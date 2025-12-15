@@ -1121,17 +1121,17 @@ const bffRestApi = async parameters =>{
                 );
                 //rename IAM parameter names with common names as admin parameter names
                 //admin sends parameters without IAM_ to access "anything"
-                if ('IAM_module_app_id' in parametersIn ||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                if ('IAM_module_app_id' in parametersIn ||['APP_EXTERNAL','APP_ACCESS_EXTERNAL'].includes(parameters.endpoint)){
                     //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
-                    parametersIn.module_app_id = parameters.endpoint=='APP_ACCESS_EXTERNAL'?
+                    parametersIn.module_app_id = ['APP_EXTERNAL','APP_ACCESS_EXTERNAL'].includes(parameters.endpoint)?
                                                     parameters.app_id:
                                                         parametersIn.IAM_module_app_id!=null?
                                                             server.ORM.UtilNumberValue(parametersIn.IAM_module_app_id):
                                                                 null;
                 }
-                if ('IAM_data_app_id' in parametersIn ||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
+                if ('IAM_data_app_id' in parametersIn ||['APP_EXTERNAL','APP_ACCESS_EXTERNAL'].includes(parameters.endpoint)){
                     //APP_ACCESS_EXTERNAL can only run function using same appid used by host and access data for same app id
-                    parametersIn.data_app_id = parameters.endpoint=='APP_ACCESS_EXTERNAL'?
+                    parametersIn.data_app_id = ['APP_EXTERNAL','APP_ACCESS_EXTERNAL'].includes(parameters.endpoint)?
                                                     parameters.app_id:
                                                         parametersIn.IAM_data_app_id!=null?
                                                             server.ORM.UtilNumberValue(parametersIn.IAM_data_app_id):

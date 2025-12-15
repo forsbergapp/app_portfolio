@@ -566,7 +566,6 @@ const commonResourceFile = async parameters =>{
 /**
  * @name commonModuleRun
  * @description Run function for given app and role
- *              Parameters in data should be requried data_app_id plus additional keys
  *              Can return anything specified by the function and supported by the server
  *              JSON, HTML, CSS, JS, WEBP, PNG, WOFF
  *              Response JSON format can be single resource format, list format or pagination format
@@ -575,9 +574,10 @@ const commonResourceFile = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:string,
- *          data: { type?:server['ORM']['Object']['AppModule']['ModuleType'],
- *                  module_app_id?:number|null,
- *                  data_app_id?:number|null},   //can accept more parameters if defined
+ *          data: { type?:server['ORM']['Object']['AppModule']['ModuleType'],   //validation parameter, if not APP_EXTERNAL and APP_ACCESS_EXTERNAL
+ *                  module_app_id?:number|null,                                 //validation parameter, for APP_EXTERNAL and APP_ACCESS_EXTERNAL must be app_id
+ *                  data_app_id?:number|null                                    //validation parameter, for APP_EXTERNAL and APP_ACCESS_EXTERNAL must be app_id
+ *                  },                                                          //can accept more data parameters if defined
  *          user_agent:string,
  *          ip:string,
  *          host:string,
