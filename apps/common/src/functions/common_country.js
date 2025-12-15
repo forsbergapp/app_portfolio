@@ -26,7 +26,7 @@ const {formatLocale} = await import('./common_locale.js');
  *          host:string,
  *          idToken:string,
  *          authorization:string,
- *          locale:string}} parameters
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{data:string}[]}>}
  */
 const appFunction = async parameters =>{
@@ -312,7 +312,7 @@ const appFunction = async parameters =>{
      */
     
     /**@type {[key:string]} */
-    const countries =   server.ORM.getExternal('COUNTRY', formatLocale(parameters.locale))[0].countries
+    const countries =   server.ORM.getExternal('COUNTRY', formatLocale(parameters.accept_language))[0].countries
                         ??
                         server.ORM.getExternal('COUNTRY', 'en')[0].countries;
     //format result and order by group name, country code

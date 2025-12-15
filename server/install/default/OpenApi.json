@@ -788,6 +788,9 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_endpoint"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -1402,6 +1405,9 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_endpoint"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -1489,6 +1495,9 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_endpoint"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -1567,6 +1576,9 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_endpoint"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -1646,6 +1658,9 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_endpoint"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{

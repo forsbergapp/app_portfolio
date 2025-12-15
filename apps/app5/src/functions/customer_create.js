@@ -25,7 +25,7 @@ const {default:createBankAccount} = await import('./account_create.js');
  *          host:string,
  *          idToken:string,
  *          authorization:string,
- *          locale:string}} parameters
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const customerCreate = async parameters =>{
@@ -74,7 +74,7 @@ const customerCreate = async parameters =>{
                                             host:parameters.host,
                                             idToken:parameters.idToken,
                                             authorization:parameters.authorization,
-                                            locale:parameters.locale})
+                                            accept_language:parameters.accept_language})
                         .then(result=>result.http?result:Customer);
             }
             else

@@ -25,7 +25,7 @@ const createBankAccountVPA = ()=>server.security.securityUUIDCreate();
  *          host:string,
  *          idToken:string,
  *          authorization:string,
- *          locale:string}} parameters
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const createBankAccount = async parameters =>{

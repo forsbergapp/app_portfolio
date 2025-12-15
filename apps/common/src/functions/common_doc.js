@@ -550,7 +550,7 @@ const menuRender = async parameters =>{
  *          host:string,
  *          idToken:string,
  *          authorization:string,
- *          locale:string}} parameters
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:string}>}
  */
 const appFunction = async parameters =>{
@@ -584,7 +584,7 @@ const appFunction = async parameters =>{
                                                         type:parameters.data.documentType,
                                                         doc:parameters.data.doc,
                                                         module:parameters.data.doc,
-                                                        locale:parameters.locale}),
+                                                        locale:parameters.accept_language}),
                         type:'HTML'};
             }
             default:{

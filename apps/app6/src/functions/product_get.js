@@ -11,13 +11,14 @@ const {server} = await import('../../../../server/server.js');
  * @description Get product
  * @function
  * @param {{app_id:number,
- *          data:*,
+ *          data:{  resource_id:number,
+ *                  data_app_id:number},
  *          user_agent:string,
  *          ip:string,
  *          host:string,
  *          idToken:string,
  *          authorization:string,
- *          locale:string}} parameters
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceMaster'][]}>}
  */
 const productGet = async parameters =>{
@@ -43,15 +44,7 @@ const productGet = async parameters =>{
                                                                 resource_name:'CURRENCY',
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result[0];
-    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceDetail'] & {Document:product_variant})[]}} */
-    const product_variants = server.ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
-                                                                resource_id:parameters.data.resource_id_variant, 
-                                                                data:{  iam_user_id:null,
-                                                                        data_app_id:parameters.data.data_app_id,
-                                                                        resource_name:'PRODUCT_VARIANT',
-                                                                        app_data_resource_master_id:null,
-                                                                        app_data_entity_id:Entity.Id
-                                                                }});
+    
     /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_product_variant})[]}} */
     const product_variant_metadatas = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         resource_id:null, 
@@ -62,7 +55,18 @@ const productGet = async parameters =>{
                                                                         }});
     for (const product of products.result){
         product.Sku = [];
-        for (const product_variant of product_variants.result.filter((/**@type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:product_variant})}*/row)=>row.AppDataResourceMasterId == product.Id)){
+        /**@type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:product_variant})[]}} */
+        const product_variants = server.ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
+                                                                resource_id:null, 
+                                                                data:{  iam_user_id:null,
+                                                                        data_app_id:parameters.data.data_app_id,
+                                                                        resource_name:'PRODUCT_VARIANT',
+                                                                        app_data_resource_master_id:null,
+                                                                        app_data_entity_id:Entity.Id
+                                                                }})
+                                                                .result.filter((/**@type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:product_variant})}*/row)=>
+                                                                    row.AppDataResourceMasterId == product.Id);
+        for (const product_variant of product_variants){
             product.sku_keys = [];
             for (const product_variant_metadata of product_variant_metadatas.result){
                 const key_name = Object.keys(product_variant_metadata.Document)[0];
