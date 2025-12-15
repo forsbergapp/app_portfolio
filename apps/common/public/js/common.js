@@ -1963,9 +1963,6 @@ const commonFFB = async parameter =>{
                 break;
             }
         }
-        //add common query parameter
-        parameters.data.query += '&locale=' + (COMMON_GLOBAL.user_locale??'');
-
         //encode query parameters
         const encodedparameters = parameters.data.query?commonWindowToBase64(parameters.data.query):'';
         const bff_path = parameters.rest_bff_path + '/' + 
@@ -2244,29 +2241,6 @@ const commonSocketConnectOnlineCheck = (div_icon_online, iam_user_id) => {
     .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
 };
 /**
- * @name commonGeolocationPlace
- * @description Microservice Geolocation: Get place from GPS
- * @function
- * @param {string} longitude 
- * @param {string} latitude 
- * @returns {Promise.<string>}
- */
-const commonGeolocationPlace = async (longitude, latitude) => {
-    return await new Promise((resolve)=>{
-       commonFFB({path:'/geolocation/place', query:`longitude=${longitude}&latitude=${latitude}`, method:'GET', authorization_type:'APP_ID'})
-        .then(result=>{
-            const json = JSON.parse(result).rows;
-            if (json.place=='' && json.region =='' && json.countryCode =='')
-                resolve('');
-            else
-                resolve(json.place + ', ' +
-                        json.region + ', ' +
-                        json.country + ' (' + json.countryCode + ')');
-        })
-        .catch(()=>resolve(''));
-    });
-};
-/**
  * @name commonTextEditingDisabled
  * @description Check if textediting is disabled
  * @function
@@ -2364,11 +2338,7 @@ const commonEvent = async (event_type,event=null) =>{
                                                 common_app_id:COMMON_GLOBAL.app_common_app_id,
                                                 admin_app_id:COMMON_GLOBAL.app_admin_app_id,
                                                 token_exp:COMMON_GLOBAL.token_exp,
-                                                token_iat:COMMON_GLOBAL.token_iat,
-                                                user_locale:COMMON_GLOBAL.user_locale,
-                                                user_timezone:COMMON_GLOBAL.user_timezone,
-                                                user_direction:COMMON_GLOBAL.user_direction,
-                                                user_arabic_script:COMMON_GLOBAL.user_arabic_script
+                                                token_iat:COMMON_GLOBAL.token_iat
                                                 },
                                     methods:    null,
                                     path:       '/common/component/common_app_dialogues_user_menu.js'});
@@ -3026,8 +2996,6 @@ const commonGet = () =>{
         /* SERVICE SOCKET */
         commonSocketSSEShow:commonSocketSSEShow, 
         commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
-        /* GEOLOCATION */
-        commonGeolocationPlace:commonGeolocationPlace,
         /* EVENT */
         commonEvent:commonEvent,
         /* INIT */
@@ -3166,8 +3134,6 @@ export{/* GLOBALS*/
        /* SERVICE SOCKET */
        commonSocketSSEShow, 
        commonSocketConnectOnlineCheck,
-       /* GEOLOCATION */
-       commonGeolocationPlace,
        /* EVENT */
        commonEvent,
        /* INIT */

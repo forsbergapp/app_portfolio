@@ -18,8 +18,7 @@ const {default:ComponentMaintenance} = await import('../apps/common/src/componen
  *          idToken:string,
  *          user_agent:string,
  *          accept_language:string,
- *          response:server['server']['res'],
- *          locale:string}} parameters
+ *          response:server['server']['res']}} parameters
  * @returns {Promise.<void>}
  */
 const bffConnect = async parameters =>{
@@ -1185,7 +1184,6 @@ const bffRestApi = async parameters =>{
                                 ...(getParameter('server_accept_language')      && {accept_language:    parameters.accept_language}),
                                 ...(getParameter('server_response')             && {response:           parameters.res}),
                                 ...(getParameter('server_host')                 && {host:               parameters.host}),
-                                ...(getParameter('locale')                      && {locale:             parameters.app_query?.get('locale') ??server.app_common.commonClientLocale(parameters.accept_language)}),
                                 ...(getParameter('server_ip')                   && {ip:                 parameters.ip}),
                                 ...(getParameter('server_microservice')         && {microservice:       getParameter('server_microservice').default}),
                                 ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),

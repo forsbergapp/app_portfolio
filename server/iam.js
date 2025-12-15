@@ -176,8 +176,7 @@ const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
  *          idToken:string,
  *          authorization:string,
  *          ip:string,
- *          user_agent:string,
- *          accept_language:string}} parameters
+ *          user_agent:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{
  *                                              iam_user_id:        number,
  *                                              iam_user_username:  string,
@@ -361,8 +360,6 @@ const iamAuthenticateUser = async parameters =>{
  *          idToken:string,
  *          ip:string,
  *          user_agent:string,
- *          accept_language:string,
- *          locale:string,
  *          data:{  username:string,
  *                  password:string,
  *                  password_reminder:string|null}}} parameters
@@ -446,8 +443,6 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          ip:string,
  *          authorization:string,
  *          user_agent:string,
- *          accept_language:string,
- *          locale:string,
  *          data:{  verification_type:'1'|'2',   //1 LOGIN, 2 SIGNUP
  *                  verification_code:string}}} parameters
  * @returns {Promise.<server['server']['response'] & { result?:{activated:number} }>}
@@ -474,8 +469,7 @@ const iamAuthenticateUserActivate = async parameters =>{
                                                 idToken:parameters.idToken,
                                                 ip:parameters.ip,
                                                 authorization:parameters.authorization,
-                                                user_agent:parameters.user_agent,
-                                                accept_language:parameters.accept_language})
+                                                user_agent:parameters.user_agent})
                                     .then(result=>result.http?result:
                                                     {result:{activated:1}, type:'JSON'}
                                         )
@@ -512,7 +506,6 @@ const iamAuthenticateUserActivate = async parameters =>{
  *          idToken:string,
  *          authorization:string,
  *          user_agent:string,
- *          accept_language:string,
  *          data :{ username:string,
  *                  password:string,
  *                  password_new:string,
@@ -520,8 +513,7 @@ const iamAuthenticateUserActivate = async parameters =>{
  *                  bio:string,
  *                  private:number,
  *                  avatar:string,
- *                  totp:string},
- *          locale:string}} parameters
+ *                  totp:string}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{updated: number} }>}
  */
 const iamAuthenticateUserUpdate = async parameters => {
@@ -555,8 +547,7 @@ const iamAuthenticateUserUpdate = async parameters => {
                                             idToken:parameters.idToken,
                                             authorization:parameters.authorization,
                                             ip:parameters.ip,
-                                            user_agent:parameters.user_agent,
-                                            accept_language:parameters.accept_language})
+                                            user_agent:parameters.user_agent})
                                         .then(result_logout=>result_logout.http?
                                                                 result_logout:
                                                                     {result:{updated:1}, type:'JSON'})
@@ -599,9 +590,7 @@ const iamAuthenticateUserUpdate = async parameters => {
  *          idToken:string,
  *          authorization:string,
  *          user_agent:string,
- *          accept_language:string,
- *          data:{password:string},
- *          locale:string}} parameters
+ *          data:{password:string}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
 const iamAuthenticateUserDelete = async parameters => server.ORM.db.IamUser.deleteRecord(parameters.app_id, parameters.resource_id, {password:parameters.data.password});
@@ -615,13 +604,9 @@ const iamAuthenticateUserDelete = async parameters => server.ORM.db.IamUser.dele
  *          resource_id:number,
  *          ip:string,
  *          idToken:string,
- *          authorization:string,
- *          user_agent:string,
- *          accept_language:string,
  *          data:{   data_app_id:number,
  *                   iam_user_id:number,
- *                   password:string},
- *          locale:string}} parameters
+ *                   password:string}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
 const iamAuthenticateUserAppDelete = async parameters => {
@@ -1530,8 +1515,7 @@ const iamUserGetLastLogin = (app_id, id) =>server.ORM.db.IamAppAccess.get(app_id
  *          idToken:string,
  *          authorization:string,
  *          ip:string,
- *          user_agent:string,
- *          accept_language:string|null}} parameters
+ *          user_agent:string}} parameters
  * @returns {Promise.<server['server']['response']>}
  */
 

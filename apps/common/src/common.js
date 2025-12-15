@@ -462,35 +462,6 @@ const commonAppStart = async (app_id) =>{
 };
 
 /**
- * @name commonClientLocale
- * @description Get client locale from accept language from request
- * @function
- * @param {string} accept_language  - Accept language from request
- * @returns {string}                - lowercase locale, can be default 'en' or with syntax 'en-us' or 'zh-hant-cn'
- */
-const commonClientLocale = accept_language =>{
-    let locale;
-    if (!accept_language || accept_language.startsWith('text') || accept_language=='*')
-        locale = 'en';
-    else{
-        //check first lang ex syntax 'en-US,en;'
-        locale = accept_language.split(',')[0].toLowerCase();
-        if (locale.length==0){
-            //check first lang ex syntax 'en;'
-            locale = accept_language.split(';')[0].toLowerCase();
-            if (locale.length==0 && accept_language.length>0)
-                //check first lang ex syntax 'en' or 'zh-cn'
-                locale = accept_language.toLowerCase();
-            else{
-                locale = 'en';
-            }
-        }
-    }
-    return locale;
-};
-
-
-/**
  * @name commonResourceFile
  * @memberof ROUTE_APP
  * @description Get resource
@@ -690,7 +661,6 @@ const commonModuleRun = async parameters => {
 *                  queue_parameters?:{appModuleQueueId:number}},
 *          user_agent:string, 
 *          ip:string,
-*          locale:string,
 *          endpoint:server['bff']['parameters']['endpoint']|''}} parameters
 * @returns {Promise.<server['server']['response']>}
 */
@@ -716,8 +686,7 @@ const commonAppReport = async parameters => {
                                 queue_parameters:parameters.data.queue_parameters,
                                 reportid:       parameters.data.reportid ?? '',
                                 ip:             parameters.ip,
-                                user_agent:     parameters.user_agent ?? '',
-                                accept_language:parameters.locale ?? ''
+                                user_agent:     parameters.user_agent ?? ''
                                 };
                 if (parameters.data.queue_parameters){
                     //do not wait for the report result when using report queue and the result is saved and not returned here
@@ -808,7 +777,6 @@ const commonAppReport = async parameters => {
  *                  report_parameters:string},
  *          user_agent:string,
  *          ip:string,
- *          locale:string,
  *          endpoint:server['bff']['parameters']['endpoint']|'',
  *          res:server['server']['res']}} parameters
  * @returns {Promise.<server['server']['response']|void>}
@@ -853,7 +821,6 @@ const commonAppReportQueue = async parameters =>{
                                                         },
                                     user_agent:         parameters.user_agent,
                                     ip:                 parameters.ip,
-                                    locale:             parameters.locale,
                                     endpoint:           parameters.endpoint});
             });
             return {result:null, type:'JSON'};
@@ -1033,11 +1000,9 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   *          resource_id:number,
   *          ip:string,
   *          host:string,
-  *          user_agent:string,
-  *          accept_language:string,
+  *          user_agent:string
   *          idToken:string, 
-  *          data:{ iam_user_id:server['ORM']['Object']['IamUser']['Id'],
-  *                 locale:string } } } parameters
+  *          data:{ iam_user_id:server['ORM']['Object']['IamUser']['Id']} } } parameters
   * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppMount']}>}
   */
 const commonAppMount = async parameters =>{
@@ -1114,7 +1079,7 @@ const commonAppMount = async parameters =>{
                                                              token_admin:null,
                                                              ip:parameters.ip,
                                                              headers_user_agent:parameters.user_agent})).result,
-                            IamUserApp: parameters.data.iam_user_id !=null?
+                            IamUserApp: parameters.data?.iam_user_id !=null?
                                             (await server.iam.iamUserLoginApp({ app_id:parameters.app_id, 
                                                                                 data:{  iam_user_id:parameters.data.iam_user_id,
                                                                                         data_app_id:parameters.resource_id
@@ -1239,7 +1204,6 @@ const commonAppError = async () =>serverError({data:null, methods:null});
  *          ip:string,
  *          host:string,
  *          user_agent:string,
- *          accept_language:string,
  *          data:{data_app_id:number,
  *                type: 'INFO'|'RESOURCE',
  *                content_type: string}
@@ -1315,9 +1279,8 @@ const commonRegistryAppModule = (app_id, parameters) => server.ORM.db.AppModule.
 */
 const commonGeodata = async parameters =>{
     const result_gps = getIP({ app_id:parameters.app_id,
-                                        data:{ip:parameters.ip},
-                                        ip:parameters.ip,
-                                        locale:'en'
+                                        data:{ip:parameters.ip, locale:parameters.accept_language},
+                                        ip:parameters.ip
                                     }).result;
     const result_geodata = {};
     if (result_gps){
@@ -1357,9 +1320,8 @@ const commonGeodata = async parameters =>{
 */
 const commonGeodataUser = async (app_id, ip) =>{
    const result_geodata = getIP({ app_id:app_id,
-                                    data:{ip:ip},
+                                    data:{ip:ip, locale:'en'},
                                     ip:ip,
-                                    locale:'en'
                                 }).result;   
    const place = result_geodata?result_geodata.place:'';
    return {latitude:result_geodata?result_geodata.latitude ?? '':'',
@@ -1371,7 +1333,7 @@ const commonGeodataUser = async (app_id, ip) =>{
 export {commonValidImage,
         commonGetFile,
         commonCssFonts,
-        commonAppStart, commonClientLocale,
+        commonAppStart, 
         commonAppIam, commonResourceFile,
         commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
         commonAppMount,

@@ -84,7 +84,6 @@
  * @property {string}       reportid
  * @property {string}       ip
  * @property {string}       user_agent
- * @property {string}       accept_language
  */
 /**
  * @description APP server_apps_module_metadata

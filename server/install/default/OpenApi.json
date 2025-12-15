@@ -187,10 +187,6 @@
                         },
                         {
                             "$ref": "#/components/parameters/paths/server_response"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
                         }
                 ],
                 "requestBody":{
@@ -255,10 +251,6 @@
                             "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"app.id",
                             "in":"path"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
                         }
                 ],
                 "responses": {
@@ -324,10 +316,6 @@
                         {
                             "$ref":"#/components/parameters/paths/IAM_data_app_id",
                             "in":"query"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
                         }
                 ],
                 "responses": {
@@ -375,9 +363,6 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -787,10 +772,6 @@
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
@@ -828,6 +809,10 @@
                                             "type":{
                                                 "type":"string",
                                                 "required":true
+                                            },
+                                            "locale":{
+                                                "$ref": "#/components/parameters/paths/locale",
+                                                "required":false
                                             }
                                         },
                                         "additionalProperties":true
@@ -942,10 +927,6 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
@@ -1005,10 +986,6 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
                         },
                         {
                             "$ref": "#/components/parameters/paths/server_ip"
@@ -1214,15 +1191,8 @@
                             "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/resource_id_string",
                             "in":"path"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
                         },
                         {
                             "$ref": "#/components/parameters/paths/IAM_data_app_id",
@@ -1295,14 +1265,7 @@
                             "$ref": "#/components/parameters/paths/server_user_agent"
                         },
                         {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/server_idtoken"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
                         },
                         {
                             "$ref": "#/components/parameters/paths/IAM_data_app_id",
@@ -1364,10 +1327,6 @@
                             "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/IAM_data_app_id",
                             "in":"path"
                         },
@@ -1423,10 +1382,6 @@
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
@@ -1460,6 +1415,10 @@
                                             "type":{
                                                 "type":"string",
                                                 "required":true
+                                            },
+                                            "locale":{
+                                                "$ref": "#/components/parameters/paths/locale",
+                                                "required":false
                                             }
                                         },
                                         "additionalProperties":true
@@ -1513,10 +1472,6 @@
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
@@ -1542,6 +1497,10 @@
                                             },
                                             "message":{
                                                 "type":"string"
+                                            },
+                                            "locale":{
+                                                "$ref": "#/components/parameters/paths/locale",
+                                                "required":false
                                             }
                                         }
                                     }
@@ -1585,10 +1544,6 @@
                             "in":"path"
                         },
                         {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/server_ip"
                         },
 			            {
@@ -1620,6 +1575,10 @@
                                             },
                                             "message":{
                                                 "type":"string"
+                                            },
+                                            "locale":{
+                                                "$ref": "#/components/parameters/paths/locale",
+                                                "required":false
                                             }
                                         },
                                         "additionalProperties":true
@@ -1662,10 +1621,6 @@
                             "description":"AppModule.common_name",
                             "required":true,
                             "in":"path"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
                         },
                         {
                             "$ref": "#/components/parameters/paths/server_ip"
@@ -1712,6 +1667,10 @@
                                             "type":{
                                                 "type":"string",
                                                 "required":true
+                                            },
+                                            "locale":{
+                                                "$ref": "#/components/parameters/paths/locale",
+                                                "required":false
                                             }
                                         },
                                         "additionalProperties":true
@@ -2407,17 +2366,8 @@
                         {
                             "$ref": "#/components/parameters/paths/server_ip"
                         },
-			            {
-                            "$ref": "#/components/parameters/paths/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
-                        },
                         {
                             "$ref": "#/components/parameters/paths/server_idtoken"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/server_authorization"
                         }
                 ],
                 "requestBody":{
@@ -2525,9 +2475,6 @@
                         },
                         {
                             "$ref": "#/components/parameters/paths/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
                         },
                         {
                             "$ref": "#/components/parameters/paths/server_idtoken"
@@ -3881,9 +3828,6 @@
                         {
                             "$ref": "#/components/parameters/paths/server_user_agent"
                         },
-			            {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
-                        },
                         {
                             "$ref": "#/components/parameters/paths/server_idtoken"
                         },
@@ -4169,9 +4113,6 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "requestBody":{
@@ -4239,10 +4180,8 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
+			            
                 ],
                 "requestBody":{
                             "description":"",
@@ -4335,9 +4274,6 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_user_agent"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_accept_language"
                         }
                 ],
                 "responses": {
@@ -4487,10 +4423,6 @@
                             }    
                         },
                         {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/server_ip"
                         }
                 ],
@@ -4525,6 +4457,10 @@
                                                             "schema":{
                                                                 "type": "string"
                                                             }
+                                                        },
+                                                        "locale":{
+                                                            "$ref": "#/components/parameters/paths/locale",
+                                                            "required":false
                                                         }
                                                     }
                                                 }
@@ -4564,10 +4500,6 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/locale",
-                            "required":false
                         },
                         {
                             "$ref": "#/components/parameters/paths/server_ip"
@@ -4622,6 +4554,10 @@
                                                             "schema":{
                                                                 "type": "string"
                                                             }
+                                                        },
+                                                        "locale":{
+                                                            "$ref": "#/components/parameters/paths/locale",
+                                                            "required":false
                                                         }
                                                     }
                                                 }
