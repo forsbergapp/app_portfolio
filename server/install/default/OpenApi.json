@@ -4428,9 +4428,6 @@
                             "schema":{
                                 "type": "string"
                             }    
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/server_ip"
                         }
                 ],
                 "responses": {
