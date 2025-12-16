@@ -1185,6 +1185,7 @@ const bffRestApi = async parameters =>{
                                 ...(getParameter('server_microservice')         && {microservice:       getParameter('server_microservice').default}),
                                 ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
                                 ...(getParameter('server_message_queue_type')   && {message_queue_type: getParameter('server_message_queue_type').default}),
+                                ...(getParameter('server_url')                  && {url:                parameters.url}),
                                 ...(getParameter('server_method')               && {method:             parameters.method}),
                                 ...(Object.keys(parametersIn)?.length>0         && {data:               {...parametersIn}}),
                                 ...(getParameter('server_endpoint')             && {endpoint:           parameters.endpoint}),

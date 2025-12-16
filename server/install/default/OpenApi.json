@@ -4140,8 +4140,19 @@
                         },
 			            {
                             "$ref": "#/components/parameters/paths/server_user_agent"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_accept_language"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_host"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_method"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_url"
                         }
-			            
                 ],
                 "requestBody":{
                             "description":"",
@@ -4830,6 +4841,10 @@
                     "default":"0",
                     "description":"0=NO, 1=YES"
                 },
+                "IAM_USER_MAX_FAILED_LOGIN_ATTEMPTS":{
+                    "default":"5",
+                    "description":"The IP address will get a record in IamControlObserve after max attempt reached"
+                },
                 "IAM_USER_ENABLE_LOGIN":{
                     "default":"1",
                     "description":"0=NO, 1=YES"
@@ -5083,7 +5098,7 @@
                     }
                 },
                 "server_method":{
-                    "description":"Used to send method to microservice from server",
+                    "description":"Used to send method to microservice from server or used by IAM",
                     "name":	"method",
                     "in":"path",
                     "required":true,
@@ -5097,6 +5112,14 @@
                     "required":true,
                     "schema":{
                         "type":"object"
+                    }
+                },
+                "server_url":{
+                    "description":"Use this parameter to send url requested",
+                    "name":	"server_url",
+                    "required":true,
+                    "schema":{
+                        "type":"string"
                     }
                 }
             }
