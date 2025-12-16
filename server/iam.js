@@ -287,8 +287,7 @@ const iamAuthenticateUser = async parameters =>{
                         Ip:                 parameters.ip,
                         Ua:                 parameters.user_agent};
             await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
-            if (user?.Id != null &&
-                server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
+            if (server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
                 .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
                     row.Ip==parameters.ip && row.Res==0
                 ).length > (server.ORM.UtilNumberValue(server.ORM?.OpenApiConfig?.IAM_USER_MAX_FAILED_LOGIN_ATTEMPTS?.default)??0)){
@@ -861,7 +860,7 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
 };
 /**
  * @name iamObserveLimitReached
- * @description check if observe limit reached
+ * @description check if observe limit reached for given IP
  * @function
  * @param {number} app_id
  * @param {server['ORM']['Object']['OpenApi']} openApi
@@ -872,9 +871,8 @@ const iamObserveLimitReached = (app_id, openApi, ip) =>{
     return server.ORM.db.IamControlObserve.get(app_id, 
                                                 null).result
                 .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
-                        row.Ip==ip && 
-                        row.AppId == app_id).length>
-                                            openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default
+                        row.Ip==ip).length>
+                                            (server.ORM.UtilNumberValue(openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default)??0)
 }
 /**
  * @name iamAuthenticateRequest

@@ -28,7 +28,7 @@ const post = async (app_id, data) => {
         const id = Date.now();
         /**@type{server['ORM']['Object']['IamControlObserve']}*/
         const data_new = {  Id:id, 
-                            IamUserId:data.IamUserId,
+                            IamUserId:data.IamUserId??null,
                             AppId:data.AppId,
                             Ip:data.Ip, 
                             UserAgent:data.UserAgent,
