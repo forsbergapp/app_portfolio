@@ -172,7 +172,11 @@ const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
  *          idToken:string,
  *          authorization:string,
  *          ip:string,
- *          user_agent:string}} parameters
+ *          host:string,
+ *          method:server['server']['req']['method']
+ *          url:string,
+ *          user_agent:string,
+ *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{
  *                                              iam_user_id:        number,
  *                                              iam_user_username:  string,
@@ -278,11 +282,33 @@ const iamAuthenticateUser = async parameters =>{
                         IamUserAppId:       null,
                         IamUserId:          user?.Id,
                         IamUserUsername:    user?.Username,
-                        Res:		            result,
-                        Token:                  null,
-                        Ip:                     parameters.ip,
-                        Ua:                     parameters.user_agent};
+                        Res:		        result,
+                        Token:              null,
+                        Ip:                 parameters.ip,
+                        Ua:                 parameters.user_agent};
             await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
+            if (user?.Id != null &&
+                server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
+                .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
+                    row.Ip==parameters.ip && row.Res==0
+                ).length > (server.ORM.UtilNumberValue(server.ORM?.OpenApiConfig?.IAM_USER_MAX_FAILED_LOGIN_ATTEMPTS?.default)??0)){
+                //Create observe record in IamControlObserve since max failed login attempts reached
+                //and for any user attempted
+                /**@type{server['ORM']['Object']['IamControlObserve']} */
+                const record = {    IamUserId:      user?.Id,
+                                    AppId:          parameters.app_id,
+                                    Ip:             parameters.ip, 
+                                    UserAgent:      parameters.user_agent, 
+                                    Host:           parameters.host, 
+                                    AcceptLanguage: parameters.accept_language, 
+                                    Method:         parameters.method,
+                                    Url:            parameters.url};
+                await server.ORM.db.IamControlObserve.post(server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0, 
+                                                            {   ...record,
+                                                                Status:0, 
+                                                                Type:'TOO_MANY_FAILED_LOGIN'});
+            }
+            
             return {http:401,
                 code:'IAM',
                 text:iamUtilMessageNotAuthorized(),
