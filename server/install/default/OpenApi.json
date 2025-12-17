@@ -4789,6 +4789,10 @@
                     "default":"1", 
                     "description": "1=on, 0=off"
                 },
+                "IAM_MAX_IMAGE_PIXEL_SIZE":{
+                    "default":"2073600",
+                    "description":"Default value 1920*1080 = 2073600"
+                },
                 "IAM_SERVER_UPDATE_SECRETS_START":{
                     "default":"1",
                     "description":"1=YES, 0=NO"

@@ -19,6 +19,7 @@ const fs = await import('node:fs');
 /**
  * @name commonConvertBinary
  * @description  converts binary file to base64 url string
+ * @function
  * @param {string} content_type
  * @param {string} path
  * @returns {Promise.<server['server']['response']>}
@@ -36,10 +37,80 @@ const commonConvertBinary = async (content_type, path) =>
                                 }
                         };
             });
+/**
+ * @name commonValidImagePixelSize
+ * @description  Controls if image using valid pixel size
+ * @function
+ * @param {Buffer} image
+ * @returns {boolean}
+ */
+const commonValidImagePixelSize = image =>{
+    /**
+     * 
+     * @param {Buffer} buffer 
+     * @param {number} offset 
+     * @returns {number}
+     */
+    const readUInt32be = (buffer, offset) =>
+        (
+            (buffer[offset] << 24) |
+            (buffer[offset + 1] << 16) |
+            (buffer[offset + 2] << 8) |
+            (buffer[offset + 3] << 0)
+        );
+    const imageBuffer = Buffer.from(image);
+    let width, height;
 
+    switch (true){
+        case (imageBuffer[0] === 0xFF && imageBuffer[1] === 0xD8):{
+            //JPEG
+            //find 0xFF and search for SOF (Start of frame) with SOF0, SOF1 or SOF2 specification
+            const offset = imageBuffer.findIndex((offset,index)=>(offset === 0xFF && [0xC0, 0xC1, 0xC2].includes(imageBuffer[index+1])))
+            width = (imageBuffer[offset+5]*256) + imageBuffer[offset+6];
+            height = (imageBuffer[offset+7]*256) + imageBuffer[offset+8];
+            break;
+        }
+        case (imageBuffer[0] === 0x89 && imageBuffer[1] === 0x50 && imageBuffer[2] === 0x4E && imageBuffer[3] === 0x47):{
+            //PNG
+            width = readUInt32be(imageBuffer, 16);
+            height = readUInt32be(imageBuffer, 20);
+            break;
+        }
+        case (imageBuffer[0] === 0x52 && imageBuffer[1] === 0x49 && imageBuffer[2] === 0x46 && imageBuffer[3] === 0x46):{
+            // WebP
+            //Only support for VP8X
+            if (imageBuffer.slice(0, 4).toString('utf8') =='RIFF' && 
+                imageBuffer.slice(8, 12).toString('utf8') =='WEBP' &&
+                imageBuffer.slice(12, 16).toString('utf-8') =='VP8X'){
+                //VP8X
+                width = 1 + ((imageBuffer[26] << 16 | imageBuffer[25] << 8 | imageBuffer[24]))
+                height = 1 + ((imageBuffer[29] << 16 | imageBuffer[28] << 8 | imageBuffer[27]))
+            }
+            else
+                throw { http:400,
+                        code:null,
+                        text:'',
+                        developerText:null,
+                        moreInfo:null,
+                        type:'JSON'
+                    };
+        }
+        default:{
+            throw { http:400,
+                    code:null,
+                    text:'',
+                    developerText:null,
+                    moreInfo:null,
+                    type:'JSON'
+                };
+        }
+    }   
+    return ((width??0) * (height??0)) <=(server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_MAX_IMAGE_PIXEL_SIZE.default)??0);
+}
 /**
  * @name commonValidImage
  * @description  Controls if image using encoded using base64 is valid
+ * @function
  * @param {string} image
  * @returns {Promise.<boolean>}
  */
@@ -48,7 +119,7 @@ const commonValidImage = async image => {
      * @name controlImage
      * @description Detects file type
      * @function
-     * @param {FileInput} input 
+     * @param {Buffer} input 
      * @param {{    bytesToRead?: number,       
      *              expectedExtension?: string, 
      *              expectedMimeType?: string,  
@@ -66,7 +137,6 @@ const commonValidImage = async image => {
     const  controlImage = async (input,options = {}) => {
         /**
          * @typedef {'H' | 'M' | 'L' | '⛔'} ConfidenceLevel
-         * @typedef {Buffer | Uint8Array | ArrayBuffer | Blob | File} FileInput
          */
 
         /**
@@ -115,6 +185,7 @@ const commonValidImage = async image => {
             'image/webp': 	    [{name: 'WebP', bytes: [0x52, 0x49, 0x46, 0x46],offset: 0,extBytes: [0x57, 0x45, 0x42, 0x50],extOffset: 8}],
             'image/svg+xml':    [{name: 'SVG',  text: '<svg' },{name: 'SVG', text: '<?xml', secondText: '<svg'}]
         };
+        
         /**
          * @name MIME_EXTENSION
          * @description Supported MIME_EXTENSION
@@ -163,7 +234,7 @@ const commonValidImage = async image => {
          * @name controlMimeType
          * @description control Mime type
          * @function
-         * @param {Uint8Array} bytes 
+         * @param {Buffer} bytes 
          * @returns {{
          *              mimeType:   string | null,
          *              name:       string,
@@ -205,16 +276,7 @@ const commonValidImage = async image => {
             }
             return { mimeType: null, name: '?', confidence: '⛔' };
         }
-        let bytes = input instanceof Uint8Array?
-                                input:
-                                    input instanceof ArrayBuffer?
-                                        new Uint8Array(input):
-                                            (typeof Buffer !== 'undefined' && Buffer.isBuffer(input))?
-                                                new Uint8Array(input):
-                                                    input instanceof Blob?
-                                                        new Uint8Array(await input.arrayBuffer()):
-                                                            null;
-        if (bytes==null)    
+        if (input==null)    
             throw {http:400,
                     code:null,
                     text:'',
@@ -222,14 +284,14 @@ const commonValidImage = async image => {
                     moreInfo:null,
                     type:'JSON'
                 };
-        if (bytes.length > (options.bytesToRead?options.bytesToRead:64*1024)) {
-            bytes = bytes.slice(0, (options.bytesToRead?options.bytesToRead:64*1024));
-        }
+        const bytes = input.length > (options.bytesToRead?options.bytesToRead:64*1024)?
+                                                input.slice(0, (options.bytesToRead?options.bytesToRead:64*1024)):
+                                                    input;
         const controlled = controlMimeType(bytes);
         
         const finalExpectedMimeType = (!options.expectedMimeType && options.expectedExtension)?
                                             /**@ts-ignore */
-                                            EXTENSION_MIME[expectedExtension.toLowerCase()] ?? undefined:
+                                            EXTENSION_MIME[options.expectedExtension.toLowerCase()] ?? undefined:
                                                 options.expectedMimeType;
 
         const Valid =   controlled.mimeType && finalExpectedMimeType?
@@ -271,7 +333,7 @@ const commonValidImage = async image => {
         const extenstion = image.split(';')[0]?.split('/')[1].toLowerCase();
         if (file && ['webp', 'jpg', 'jpeg', 'png', 'svg'].includes(extenstion)){
             const result = await controlImage(file,{expectedExtension:extenstion});
-            return result.Valid;
+            return result.Valid && commonValidImagePixelSize(file);
         }    
         else
             return false
@@ -1324,7 +1386,8 @@ const commonGeodataUser = async (app_id, ip) =>{
            timezone:result_geodata?result_geodata.timezone ?? '':''};
 };
 
-export {commonValidImage,
+export {commonValidImagePixelSize,
+        commonValidImage,
         commonGetFile,
         commonCssFonts,
         commonAppStart, 

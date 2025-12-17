@@ -362,13 +362,15 @@ const update = async (app_id, resource_id, data) => {
             const data_update = {};
             //allowed parameters to update:
             if (data.Username!=null && data.Username != ''){
-                //OWASP 7.4.3
-                data_update.Active=0;
+                if (data.Username != user.Username)
+                    //OWASP 7.4.3
+                    data_update.Active=0;
                 data_update.Username = data.Username;
             }
             if (data.Password!=null && data.Password != ''){
-                //OWASP 7.4.3
-                data_update.Active=0;
+                if (data.PasswordNew!=null)
+                    //OWASP 7.4.3
+                    data_update.Active=0;
                 data_update.Password = await server.security.securityPasswordCreate(app_id, data.PasswordNew ?? data.Password);
             }
             if (data.PasswordReminder!=null)
@@ -435,8 +437,9 @@ const updateAdmin = async parameters => {
                 data_update.Username = parameters.data.username;
             }
             if (parameters.data?.password!=null && parameters.data?.password!=''){
-                //OWASP 7.4.3
-                data_update.Active=0;
+                if (parameters.data.password_new!=null)
+                    //OWASP 7.4.3
+                    data_update.Active=0;
                 data_update.Password = await server.security.securityPasswordCreate(parameters.app_id, parameters.data?.password_new ?? parameters.data.password);
             }
             if (parameters.data?.password_reminder!=null)
