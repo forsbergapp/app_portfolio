@@ -6,7 +6,8 @@
  */
 
 const {server} = await import('../../../server/server.js');
-const {default:ComponentCreate} = await import('./component/common_app.js');
+const {default:ComponentApp} = await import('./component/common_app.js');
+const {default:ComponentCss} = await import('./component/common_css.js');
 const {default:ComponentMaintenance} = await import('./component/common_maintenance.js');
 const {default:ComponentReport} = await import('./component/common_report.js');
 const {default:ComponentInfo} = await import('./component/common_info.js');
@@ -425,7 +426,19 @@ const commonGetFile = async parameters =>{
                                         });
             });
 };
-
+/**
+ * @name commonCSSStart
+ * @description Returns CSS for app and server error components
+ * @function
+ * @param {{start:boolean,
+ *          ui:boolean}} parameters
+ * @returns {Promise.<string>}
+ */
+const commonCSSStart = async parameters =>
+    await ComponentCss({  data:   { start:parameters.start,
+                                    ui:parameters.ui},
+                            methods:null
+                        });
 /**
  * @name commonCssFonts
  * @description Returns resource /common/css/font/fonts.css used with updated url and db records to create at start
@@ -1181,65 +1194,76 @@ const commonApp = async parameters =>{
                 moreInfo:null,
                 type:'JSON'};
     else
-        if  ((await commonAppIam(parameters.host, 'APP')).admin == false && 
-                await commonAppStart(parameters.app_id) ==false){
-            return {result:await ComponentMaintenance({  data:   null,
-                                                    methods:{commonResourceFile:commonResourceFile}
-                                                }), type:'HTML'};
-        }
-        else{
-            const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)??1;
-            const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
-            const basePathRESTAPI = server.ORM.db.OpenApi.getViewServers({app_id:common_app_id, data:{pathType:'REST_API'}}).result[0].variables.basePath.default
-            const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
-                                admin_app_id:
-                                    common_app_id;
-            
-            return {result:await ComponentCreate({data:     {
-                                                            app_id:             app_id,
-                                                            app_admin_app_id:   admin_app_id,
-                                                            ip:                 parameters.ip, 
-                                                            user_agent:         parameters.user_agent ??'', 
-                                                            accept_language:    parameters.accept_language??'',
-                                                            basePathRESTAPI:    basePathRESTAPI
-                                                            },
-                                                methods:    {
-                                                            commonAppStart:commonAppStart,
-                                                            commonGeodata:commonGeodata,
-                                                            AppData:server.ORM.db.AppData,
-                                                            IamEncryption:server.ORM.db.IamEncryption,
-                                                            IamUser:server.ORM.db.IamUser,
-                                                            iamAuthorizeIdToken:server.iam.iamAuthorizeIdToken,
-                                                            serverProcess:server.ORM.serverProcess,
-                                                            UtilNumberValue:server.ORM.UtilNumberValue,
-                                                            Security:server.security,
-                                                            commonResourceFile:commonResourceFile,
-                                                            commonGetFile:commonGetFile
-                                                            }})
-                                .catch(error=>{
-                                    return server.ORM.db.Log.post({ app_id:parameters.app_id, 
-                                                                    data:{  object:'LogAppError', 
-                                                                            app:{   AppFilename:server.UtilAppFilename(import.meta.url),
-                                                                                    AppFunctionName:'commonApp()',
-                                                                                    AppLine:server.UtilAppLine()
-                                                                            },
-                                                                            log:error
-                                                                        }
-                                                                    })
-                                    .then(()=>{
-                                        return commonAppError();
-                                    });
-                            }),
+        //check max allowed connections
+        if( (
+            server.socket.socketConnectedCount({data:{logged_in:'1'}})
+                .result.count_connected +
+            server.socket.socketConnectedCount({data:{logged_in:'0'}})
+                .result.count_connected
+            ) >= (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_MAX_CONNECTED_CLIENTS.default)??0 ))
+            return {result: commonAppError(server.iam.iamUtilMessageNotAuthorized()),
                     type:'HTML'};
-        }
+        else
+            if  ((await commonAppIam(parameters.host, 'APP')).admin == false && 
+                    await commonAppStart(parameters.app_id) ==false){
+                return {result:await ComponentMaintenance({  data:   null,
+                                                        methods:{commonResourceFile:commonResourceFile}
+                                                    }), type:'HTML'};
+            }
+            else{
+                const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)??1;
+                const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
+                const basePathRESTAPI = server.ORM.db.OpenApi.getViewServers({app_id:common_app_id, data:{pathType:'REST_API'}}).result[0].variables.basePath.default
+                const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
+                                    admin_app_id:
+                                        common_app_id;
+                
+                return {result:await ComponentApp({data:     {
+                                                                app_id:             app_id,
+                                                                app_admin_app_id:   admin_app_id,
+                                                                ip:                 parameters.ip, 
+                                                                user_agent:         parameters.user_agent ??'', 
+                                                                accept_language:    parameters.accept_language??'',
+                                                                basePathRESTAPI:    basePathRESTAPI
+                                                                },
+                                                    methods:    {
+                                                                commonAppStart:commonAppStart,
+                                                                commonGeodata:commonGeodata,
+                                                                AppData:server.ORM.db.AppData,
+                                                                IamEncryption:server.ORM.db.IamEncryption,
+                                                                IamUser:server.ORM.db.IamUser,
+                                                                iamAuthorizeIdToken:server.iam.iamAuthorizeIdToken,
+                                                                serverProcess:server.ORM.serverProcess,
+                                                                UtilNumberValue:server.ORM.UtilNumberValue,
+                                                                Security:server.security,
+                                                                commonResourceFile:commonResourceFile,
+                                                                commonGetFile:commonGetFile
+                                                                }})
+                                    .catch(error=>{
+                                        return server.ORM.db.Log.post({ app_id:parameters.app_id, 
+                                                                        data:{  object:'LogAppError', 
+                                                                                app:{   AppFilename:server.UtilAppFilename(import.meta.url),
+                                                                                        AppFunctionName:'commonApp()',
+                                                                                        AppLine:server.UtilAppLine()
+                                                                                },
+                                                                                log:error
+                                                                            }
+                                                                        })
+                                        .then(()=>{
+                                            return commonAppError();
+                                        });
+                                }),
+                        type:'HTML'};
+            }
 };
 /**
  * @name commonAppError
  * @description Get server error
+ * @param{string|null} message
  * @function
 * @returns {Promise.<string>}
 */
-const commonAppError = async () =>serverError({data:null, methods:null});
+const commonAppError = async (message=null) =>serverError({data:{message:message}, methods:null});
 
 /**
  * @name commonAppResource
@@ -1389,6 +1413,7 @@ const commonGeodataUser = async (app_id, ip) =>{
 export {commonValidImagePixelSize,
         commonValidImage,
         commonGetFile,
+        commonCSSStart,
         commonCssFonts,
         commonAppStart, 
         commonAppIam, commonResourceFile,

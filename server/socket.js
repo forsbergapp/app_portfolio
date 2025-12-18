@@ -245,8 +245,7 @@ const socketClientAdd = (newClient) => {
  * @returns {server['server']['response'] & {result?:{count_connected:number} }}
  */
  const socketConnectedCount = parameters => {
-    const logged_in = server.ORM.UtilNumberValue(parameters.data.logged_in);
-    if (logged_in == 1)
+    if (server.ORM.UtilNumberValue(parameters.data.logged_in) == 1)
         return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>  connected.IamUserid != null).length}, type:'JSON'};
     else
         return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>connected.IamUserid== null).length}, type:'JSON'};

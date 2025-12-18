@@ -206,39 +206,6 @@
             const app_toolbar_button_start =  props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_TOOLBAR_BUTTON_START.default)??1;
             const app_toolbar_button_framework = props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_TOOLBAR_BUTTON_FRAMEWORK.default)??1;
             const app_framework = props.methods.UtilNumberValue(server.ORM.OpenApiConfig.APP_FRAMEWORK.default)??1;
-            const app_fonts_ui = `@font-face {
-                                        font-family: "Font Awesome 6 Free";
-                                        font-style: normal;
-                                        font-weight: 400;
-                                        font-display: block;
-                                        src: url(${(await props.methods.commonResourceFile({ 
-                                                        app_id:props.data.app_id, 
-                                                        resource_id:'/common/modules/fontawesome/webfonts/fa-regular-400.woff2',
-                                                        content_type:'font/woff2', 
-                                                        data_app_id:common_app_id})).result.resource}) format("woff2")
-                                    }
-                                    @font-face {
-                                        font-family: "Font Awesome 6 Free";
-                                        font-style: normal;
-                                        font-weight: 900;
-                                        font-display: block;
-                                        src: url(${(await props.methods.commonResourceFile({ 
-                                                        app_id:props.data.app_id, 
-                                                        resource_id:'/common/modules/fontawesome/webfonts/fa-solid-900.woff2',
-                                                        content_type:'font/woff2', 
-                                                        data_app_id:common_app_id})).result.resource}) format("woff2")
-                                    }
-                                    @font-face {
-                                        font-family: "Font Awesome 6 Brands";
-                                        font-style: normal;
-                                        font-weight: 900;
-                                        font-display: block;
-                                        src: url(${(await props.methods.commonResourceFile({ 
-                                                        app_id:props.data.app_id, 
-                                                        resource_id:'/common/modules/fontawesome/webfonts/fa-brands-400.woff2',
-                                                        content_type:'font/woff2', 
-                                                        data_app_id:common_app_id})).result.resource}) format("woff2")
-                                    }`;
             /**@type{server['app']['commonGlobals']} */
             const globals = {
                                 //update COMMON_GLOBAL keys:
@@ -313,8 +280,8 @@
                                                         app_id:props.data.app_id, 
                                                         path:'/apps/common/src/functions/common_crypto.js',
                                                         content_type:'text/javascript'})).toString('base64'),
-                    /*ui fonts saved in globals and also used to display immediately at app start*/
-                    cssFontsStart:  Buffer.from(app_fonts_ui).toString('base64'),
+                    /*Return cached CSS with loaded fonts*/
+                    cssFontsStart:  Buffer.from(server.commonCSSStartUI + server.commonCSSStart).toString('base64'),
                     idToken:        postData.idToken,
                     uuid:           postData.uuid,
                     secret:         postData.secret,

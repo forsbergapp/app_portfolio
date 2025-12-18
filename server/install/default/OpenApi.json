@@ -4793,6 +4793,10 @@
                     "default":"2073600",
                     "description":"Default value 1920*1080 = 2073600"
                 },
+                "IAM_MAX_CONNECTED_CLIENTS":{
+                    "default":"100",
+                    "description":"Max connected clients"
+                },
                 "IAM_SERVER_UPDATE_SECRETS_START":{
                     "default":"1",
                     "description":"1=YES, 0=NO"
