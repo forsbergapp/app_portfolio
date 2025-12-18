@@ -4837,6 +4837,10 @@
                     "default":"",
                     "$ref":"#/components/schemas/parameterDoc/TokenSecretDescription"
                 },
+                "IAM_USER_MAX_LOGIN":{
+                    "default":"2",
+                    "description":"Maximum logins allowed by the same user including admin"
+                },
                 "IAM_USER_PASSWORD_ENCRYPTION_KEY":{
                     "default":"",
                     "description":"32 characters"

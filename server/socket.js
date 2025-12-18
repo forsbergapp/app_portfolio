@@ -11,14 +11,14 @@ const {commonGeodataUser} = await import('../apps/common/src/common.js')
 let SOCKET_CONNECTED_CLIENTS = [];
 
 /**
- * @name socketClientGet
- * @description Socket client get client_id for given id token
+ * @name socketConnectedUserGet
+ * @description Socket get conections for given user
  *              
  * @function
- * @param {string} idtoken
- * @returns {server['socket']['SocketConnectedServer']}
+ * @param {server['ORM']['Object']['IamUser']['Id']} IamUserId
+ * @returns {server['socket']['SocketConnectedServer'][]}
  */
-const socketClientGet = idtoken => SOCKET_CONNECTED_CLIENTS.filter(client => client.IdToken == idtoken)[0];
+const socketConnectedUserGet = IamUserId => SOCKET_CONNECTED_CLIENTS.filter(client => client.IamUserid == IamUserId);
 
 /**
  * @name socketClientAdd
@@ -514,7 +514,7 @@ const socketClientPostMessage = async parameters => {
             res:client.Response});
     }
 };
-export {socketClientGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
+export {socketConnectedUserGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
         socketAdminSend, 
         socketIntervalCheck, socketExpiredTokenSendSSE, CheckOnline, 
         socketClientPostMessage};
