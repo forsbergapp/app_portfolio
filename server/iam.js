@@ -209,65 +209,75 @@ const iamAuthenticateUser = async parameters =>{
      */
     const check_user = async (result, user, token_type) => {     
         if (result == 1){
-            //user authorized access
-            const recordIamUserApp = await iamUserLoginApp({  app_id:parameters.app_id, 
-                                                    data:{  data_app_id:parameters.app_id,
-                                                            iam_user_id:user.Id
-                                                            }});
-            if (recordIamUserApp.result){
-                //authorize access token ADMIN or APP_ACCESS for active account or APP_ACCESS_VERFICATION
-                const jwt_data = iamAuthorizeToken( parameters.app_id, 
-                                                    user.Active==1?token_type:'APP_ACCESS_VERIFICATION', 
-                                                    {   app_id:             parameters.app_id,
-                                                        app_id_token:       iamUtilTokenAppId(parameters.app_id),
-                                                        app_custom_id:      null,
-                                                        iam_user_app_id:    recordIamUserApp.result[0].Id??null,
-                                                        iam_user_id:        user.Id, 
-                                                        iam_user_username:  user.Username,
-                                                        ip:                 parameters.ip, 
-                                                        scope:              'USER'});
-                //Save access info in IAM_APP_ACCESS table
-                /**@type{server['ORM']['Object']['IamAppAccess']} */
-                const file_content = {	
-                        AppId:                  parameters.app_id,
-                        AppIdToken:             iamUtilTokenAppId(parameters.app_id),
-                        Type:                   user.Active==1?token_type:'APP_ACCESS_VERIFICATION',
-                        Res:		            result,
-                        Ip:                     parameters.ip,
-                        AppCustomId:            null,
-                        IamUserAppId:           recordIamUserApp.result[0].Id??null,
-                        IamUserId:              user.Id,
-                        IamUserUsername:        user.Username,
-                        Token:                  jwt_data?jwt_data.token:null,
-                        Ua:                     parameters.user_agent};
-                await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
-                //update info in connected list and then return login result
-                return await server.socket.socketConnectedUpdate(parameters.app_id, 
-                    {   idToken:                parameters.idToken,
-                        iam_user_id:            user.Id,
-                        iam_user_username:      user.Username,
-                        iam_user_type:          user.Type,
-                        token_access:           token_type=='ADMIN'?null:jwt_data?jwt_data.token:null,
-                        token_admin:            token_type=='ADMIN'?jwt_data?jwt_data.token:null:null,
-                        ip:                     parameters.ip,
-                        headers_user_agent:     parameters.user_agent})
-                .then((result_socket)=>{
-                    return  result_socket.http?result_socket:{result:{  iam_user_id:    user.Id,
-                                                                        iam_user_app_id: recordIamUserApp.result[0].Id,
-                                                                        //return only if account is active:
-                                                                        ...(user.Active==1 && {iam_user_username:  user.Username}),
-                                                                        ...(user.Active==1 && {bio:  user.Bio}),
-                                                                        ...(user.Active==1 && {avatar:  user.Avatar}),
-                                                                        ...(user.Active==1 && {IamUserApp: recordIamUserApp.result[0]}),
-                                                                        token_at:       jwt_data?jwt_data.token:null,
-                                                                        exp:            jwt_data?jwt_data.exp:null,
-                                                                        iat:            jwt_data?jwt_data.iat:null,
-                                                                        active:         user.Active}, 
-                                                                    type:'JSON'};
-                });
+            if (server.socket.socketConnectedUserGet(user.Id).length>=(server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_USER_MAX_LOGIN.default)??0))
+                return {http:401,
+                    code:'IAM',
+                    text:iamUtilMessageNotAuthorized(),
+                    developerText:null,
+                    moreInfo:null,
+                    type:'JSON'
+                }
+            else{
+                //user authorized access
+                const recordIamUserApp = await iamUserLoginApp({  app_id:parameters.app_id, 
+                                                        data:{  data_app_id:parameters.app_id,
+                                                                iam_user_id:user.Id
+                                                                }});
+                if (recordIamUserApp.result){
+                    //authorize access token ADMIN or APP_ACCESS for active account or APP_ACCESS_VERFICATION
+                    const jwt_data = iamAuthorizeToken( parameters.app_id, 
+                                                        user.Active==1?token_type:'APP_ACCESS_VERIFICATION', 
+                                                        {   app_id:             parameters.app_id,
+                                                            app_id_token:       iamUtilTokenAppId(parameters.app_id),
+                                                            app_custom_id:      null,
+                                                            iam_user_app_id:    recordIamUserApp.result[0].Id??null,
+                                                            iam_user_id:        user.Id, 
+                                                            iam_user_username:  user.Username,
+                                                            ip:                 parameters.ip, 
+                                                            scope:              'USER'});
+                    //Save access info in IAM_APP_ACCESS table
+                    /**@type{server['ORM']['Object']['IamAppAccess']} */
+                    const file_content = {	
+                            AppId:                  parameters.app_id,
+                            AppIdToken:             iamUtilTokenAppId(parameters.app_id),
+                            Type:                   user.Active==1?token_type:'APP_ACCESS_VERIFICATION',
+                            Res:		            result,
+                            Ip:                     parameters.ip,
+                            AppCustomId:            null,
+                            IamUserAppId:           recordIamUserApp.result[0].Id??null,
+                            IamUserId:              user.Id,
+                            IamUserUsername:        user.Username,
+                            Token:                  jwt_data?jwt_data.token:null,
+                            Ua:                     parameters.user_agent};
+                    await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
+                    //update info in connected list and then return login result
+                    return await server.socket.socketConnectedUpdate(parameters.app_id, 
+                        {   idToken:                parameters.idToken,
+                            iam_user_id:            user.Id,
+                            iam_user_username:      user.Username,
+                            iam_user_type:          user.Type,
+                            token_access:           token_type=='ADMIN'?null:jwt_data?jwt_data.token:null,
+                            token_admin:            token_type=='ADMIN'?jwt_data?jwt_data.token:null:null,
+                            ip:                     parameters.ip,
+                            headers_user_agent:     parameters.user_agent})
+                    .then((result_socket)=>{
+                        return  result_socket.http?result_socket:{result:{  iam_user_id:    user.Id,
+                                                                            iam_user_app_id: recordIamUserApp.result[0].Id,
+                                                                            //return only if account is active:
+                                                                            ...(user.Active==1 && {iam_user_username:  user.Username}),
+                                                                            ...(user.Active==1 && {bio:  user.Bio}),
+                                                                            ...(user.Active==1 && {avatar:  user.Avatar}),
+                                                                            ...(user.Active==1 && {IamUserApp: recordIamUserApp.result[0]}),
+                                                                            token_at:       jwt_data?jwt_data.token:null,
+                                                                            exp:            jwt_data?jwt_data.exp:null,
+                                                                            iat:            jwt_data?jwt_data.iat:null,
+                                                                            active:         user.Active}, 
+                                                                        type:'JSON'};
+                    });
+                }
+                else
+                    return recordIamUserApp;
             }
-            else
-                return recordIamUserApp;
         }
         else{
             //save log for all login attempts  
@@ -307,7 +317,6 @@ const iamAuthenticateUser = async parameters =>{
                                                                 Status:0, 
                                                                 Type:'TOO_MANY_FAILED_LOGIN'});
             }
-            
             return {http:401,
                 code:'IAM',
                 text:iamUtilMessageNotAuthorized(),
@@ -316,7 +325,6 @@ const iamAuthenticateUser = async parameters =>{
                 type:'JSON'
             };
         }
-            
     };
     if(parameters.authorization){       
         //if admin app create user if first time
@@ -343,7 +351,6 @@ const iamAuthenticateUser = async parameters =>{
                                                                     Active:     1
                                                                     }, 'ADMIN'));
         else{
-
             /**@type{server['ORM']['Object']['IamUser'] & {Id:number, Type:string}}*/
             const user =  server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server['ORM']['Object']['IamUser']}*/user)=>user.Username == username)[0];
             if (user && await server.security.securityPasswordCompare(parameters.app_id, password, user.Password)){
