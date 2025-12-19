@@ -456,16 +456,10 @@ const bffDecryptRequest = async parameters =>{
                     URI_path:       parameters.URI_path,
                     query:          parameters.req.query?.parameters ?? '',
                     body:           parameters.req.body,
-                    security_app:   { 
-                                    AppId:          parameters.req.headers['content-type'] ==server.CONTENT_TYPE_SSE?
-                                                        0:
-                                                            parameters.req.headers['app-id']??null,
-                                    AppSignature:   parameters.req.headers['app-signature']??null,
-                                    AppIdToken:     parameters.req.headers['app-id-token']?.replace('Bearer ','')??null
-                                    },
-                    authorization:  parameters.req.headers.authorization, 
+                    security_app:   null,
+                    authorization:  null, 
                     //metadata
-                    ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.socket.remoteAddress, 
+                    ip:             parameters.req.socket.remoteAddress, 
                     user_agent:     parameters.req.headers['user-agent'], 
                     accept_language:parameters.req.headers['accept-language'], 
                     //response
