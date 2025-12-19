@@ -1113,8 +1113,6 @@
  * @property {string} host
  * @property {string} path
  * @property {string} url
- * @property {string} originalUrl
- * @property {string} ip
  * @property {'GET'|'POST'|'DELETE'|'PATCH'|'PUT'} method
  * @property {function} get
  * @property {string} protocol
@@ -1131,7 +1129,6 @@
  * query
  * @property {object} query
  * @property {string} query.parameters
- 
  * @property {{ 'app-id-token':string,
  *              'app-id': number,
  *              'app-signature':string,
@@ -1169,7 +1166,6 @@
  * @property {function} status
  * @property {number} statusCode
  * @property {(Error|string|number|null|object)} statusMessage
- * @property {function} type
  * @property {function} end
  * @property {function} send
  * @property {function} getHeader
