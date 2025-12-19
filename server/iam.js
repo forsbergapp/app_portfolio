@@ -963,7 +963,7 @@ const iamObserveLimitReached = ip =>{
             return false;
     };
 
-    if (BLOCKED_PATHS.includes(parameters.req.originalUrl)){
+    if (BLOCKED_PATHS.includes(parameters.req.url)){
         //Browser path to block without any more action
         statusCode = 401;
         statusMessage=' ';    

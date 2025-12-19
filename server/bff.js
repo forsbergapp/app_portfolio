@@ -396,7 +396,7 @@ const bffDecryptRequest = async parameters =>{
             /**@type{server['ORM']['Object']['IamControlObserve']} */
             const recordObserve = { IamUserId:null,
                                     AppId:parameters.common_app_id,
-                                    Ip:parameters.req.ip.replace('::ffff:',''), 
+                                    Ip:parameters.req.socket.remoteAddress.replace('::ffff:',''), 
                                     UserAgent:parameters.req.headers['user-agent'], 
                                     Host:parameters.req.headers.host, 
                                     AcceptLanguage:parameters.req.headers['accept-language'], 
@@ -451,7 +451,7 @@ const bffDecryptRequest = async parameters =>{
                     endpoint:       'APP',
                     //request
                     host:           parameters.req.headers.host ?? '', 
-                    url:            parameters.req.originalUrl,
+                    url:            parameters.req.url,
                     method:         parameters.req.method,
                     URI_path:       parameters.URI_path,
                     query:          parameters.req.query?.parameters ?? '',
@@ -465,7 +465,7 @@ const bffDecryptRequest = async parameters =>{
                                     },
                     authorization:  parameters.req.headers.authorization, 
                     //metadata
-                    ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.ip, 
+                    ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.socket.remoteAddress, 
                     user_agent:     parameters.req.headers['user-agent'], 
                     accept_language:parameters.req.headers['accept-language'], 
                     //response
@@ -578,7 +578,7 @@ const bffDecryptRequest = async parameters =>{
                                                         AppId:decrypted.headers['app-id'], 
                                                         AppSignature: decrypted.headers['app-signature'],
                                             },
-                                            ip: parameters.req.headers['x-forwarded-for'] || parameters.req.ip,
+                                            ip: parameters.req.headers['x-forwarded-for'] || parameters.req.socket.remoteAddress,
                                             res:parameters.res
                                             })
                                             .then(authenticate=>{
@@ -616,7 +616,7 @@ const bffDecryptRequest = async parameters =>{
                                                                             },
                                                             authorization:  decrypted.headers.Authorization??null, 
                                                             //metadata
-                                                            ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.ip, 
+                                                            ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.socket.remoteAddress, 
                                                             user_agent:     parameters.req.headers['user-agent'], 
                                                             accept_language:parameters.req.headers['accept-language'], 
                                                             //response
@@ -653,10 +653,12 @@ const bffDecryptRequest = async parameters =>{
  * @function
  * @param {server['server']['req']} req
  * @param {server['server']['res']} res
- * @param {number} RequestStart
+ * @param {{Id:string,
+ *          CorrelationId:string,
+ *          RequestStart:number}} RequestData
  * @returns {Promise<*>}
  */
- const bff = async (req, res, RequestStart) =>{
+ const bff = async (req, res, RequestData) =>{
     /**@type{server['ORM']['Object']['OpenApi']} */
     const openApi = server.ORM.db.OpenApi.get({app_id:0}).result;
     const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0;
@@ -668,7 +670,7 @@ const bffDecryptRequest = async parameters =>{
         server.ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestError', 
                             request:{   Req:req,
-                                        ResponseTime:Date.now() - RequestStart,
+                                        ResponseTime:Date.now() - RequestData.RequestStart,
                                         StatusCode:res.statusCode,
                                         StatusMessage:res.statusMessage
                                     },
@@ -710,7 +712,7 @@ const bffDecryptRequest = async parameters =>{
             const OpenApiPathsMatchPublic = bffOpenApiPathMatch({URI_path:URI_path.replace(basePathRESTAPI,''), 
                                                                 openApi:openApi}).paths;
             //access control that stops request if not passing controls
-            if (await server.iam.iamAuthenticateRequest({ip:req.ip, 
+            if (await server.iam.iamAuthenticateRequest({ip:req.socket.remoteAddress, 
                                                         common_app_id:common_app_id,
                                                         OpenApiPathsMatchPublic:OpenApiPathsMatchPublic,
                                                         openApi:openApi,
@@ -759,7 +761,7 @@ const bffDecryptRequest = async parameters =>{
                 else  
                     //control rate limiter using decrypted url
                     if (server.iam.iamAuthenticateRequestRateLimiter({  app_id:common_app_id, 
-                                                                        ip:req.ip, 
+                                                                        ip:req.socket.remoteAddress, 
                                                                         openApi:openApi, 
                                                                         path:bff_parameters.url})){
                         if (bff_parameters.endpoint != 'APP' &&bffOpenApiPathMatch({ URI_path:   
@@ -770,7 +772,7 @@ const bffDecryptRequest = async parameters =>{
                             server.ORM.db.Log.post({  app_id:0, 
                                 data:{  object:'LogRequestInfo', 
                                         request:{   Req:req,
-                                                    ResponseTime:Date.now() - RequestStart,
+                                                    ResponseTime:Date.now() - RequestData.RequestStart,
                                                     StatusCode:res.statusCode,
                                                     StatusMessage:'SSE'
                                                 },

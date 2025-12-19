@@ -85,7 +85,29 @@ class serverClass {
      * @returns {Promise.<*>}
      */
     request = async (req, res)=>{
-        const RequestStart = Date.now();
+        res.on('close',()=>{
+            if (server.iam.iamObserveLimitReached(req.socket.remoteAddress.replace('::ffff:',''))){
+                //do not log blocked ip that could cause unwanted logs
+                res.statusMessage = '';
+                res.end();
+            }
+            else
+                //SSE response time will be time connected until disconnected
+                server.ORM.db.Log.post({  app_id:0, 
+                    data:{  object:'LogRequestInfo', 
+                            request:{   Req:req,
+                                        ResponseTime:Date.now() - RequestData.RequestStart,
+                                        StatusCode:res.statusCode,
+                                        StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                                    },
+                            log:''
+                        }
+                    }).then(() => {
+                        // do not return any StatusMessage to client, this is only used for logging purpose
+                        res.statusMessage = '';
+                        res.end();
+                    });
+        });
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
                 if (req.headers['content-type'] ==this.CONTENT_TYPE_JSON){
@@ -115,56 +137,33 @@ class serverClass {
             });
             
         };
+        /**
+         * @type {{ Id:string,
+         *          CorrelationId:string,
+         *          RequestStart:number}}
+         */
+        const RequestData = { 
+                                Id:             this.security.securityRequestIdCreate(),
+                                CorrelationId:  this.security.securityCorrelationIdCreate(  req.headers.host ??'' +  
+                                                                                            req.socket.remoteAddress + 
+                                                                                            req.method),
+                                RequestStart:   Date.now(),
+                            };
         await read_body().catch(()=>null);
-        req.ip =            req.socket.remoteAddress ??'';
-        req.hostname =      req.headers.host ??'';
         req.path =          req.url??'';
-        req.originalUrl =   req.url;
         /**@ts-ignore */
         req.query =         req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
                             .substring(req.path.indexOf('?')+1)))
                             .reduce((query, param)=>{
                                 const key = {[param[0]] : decodeURIComponent(param[1])};
                                 return {...query, ...key};
-                            }, {}):null;           
-        res.type =          (/**@type{string}*/type)=>{
-                                res.setHeader('Content-Type', type);
-                            };
-        
-        //set headers
-        req.headers['x-request-id'] =  this.security.securityUUIDCreate().replaceAll('-','');
-        if (req.headers.authorization)
-            req.headers['x-correlation-id'] = this.security.securityRequestIdCreate();
-        else
-            req.headers['x-correlation-id'] = this.security.securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
+                            }, {}):null;
         if (server.ORM.OpenApiConfig.IAM_CONTENT_SECURITY_POLICY_ENABLE.default == '1'){
             res.setHeader('content-security-policy', server.ORM.OpenApiConfig.IAM_CONTENT_SECURITY_POLICY.default);
         }
-        res.on('close',()=>{
-            if (server.iam.iamObserveLimitReached(req.ip.replace('::ffff:',''))){
-                //do not log blocked ip that could cause unwanted logs
-                res.statusMessage = '';
-                res.end();
-            }
-            else
-                //SSE response time will be time connected until disconnected
-                server.ORM.db.Log.post({  app_id:0, 
-                    data:{  object:'LogRequestInfo', 
-                            request:{   Req:req,
-                                        ResponseTime:Date.now() - RequestStart,
-                                        StatusCode:res.statusCode,
-                                        StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
-                                    },
-                            log:''
-                        }
-                    }).then(() => {
-                        // do not return any StatusMessage to client, this is only used for logging purpose
-                        res.statusMessage = '';
-                        res.end();
-                    });
-        });
+        
         //Backend for frontend (BFF) start
-        return this.bff.bff(req, res, RequestStart);            
+        return this.bff.bff(req, res, RequestData);            
     };
     /**
      * @name response
@@ -191,13 +190,13 @@ class serverClass {
                 case 'JSON':{
                     if (app_cache_control !='')
                         parameters.res.setHeader('Cache-Control', app_cache_control);
-                    parameters.res.type(this.CONTENT_TYPE_JSON);
+                    parameters.res.setHeader('Content-Type', this.CONTENT_TYPE_JSON);
                     break;
                 }
                 case 'HTML':{
                     if (app_cache_control !='')
                         parameters.res.setHeader('Cache-Control', app_cache_control);
-                    parameters.res.type(this.CONTENT_TYPE_HTML);
+                    parameters.res.setHeader('Content-Type', this.CONTENT_TYPE_HTML);
                     break;
                 }
                 default:{
@@ -226,7 +225,7 @@ class serverClass {
             parameters.res.statusCode = parameters.statusCode;
     
             if (parameters.res.getHeader('Content-Type')==undefined)
-                parameters.res.type(this.CONTENT_TYPE_HTML);
+                parameters.res.setHeader('Content-Type', this.CONTENT_TYPE_HTML);
             
             write(parameters.result);
             parameters.res.end();
