@@ -95,10 +95,26 @@ class serverClass {
                 //SSE response time will be time connected until disconnected
                 server.ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestInfo', 
-                            request:{   Req:req,
-                                        ResponseTime:Date.now() - RequestData.RequestStart,
+                            request:{   Host:req.headers.host,
+                                        Ip:req.socket.remoteAddress,
+                                        RequestId: RequestData.Id,
+                                        CorrelationId:RequestData.CorrelationId,
+                                        Url:req.url,
+                                        HttpInfo:req.httpVersion,
+                                        Method:req.method,
                                         StatusCode:res.statusCode,
-                                        StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                                        StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??'',
+                                        UserAgent:req.headers['user-agent'],
+                                        AcceptLanguage:req.headers['accept-language'],
+                                        Referer:req.headers.referer,
+                                        SizeReceived:req.socket.bytesRead,
+                                        SizeSent:req.socket.bytesWritten,
+                                        ResponseTime:Date.now() - RequestData.RequestStart,
+                                        XAppId:RequestData.XAppId,
+                                        XAppIdAuth:RequestData.XAppIdAuth,
+                                        XUrl:RequestData.XUrl,
+                                        XMethod:RequestData.XMethod,
+                                        Req:null
                                     },
                             log:''
                         }
@@ -140,7 +156,11 @@ class serverClass {
         /**
          * @type {{ Id:string,
          *          CorrelationId:string,
-         *          RequestStart:number}}
+         *          RequestStart:number,
+         *          XAppId:server['ORM']['Object']['App']['Id']|null,
+         *          XAppIdAuth:server['ORM']['Object']['App']['Id']|null,
+         *          XUrl:server['server']['req']['url']|null,
+         *          XMethod:server['server']['req']['method']|null}}
          */
         const RequestData = { 
                                 Id:             this.security.securityRequestIdCreate(),
@@ -148,6 +168,10 @@ class serverClass {
                                                                                             req.socket.remoteAddress + 
                                                                                             req.method),
                                 RequestStart:   Date.now(),
+                                XAppId:         null,
+                                XAppIdAuth:     null,
+                                XUrl:           null,
+                                XMethod:        null
                             };
         await read_body().catch(()=>null);
         req.path =          req.url??'';

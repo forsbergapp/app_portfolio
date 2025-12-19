@@ -183,7 +183,11 @@
  *          accept_language:string,
  *          jwk:JsonWebKey|null,
  *          iv:string|null,
- *          res: server_server_res}} server_bff_parameters
+ *          res:server_server_res,
+ *          XAppId:server['ORM']['Object']['App']['Id']|null,
+ *          XAppIdAuth:server['ORM']['Object']['App']['Id']|null,
+ *          XUrl:server['server']['req']['url']|null,
+ *          XMethod:server['server']['req']['method']|null}} server_bff_parameters
  *
  */
 /**
@@ -1108,9 +1112,6 @@
 /**
  * @description SERVER server_server_req
  * @typedef {Object} server_server_req
- * @property {string} baseUrl
- * @property {string} hostname
- * @property {string} host
  * @property {string} path
  * @property {string} url
  * @property {'GET'|'POST'|'DELETE'|'PATCH'|'PUT'} method
@@ -1144,13 +1145,7 @@
  *              'sec-fetch-dest':string,
  *              'sec-fetch-mode':string,
  *              'sec-fetch-site':string,
- *              'x-request-id':string,
- *              'x-forwarded-for':string,
- *              'x-correlation-id':string,
- *              x?:{app_id:     number|null, 
- *                  app_id_auth:number|null, 
- *                  method:     string|null, 
- *                  url:        string|null}}} headers
+ *              'x-forwarded-for':string}} headers
  * socket
  * @property {object} socket
  * @property {number} socket.bytesRead

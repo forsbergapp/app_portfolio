@@ -441,11 +441,6 @@ const bffDecryptRequest = async parameters =>{
         //Apply OWASP 3.2.1 requirement for APP/ADMIN, accept missing or correct values
         if (await bffAuthenticateRequestKeys({headers:parameters.req.headers, 
                                         openApiConfigKey:'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_APP'})){
-            //save info for logs in the request object
-            parameters.req.headers.x = {app_id:     parameters.req.headers['app-id']??null, 
-                                        app_id_auth:null, 
-                                        method:     parameters.req.method, 
-                                        url:        parameters.req.url};
             return {
                     app_id:         0,
                     endpoint:       'APP',
@@ -465,7 +460,12 @@ const bffDecryptRequest = async parameters =>{
                     //response
                     jwk:            null,
                     iv:             null,
-                    res:            parameters.res
+                    res:            parameters.res,
+                    //x
+                    XAppId:         null,
+                    XAppIdAuth:     null,
+                    XMethod:        null,
+                    XUrl:           null
                 }
             }
         else
@@ -576,11 +576,6 @@ const bffDecryptRequest = async parameters =>{
                                             res:parameters.res
                                             })
                                             .then(authenticate=>{
-                                                //save decrypted info for logs
-                                                parameters.req.headers.x = {app_id:     decrypted?.headers['app-id']??null, 
-                                                                            app_id_auth:authenticate.app_id !=null?1:0, 
-                                                                            method:     decrypted?.method??null, 
-                                                                            url:        decrypted?.url??null};
                                                 return  (authenticate.app_id !=null && decrypted)?
                                                             {
                                                             app_id:         authenticate.app_id,
@@ -616,7 +611,12 @@ const bffDecryptRequest = async parameters =>{
                                                             //response
                                                             jwk:            jwk,
                                                             iv:             iv,
-                                                            res:            parameters.res}:
+                                                            res:            parameters.res,
+                                                            //x
+                                                            XAppId:         decrypted?.headers['app-id'],
+                                                            XAppIdAuth:     authenticate.app_id !=null?1:0,
+                                                            XMethod:        decrypted?.method??null,
+                                                            XUrl:           decrypted?.url??null}:
                                                                 null;
                                             });
                                 })
@@ -649,7 +649,11 @@ const bffDecryptRequest = async parameters =>{
  * @param {server['server']['res']} res
  * @param {{Id:string,
  *          CorrelationId:string,
- *          RequestStart:number}} RequestData
+ *          RequestStart:number,
+ *          XAppId:server['ORM']['Object']['App']['Id']|null,
+ *          XAppIdAuth:server['ORM']['Object']['App']['Id']|null,
+ *          XUrl:server['server']['req']['url']|null,
+ *          XMethod:server['server']['req']['method']|null}} RequestData
  * @returns {Promise<*>}
  */
  const bff = async (req, res, RequestData) =>{
@@ -663,10 +667,26 @@ const bffDecryptRequest = async parameters =>{
         //log error                                        
         server.ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestError', 
-                            request:{   Req:req,
-                                        ResponseTime:Date.now() - RequestData.RequestStart,
+                            request:{   Host:req.headers.host,
+                                        Ip:req.socket.remoteAddress,
+                                        RequestId: RequestData.Id,
+                                        CorrelationId:RequestData.CorrelationId,
+                                        Url:req.url,
+                                        HttpInfo:req.httpVersion,
+                                        Method:req.method,
                                         StatusCode:res.statusCode,
-                                        StatusMessage:res.statusMessage
+                                        StatusMessage:res.statusMessage,
+                                        UserAgent:req.headers['user-agent'],
+                                        AcceptLanguage:req.headers['accept-language'],
+                                        Referer:req.headers.referer,
+                                        SizeReceived:req.socket.bytesRead,
+                                        SizeSent:req.socket.bytesWritten,
+                                        ResponseTime:Date.now() - RequestData.RequestStart,
+                                        XAppId:RequestData.XAppId,
+                                        XAppIdAuth:RequestData.XAppIdAuth,
+                                        XUrl:RequestData.XUrl,
+                                        XMethod:RequestData.XMethod,
+                                        Req:null
                                     },
                             log:'PayloadTooLargeError'
                         }
@@ -731,6 +751,14 @@ const bffDecryptRequest = async parameters =>{
                                                                 req:req, 
                                                                 res:res, 
                                                                 openApi:openApi});
+                /**@ts-ignore */
+                RequestData.XAppId = bff_parameters?.XAppId;
+                /**@ts-ignore */
+                RequestData.XAppIdAuth = bff_parameters?.XAppIdAuth;
+                /**@ts-ignore */
+                RequestData.XMethod = bff_parameters?.XMethod;
+                /**@ts-ignore */
+                RequestData.XUrl = bff_parameters?.XUrl;
                 //if decrypt failed, authentication failed or font
                 if (bff_parameters==null || bff_parameters==1){
                     if (bff_parameters==1){
@@ -765,10 +793,26 @@ const bffDecryptRequest = async parameters =>{
                             //SSE, log since response is open and log again when closing
                             server.ORM.db.Log.post({  app_id:0, 
                                 data:{  object:'LogRequestInfo', 
-                                        request:{   Req:req,
-                                                    ResponseTime:Date.now() - RequestData.RequestStart,
+                                        request:{   Host:req.headers.host,
+                                                    Ip:req.socket.remoteAddress,
+                                                    RequestId: RequestData.Id,
+                                                    CorrelationId:RequestData.CorrelationId,
+                                                    Url:req.url,
+                                                    HttpInfo:req.httpVersion,
+                                                    Method:req.method,
                                                     StatusCode:res.statusCode,
-                                                    StatusMessage:'SSE'
+                                                    StatusMessage:'SSE',
+                                                    UserAgent:req.headers['user-agent'],
+                                                    AcceptLanguage:req.headers['accept-language'],
+                                                    Referer:req.headers.referer,
+                                                    SizeReceived:req.socket.bytesRead,
+                                                    SizeSent:req.socket.bytesWritten,
+                                                    ResponseTime:Date.now() - RequestData.RequestStart,
+                                                    XAppId:RequestData.XAppId,
+                                                    XAppIdAuth:RequestData.XAppIdAuth,
+                                                    XUrl:RequestData.XUrl,
+                                                    XMethod:RequestData.XMethod,
+                                                    Req:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.LOG_REQUEST_LEVEL.default)==2?req:null
                                                 },
                                         log:''
                                     }

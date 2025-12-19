@@ -338,10 +338,26 @@ const getFiles = async () => {
  *                                  'LogServerError'|
  *                                  'LogBffInfo'|
  *                                  'LogBffError'>,
- *                  request?:{  Req:server['server']['req'],
- *                              ResponseTime:number,
- *                              StatusCode:number,
- *                              StatusMessage:string | number | object | Error | null},
+ *                  request?:{  Host:       	server['server']['req']['headers']['host'],
+ *                              Ip:		        server['server']['req']['socket']['remoteAddress'],
+ *                              RequestId:		string,
+ *                              CorrelationId:	string,
+ *                              Url:			server['server']['req']['url'],
+ *                              HttpInfo:		server['server']['req']['httpVersion'],
+ *                              Method:			server['server']['req']['method'],
+ *                              StatusCode:		server['server']['res']['statusCode'],
+ *                              StatusMessage:	server['server']['res']['statusMessage'],
+ *                              UserAgent:		server['server']['req']['headers']['user-agent'], 
+ *                              AcceptLanguage:	server['server']['req']['headers']['accept-language'], 
+ *                              Referer:		server['server']['req']['headers']['referer'], 
+ *                              SizeReceived:	server['server']['req']['socket']['bytesRead'],
+ *                              SizeSent:		server['server']['req']['socket']['bytesWritten'],
+ *                              ResponseTime:	number,
+ *                              XAppId:			server['ORM']['Object']['App']['Id']|null,
+ *                              XAppIdAuth:		server['ORM']['Object']['App']['Id']|null,
+ *                              XUrl:			server['server']['req']['url']|null,
+ *                              XMethod:		server['server']['req']['method']|null,
+ *                              Req:            server['server']['req']|null},
  *                  bff?:{      Service:string,
  *                              Method:string,
  *                              Url:string,
@@ -453,32 +469,32 @@ const post = async parameters => {
             };
             const request_level = server.ORM.OpenApiConfig.LOG_REQUEST_LEVEL.default; 
             if (request_level=='1'||request_level=='2'){
-                log = { Host:               parameters.data.request?.Req.headers.host,
-                        AppId:              parameters.data.request?.Req.headers.x?.app_id,
-                        AppIdAuth:          parameters.data.request?.Req.headers.x?.app_id_auth,
-                        Ip:                 parameters.data.request?.Req.socket.remoteAddress,
-                        RequestId:          parameters.data.request?.Req.headers['x-request-id'],
-                        CorrelationId:      parameters.data.request?.Req.headers['x-correlation-id'],
-                        Url:                parameters.data.request?.Req.url,
-                        XUrl:               parameters.data.request?.Req.headers.x?.url,
-                        HttpInfo:          'HTTP/' + parameters.data.request?.Req.httpVersion,
-                        Method:             parameters.data.request?.Req.method,
-                        XMethod:            parameters.data.request?.Req.headers.x?.method,
+                log = { Host:               parameters.data.request?.Host,
+                        AppId:              parameters.data.request?.XAppId,
+                        AppIdAuth:          parameters.data.request?.XAppIdAuth,
+                        Ip:                 parameters.data.request?.Ip,
+                        RequestId:          parameters.data.request?.RequestId,
+                        CorrelationId:      parameters.data.request?.CorrelationId,
+                        Url:                parameters.data.request?.Url,
+                        XUrl:               parameters.data.request?.XUrl,
+                        HttpInfo:          'HTTP/' + parameters.data.request?.HttpInfo,
+                        Method:             parameters.data.request?.Method,
+                        XMethod:            parameters.data.request?.XMethod,
                         StatusCode:         parameters.data.request?.StatusCode,
                         StatusMessage:      parameters.data.request?.StatusMessage,
-                        UserAgent:          parameters.data.request?.Req.headers['user-agent'], 
-                        AcceptLanguage:     parameters.data.request?.Req.headers['accept-language'], 
-                        Referer:            parameters.data.request?.Req.headers.referer,
-                        SizeReceived:       parameters.data.request?.Req.socket.bytesRead,
-                        SizeSent:           parameters.data.request?.Req.socket.bytesWritten,
+                        UserAgent:          parameters.data.request?.UserAgent, 
+                        AcceptLanguage:     parameters.data.request?.AcceptLanguage, 
+                        Referer:            parameters.data.request?.Referer,
+                        SizeReceived:       parameters.data.request?.SizeReceived,
+                        SizeSent:           parameters.data.request?.SizeSent,
                         ResponseTime:       parameters.data.request?.ResponseTime,
                         Logtext:            parameters.data.object=='LogRequestInfo'?
-                                                (request_level=='1'?
-                                                    '':
-                                                        'req:' + JSON.stringify(Object.assign({}, parameters.data.request?.Req), getCircularReplacer())): 
-                                            parameters.data.object=='LogRequestError'?
-                                                (parameters.data.log.status + '-' + parameters.data.log.message):
-                                                    ''
+                                                (parameters.data.request?.Req?
+                                                    'req:' + JSON.stringify(Object.assign({}, parameters.data.request?.Req), getCircularReplacer()):
+                                                        ''):
+                                                parameters.data.object=='LogRequestError'?
+                                                    (parameters.data.log.status + '-' + parameters.data.log.message):
+                                                        ''
                     };
                 log_object = parameters.data.object;
             }
