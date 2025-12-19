@@ -104,6 +104,8 @@ const update = async parameters => {
                                         data:OpenApi}})
             .then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
                     if (result.AffectedRows>0){
+                        //Update OpenApi cache
+                        server.ORM.OpenApiServers = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{}}).result;
                         server.ORM.OpenApiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
                         return {result:result, type:'JSON'};
                     }

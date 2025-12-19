@@ -89,8 +89,8 @@ const template = props => ` <div id='report'>
 const component = async props => {
 
     const PROTOCOL = 'http://';
-    const HOST = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.host.default;
-    const PORT = server.ORM.UtilNumberValue(server.ORM.db.OpenApi.getViewServers({app_id:0, data:{pathType:'APP'}}).result[0].variables.port.default);
+    const HOST = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.host.default;
+    const PORT = server.ORM.UtilNumberValue(server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default);
     const test = await import('../../../../test/test.js');
     class Benchmark {
         /**
