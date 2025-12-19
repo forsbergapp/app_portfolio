@@ -28,7 +28,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppModuleQueue
  * @returns {Promise.<server['server']['response'] & {result?:{resource:string}}>}
  */
 const getResult = async parameters => {
-    return {result:{resource:(await fs.promises.readFile(server.ORM.serverProcess.cwd() + `/data/${server.ORM.OpenApiConfig.SERVER_PATH_JOBS.default}/${parameters.resource_id}.html`)).toString()}, 
+    return {result:{resource:(await fs.promises.readFile(server.ORM.serverProcess.cwd() + `/data/${server.ORM.OpenApiComponentParameters.config.SERVER_PATH_JOBS.default}/${parameters.resource_id}.html`)).toString()}, 
             type:'JSON'};
 };
 /**
@@ -84,7 +84,7 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const postResult = async (app_id, id, result) =>{
-    await fs.promises.writeFile(server.ORM.serverProcess.cwd() + `/data/${server.ORM.OpenApiConfig.SERVER_PATH_JOBS.default}/${id}.html`, result,  'utf8');
+    await fs.promises.writeFile(server.ORM.serverProcess.cwd() + `/data/${server.ORM.OpenApiComponentParameters.config.SERVER_PATH_JOBS.default}/${id}.html`, result,  'utf8');
     return {result:{AffectedRows:1}, type:'JSON'};
 };
 /**

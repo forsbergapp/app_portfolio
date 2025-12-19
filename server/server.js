@@ -182,8 +182,8 @@ class serverClass {
                                 const key = {[param[0]] : decodeURIComponent(param[1])};
                                 return {...query, ...key};
                             }, {}):null;
-        if (server.ORM.OpenApiConfig.IAM_CONTENT_SECURITY_POLICY_ENABLE.default == '1'){
-            res.setHeader('content-security-policy', server.ORM.OpenApiConfig.IAM_CONTENT_SECURITY_POLICY.default);
+        if (server.ORM.OpenApiComponentParameters.config.IAM_CONTENT_SECURITY_POLICY_ENABLE.default == '1'){
+            res.setHeader('content-security-policy', server.ORM.OpenApiComponentParameters.config.IAM_CONTENT_SECURITY_POLICY.default);
         }
         
         //Backend for frontend (BFF) start
@@ -209,7 +209,7 @@ class serverClass {
          * @param {server['server']['response']['type']} type
          */
         const setType = async type => {
-            const app_cache_control =  server.ORM.OpenApiConfig.APP_CACHE_CONTROL.default;
+            const app_cache_control =  server.ORM.OpenApiComponentParameters.config.APP_CACHE_CONTROL.default;
             switch (type){
                 case 'JSON':{
                     if (app_cache_control !='')
@@ -431,7 +431,7 @@ class serverClass {
      */
     postServer = () =>{
         /**@type{string} */
-        const NETWORK_INTERFACE = server.ORM.OpenApiConfig.SERVER_NETWORK_INTERFACE.default;
+        const NETWORK_INTERFACE = server.ORM.OpenApiComponentParameters.config.SERVER_NETWORK_INTERFACE.default;
         /**@type{string} */
         const PORT_APP = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default;
         /**@type{string} */
@@ -530,10 +530,10 @@ class serverCircuitBreakerClass {
         /**@type{[index:any][*]} */
         this.states = {};
                                                         
-        this.requestTimeout =       server.ORM.OpenApiConfig.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS.default ?? 20;
-        this.requestTimeoutAdmin =  server.ORM.OpenApiConfig.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES.default ?? 60;
-        this.failureThreshold =     server.ORM.OpenApiConfig.SERVER_CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS.default ?? 5;
-        this.cooldownPeriod =       server.ORM.OpenApiConfig.SERVER_CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS.default ?? 10;
+        this.requestTimeout =       server.ORM.OpenApiComponentParameters.config.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS.default ?? 20;
+        this.requestTimeoutAdmin =  server.ORM.OpenApiComponentParameters.config.SERVER_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES.default ?? 60;
+        this.failureThreshold =     server.ORM.OpenApiComponentParameters.config.SERVER_CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS.default ?? 5;
+        this.cooldownPeriod =       server.ORM.OpenApiComponentParameters.config.SERVER_CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS.default ?? 10;
 
     }
     /**
@@ -703,7 +703,7 @@ const serverStart = async () =>{
         //Startup functions
     
         //Update secrets
-        if (server.ORM.OpenApiConfig.IAM_SERVER_UPDATE_SECRETS_START.default=='1')
+        if (server.ORM.OpenApiComponentParameters.config.IAM_SERVER_UPDATE_SECRETS_START.default=='1')
             await server.installation.updateConfigSecrets();
 
         //common font css contain many font urls, return css file with each url replaced with a secure url

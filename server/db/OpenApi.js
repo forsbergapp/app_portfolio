@@ -19,24 +19,6 @@ const get = parameters => {
 };
 
 /**
- * @name getViewConfig
- * @description Returns #/compomnents/parameters/config or given parameter
- * @function
- * @param {{app_id:number,
- *          data:{parameter?:string|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi']['components']['parameters']['config'] }}
- */
-const getViewConfig = parameters =>{
-    return parameters.data.parameter!=null?
-        //return value
-        {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).components.parameters.config[parameters.data.parameter]?.default, 
-                type:'JSON'}:
-            //return all configuration
-            {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).components.parameters.config,
-                    type:'JSON'};
-}
-
-/**
  * @name getViewServers
  * @description Returns #/servers for given pathType or all servers without variables.config for each server
  * @function
@@ -105,8 +87,7 @@ const update = async parameters => {
             .then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
                     if (result.AffectedRows>0){
                         //Update OpenApi cache
-                        server.ORM.OpenApiServers = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{}}).result;
-                        server.ORM.OpenApiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
+                        server.ORM.setOpenApiCache();
                         return {result:result, type:'JSON'};
                     }
                     else
@@ -177,4 +158,4 @@ const updateServersVariables = async parameters =>{
         return server.ORM.getError(parameters.app_id, 404);
 }
 
-export{ get,getViewConfig, getViewServers, getViewWithoutConfig, update, updateConfig, updateServersVariables};
+export{ get, getViewServers, getViewWithoutConfig, update, updateConfig, updateServersVariables};
