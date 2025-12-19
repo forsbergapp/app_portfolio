@@ -264,7 +264,7 @@ const markdownRender = async parameters =>{
                                 .replaceAll('@{MODULE}',            parameters.module ??'')
                                 .replaceAll('@{SOURCE_LINK}',       parameters.module ??'')
                                 //metadata tags                            
-                                .replaceAll('@{SERVER_HOST}',       server.ORM.db.OpenApi.getViewServers({app_id:parameters.app_id, data:{pathType:'APP'}}).result[0].variables.host.default??'')
+                                .replaceAll('@{SERVER_HOST}',       server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.host.default??'')
                                 .replaceAll('@{APP_COPYRIGHT}',     server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].Copyright)
                         );
             

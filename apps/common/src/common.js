@@ -525,12 +525,10 @@ const commonCssFonts = async (base64=false)=>{
  * @returns {Promise.<boolean>}
  */
 const commonAppStart = async (app_id) =>{
-    /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-    const openapiConfig = server.ORM.db.OpenApi.get({app_id:0}).result.components.parameters.config;
-    if (server.ORM.UtilNumberValue(openapiConfig.APP_COMMON_APP_ID.default)!=null &&
-        openapiConfig.SERVER_MAINTENANCE.default==0 &&
+    if (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)!=null &&
+        server.ORM.OpenApiConfig.SERVER_MAINTENANCE.default==0 &&
         server.ORM.db.App.get({ app_id:app_id, 
-                                resource_id:server.ORM.UtilNumberValue(openapiConfig.APP_START_APP_ID.default)??0}).result[0].Status =='ONLINE')
+                                resource_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_START_APP_ID.default)??0}).result[0].Status =='ONLINE')
             return true;
     else
         return false;
@@ -561,7 +559,7 @@ const commonAppStart = async (app_id) =>{
  */
 const commonResourceFile = async parameters =>{
     const resource_directory = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].Path;
-    const resource_path = parameters.data_app_id==server.ORM.UtilNumberValue(server.ORM.db.OpenApi.get({app_id:0}).result.components.parameters.config.APP_COMMON_APP_ID.default)?
+    const resource_path = parameters.data_app_id==server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)?
                             parameters.resource_id.replace('/common', ''):
                                 parameters.resource_id;
     switch (true){
@@ -864,7 +862,7 @@ const commonAppReportQueue = async parameters =>{
         const user = server.ORM.db.IamUser.get(  parameters.app_id, 
                                             server.ORM.UtilNumberValue(server.iam.iamUtilTokenGet(  parameters.app_id, 
                                                                                         parameters.authorization, 
-                                                                                        parameters.app_id==server.ORM.UtilNumberValue(server.ORM.db.OpenApi.get({app_id:0}).result.components.parameters.config.APP_ADMIN_APP_ID.default)?
+                                                                                        parameters.app_id==server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)?
                                                                                                                                                         'ADMIN':
                                                                                                                                                             /**@ts-ignore */
                                                                                                                                                             'APP_ACCESS').iam_user_id)).result[0];
@@ -1025,24 +1023,22 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                     apps:[]};
     }
     else{
-        /**@type{server['ORM']['Object']['OpenApi']} */
-        const openApi = server.ORM.db.OpenApi.get({app_id:0}).result;
         /**@type{server['ORM']['Object']['App']['Id'][]} */
-        const apps = server.ORM.db.App.get({app_id:server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0, resource_id:null})
+        const apps = server.ORM.db.App.get({app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0, resource_id:null})
                     .result.map((/**@type{server['ORM']['Object']['App']}*/app)=>{return app.Id;});
         if (endpoint !=null && ['MICROSERVICE', 'MICROSERVICE_AUTH'].includes(endpoint))
             return {admin:false, 
-                    app_id:server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default),
-                    app_id_token:server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default),
+                    app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
+                    app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
                     //all apps
                     apps:apps};
         else
-            if ([openApi.servers.filter(row=>row['x-type'].default=='ADMIN')[0].variables.port.default]
+            if ([server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='ADMIN')[0].variables.port.default]
                                     .includes(host.split(':')[host.split(':').length-1]))
                 return {
                         admin:true,
-                        app_id:server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_ADMIN_APP_ID.default),
-                        app_id_token:server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_ADMIN_APP_ID.default),
+                        app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default),
+                        app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default),
                         //all apps
                         apps:apps
                 };
@@ -1050,8 +1046,8 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                 if (endpoint==null)
                     return {
                         admin:false,
-                        app_id:server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default),
-                        app_id_token:server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default),
+                        app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
+                        app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
                         //no apps
                         apps:[]
                     };
@@ -1059,9 +1055,9 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                     return {
                             admin:false,
                             app_id:server.ORM.UtilNumberValue(security?.AppId)??0,
-                            app_id_token:server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default),
+                            app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
                             //all apps except admin
-                            apps:apps.filter(id=>id != server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default))
+                            apps:apps.filter(id=>id != server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default))
                     };
     }
     
@@ -1213,7 +1209,7 @@ const commonApp = async parameters =>{
             else{
                 const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)??1;
                 const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
-                const basePathRESTAPI = server.ORM.db.OpenApi.getViewServers({app_id:common_app_id, data:{pathType:'REST_API'}}).result[0].variables.basePath.default
+                const basePathRESTAPI = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='REST_API')[0].variables.basePath.default
                 const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
                                     admin_app_id:
                                         common_app_id;

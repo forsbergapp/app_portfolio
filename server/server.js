@@ -409,11 +409,11 @@ class serverClass {
         /**@type{string} */
         const NETWORK_INTERFACE = server.ORM.OpenApiConfig.SERVER_NETWORK_INTERFACE.default;
         /**@type{string} */
-        const PORT_APP = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'APP'}}).result[0].variables.port.default;
+        const PORT_APP = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default;
         /**@type{string} */
-        const PORT_ADMIN = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'ADMIN'}}).result[0].variables.port.default;
+        const PORT_ADMIN = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='ADMIN')[0].variables.port.default;
         /**@type{string} */
-        const PORT_DUMMY = server.ORM.db.OpenApi.getViewServers({app_id:0,data:{pathType:'NOHANGING_HTTPS'}}).result[0].variables.port.default;
+        const PORT_DUMMY = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='NOHANGING_HTTPS')[0].variables.port.default;
         //Start http server and listener for apps
         this.server_app = http.createServer((req,res)=>server.request(
                                             /**@ts-ignore*/

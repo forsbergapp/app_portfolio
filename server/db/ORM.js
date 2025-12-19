@@ -129,6 +129,8 @@ class ORM_class {
         this.db;
         this.init = this.InitAsync;
         this.serverProcess = serverProcess;
+        /**@type{server['ORM']['Object']['OpenApi']['servers']} */
+        this.OpenApiServers;
         /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
         this.OpenApiConfig;
     }
@@ -199,7 +201,8 @@ class ORM_class {
                     file_db_record.CacheContent = file?file:null;
                 }
             }
-            //cache OpenConfig parameters
+            //cache frequent used OpenConfig 
+            this.OpenApiServers = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{}}).result;
             this.OpenApiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
             DB.external = {
                         COUNTRY:		    await this.postExternal('COUNTRY'),
