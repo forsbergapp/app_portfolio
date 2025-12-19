@@ -85,6 +85,7 @@ class serverClass {
      * @returns {Promise.<*>}
      */
     request = async (req, res)=>{
+        const RequestStart = Date.now();
         const read_body = async () =>{
             return new Promise((resolve,reject)=>{
                 if (req.headers['content-type'] ==this.CONTENT_TYPE_JSON){
@@ -131,31 +132,39 @@ class serverClass {
                             };
         
         //set headers
-        res.setHeader('x-response-time', serverProcess.hrtime());
         req.headers['x-request-id'] =  this.security.securityUUIDCreate().replaceAll('-','');
         if (req.headers.authorization)
             req.headers['x-correlation-id'] = this.security.securityRequestIdCreate();
         else
             req.headers['x-correlation-id'] = this.security.securityCorrelationIdCreate(req.hostname +  req.ip + req.method);
-        res.setHeader('Access-Control-Max-Age','5');
-        res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-        
         if (server.ORM.OpenApiConfig.IAM_CONTENT_SECURITY_POLICY_ENABLE.default == '1'){
             res.setHeader('content-security-policy', server.ORM.OpenApiConfig.IAM_CONTENT_SECURITY_POLICY.default);
         }
-        res.setHeader('cross-origin-opener-policy','same-origin');
-        res.setHeader('cross-origin-resource-policy',	'same-origin');
-        res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
-        //res.setHeader('x-content-type-options', 'nosniff');
-        res.setHeader('x-dns-prefetch-control', 'off');
-        res.setHeader('x-download-options', 'noopen');
-        res.setHeader('x-frame-options', 'SAMEORIGIN');
-        res.setHeader('x-permitted-cross-domain-policies', 'none');
-        res.setHeader('x-xss-protection', '0');
-    
+        res.on('close',()=>{
+            if (server.iam.iamObserveLimitReached(req.ip.replace('::ffff:',''))){
+                //do not log blocked ip that could cause unwanted logs
+                res.statusMessage = '';
+                res.end();
+            }
+            else
+                //SSE response time will be time connected until disconnected
+                server.ORM.db.Log.post({  app_id:0, 
+                    data:{  object:'LogRequestInfo', 
+                            request:{   Req:req,
+                                        ResponseTime:Date.now() - RequestStart,
+                                        StatusCode:res.statusCode,
+                                        StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
+                                    },
+                            log:''
+                        }
+                    }).then(() => {
+                        // do not return any StatusMessage to client, this is only used for logging purpose
+                        res.statusMessage = '';
+                        res.end();
+                    });
+        });
         //Backend for frontend (BFF) start
-        return this.bff.bff(req, res);            
+        return this.bff.bff(req, res, RequestStart);            
     };
     /**
      * @name response
@@ -447,17 +456,6 @@ class serverClass {
         this.server_dummy.close();
         this.postServer();
     }
-    /**
-     * @name UtilResponseTime
-     * @description Calculate responsetime
-     * @method
-     * @param {server['server']['res']} res
-     * @returns {number}
-     */
-    UtilResponseTime = res => {
-        const diff = serverProcess.hrtime(res.getHeader('x-response-time'));
-        return diff[0] * 1e3 + diff[1] * 1e-6;
-    };
     /**
      * @name UtilAppFilename
      * @description Returns filename/module used
