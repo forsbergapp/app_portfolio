@@ -653,35 +653,14 @@ const bffDecryptRequest = async parameters =>{
  * @function
  * @param {server['server']['req']} req
  * @param {server['server']['res']} res
+ * @param {number} RequestStart
  * @returns {Promise<*>}
  */
- const bff = async (req, res) =>{
+ const bff = async (req, res, RequestStart) =>{
     /**@type{server['ORM']['Object']['OpenApi']} */
     const openApi = server.ORM.db.OpenApi.get({app_id:0}).result;
     const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0;
-    res.on('close',()=>{
-        if (server.iam.iamObserveLimitReached(common_app_id,openApi, req.ip.replace('::ffff:',''))){
-            //do not log blocked ip that could cause unwanted logs
-            res.statusMessage = '';
-            res.end();
-        }
-        else
-            //SSE response time will be time connected until disconnected
-            server.ORM.db.Log.post({  app_id:0, 
-                data:{  object:'LogRequestInfo', 
-                        request:{   Req:req,
-                                    ResponseTime:server.UtilResponseTime(res),
-                                    StatusCode:res.statusCode,
-                                    StatusMessage:typeof res.statusMessage == 'string'?res.statusMessage:JSON.stringify(res.statusMessage)??''
-                                },
-                        log:''
-                    }
-                }).then(() => {
-                    // do not return any StatusMessage to client, this is only used for logging purpose
-                    res.statusMessage = '';
-                    res.end();
-                });
-    });
+    
     // check JSON maximum size, parameter uses megabytes (MB)
     if (req.body && JSON.stringify(req.body).length/1024/1024 > 
             (server.ORM.UtilNumberValue((openApi.components.parameters.config.SERVER_JSON_LIMIT.default ?? '0').replace('MB',''))??0)){
@@ -689,7 +668,7 @@ const bffDecryptRequest = async parameters =>{
         server.ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestError', 
                             request:{   Req:req,
-                                        ResponseTime:server.UtilResponseTime(res),
+                                        ResponseTime:Date.now() - RequestStart,
                                         StatusCode:res.statusCode,
                                         StatusMessage:res.statusMessage
                                     },
@@ -791,7 +770,7 @@ const bffDecryptRequest = async parameters =>{
                             server.ORM.db.Log.post({  app_id:0, 
                                 data:{  object:'LogRequestInfo', 
                                         request:{   Req:req,
-                                                    ResponseTime:server.UtilResponseTime(res),
+                                                    ResponseTime:Date.now() - RequestStart,
                                                     StatusCode:res.statusCode,
                                                     StatusMessage:'SSE'
                                                 },

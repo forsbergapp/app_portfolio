@@ -869,17 +869,15 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
  * @name iamObserveLimitReached
  * @description check if observe limit reached for given IP
  * @function
- * @param {number} app_id
- * @param {server['ORM']['Object']['OpenApi']} openApi
  * @param {string} ip 
  * @returns {boolean}
  */
-const iamObserveLimitReached = (app_id, openApi, ip) =>{
-    return server.ORM.db.IamControlObserve.get(app_id, 
+const iamObserveLimitReached = ip =>{
+    return server.ORM.db.IamControlObserve.get(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default, 
                                                 null).result
                 .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
                         row.Ip==ip).length>
-                                            (server.ORM.UtilNumberValue(openApi.components.parameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default)??0)
+                                            (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default)??0)
 }
 /**
  * @name iamAuthenticateRequest
@@ -975,7 +973,7 @@ const iamObserveLimitReached = (app_id, openApi, ip) =>{
         let fail_block = false;
         const ip_v4 = parameters.ip.replace('::ffff:','');
 
-        if (iamObserveLimitReached(parameters.common_app_id,parameters.openApi, ip_v4)){
+        if (iamObserveLimitReached(ip_v4)){
             //use 401 to avoid more explanation
             statusCode = 401, 
             statusMessage= '';
@@ -1048,7 +1046,7 @@ const iamObserveLimitReached = (app_id, openApi, ip) =>{
                     fail ++;
                 }
                 if (fail>0){
-                    if (fail_block || iamObserveLimitReached(parameters.common_app_id, parameters.openApi, ip_v4)){
+                    if (fail_block || iamObserveLimitReached(ip_v4)){
                         await server.ORM.db.IamControlObserve.post(parameters.common_app_id,
                                                             {   ...record,
                                                                 Status:1, 

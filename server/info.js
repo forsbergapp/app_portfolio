@@ -20,10 +20,6 @@ class ClassServerProcess {
         };
     };
     /**
-     * @param {*} [value]
-     */
-    hrtime = value => process.hrtime(value);
-    /**
      * @param {string|symbol} event
      * @param {(...args: any[]) => void} listener
      */
