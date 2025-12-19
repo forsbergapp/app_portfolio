@@ -131,8 +131,10 @@ class ORM_class {
         this.serverProcess = serverProcess;
         /**@type{server['ORM']['Object']['OpenApi']['servers']} */
         this.OpenApiServers;
-        /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']['config']} */
-        this.OpenApiConfig;
+        /**@type{server['ORM']['Object']['OpenApi']['paths']} */
+        this.OpenApiPaths;
+        /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']} */
+        this.OpenApiComponentParameters;
     }
     /**
      * @name InitAsync
@@ -202,8 +204,7 @@ class ORM_class {
                 }
             }
             //cache frequent used OpenConfig 
-            this.OpenApiServers = server.ORM.db.OpenApi.getViewServers({app_id:0, data:{}}).result;
-            this.OpenApiConfig = server.ORM.db.OpenApi.getViewConfig({app_id:0, data:{}}).result;
+            this.setOpenApiCache();
             DB.external = {
                         COUNTRY:		    await this.postExternal('COUNTRY'),
                         LOCALE: 		    await this.postExternal('LOCALE'),
@@ -212,7 +213,18 @@ class ORM_class {
                 };
         }
     };
-    
+    /**
+     * @name setOpenApiCache
+     * @description Sets OpenApi Cache for frequent used object
+     * @method
+     * @returns {void}
+     */
+    setOpenApiCache = () =>{
+        const OpenApi = server.ORM.db.OpenApi.get({app_id:0}).result;
+        this.OpenApiServers = OpenApi.servers;
+        this.OpenApiPaths = OpenApi.paths;
+        this.OpenApiComponentParameters = OpenApi.components.parameters;
+    }
     /**
      * @name formatContent
      * @description Formats content
@@ -900,7 +912,7 @@ class ORM_class {
                  * 
                  * Uses partition with arrays to speed up searches
                  */
-                return server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_ENABLE_GEOLOCATION.default)==1?
+                return server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.IAM_ENABLE_GEOLOCATION.default)==1?
                         await loadGeolocation(object):
                             null;
             }

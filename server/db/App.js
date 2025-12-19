@@ -29,9 +29,9 @@ const getViewInfo = async parameters =>{
     const apps = get({app_id:parameters.app_id, resource_id:null}).result
                     //do not show common app id, admin app id or start app id
                     .filter((/**@type{server['ORM']['Object']['App']}*/app)=>
-                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_START_APP_ID.default)) &&
-                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)) &&
-                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)));
+                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_START_APP_ID.default)) &&
+                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)) &&
+                        app.Id != (server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default)));
     for (const app of apps){
         app.Logo = (await server.app_common.commonResourceFile({app_id:parameters.app_id, 
                                                     resource_id:app.Logo, 

@@ -22,7 +22,7 @@ const {default:ComponentMaintenance} = await import('../apps/common/src/componen
  * @returns {Promise.<void>}
  */
 const bffConnect = async parameters =>{
-    const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
+    const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??0;
     await server.socket.socketConnect({
         app_id:common_app_id,
            idToken:parameters.idToken,
@@ -57,7 +57,7 @@ const bffExternal = async parameters =>{
                url:                parameters.url,
                host:               null,
                port:               null,
-               admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default),
+               admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default),
                path:               null,
                body:               parameters.body,
                method:             parameters.method,
@@ -120,7 +120,7 @@ const bffMicroservice = async parameters =>{
                     url:                null,
                     host:               ServiceRegistry.ServerHost,
                     port:               ServiceRegistry.ServerPort,
-                    admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default),
+                    admin:              parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default),
                     path:               `/api/v${ServiceRegistry.RestApiVersion}?${query}`,
                     body:               parameters.data,
                     method:             parameters.method,
@@ -201,7 +201,7 @@ const bffResponse = async parameters =>{
                                     server.security.securityTransportEncrypt({app_id:parameters.app_id??0, data:data, jwk:parameters.jwk, iv:parameters.iv }):
                                         data;
 
-    const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default);
+    const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default);
     if (parameters.result_request.http){    
         //ISO20022 error format
         const message = {error:{
@@ -272,9 +272,9 @@ const bffResponse = async parameters =>{
                         }
                     }
                     //records limit in controlled by server, apps can not set limits                                                     
-                    const limit = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_LIMIT_RECORDS.default??0);
+                    const limit = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_LIMIT_RECORDS.default??0);
                     //Admin shows all records except for pagination, apps use always APP_LIMIT_RECORDS
-                    const admin_limit = parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)?
+                    const admin_limit = parameters.app_id == server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default)?
                                                                 null:
                                                                     limit;
                     if (parameters.result_request.singleResource){
@@ -360,14 +360,14 @@ const bffResponse = async parameters =>{
 };
 /**
  * @description get paths and components keys in OpenApi
- * @param {{URI_path:string, openApi:server['ORM']['Object']['OpenApi']}} parameters
+ * @param {{URI_path:string}} parameters
  * @returns {{
  *              paths: [string, *]
  *          }}
  */
 const bffOpenApiPathMatch = parameters => { 
     return {
-        paths:      Object.entries(parameters.openApi.paths).filter(path=>   
+        paths:      Object.entries(server.ORM.OpenApiPaths).filter(path=>   
                         //match with resource id string             
                         (path[0].indexOf('${')>-1 && path[0].substring(0,path[0].lastIndexOf('${')) == parameters.URI_path.substring(0,parameters.URI_path.lastIndexOf('/')+1)) ||
                         //match without resource id string
@@ -383,8 +383,7 @@ const bffOpenApiPathMatch = parameters => {
  *          URI_path:string,
  *          basePathRESTAPI:string,
  *          req:server['server']['req'],
- *          res:server['server']['res'],
- *          openApi:server['ORM']['Object']['OpenApi']}} parameters
+ *          res:server['server']['res']}} parameters
  * @returns {Promise.<server['bff']['parameters']|null|1>}
  */
 const bffDecryptRequest = async parameters =>{
@@ -419,14 +418,14 @@ const bffDecryptRequest = async parameters =>{
      * @returns {Promise.<boolean>}
      */
     const bffAuthenticateRequestKeys = async params =>{
-        const keysOk = Object.entries(JSON.parse(parameters.openApi.components.parameters.config[params.openApiConfigKey].default))
+        const keysOk = Object.entries(JSON.parse(server.ORM.OpenApiComponentParameters.config[params.openApiConfigKey].default))
             .filter(key=>
                 //Accept always same-origin or value in OpenApi for sec-fetch-site
                 (key[0]=='sec-fetch-site' && ['same-origin',key[1]].includes((params.headers[key[0]]??key[1])) ||
                 /**@ts-ignore */
                  key[0]!='sec-fetch-site' && ((params.headers[key[0]]??key[1])==key[1]))
             )
-            .length == Object.keys(JSON.parse(parameters.openApi.components.parameters.config[params.openApiConfigKey].default)).length;
+            .length == Object.keys(JSON.parse(server.ORM.OpenApiComponentParameters.config[params.openApiConfigKey].default)).length;
         if (!keysOk){
             //Add observe record
             await bffObserveRecord('REQUEST_KEY')
@@ -435,7 +434,7 @@ const bffDecryptRequest = async parameters =>{
     }
         
 
-    if (parameters.openApi.servers.filter(row=>['APP', 'ADMIN'].includes(row['x-type'].default) && row.variables.basePath.default == parameters.req.url)[0] &&
+    if (server.ORM.OpenApiServers.filter(row=>['APP', 'ADMIN'].includes(row['x-type'].default) && row.variables.basePath.default == parameters.req.url)[0] &&
         parameters.req.method.toUpperCase() == 'GET'){
         //APP or ADMIN server start url
         //Apply OWASP 3.2.1 requirement for APP/ADMIN, accept missing or correct values
@@ -552,7 +551,7 @@ const bffDecryptRequest = async parameters =>{
                                 iv:         iv})
                                 .then(result=>{
                                     const decrypted = JSON.parse(result);
-                                    const endpoint = decrypted.url.startsWith(parameters.openApi.components.parameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
+                                    const endpoint = decrypted.url.startsWith(server.ORM.OpenApiComponentParameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
                                             (decrypted.url.split('/')[2]?.toUpperCase()):
                                                 'APP';
                                     const idToken = //All external roles and microservice do not use AppId Token
@@ -657,13 +656,11 @@ const bffDecryptRequest = async parameters =>{
  * @returns {Promise<*>}
  */
  const bff = async (req, res, RequestData) =>{
-    /**@type{server['ORM']['Object']['OpenApi']} */
-    const openApi = server.ORM.db.OpenApi.get({app_id:0}).result;
-    const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default)??0;
+    const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??0;
     
     // check JSON maximum size, parameter uses megabytes (MB)
     if (req.body && JSON.stringify(req.body).length/1024/1024 > 
-            (server.ORM.UtilNumberValue((openApi.components.parameters.config.SERVER_JSON_LIMIT.default ?? '0').replace('MB',''))??0)){
+            (server.ORM.UtilNumberValue((server.ORM.OpenApiComponentParameters.config.SERVER_JSON_LIMIT.default ?? '0').replace('MB',''))??0)){
         //log error                                        
         server.ORM.db.Log.post({  app_id:0, 
                     data:{  object:'LogRequestError', 
@@ -722,14 +719,12 @@ const bffDecryptRequest = async parameters =>{
                                 req.url.substring(0, req.url.indexOf('?')):
                                     req.url;
             //check if REST API or css font url request, that both are (should be) the only declared public paths in OpenApi
-            const basePathRESTAPI = openApi.servers.filter(server=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
-            const OpenApiPathsMatchPublic = bffOpenApiPathMatch({URI_path:URI_path.replace(basePathRESTAPI,''), 
-                                                                openApi:openApi}).paths;
+            const basePathRESTAPI = server.ORM.OpenApiServers.filter(server=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
+            const OpenApiPathsMatchPublic = bffOpenApiPathMatch({URI_path:URI_path.replace(basePathRESTAPI,'')}).paths;
             //access control that stops request if not passing controls
             if (await server.iam.iamAuthenticateRequest({ip:req.socket.remoteAddress, 
                                                         common_app_id:common_app_id,
                                                         OpenApiPathsMatchPublic:OpenApiPathsMatchPublic,
-                                                        openApi:openApi,
                                                         req:req,
                                                         res:res})
                     .catch((/**@type{server['server']['error']}*/error)=>{
@@ -749,8 +744,7 @@ const bffDecryptRequest = async parameters =>{
                                                                 URI_path:URI_path,
                                                                 basePathRESTAPI:basePathRESTAPI,
                                                                 req:req, 
-                                                                res:res, 
-                                                                openApi:openApi});
+                                                                res:res});
                 /**@ts-ignore */
                 RequestData.XAppId = bff_parameters?.XAppId;
                 /**@ts-ignore */
@@ -784,11 +778,8 @@ const bffDecryptRequest = async parameters =>{
                     //control rate limiter using decrypted url
                     if (server.iam.iamAuthenticateRequestRateLimiter({  app_id:common_app_id, 
                                                                         ip:req.socket.remoteAddress, 
-                                                                        openApi:openApi, 
                                                                         path:bff_parameters.url})){
-                        if (bff_parameters.endpoint != 'APP' &&bffOpenApiPathMatch({ URI_path:   
-                                                                                        bff_parameters.URI_path, 
-                                                                                        openApi:openApi})
+                        if (bff_parameters.endpoint != 'APP' &&bffOpenApiPathMatch({ URI_path: bff_parameters.URI_path})
                                 .paths[1][bff_parameters.method.toLowerCase()]?.requestBody?.content['text/event-stream']){
                             //SSE, log since response is open and log again when closing
                             server.ORM.db.Log.post({  app_id:0, 
@@ -812,7 +803,7 @@ const bffDecryptRequest = async parameters =>{
                                                     XAppIdAuth:RequestData.XAppIdAuth,
                                                     XUrl:RequestData.XUrl,
                                                     XMethod:RequestData.XMethod,
-                                                    Req:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.LOG_REQUEST_LEVEL.default)==2?req:null
+                                                    Req:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.LOG_REQUEST_LEVEL.default)==2?req:null
                                                 },
                                         log:''
                                     }
@@ -857,7 +848,6 @@ const bffDecryptRequest = async parameters =>{
                             const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
                             return await bffRestApi({  
                                                     app_id:bff_parameters.app_id,
-                                                    openApi:openApi,
                                                     endpoint:bff_parameters.endpoint,
                                                     host:bff_parameters.host ?? '', 
                                                     url:bff_parameters.url ?? '',
@@ -877,7 +867,7 @@ const bffDecryptRequest = async parameters =>{
                                                     accept_language:bff_parameters.accept_language, 
                                                     res:bff_parameters.res})
                                     .then(result_service => {
-                                        const log_result = server.ORM.UtilNumberValue(openApi.components.parameters.config.LOG_REQUEST_LEVEL.default)==2?result_service:'✅';
+                                        const log_result = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.LOG_REQUEST_LEVEL.default)==2?result_service:'✅';
                                         return server.ORM.db.Log.post({  app_id:bff_parameters.app_id, 
                                             data:{  object:'LogBffInfo', 
                                                     bff:{   Service:'RESTAPI',
@@ -995,24 +985,22 @@ const bffRestApi = async parameters =>{
     /**
      * @description returns resource id name and value if used using OpentApi and URI path
      * @param {*} paths
-     * @param {*} components
      * @returns {Object.<string, string|number|null>|null}
      */
-    const openApiResourceId =(paths, components) =>
+    const openApiResourceId =paths =>
         paths[0].indexOf('${')>-1?
             paths[1][Object.keys(paths[1])[0]].parameters
             .filter((/**@type{*}*/parameter)=>
                 parameter.in=='path'
             )[0]==null?null:
             {[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]:
-                (components.parameters.paths[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]?.schema.type == 'number'?
+                (server.ORM.OpenApiComponentParameters.paths[paths[0].substring(paths[0].indexOf('${')+'${'.length).replace('}','')]?.schema.type == 'number'?
                     server.ORM.UtilNumberValue(parameters.URI_path.substring(parameters.URI_path.lastIndexOf('/')+1)):
                         parameters.URI_path.substring(parameters.URI_path.lastIndexOf('/')+1))
             }:
                 //no resource id string in defined path
                 null;
-    const OpenApiPaths = bffOpenApiPathMatch({  URI_path:   parameters.URI_path, 
-                                                    openApi:parameters.openApi}).paths;
+    const OpenApiPaths = bffOpenApiPathMatch({  URI_path:   parameters.URI_path}).paths;
     if (OpenApiPaths){
         /**
          * @description get parameter in path
@@ -1052,7 +1040,7 @@ const bffRestApi = async parameters =>{
                                                             //component parameter that has in=query
                                                             (   '$ref' in parameter && 
                                                                 'required' in parameter && 
-                                                                parameters.openApi.components.parameters.paths[parameter['$ref'].split('#/components/parameters/paths/')[1]].in == 'query')
+                                                                server.ORM.OpenApiComponentParameters.paths[parameter['$ref'].split('#/components/parameters/paths/')[1]].in == 'query')
                                                         )
                                                         .reduce((/**@type{*}*/keys, /**@type{*}*/key)=>{
                                                             if ('$ref' in key )
@@ -1096,8 +1084,7 @@ const bffRestApi = async parameters =>{
                                             return {...keys, ...{   
                                                                 [key['$ref'].split('#/components/parameters/paths/')[1]]:
                                                                 {
-                                                                    data:       openApiResourceId(  OpenApiPaths, 
-                                                                                                    parameters.openApi.components)?.[key['$ref'].split('#/components/parameters/paths/')[1]],
+                                                                    data:       openApiResourceId(  OpenApiPaths)?.[key['$ref'].split('#/components/parameters/paths/')[1]],
                                                                     //IAM parameters are required by default
                                                                     required:   (key?.required ?? (key['$ref'].split('#/components/parameters/paths/')[1].startsWith('IAM')?true:false)),
                                                                     type:       'PATH',
@@ -1188,8 +1175,8 @@ const bffRestApi = async parameters =>{
                 const singleResource = () => functionRESTAPI=='commonModuleRun'?
                                                 false:
                                                     (parameters.method!='GET' ||functionRESTAPI=='microserviceRequest')?
-                                                        true: ( Object.keys(openApiResourceId(OpenApiPaths, parameters.openApi.components)??{}).length==1 && 
-                                                                Object.values(openApiResourceId(OpenApiPaths, parameters.openApi.components)??{})[0]!=null);
+                                                        true: ( Object.keys(openApiResourceId(OpenApiPaths)??{}).length==1 && 
+                                                                Object.values(openApiResourceId(OpenApiPaths)??{})[0]!=null);
                 //return result using ISO20022 format
                 //send only parameters to the function if declared true
                 const result = await  moduleRESTAPI[functionRESTAPI]({
@@ -1208,11 +1195,7 @@ const bffRestApi = async parameters =>{
                                 ...(getParameter('server_method')               && {method:             parameters.method}),
                                 ...(Object.keys(parametersIn)?.length>0         && {data:               {...parametersIn}}),
                                 ...(getParameter('server_endpoint')             && {endpoint:           parameters.endpoint}),
-                                ...(openApiResourceId(  OpenApiPaths, 
-                                                        parameters.openApi.components) && {resource_id:   Object.values(
-                                                                                                                        openApiResourceId(  OpenApiPaths, 
-                                                                                                                                            parameters.openApi.components)??{}
-                                                                                                                )[0]})
+                                ...(openApiResourceId(  OpenApiPaths)           && {resource_id:        Object.values(openApiResourceId(  OpenApiPaths)??{})[0]})
                                 });
                 return { singleResource:singleResource(),
                          operation:methodObj.operationId,

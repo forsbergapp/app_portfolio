@@ -364,8 +364,6 @@ const markdownRender = async parameters =>{
                         }
                         return {summary:'', response:''};
                 };
-
-                
                         
                 /**@type{server['ORM']['Object']['OpenApi']} */
                 const openApi = server.ORM.db.OpenApi.getViewWithoutConfig({app_id:parameters.app_id}).result;

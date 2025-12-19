@@ -52,8 +52,6 @@ const getDefaultObject = async object =>
 * @returns {Promise.<server['server']['response'] & {result?:{info: {}[]} }>}
 */
 const postDemo = async parameters=> {
-    /**@type{server['ORM']['Object']['OpenApi']} */
-    const openApi = server.ORM.db.OpenApi.get({app_id:0}).result;
 
     /**@type{{[key:string]: string|number}[]} */
     const install_result = [];
@@ -73,8 +71,8 @@ const postDemo = async parameters=> {
     let install_count=0;
     const install_total_count = demo_users.length + social_types.length;
     install_count++;
-    const common_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_COMMON_APP_ID.default) ?? 0;
-    const admin_app_id = server.ORM.UtilNumberValue(openApi.components.parameters.config.APP_ADMIN_APP_ID.default);
+    const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default) ?? 0;
+    const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default);
 
     try {
         /**
@@ -365,8 +363,8 @@ const postDemo = async parameters=> {
                                 //replace if containing HOST parameter
                                 if (key_name[1]!=null && typeof key_name[1]=='string' && key_name[1].indexOf('<HOST/>')>-1){
                                     //use HTTP configuration as default
-                                    const HOST = openApi.servers.filter(row=>row['x-type'].default=='APP')[0].variables.host.default;
-                                    const HTTP_PORT = server.ORM.UtilNumberValue(openApi.servers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default);
+                                    const HOST = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.host.default;
+                                    const HTTP_PORT = server.ORM.UtilNumberValue(server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default);
                                     return key_name[1]?.replaceAll('<HOST/>', HOST + ((HTTP_PORT==443)?'':`:${HTTP_PORT}`));
                                 }
                                 else

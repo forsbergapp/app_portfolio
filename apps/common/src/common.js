@@ -106,7 +106,7 @@ const commonValidImagePixelSize = image =>{
                 };
         }
     }   
-    return ((width??0) * (height??0)) <=(server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_MAX_IMAGE_PIXEL_SIZE.default)??0);
+    return ((width??0) * (height??0)) <=(server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.IAM_MAX_IMAGE_PIXEL_SIZE.default)??0);
 }
 /**
  * @name commonValidImage
@@ -525,10 +525,10 @@ const commonCssFonts = async (base64=false)=>{
  * @returns {Promise.<boolean>}
  */
 const commonAppStart = async (app_id) =>{
-    if (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)!=null &&
-        server.ORM.OpenApiConfig.SERVER_MAINTENANCE.default==0 &&
+    if (server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)!=null &&
+        server.ORM.OpenApiComponentParameters.config.SERVER_MAINTENANCE.default==0 &&
         server.ORM.db.App.get({ app_id:app_id, 
-                                resource_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_START_APP_ID.default)??0}).result[0].Status =='ONLINE')
+                                resource_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_START_APP_ID.default)??0}).result[0].Status =='ONLINE')
             return true;
     else
         return false;
@@ -559,7 +559,7 @@ const commonAppStart = async (app_id) =>{
  */
 const commonResourceFile = async parameters =>{
     const resource_directory = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].Path;
-    const resource_path = parameters.data_app_id==server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)?
+    const resource_path = parameters.data_app_id==server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)?
                             parameters.resource_id.replace('/common', ''):
                                 parameters.resource_id;
     switch (true){
@@ -862,7 +862,7 @@ const commonAppReportQueue = async parameters =>{
         const user = server.ORM.db.IamUser.get(  parameters.app_id, 
                                             server.ORM.UtilNumberValue(server.iam.iamUtilTokenGet(  parameters.app_id, 
                                                                                         parameters.authorization, 
-                                                                                        parameters.app_id==server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)?
+                                                                                        parameters.app_id==server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default)?
                                                                                                                                                         'ADMIN':
                                                                                                                                                             /**@ts-ignore */
                                                                                                                                                             'APP_ACCESS').iam_user_id)).result[0];
@@ -1024,12 +1024,12 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
     }
     else{
         /**@type{server['ORM']['Object']['App']['Id'][]} */
-        const apps = server.ORM.db.App.get({app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0, resource_id:null})
+        const apps = server.ORM.db.App.get({app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??0, resource_id:null})
                     .result.map((/**@type{server['ORM']['Object']['App']}*/app)=>{return app.Id;});
         if (endpoint !=null && ['MICROSERVICE', 'MICROSERVICE_AUTH'].includes(endpoint))
             return {admin:false, 
-                    app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
-                    app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
+                    app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default),
+                    app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default),
                     //all apps
                     apps:apps};
         else
@@ -1037,8 +1037,8 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                                     .includes(host.split(':')[host.split(':').length-1]))
                 return {
                         admin:true,
-                        app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default),
-                        app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default),
+                        app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default),
+                        app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default),
                         //all apps
                         apps:apps
                 };
@@ -1046,8 +1046,8 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                 if (endpoint==null)
                     return {
                         admin:false,
-                        app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
-                        app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
+                        app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default),
+                        app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default),
                         //no apps
                         apps:[]
                     };
@@ -1055,9 +1055,9 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                     return {
                             admin:false,
                             app_id:server.ORM.UtilNumberValue(security?.AppId)??0,
-                            app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default),
+                            app_id_token:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default),
                             //all apps except admin
-                            apps:apps.filter(id=>id != server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default))
+                            apps:apps.filter(id=>id != server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default))
                     };
     }
     
@@ -1077,7 +1077,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppMount']}>}
   */
 const commonAppMount = async parameters =>{
-    if (parameters.resource_id == server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default))
+    if (parameters.resource_id == server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default))
         return {http:400,
             code:null,
             text:null,
@@ -1196,7 +1196,7 @@ const commonApp = async parameters =>{
                 .result.count_connected +
             server.socket.socketConnectedCount({data:{logged_in:'0'}})
                 .result.count_connected
-            ) >= (server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_MAX_CONNECTED_CLIENTS.default)??0 ))
+            ) >= (server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.IAM_MAX_CONNECTED_CLIENTS.default)??0 ))
             return {result: commonAppError(server.iam.iamUtilMessageNotAuthorized()),
                     type:'HTML'};
         else
@@ -1207,8 +1207,8 @@ const commonApp = async parameters =>{
                                                     }), type:'HTML'};
             }
             else{
-                const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_ADMIN_APP_ID.default)??1;
-                const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??0;
+                const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default)??1;
+                const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??0;
                 const basePathRESTAPI = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='REST_API')[0].variables.basePath.default
                 const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
                                     admin_app_id:

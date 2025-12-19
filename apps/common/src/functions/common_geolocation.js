@@ -95,7 +95,7 @@ const getIP = parameters =>{
     //ignore all local IP addresses
     const geolocation_ip = parameters.data.ip.startsWith('127.0.0.')?
                                 null:
-                                server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.IAM_ENABLE_GEOLOCATION.default)==1?
+                                server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.IAM_ENABLE_GEOLOCATION.default)==1?
                                     server.ORM.getExternal('GEOLOCATION_IP')[('000'+parameters.data.ip?.split(',')[0].split('.')[0]).substr(-3)].filter((/**@type{string}*/row)=> 
                                                 IPtoNum(row.split(';')[0]) <= ipNumber &&
                                                 IPtoNum(row.split(';')[1]) >= ipNumber)[0]:

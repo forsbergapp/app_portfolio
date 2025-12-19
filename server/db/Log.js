@@ -219,7 +219,7 @@ const getStat = async parameters => {
            (file.name.startsWith(`LogRequestVerbose_${data.year}${data.month.toString().padStart(2,'0')}`)&& 
            (regexp_verbose_day.exec(file.name)!=null||regexp_verbose_month.exec(file.name)!=null))){
            //filename format: log_request_info_YYYMMDD.json
-           if (server.ORM.OpenApiConfig.LOG_FILE_INTERVAL.default=='1D'){
+           if (server.ORM.OpenApiComponentParameters.config.LOG_FILE_INTERVAL.default=='1D'){
                //return DD
                day = file.name.slice(-7).substring(0,2);
                sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
@@ -400,7 +400,7 @@ const post = async parameters => {
         }
         case 'LogBffError':
         case 'LogBffInfo':{
-            const service_level = server.ORM.OpenApiConfig.LOG_BFF_LEVEL.default;
+            const service_level = server.ORM.OpenApiComponentParameters.config.LOG_BFF_LEVEL.default;
             /**@type{server['ORM']['Object']['LogBffInfo']}*/
             log = (service_level=='1' ||service_level=='2')?
                     {AppId:     parameters.app_id,
@@ -416,7 +416,7 @@ const post = async parameters => {
         }
         case 'LogAppError':
         case 'LogAppInfo':{
-            const app_level = server.ORM.OpenApiConfig.LOG_APP_LEVEL.default;
+            const app_level = server.ORM.OpenApiComponentParameters.config.LOG_APP_LEVEL.default;
             if (app_level=='1'||app_level=='2'){
                 /**@type{server['ORM']['Object']['LogAppInfo']} */
                 log ={
@@ -434,7 +434,7 @@ const post = async parameters => {
         }
         case 'LogDbError':
         case 'LogDbInfo':{
-            const db_level = server.ORM.OpenApiConfig.LOG_DB_LEVEL.default;
+            const db_level = server.ORM.OpenApiComponentParameters.config.LOG_DB_LEVEL.default;
             if (db_level=='1'||db_level=='2'){
                 log_object = parameters.data.object;
                 /**@type{server['ORM']['Object']['LogDbError']} */
@@ -467,7 +467,7 @@ const post = async parameters => {
                     return value;
                 };
             };
-            const request_level = server.ORM.OpenApiConfig.LOG_REQUEST_LEVEL.default; 
+            const request_level = server.ORM.OpenApiComponentParameters.config.LOG_REQUEST_LEVEL.default; 
             if (request_level=='1'||request_level=='2'){
                 log = { Host:               parameters.data.request?.Host,
                         AppId:              parameters.data.request?.XAppId,

@@ -180,7 +180,7 @@ const serverRequest = async parameters =>{
             });
         };
         /**@type{Object.<string,string>} */
-        const OpenApiKey = JSON.parse(server.ORM.OpenApiConfig.IAM_AUTHENTICATE_REQUEST_KEY_VALUES_APP.default);
+        const OpenApiKey = JSON.parse(server.ORM.OpenApiComponentParameters.config.IAM_AUTHENTICATE_REQUEST_KEY_VALUES_APP.default);
         /**@type{import('node:http').RequestOptions}*/    
         const options = {
                         family: 4,

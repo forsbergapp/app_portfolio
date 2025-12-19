@@ -139,7 +139,7 @@
     */
     const component = async props =>{
         props;
-        const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiConfig.APP_COMMON_APP_ID.default)??1;
+        const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??1;
         const font_urls =[
             //Fontawesome fonts
             '/common/modules/fontawesome/webfonts/fa-regular-400.woff2',
