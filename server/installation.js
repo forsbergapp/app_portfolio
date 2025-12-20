@@ -821,11 +821,6 @@ const postConfigDefault = async () => {
     updateMicroserviceSecurity({serveRegistry:              config_obj[2][1],
                                 pathMicroserviceSource:     '/server/install/default/microservice/',
                                 pathMicroserviceDestination:'/data/microservice/'});
-    //install default microservice files
-    for (const file of ['common.js', 'crypto.js', 'types.js'])
-        await fs.promises.copyFile( server.ORM.serverProcess.cwd() + `/server/install/default/microservice/${file}`, 
-                                    server.ORM.serverProcess.cwd() + `/data/microservice/${file}`)
-            .catch(error=>{throw error;});
     
     //write files to ORM
     for (const config_row of config_obj){

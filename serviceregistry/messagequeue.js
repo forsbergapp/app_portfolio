@@ -11,10 +11,10 @@ const {server} = await import('../server/server.js');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          message_queue_type: 'CONSUME'|'PUBLISH',
- *          data: { service: string,
- *                  message_id?:server['ORM']['Object']['MessageQueueConsume']['message_queue_publish_id'],
- *                  type?:server['ORM']['Object']['MessageQueuePublish']['message']['type']
- *                  message?:server['ORM']['Object']['MessageQueuePublish']['message']['message']},
+ *          data: { service: server['ORM']['Object']['MessageQueuePublish']['Service'],
+ *                  message_id?:server['ORM']['Object']['MessageQueueConsume']['MessageQueuePublishId'],
+ *                  type?:server['ORM']['Object']['MessageQueuePublish']['Message']['Type']
+ *                  message?:server['ORM']['Object']['MessageQueuePublish']['Message']['Message']},
  *          authorization:string,
  *          endpoint:server['bff']['parameters']['endpoint']}} parameters
  * @returns {Promise.<server['server']['response']>}
@@ -25,21 +25,21 @@ const messageQueue = async parameters => {
             /**@type{server['ORM']['Object']['MessageQueuePublish']} */
             const message_queue = { Service: parameters.data.service, 
                                     Message:   {Type:parameters.data.type,
-                                                Message:parameters.data.message}
+                                                Message:parameters.data.message??''}
                                     };
             return await server.ORM.db.MessageQueuePublish.post({app_id:parameters.app_id, data:message_queue});
         }
         case 'CONSUME': {
             //message CONSUME
-            return await server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id})
-            .then(message_queue=>{
+            return await server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id??null}).result
+            .then((/**@type{server['ORM']['Object']['MessageQueuePublish'][]}*/message_queue)=>{
                 /**@type{server['ORM']['Object']['MessageQueueConsume']} */
-                const message_consume = {   MessageQueuePublishId: parameters.data.message_id,
+                const message_consume = {   MessageQueuePublishId: parameters.data.message_id??0,
                                             Message:    null,
                                             Start:      null,
                                             Finished:   null,
                                             Result:     null};
-                for (const row of message_queue.result){
+                for (const row of message_queue){
                     if (row.Id == parameters.data.message_id){
                         message_consume.Message = row.Message;
                         break;
@@ -50,9 +50,9 @@ const messageQueue = async parameters => {
                 return server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, data:message_consume})
                     .catch((/**@type{server['server']['error']}*/error)=>{
                         server.ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
-                                                data:{  message_queue_publish_id: parameters.data.message_id, 
-                                                        message:   error, 
-                                                        result:error}}).then(()=>{
+                                                data:{  MessageQueuePublishId: parameters.data.message_id??0, 
+                                                        Message:   error, 
+                                                        Result:error}}).then(()=>{
                             throw error;
                         });
                     });

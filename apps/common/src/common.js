@@ -364,7 +364,7 @@ const commonGetFile = async parameters =>{
      */
     const adjustResult = parameters =>{
         // remove comment rows for text/css and text/javascript and except third party modules
-        return  (parameters.path.startsWith('/apps/') && 
+        return  ((parameters.path.startsWith('/apps/')||parameters.path.startsWith('/sdk/')) && 
                 !parameters.path.startsWith('/apps/common/public/modules/') &&
                 ['text/css','text/javascript'].includes(parameters.content_type))?
                 parameters.file

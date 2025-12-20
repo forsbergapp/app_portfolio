@@ -1,5 +1,5 @@
 /**
- * @module apps/common/src/functions/common_crypto
+ * @module sdk/crypto
  */
 
 /**

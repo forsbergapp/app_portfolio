@@ -9,13 +9,13 @@
     "message_queue_method":	            "POST",
     "uuid":                             "",
     "secret":                           "",
-    "config":[
-            {"jobs":[
-                {"jobid":1 , "name": "Pipeline every minute", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"* * * * *", "enabled":false},
-                {"jobid":2 , "name": "Pipeline 08.00 every day", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"0 8 * * *", "enabled":false},
-                {"jobid":3 , "name": "Pipeline 12.00 every day", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"0 12 * * *", "enabled":false},
-                {"jobid":4 , "name": "Pipeline 17.00 every day", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"0 17 * * *", "enabled":false},
-                {"jobid":5 , "name": "Pipeline 16.00 every friday", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"0 16 * * 5", "enabled":false}
-            ]}
-            ]
+    "config":{
+                "jobs":[
+                    {"jobid":1 , "name": "Pipeline every minute", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"* * * * *", "enabled":false},
+                    {"jobid":2 , "name": "Pipeline 08.00 every day", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"0 8 * * *", "enabled":false},
+                    {"jobid":3 , "name": "Pipeline 12.00 every day", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"0 12 * * *", "enabled":false},
+                    {"jobid":4 , "name": "Pipeline 17.00 every day", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"0 17 * * *", "enabled":false},
+                    {"jobid":5 , "name": "Pipeline 16.00 every friday", "command_type":"OS", "platform": "linux", "command": "sudo -i -u ubuntu cd $HOME/app_portfolio && git pull && sudo systemctl restart app_portfolio && sudo systemctl restart app_portfolio_microservice_batch", "cron_expression":"0 16 * * 5", "enabled":false}
+                ]
+            }
 }
