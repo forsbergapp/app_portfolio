@@ -285,7 +285,8 @@ const component = async props => {
                                         cube_currentstate: 	CONSTANTS.cube.getState(),
                                         cube_goalstate: 	CONSTANTS.cube_goalstate}, 
                                 spinner_id:event_target.id,
-                                timeout:1000 * 60 * 5}) //5 minutes timeout
+                                //5 minutes timeout
+                                timeout:1000 * 60 * 5}) 
                     .then((/**@type{string}*/result)=>{
                         /**
                          * @type{{cube_solution:string,

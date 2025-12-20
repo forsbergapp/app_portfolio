@@ -812,7 +812,9 @@ const commonMiscLoadFont = parameters => {
     commonFFB({ path:               '/app-resource/' + fontData.url.replaceAll('/','~'),
                 query:              'content_type=font/woff2&IAM_data_app_id=0', 
                 method:             'GET',
-                authorization_type: 'APP_ID'})
+                authorization_type: 'APP_ID',
+                //5 minutes timeout for fonts
+                timeout:1000 * 60 * 5 })
     .then((/**@type{string}*/result)=> {
         const fontResult = JSON.parse(result).resource;
         /**
