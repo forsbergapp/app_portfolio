@@ -109,18 +109,24 @@
     },
     {
         "id":7,
-        "menu":"7 Modules Serviceregistry",
-        "type":"MODULE_SERVICEREGISTRY",
+        "menu":"7 Modules SDK",
+        "type":"MODULE_SDK",
         "menu_sub":null
     },
     {
         "id":8,
+        "menu":"8 Modules Serviceregistry",
+        "type":"MODULE_SERVICEREGISTRY",
+        "menu_sub":null
+    },
+    {
+        "id":9,
         "menu":"8 Modules Server",
         "type":"MODULE_SERVER",
         "menu_sub":null
     },
     {
-        "id":9,
+        "id":10,
         "menu":"9 Modules Test",
         "type":"MODULE_TEST",
         "menu_sub":null

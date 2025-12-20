@@ -597,6 +597,10 @@ const Crypto = (() =>{
 })();
 
 /**
+ *
+ * @name HMAC
+ * @description HMAC
+ * @function
  * @param {*} hasher
  * @param {*} message
  * @param {*} key
@@ -629,6 +633,9 @@ const HMAC = (hasher, message, key, options) =>{
 
 };
 /**
+ * @name PBKDF2
+ * @description PBKDF2
+ * @function
  * @param {*} password
  * @param {*} salt
  * @param {*} keylen
@@ -675,6 +682,9 @@ const PBKDF2 = (password, salt, keylen, options) =>{
 
 };
 /**
+ * @name SHA1
+ * @description SHA1
+ * @function
  * @param {*} message
  * @param {*} options
  */
@@ -686,7 +696,9 @@ const SHA1 = (message, options) => {
 };
 
 /**
+ * @name SHA1._sha1
  * @description The core
+ * @function
  * @param {*} message
  */
 SHA1._sha1 = message => {
@@ -754,12 +766,25 @@ SHA1._sha1 = message => {
 
 };
 
-// Package private blocksize
+/**
+ * @name SHA1._blocksize
+ * @description Package private blocksize
+ * @constant
+ */
 SHA1._blocksize = 16;
 
+/**
+ * @name SHA1._digestsize
+ * @description Package private digestsize
+ * @constant
+ */
 SHA1._digestsize = 20;
 
-// Precomputed SBOX
+/**
+ * @name SBOX
+ * @description Precomputed SBOX
+ * @constant
+ */
 const SBOX = [ 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
              0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
              0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0,
@@ -793,13 +818,22 @@ const SBOX = [ 0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5,
              0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68,
              0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16 ];
 
-// Compute inverse SBOX lookup table
-/**@type{*[]} */
+/**
+ * @name INVSBOX
+ * @description Compute inverse SBOX lookup table
+ * @constant
+ * @type{*[]}
+ */
 const INVSBOX = [];
 for (let i = 0; i < 256; i++) INVSBOX[SBOX[i]] = i;
 
 // Compute mulitplication in GF(2^8) lookup tables
-    
+
+/**
+ * @name MULT2 MULT3 MULT9 MULTB MULTD MULTE
+ * @description MULT2 MULT3 MULT9 MULTB MULTD MULTE
+ * @constant
+ */
 const 
     /**@type{*[]} */
     MULT2 = [],
@@ -815,6 +849,9 @@ const
     MULTE = [];
 
 /** 
+ * @name xtime
+ * @description xtime
+ * @function
  * @param {*} a
  * @param {*} b
  */
@@ -841,12 +878,17 @@ for (let i = 0; i < 256; i++) {
 }
 
 /**
+ * @name RCON
  * @description Precomputed RCon lookup
  * @constant
  */
 const RCON = [0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36];
 
-// Inner state
+/**
+ * @name state
+ * @ddescription Inner state
+ * @constant
+ */
 const state = [[], [], [], []];
 
 let 
@@ -857,7 +899,6 @@ let
     /**@type {[]} */
     keyschedule;
 
-    
 /**
  * @name AES
  * @description Encrypts and decrypts using Web Crypto API pattern,
@@ -878,6 +919,7 @@ let
  *              Encrypt uses data string parameter to encrypt, returns ciphertext string in base64 format
  *              Decrypt uses ciphertext parameter from encrypt function and returns decrypted text string
  *              Supports Unicode and functions can be used in app and server without protocol restrictions
+ * @constant
  */    
 Crypto.AES = {
     /**
@@ -1227,6 +1269,11 @@ Crypto.AES = {
 		}
 	}
 };
+/**
+ * @name subtle
+ * @description subtle with encrypt and decrypt functions
+ * @constant
+ */
 const subtle = {encrypt: Crypto.AES.encrypt,
                 decrypt: Crypto.AES.decrypt,
                 };

@@ -2738,16 +2738,6 @@ const commonFrameworkSet = async (framework) => {
     
 };
 /**
- * @name setUserAgentAttributes
- * @description Set useragent attributes
- * @function
- * @returns {void}
- */
- const setUserAgentAttributes = () => {
-    if (COMMON_WINDOW.navigator.userAgent.toLowerCase().indexOf('firefox')>-1)
-        COMMON_DOCUMENT.querySelector(':root').style.setProperty('--common_app_css_useragent_fix_margin_top', '-5px');
- };
-/**
  * @name custom_framework
  * @description Set custom framework functionality:
  *              show only console messages if app_framework_messages == 1
@@ -3056,7 +3046,6 @@ const commonInit = async parameters => {
     commonUserPreferencesGlobalSetDefault('DIRECTION');
     commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
 
-    setUserAgentAttributes();
     custom_framework();
     //set common app id
     COMMON_GLOBAL.app_id =                          COMMON_GLOBAL.app_common_app_id;

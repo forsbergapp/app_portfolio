@@ -87,7 +87,6 @@ const getFiles = async (directory, filePattern) =>{
  * @returns {Promise.<string>}
  */
 const renderTablesFunctions = async parameters =>{
-    //replace variables for MODULE_APPS, MODULE_SERVICEREGISTRY and MODULE_SERVER
 
     //search all JSDoc comments
     const regexp_module_function = /\/\*\*([\s\S]*?)\*\//g;
@@ -531,6 +530,7 @@ const menuRender = async parameters =>{
  *              MODULE_CODE         JS   - javascript source file
  *				MENU                JSON - renders menu with scanned files and apps from configuration
  *              MODULE_APPS         HTML - markdown converted with documentation of a file in /apps
+ *              MODULE_SDK          HTML - markdown converted with documentation of a file in /sdk
  *              MODULE_SERVICEREGISTRY HTML - markdown converted with documentation of a file in /serviceregistry
  *              MODULE_SERVER       HTML - markdown converted with documentation of a file in /server
  *              MODULE_TEST         HTML - markdown converted with documentation of a file in /test
@@ -570,13 +570,13 @@ const appFunction = async parameters =>{
                 return {result:await menuRender({app_id:parameters.app_id}), type:'JSON'};
             }
             case parameters.data.documentType=='MODULE_CODE' && 
-            (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
+                ['apps', 'sdk','server','serviceregistry','test'].includes(parameters.data.doc.split('/')[1]):{
                 return {result:await getFile(`${server.ORM.serverProcess.cwd()}${parameters.data.doc}.js`, true), type:'HTML'};
             }
             case parameters.data.documentType=='GUIDE':
             case parameters.data.documentType=='APP' && server.ORM.db.App.get({app_id:parameters.app_id, resource_id:server.ORM.UtilNumberValue(parameters.data.doc)}).result?.length==1:
             case parameters.data.documentType.startsWith('MODULE') &&
-                (parameters.data.doc.startsWith('/apps') || parameters.data.doc.startsWith('/serviceregistry')||parameters.data.doc.startsWith('/server')||parameters.data.doc.startsWith('/test')):{
+                (['apps', 'sdk','server','serviceregistry','test'].includes(parameters.data.doc.split('/')[1])):{
                 //guide documents in separate files, app and modules use templates
                 return {result:await markdownRender({   app_id:parameters.app_id,
                                                         type:parameters.data.documentType,
