@@ -1,6 +1,4 @@
 :root {
-	/*app useragent fixes*/
-	--common_app_css_useragent_fix_margin_top: 0px;
 	--common_app_css_border_radius: 4px;
 	/*app colors*/	
 	--common_app_color_blue1: rgb(81, 171, 255);
@@ -1618,11 +1616,11 @@ body,
 #common_app_iam_user_menu_default_avatar{
 	font-size: 48px;
 	height: 48px;
+    display:inline;
 }
 #common_app_iam_user_menu_default_avatar::before{
 	vertical-align: top;
 	display: inline-block;
-    margin-top: var(--common_app_css_useragent_fix_margin_top)
 }
 #common_app_iam_user_menu, #common_app_iam_user_menu_avatar_img, #common_app_iam_user_menu_default_avatar{
     border-radius: 50% !important;
