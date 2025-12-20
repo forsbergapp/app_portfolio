@@ -2067,18 +2067,22 @@ const commonFFB = async parameter =>{
                                         };
                                         const BFFStream = new WritableStream({
                                             async write(BFFmessage){
-                                                const SSEmessage = getSSEMessage(getDecrypted(BFFmessage));
-                                                switch (SSEmessage.sse_type){
-                                                    case 'FONT_URL':{
-                                                        commonMiscLoadFont({uuid:               parameters.uuid??'',
-                                                                            secret:             parameters.secret??'',
-                                                                            message:            SSEmessage.sse_message});
-                                                        break;
-                                                    }
-                                                    default:{
-                                                        commonSocketSSEShow(SSEmessage);
-                                                        break;
-                                                    }
+                                                try {
+                                                    const SSEmessage = getSSEMessage(getDecrypted(BFFmessage));
+                                                    switch (SSEmessage.sse_type){
+                                                        case 'FONT_URL':{
+                                                            commonMiscLoadFont({uuid:               parameters.uuid??'',
+                                                                                secret:             parameters.secret??'',
+                                                                                message:            SSEmessage.sse_message});
+                                                            break;
+                                                        }
+                                                        default:{
+                                                            commonSocketSSEShow(SSEmessage);
+                                                            break;
+                                                        }
+                                                    }    
+                                                } catch (error) {
+                                                    null;
                                                 }
                                             }
                                         //The total number of chunks that can be contained in the internal queue before backpressure is applied
