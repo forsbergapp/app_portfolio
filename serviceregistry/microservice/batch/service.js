@@ -80,7 +80,21 @@ const validateCronExpression = (expression) =>{
     catch(error){
         return false;
     }
-};	
+};
+/**
+ * @name getUTCDate
+ * @description Returns UTC date
+ * @function
+ * @returns {Date}
+ */
+const getUTCDate = () =>
+    new Date(   Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
+                                Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
+                                Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'})),
+                                Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
+                                Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})),
+                                Number(new Date().toLocaleString('en', {timeZone: 'UTC', second:'numeric'})));
+
 /**
  * @name scheduleMilliseconds
  * @description Calculates scheduled time in milliseconds
@@ -124,12 +138,7 @@ const scheduleMilliseconds = (cron_expression) =>{
          return milliseconds + (roundUTC.valueOf() - UTC.valueOf() )
     };
     //Get current UTC time with seconds
-    const UTC = new Date(   Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})),
-                            Number(new Date().toLocaleString('en', {timeZone: 'UTC', second:'numeric'})));
+    const UTC = getUTCDate();
     
 
     
@@ -269,7 +278,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
                         result:null});
             /**@type{NodeJS.Timeout} */
             let timeId = setTimeout(async () =>{
-                    const start = new Date().toISOString();
+                    const start = getUTCDate().toISOString();
                     await log({ log_id: log_id,
                                 jobid: jobid, 
                                 scheduled_start: null, 
@@ -284,7 +293,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
                                     jobid: jobid, 
                                     scheduled_start: null, 
                                     start:start, 
-                                    end:new Date().toISOString(), 
+                                    end:getUTCDate().toISOString(), 
                                     status:err?'FAILED':'FINISHED', 
                                     result:err?err:`stdout: ${stdout}, stderr: ${stderr}`
                                 }).then(()=>{
@@ -307,7 +316,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
                                     jobid: jobid, 
                                     scheduled_start: null, 
                                     start:start, 
-                                    end:new Date().toISOString(), 
+                                    end:getUTCDate().toISOString(), 
                                     status:'FAILED', 
                                     result:error
                                 });
@@ -346,7 +355,7 @@ const startJobs = async (sdk, config, token) =>{
                                         log_id: null,
                                         jobid: null, 
                                         scheduled_start: null, 
-                                        start:new Date().toISOString(), 
+                                        start:getUTCDate().toISOString(), 
                                         end:null, 
                                         status:'CANCELED', 
                                         result:'SERVER RESTART'
