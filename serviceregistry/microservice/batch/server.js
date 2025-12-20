@@ -5,11 +5,7 @@
 
 
 /**
- * @import {config, request, response} from './types.js'
- */
-
-/**
- * @import {common} from '../../../data/microservice/types.js'
+ * @import {config} from './types.js'
  */
 
 /**
@@ -35,24 +31,23 @@ const serverProcess = new ClassServerProcess();
  */
 const serverStart = async () =>{
     const service = await import('./service.js');
-
-    /**@type{common} */
-    const common = await import('file://' + serverProcess.cwd() + '/data/microservice/common.js');
+    /**@type{import('../../../sdk/server/serviceregistry.js')} */
+    const serviceregistry = await import(`${serverProcess.cwd()}/sdk/server/serviceregistry.js`);
     /**
      * @description Get config
      * @type{config} 
      */
-    const Config = await common.commonConfig('BATCH');
+    const Config = await serviceregistry.commonConfig({service:'BATCH', path:serverProcess.cwd()});
 
-    const auth = await common.commonAuth({  service_registry_auth_method:Config.service_registry_auth_method,
+    const auth = await serviceregistry.commonAuth({  service_registry_auth_method:Config.service_registry_auth_method,
                                             service_registry_auth_url:Config.service_registry_auth_url,
                                             uuid:Config.uuid,
                                             secret:Config.secret
     });
-	Config.server.createServer(Config.options, (/**@type{request}*/req, /**@type{response}*/res) => {
-		common.commonServerReturn({
+	Config.server.createServer((req, res) => {
+		serviceregistry.commonServerReturn({
             service: 'BATCH',
-            token: auth.token,
+            token: auth?.token??'',
             uuid: Config.uuid,
             secret: Config.secret,
             message_queue_url: Config.message_queue_url,
@@ -61,37 +56,37 @@ const serverStart = async () =>{
             error: '⛔',
             result: null,
             res:res});
-	}).listen(Config.port, ()=>{
-		common.commonLog({
+	}).listen(Config.server_port, async ()=>{
+		await serviceregistry.commonLog({
             type:'MICROSERVICE_LOG',
             service:'BATCH',
-            message:`MICROSERVICE START PORT ${Config.port}`,
-            token:auth.token,
+            message:`MICROSERVICE START PORT ${Config.server_port}`,
+            token:auth?.token??'',
             message_queue_url:Config.message_queue_url,
             message_queue_method:Config.message_queue_method,
             uuid:Config.uuid,
             secret:Config.secret});
+        service.startJobs(serviceregistry, Config, auth?.token??'');
 	});
-	service.startJobs(common, Config, auth.token);
-	serverProcess.on('uncaughtException', err =>{
+	serverProcess.on('uncaughtException', async err =>{
         console.log('uncaughtException:' + err);
-        common.commonLog({
+        await serviceregistry.commonLog({
             type:'MICROSERVICE_ERROR',
             service:'BATCH',
-            message:'uncaughtException:' + err.stack ?? err.message ?? err,
-            token:auth.token,
+            message:'uncaughtException:' + (err.stack ?? err.message ?? err),
+            token:auth?.token??'',
             message_queue_url:Config.message_queue_url,
             message_queue_method:Config.message_queue_method,
             uuid:Config.uuid,
             secret:Config.secret});
 	});
-    serverProcess.on('unhandledRejection', (/**@type{*}*/reason) =>{
-        console.log('unhandledRejection:'|reason?.stack ?? reason?.message ?? reason ?? new Error().stack);
-        common.commonLog({
+    serverProcess.on('unhandledRejection', async (/**@type{*}*/reason) =>{
+        console.log('unhandledRejection:' + (reason?.stack ?? reason?.message ?? reason ?? new Error().stack));
+        await serviceregistry.commonLog({
             type:'MICROSERVICE_ERROR',
             service:'BATCH',
-            message:'unhandledRejection:' + reason?.stack ?? reason?.message ?? reason ?? new Error().stack,
-            token:auth.token,
+            message:'unhandledRejection:' + (reason?.stack ?? reason?.message ?? reason ?? new Error().stack),
+            token:auth?.token??'',
             message_queue_url:Config.message_queue_url,
             message_queue_method:Config.message_queue_method,
             uuid:Config.uuid,

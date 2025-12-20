@@ -3,9 +3,8 @@
  * @module serviceregistry/microservice/batch/service 
  */
 
-
 /**
- * @import {common, config, jobs} from './types.js'
+ * @import {config, jobs} from './types.js'
  */
 
 const {exec} = await import('node:child_process');
@@ -109,9 +108,14 @@ const validateCronExpression = (expression) =>{
  * @function
  * @param {string} cron_expression 
  * @returns {{milliseconds:number,
- *            scheduled_start:number}}
+ *            scheduled_start:Date}}
  */
 const scheduleMilliseconds = (cron_expression) =>{
+    /**
+     * 
+     * @param {number} milliseconds 
+     * @returns number
+     */
     const roundToNextMinute = milliseconds =>{
         //set to next minute and second to 0
          const roundUTC = UTC;
@@ -225,7 +229,7 @@ const scheduleMilliseconds = (cron_expression) =>{
  * @name scheduleJob
  * @description Schedule job
  * @function
- * @param {common['commonLog']}    commonLog
+ * @param {import('../../../sdk/server/serviceregistry.js')['commonLog']} commonLog
  * @param {config}      config
  * @param {string}      token
  * @param {number}      jobid 
@@ -237,18 +241,18 @@ const scheduleMilliseconds = (cron_expression) =>{
 const scheduleJob = async (commonLog, config, token, jobid, command_type, command, cron_expression) =>{
     /**
      * @param {{}} message
-     * @param {'MICROSERVICE_LOG'|'MICROSERVICE_ERROR'|null} type
+     * @param {'MICROSERVICE_LOG'|'MICROSERVICE_ERROR'} type
      */
     const log = async (message, type='MICROSERVICE_LOG') =>{
-        commonLog({type:type,
-                    service:'BATCH',
-                    message:JSON.stringify(message),
-                    token:token,
-                    message_queue_method:config.message_queue_method,
-                    message_queue_url:config.message_queue_url,
-                    uuid:config.uuid,
-                    secret:config.secret
-        });
+        await commonLog({   type:type,
+                            service:'BATCH',
+                            message:JSON.stringify(message),
+                            token:token,
+                            message_queue_method:config.message_queue_method,
+                            message_queue_url:config.message_queue_url,
+                            uuid:config.uuid,
+                            secret:config.secret
+                });
     };
     switch (command_type){
         case 'OS':{
@@ -284,17 +288,17 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
                                     status:err?'FAILED':'FINISHED', 
                                     result:err?err:`stdout: ${stdout}, stderr: ${stderr}`
                                 }).then(()=>{
-                                //remove job
-                                JOBS.forEach((job,index)=>{
-                                    if (job.timeId == timeId)
-                                        JOBS.splice(index,1);
+                                    //remove job
+                                    JOBS.forEach((job,index)=>{
+                                        if (job.timeId == timeId)
+                                            JOBS.splice(index,1);
+                                    });
+                                    clearTimeout(timeId);
+                                    /**@ts-ignore */
+                                    timeId = null;
+                                    //schedule job again, recursive call
+                                    scheduleJob(commonLog, config, token, jobid, command_type, command, cron_expression); 
                                 });
-                                clearTimeout(timeId);
-                                /**@ts-ignore */
-                                timeId = null;
-                                //schedule job again, recursive call
-                                scheduleJob(commonLog, config, token, jobid, command_type, command, cron_expression); 
-                            });
                         });
                     }
                     catch(error){
@@ -330,14 +334,13 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
  * @name startJobs
  * @description Start jobs
  * @function
- * @param {common} common
+ * @param {import('../../../sdk/server/serviceregistry.js')} sdk
  * @param {config} config
  * @param {string} token
  * @returns {Promise.<void>}
  */
-const startJobs = async (common, config, token) =>{
-    
-    await common.commonLog({type:'MICROSERVICE_LOG', 
+const startJobs = async (sdk, config, token) =>{
+    await sdk.commonLog({type:'MICROSERVICE_LOG', 
                             service:'BATCH',
                             message: JSON.stringify({ 
                                         log_id: null,
@@ -354,14 +357,13 @@ const startJobs = async (common, config, token) =>{
                             uuid:config.uuid,
                             secret:config.secret
                         });
-    /**@type{config['config']['jobs']} */                        
-    const jobs = config.config.filter(row=>'jobs' in row)[0].jobs;
-    for (const job of jobs){
+    
+    for (const job of config.config.jobs.sort((a,b)=>a.jobid - b.jobid)){
         //schedule enabled jobs and for current platform
         //use cron expression syntax
         if (job.enabled == true && job.platform == os.platform()){
             if (validateCronExpression(job.cron_expression))
-                await scheduleJob(  common.commonLog, 
+                await scheduleJob(  sdk.commonLog, 
                                     config,
                                     token,
                                     job.jobid, 
@@ -369,14 +371,14 @@ const startJobs = async (common, config, token) =>{
                                     job.command, 
                                     job.cron_expression);
             else
-                await common.commonLog({type:'MICROSERVICE_ERROR', 
-                                        service:'BATCH',
-                                        message: 'Not supported cron expression',
-                                        token:token,
-                                        message_queue_url:config.message_queue_url,
-                                        message_queue_method:config.message_queue_method,
-                                        uuid:config.uuid,
-                                        secret:config.secret}); 
+                await sdk.commonLog({  type:'MICROSERVICE_ERROR', 
+                                    service:'BATCH',
+                                    message: 'Not supported cron expression',
+                                    token:token,
+                                    message_queue_url:config.message_queue_url,
+                                    message_queue_method:config.message_queue_method,
+                                    uuid:config.uuid,
+                                    secret:config.secret}); 
         }
     }
 };

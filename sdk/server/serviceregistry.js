@@ -1,13 +1,8 @@
-/** @module server/install/default/microservice/common */
-
+/** @module sdk/server/serviceregistry */
 
 const zlib = await import('node:zlib');
 const fs = await import('node:fs');
-const Crypto = await import('./crypto.js');
-class ClassServerProcess {
-    cwd = () => process.cwd().replaceAll('\\','/');
-}
-const serverProcess = new ClassServerProcess();
+const Crypto = await import('../crypto.js');
 const CONTENT_TYPE_JSON = 'application/json; charset=utf-8';
 
 /**
@@ -32,7 +27,8 @@ const commonFromBase64 = str => {
  * @name commonConfig
  * @description config
  * @function
- * @param {string} service
+ * @param {{service:string,
+ *          path:string}} parameters
  * @returns {Promise.<{
  *   name:                              string,
  *   server_protocol:	                string,
@@ -45,12 +41,10 @@ const commonFromBase64 = str => {
  *   uuid:                              string,
  *   secret:                            string,
  *   config:                            *,
- *   server:                            import('node:http') ,
- *   port:                              number,
- *   options:                           {key?:string, cert?:string}}>}
+ *   server:                            import('node:http') }>}
  */
-const commonConfig = async service =>{
-    const Config = JSON.parse(await fs.promises.readFile(serverProcess.cwd() + `/data/microservice/${service}.json`, 'utf8'));
+const commonConfig = async parameters =>{
+    const Config = JSON.parse(await fs.promises.readFile(parameters.path + `/data/microservice/${parameters.service}.json`, 'utf8'));
     return {
         name:                               Config.name,
         server_protocol:                    Config.server_protocol,
@@ -64,9 +58,7 @@ const commonConfig = async service =>{
         secret:                             Config.secret,
         config:                             Config.config,
         //server start info:
-        server:                             await import(`node:${Config.server_protocol}`),
-        port:                               Config.server_port,
-        options:                            {}
+        server:                             await import(`node:${Config.server_protocol}`)
         };
 };
 
@@ -127,7 +119,7 @@ const commonAuth = async parameters =>{
  * @name commonServerReturn
  * @description returns result using ISO20022 format
  * @function
- * @param {{code:string,
+ * @param {{code:number,
  *          token:string,
  *          uuid:string,
  *          secret:string,
@@ -136,10 +128,7 @@ const commonAuth = async parameters =>{
  *          message_queue_method:'POST'|'GET',
  *          error:*,
  *          result:*,
- *          res:import('node:http')['IncomingMessage'] & {  statusCode:string, 
- *                                                          write:function, 
- *                                                          setHeader:function, 
- *                                                          end:function}}} parameters
+ *          res:import('node:http').ServerResponse}} parameters
  * @returns {Promise.<void>}
  */
 const commonServerReturn = async parameters=>{
@@ -180,10 +169,10 @@ const commonServerReturn = async parameters=>{
  *          message_queue_method:'POST'|'GET',
  *          uuid:string,
  *          secret:string}} parameters
- * @returns {void}
+ * @returns {Promise.<void>}
  */
-const commonLog = parameters =>{
-    commonRequestUrl({
+const commonLog = async parameters =>{
+    await commonRequestUrl({
         url:parameters.message_queue_url, 
         external:false,
         uuid:parameters.uuid,

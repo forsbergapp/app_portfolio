@@ -5,7 +5,7 @@
  */
 const Crypto = await import('node:crypto');
 const {server} = await import('./server.js');
-const commonCrypto = await import('../apps/common/src/functions/common_crypto.js');
+const commonCrypto = await import('../sdk/crypto.js');
 /**
  * @name securityCreateRandomString
  * @description Create random string
