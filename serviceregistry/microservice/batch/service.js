@@ -125,28 +125,31 @@ const getUTCDate = () =>
  *            scheduled_start:Date}}
  */
 const scheduleMilliseconds = (cron_expression) =>{
-    /**
-     * 
-     * @param {number} milliseconds 
-     * @returns number
-     */
-    const roundToNextMinute = milliseconds =>{
-        //set to next minute and second to 0
-         const roundUTC = UTC;
-         roundUTC.setMinutes(roundUTC.getMinutes());
-         roundUTC.setSeconds(0);
-         return milliseconds + (roundUTC.valueOf() - UTC.valueOf() )
-    };
+
     //Get current UTC time with seconds
     const UTC = getUTCDate();
     
-
+    /**
+     * 
+     * @param {Date} UTCdate
+     * @param {number} milliseconds
+     * @returns 
+     */
+    const roundToNextMinute = (UTCdate, milliseconds) => {
+        const scheduledDate = new Date(UTCdate.valueOf());
+        scheduledDate.setMilliseconds(scheduledDate.getMilliseconds() + milliseconds);
+        scheduledDate.setSeconds(0);
+        scheduledDate.setMilliseconds(0);
+        if (scheduledDate.getSeconds() > 0 || scheduledDate.getMilliseconds() > 0)
+            scheduledDate.setMinutes(scheduledDate.getMinutes() + 1);
+        return scheduledDate.valueOf() - UTCdate.valueOf();
+    }
     
     if (cron_expression== '* * * * *'){
         //every minute
         return {
-                milliseconds:roundToNextMinute(60*1000),
-                scheduled_start:new Date(UTC.valueOf() + roundToNextMinute(60*1000))
+                milliseconds:roundToNextMinute(UTC, 60*1000),
+                scheduled_start:new Date(UTC.valueOf() + roundToNextMinute(UTC, 60*1000))
                 }
     }
     else{
@@ -156,7 +159,7 @@ const scheduleMilliseconds = (cron_expression) =>{
         let new_date = null;
         if (cron_expression_array[0]=='*' && cron_expression_array[1]=='*'){
             //every minute and every hour
-            new_date = UTC.getTime() + roundToNextMinute(60*1000);
+            new_date = UTC.getTime() + roundToNextMinute(UTC, 60*1000);
         }
         else
             if (cron_expression_array[0]!='*'){
@@ -174,7 +177,7 @@ const scheduleMilliseconds = (cron_expression) =>{
                     new_date = UTC.setMinutes(cron_expression_array[0]);
             }
             else
-                new_date = UTC.getTime() + roundToNextMinute(60*1000);
+                new_date = UTC.getTime() + roundToNextMinute(UTC, 60*1000);
             if (cron_expression_array[1]!='*'){
                 if (new Date(new_date).getHours()>=cron_expression_array[1]){
                     //next specific hour is next day
