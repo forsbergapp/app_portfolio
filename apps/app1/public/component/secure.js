@@ -12,10 +12,10 @@
  * @returns {string}
  */
 const template = () =>` <div id='secure'>
-                            <div id='secure_menu_open' class='common_app_dialogues_button common_icon'></div>
+                            <div id='secure_menu_open' class='common_app_dialogues_button common_icon common_icon_button'></div>
                             <div id='secure_menu'>
                                 <div id='secure_menu_menus'>
-                                    <div id='secure_menu_close' class='common_app_dialogues_button common_icon'></div>
+                                    <div id='secure_menu_close' class='common_app_dialogues_button common_icon common_icon_button'></div>
                                     <div id='secure_menu_1' class='secure_menuitem common_icon'></div>
                                     <div id='secure_menu_2' class='secure_menuitem common_icon'></div>
                                     <div id='secure_menu_3' class='secure_menuitem common_icon'></div>

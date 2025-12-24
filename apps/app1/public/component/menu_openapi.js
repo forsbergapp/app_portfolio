@@ -19,7 +19,7 @@ const template = () => ` <div id='menu_openapi_content_widget1' class='widget'>
                                 </div>
                                 <div id='menu_openapi_detail' class='common_list_scrollbar'></div>
                                 <div id='menu_openapi_buttons' class="save_buttons">
-                                    <div id='menu_openapi_save' class='common_app_dialogues_button button_save common_icon'></div>
+                                    <div id='menu_openapi_save' class='common_app_dialogues_button button_save common_icon common_icon_button'></div>
                                 </div>
                             </div>`;
 /**

@@ -19,10 +19,10 @@
 const template = props => ` <div class='menu_users_list_row'>
                                 <div data-column='Avatar' class='menu_users_list_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
                                 <div data-column='Id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Id')}'></div>
-                                <div data-column='Type' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('Type')}'></div>
+                                <div data-column='Type' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Type')}'></div>
                                 <div data-column='Active' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Active')}'></div>
                                 <div data-column='Status' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Status')}'></div>
-                                <div data-column='UserLevel' class='menu_users_list_col list_sort_click list_title ${props.function_get_order_by('UserLevel')}'></div>
+                                <div data-column='UserLevel' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('UserLevel')}'></div>
                                 <div data-column='Private' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Private')}'></div>
                                 <div data-column='Username' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Username')}'></div>
                                 <div data-column='Bio' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Bio')}'></div>

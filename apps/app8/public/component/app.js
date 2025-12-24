@@ -55,16 +55,16 @@ const template = props =>`  <div id='app_main'>
                                     </div>
                                     <div class='buttons_row'>
                                         <div class='buttons_col'>
-                                            <div id='button_solve' class='common_app_dialogues_button common_list_lov_click'></div>
+                                            <div id='button_solve' class='common_app_dialogues_button common_list_lov_click common_icon common_icon_button'></div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_solve_cubestate' class='common_app_dialogues_button'></div>
+                                            <div id='button_solve_cubestate' class='common_app_dialogues_button common_icon common_icon_button'></div>
                                         </div>
                                         <div class='buttons_col'>
                                             <div id='app_select_model' class='common_select'>
                                                 <div class='common_select_dropdown'>
                                                     <div class='common_select_dropdown_value' data-value='0'>${props.icon_robot}</div>
-                                                    <div class='common_select_dropdown_icon common_icon'></div>
+                                                    <div class='common_icon common_icon_select_dropdown'></div>
                                                 </div>
                                                 <div class='common_select_options'>
                                                     <div class='common_select_option' data-value='0'>${props.icon_robot}</div>
@@ -73,22 +73,22 @@ const template = props =>`  <div id='app_main'>
                                             </div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_solved_step' class='common_app_dialogues_button common_list_lov_click'></div>
+                                            <div id='button_solved_step' class='common_app_dialogues_button common_list_lov_click common_icon common_icon_button'></div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_solved_step_cubestate' class='common_app_dialogues_button'></div>
+                                            <div id='button_solved_step_cubestate' class='common_app_dialogues_button common_icon common_icon_button'></div>
                                         </div>
                                     </div>
                                     <div class='buttons_row'>
                                         <div class='buttons_col'>
-                                            <div id='button_scramble' class='common_app_dialogues_button'></div>
+                                            <div id='button_scramble' class='common_app_dialogues_button common_icon common_icon_button'></div>
                                         </div>
                                         <div class='buttons_col'></div>
                                         <div class='buttons_col'>
                                             <div id='app_select_temperature' class='common_select'>
                                                 <div class='common_select_dropdown'>
                                                     <div class='common_select_dropdown_value' data-value='0'>${props.icon_solution}</div>
-                                                    <div class='common_select_dropdown_icon common_icon'></div>
+                                                    <div class='common_icon common_icon_select_dropdown'></div>
                                                 </div>
                                                 <div class='common_select_options'>
                                                     <div class='common_select_option' data-value='0'>${props.icon_solution}</div>
@@ -97,10 +97,10 @@ const template = props =>`  <div id='app_main'>
                                             </div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_reset' class='common_app_dialogues_button'></div>
+                                            <div id='button_reset' class='common_app_dialogues_button common_icon common_icon_button'></div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_info' class='common_app_dialogues_button'></div>
+                                            <div id='button_info' class='common_app_dialogues_button common_icon common_icon_button'></div>
                                         </div>
                                     </div>
                                 </div>

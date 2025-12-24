@@ -24,24 +24,24 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
                                 </div>
                                 <div id='menu_start_graphBox'></div>
                                 <div id='menu_start_user_stat'>
-                                    <div id="menu_start_user_stat_count_users" class='menu_start_user_stat_col common_icon'></div>
+                                    <div id="menu_start_user_stat_count_users" class='menu_start_user_stat_col common_icon common_icon_title'></div>
                                     <div class='menu_start_user_stat_col'>${props.user_stat[0].CountUsers}</div>
-                                    <div id="menu_start_user_stat_count_connected" class='menu_start_user_stat_col common_icon'></div>
+                                    <div id="menu_start_user_stat_count_connected" class='menu_start_user_stat_col common_icon common_icon_title'></div>
                                     <div class='menu_start_user_stat_col'>${props.user_stat[0].count_connected}</div>
-                                    <div id="menu_start_user_stat_count_notconnected" class='menu_start_user_stat_col common_icon'></div>
+                                    <div id="menu_start_user_stat_count_notconnected" class='menu_start_user_stat_col common_icon common_icon_title'></div>
                                     <div class='menu_start_user_stat_col'>${props.count_not_connected}</div>
                                 </div>
                             </div>
                             <div id='menu_start_content_widget2' class='widget'>
                                 <div id='menu_start_maintenance'>
-                                    <div id='menu_start_maintenance_title' class='common_icon'></div>
+                                    <div id='menu_start_maintenance_title' class='common_icon common_icon_title'></div>
                                     <div id='menu_start_maintenance_checkbox'>
                                         <div id='menu_start_checkbox_maintenance' class='common_switch ${props.maintenance==1?'checked':''}'></div>
                                     </div>
                                 </div>
                                 <div id='menu_start_broadcast'>
-                                    <div id='menu_start_broadcast_title' class='common_icon'></div>
-                                    <div id='menu_start_broadcast_button' class='chat_click common_icon'></div>
+                                    <div id='menu_start_broadcast_title' class='common_icon common_icon_title'></div>
+                                    <div id='menu_start_broadcast_button' class='chat_click common_icon common_icon_button'></div>
                                 </div>
                             </div>`;
 /**

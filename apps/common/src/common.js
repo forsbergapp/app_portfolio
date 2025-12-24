@@ -7,7 +7,6 @@
 
 const {server} = await import('../../../server/server.js');
 const {default:ComponentApp} = await import('./component/common_app.js');
-const {default:ComponentCss} = await import('./component/common_css.js');
 const {default:ComponentMaintenance} = await import('./component/common_maintenance.js');
 const {default:ComponentReport} = await import('./component/common_report.js');
 const {default:ComponentInfo} = await import('./component/common_info.js');
@@ -426,19 +425,6 @@ const commonGetFile = async parameters =>{
                                         });
             });
 };
-/**
- * @name commonCSSStart
- * @description Returns CSS for app and server error components
- * @function
- * @param {{start:boolean,
- *          ui:boolean}} parameters
- * @returns {Promise.<string>}
- */
-const commonCSSStart = async parameters =>
-    await ComponentCss({  data:   { start:parameters.start,
-                                    ui:parameters.ui},
-                            methods:null
-                        });
 /**
  * @name commonCssFonts
  * @description Returns resource /common/css/font/fonts.css used with updated url and db records to create at start
@@ -1409,7 +1395,6 @@ const commonGeodataUser = async (app_id, ip) =>{
 export {commonValidImagePixelSize,
         commonValidImage,
         commonGetFile,
-        commonCSSStart,
         commonCssFonts,
         commonAppStart, 
         commonAppIam, commonResourceFile,

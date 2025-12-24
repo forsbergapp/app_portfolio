@@ -195,6 +195,7 @@ body {
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
+    fill:var(--common_app_color_green) !important;
 }
 .common_app_dialogues_content:hover, 
 .common_app_dialogues_content:active{

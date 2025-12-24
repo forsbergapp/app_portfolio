@@ -1,13 +1,13 @@
 /*APP*/
 #secure_menu_open::before{															content: var(--common_app_icon_menu_open)}
-#secure_menu_close::before{															content: var(--common_app_icon_menu_close)}
+#secure_menu_close::before{															content: var(--common_app_icon_close)}
 #secure_menu_1::before{																content: var(--common_app_icon_chart)}
 #secure_menu_2::before{																content: var(--common_app_icon_users)}
 #secure_menu_3::before{																content: var(--common_app_icon_apps) ' ' var(--common_app_icon_settings)}
-#secure_menu_4::before{																content: var(--common_app_icon_log)}
+#secure_menu_4::before{																content: var(--common_app_icon_monitor)}
 #secure_menu_5::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_settings)}
-#secure_menu_6::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_install)}
-#secure_menu_7::before{																content: var(--common_app_icon_server) ' ' var(--common_app_icon_database)}
+#secure_menu_6::before{																content: var(--common_app_icon_database) ' ' var(--common_app_icon_settings)}
+#secure_menu_7::before{																content: var(--common_app_icon_database) ' ' var(--common_app_icon_chart) }
 #secure_menu_8::before{																content: var(--common_app_icon_print)}
 #secure_menu_9::before{															    content: var(--common_app_icon_server)}
 #secure_menu_10::before{															content: var(--common_app_icon_logout)}
@@ -40,13 +40,14 @@
 #menu_users_save::before{															content:var(--common_app_icon_save)}
 #menu_users_list .list_title[data-column='Avatar']::before{							content:var(--common_app_icon_user_avatar)}
 #menu_users_list .list_title[data-column='Id']::before{								content:var(--common_app_icon_provider_id)}
-#menu_users_list .list_title[data-column='Type']::before{							content:'TYPE'}
-#menu_users_list .list_title[data-column='Active']::before{							content:var(--common_app_icon_inactive) ' ' var(--common_app_icon_active)}
-#menu_users_list .list_title[data-column='UserLevel']::before{						content:'LEVEL'}
+#menu_users_list .list_title[data-column='Type']::before{							content:var(--common_app_icon_type)}
+#menu_users_list .list_title[data-column='Active']::before{							content:var(--common_app_icon_active)}
+#menu_users_list .list_title[data-column='Status']::before{							content:var(--common_app_icon_status)}
+#menu_users_list .list_title[data-column='UserLevel']::before{						content:var(--common_app_icon_level)}
 #menu_users_list .list_title[data-column='Private']::before{						content:var(--common_app_icon_private)}
-#menu_users_list .list_title[data-column='Username']::before{						content:var(--common_app_icon_user) ' ' var(--common_app_icon_username)}
+#menu_users_list .list_title[data-column='Username']::before{						content:var(--common_app_icon_username)}
 #menu_users_list .list_title[data-column='Bio']::before{							content:var(--common_app_icon_user_bio)}
-#menu_users_list .list_title[data-column='OtpKey']::before{						content:var(--common_app_icon_otp)' 123456'}
+#menu_users_list .list_title[data-column='OtpKey']::before{						    content:var(--common_app_icon_otp)}
 #menu_users_list .list_title[data-column='Password']::before{						content:var(--common_app_icon_user_password)}
 #menu_users_list .list_title[data-column='PasswordReminder']::before{				content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_info)}
 #menu_users_list .list_title[data-column='VerificationCode']::before{				content:var(--common_app_icon_verification_code)}
@@ -54,7 +55,7 @@
 #menu_users_list .list_title[data-column='Modified']::before{					    content:var(--common_app_icon_user_account_modified)}
 
 #menu_apps_title::before{															content:var(--common_app_icon_apps)}
-#menu_apps_detail_data::before{												content:var(--common_app_icon_settings)}
+#menu_apps_detail_data::before{												        content:var(--common_app_icon_settings)}
 #menu_apps_detail_secret::before{													content:var(--common_app_icon_user_password)}
 #menu_apps_detail_module::before{													content:var(--common_app_icon_init)}
 #menu_apps_save::before{															content:var(--common_app_icon_save)}
@@ -62,7 +63,6 @@
 #menu_openapi_save::before{															content:var(--common_app_icon_save)}
 
 #menu_monitor_connected::before{													content:var(--common_app_icon_user_connections)  ' '  var(--common_app_icon_log)}
-#menu_monitor_app_data_stat::before{												content:var(--common_app_icon_apps) ' ' var(--common_app_icon_log)}
 #menu_monitor_server_log::before{													content:var(--common_app_icon_server) ' ' var(--common_app_icon_log)}
 #menu_monitor_detail_filesearch::before{											content:var(--common_app_icon_lov)}
 
@@ -87,17 +87,16 @@
 
 #menu_installation_demo_demo_users_icon::before{									content:var(--common_app_icon_users)}
 #menu_installation_demo_button_install::before{										content:var(--common_app_icon_add)}
-#menu_installation_demo_button_uninstall::before{									content:var(--common_app_icon_delete)}
+#menu_installation_demo_button_uninstall::before{									content:var(--common_app_icon_remove)}
 #menu_installation_demo_password_icon::before{										content:var(--common_app_icon_user_password)}
 
 #menu_db_info_database_title::before{												content:var(--common_app_icon_database) ' ' var(--common_app_icon_regional_numbersystem)}
 #menu_db_info_name_title::before{													content:var(--common_app_icon_database)}
 #menu_db_info_version_title::before{												content:var(--common_app_icon_database) ' ' var(--common_app_icon_regional_numbersystem) ' ' var(--common_app_icon_info)}
-#menu_db_info_database_schema_title::before{										content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_schema)}
 #menu_db_info_host_title::before{													content:var(--common_app_icon_server)}
 #menu_db_info_connections_title::before{											content:var(--common_app_icon_user_connections)}
 #menu_db_info_started_title::before{												content:var(--common_app_icon_database_started)}
-#menu_db_info_title::before{														content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_calc)}
+#menu_db_info_title::before{														content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_stat)}
 #menu_db_info_db_sum::before{														content:var(--common_app_icon_sum)}
 
 #menu_report_run::before{															content:var(--common_app_icon_run)}
@@ -112,7 +111,6 @@
 #common_app_dialogues_app_custom.common_app_dialogues_show0{
 	height:320px;
 	width:300px;
-	font-size: 11px;
 }
 #dialogue_send_broadcast_select_app_broadcast{
 	width:50%;
@@ -120,14 +118,13 @@
 	margin: 0 auto;
 }
 #dialogue_send_broadcast_message{
-	width:80%;
+	width:100%;
 	height:100px;
-	margin:10px;
+	margin-top:10px;
 	resize: none;
 	display:inline-block;
 	border: 0.5px solid;
 	text-align: start;
-	padding: 2px;
 }
 #dialogue_send_broadcast_client_id_label{
 	width:100%;
@@ -151,6 +148,13 @@
 	margin-top:20px;
 	font-size: 11px;
 }
+#secure .common_icon_title,
+#secure .common_icon_button{
+    font-size:1.5em;
+}
+#secure .list_button{
+    font-size:1.25em;
+}
 #secure_menu{
 	width:150px;
 	height:100%;
@@ -167,13 +171,12 @@
 	padding-top: 10px;
 	padding-bottom: 10px;
 	margin: 0.5em;
-	font-size: 1.2em;
+	font-size: 1.5em;
 	text-transform:uppercase;
 	display: block !important;
 }
 #secure_menu_open{
 	margin-inline-start: 20px;
-	height: 30px;
 }
 #secure_menu_close{
 	display: block;
@@ -181,7 +184,6 @@
 	position: absolute;
 	text-align: end;
 	width: 90%;
-	height: 20px;
 }
 #secure_main{
 	width:100%;
@@ -286,27 +288,22 @@
     grid-template-columns: 50% 50%;
 }
 
-#menu_start_maintenance_title{
-	font-size: 2em;
-}
 #menu_start_maintenance_checkbox{
 	margin-top: 10px;
 	margin-bottom: 5px;
 }
 #menu_start_broadcast_title{
-	font-size: 2em;
 	display: block;
-}
-#menu_start_broadcast_button{
-	font-size: 30px;
-	cursor:pointer;
 }
 #dialogue_send_broadcast_title{
 	display: block;
 }
+#dialogue_send_broadcast_close::before{
+    width: 100%;
+}
 
 #menu_start_graphBox{
-	height:calc(100% - 40px);
+	height:calc(100% - 4em);
 }
 #menu_start_graphBox.common_loading_spinner{
 	height:30px;
@@ -337,11 +334,7 @@
 	width: 95%;
 	height: 2em;
 }
-.menu_start_chart_box_title .common_icon{
-	height: 1.3em;
-	width: 1.2em;
-	vertical-align: middle;
-}
+
 .menu_start_chart_box_legend{
 	text-align: start;
 	display: inline-block;
@@ -369,7 +362,7 @@
 	display: flex;
 	align-items: flex-end;
 	width: 100%;
-	height: calc(100% - 8em);
+	height: calc(100% - 10em);
 	margin-bottom: 20px;
 	font-size: 0.7em;
 }
@@ -730,9 +723,9 @@
 #menu_installation_demo_button_row >div{
 	height: 36px;
 }
+
 #menu_installation_demo_password_icon{
 	display: inline-block;
-	font-size: 1.5em;
 }
 #menu_installation_demo_input .common_password_container{
 	border:1px solid;
@@ -840,19 +833,15 @@
 	width: 100px !important;
 	text-align: start;
 }
-#menu_report_run{
-  	width: calc(100% - 20px);
-	top: unset !important;
-}
+
 #menu_report_content_widget2{
 	height: calc(50% - 10px);
 	display: flex;
 	flex-direction: column;
 }
 #menu_report_queue_reload{
-	display: inline-block;
+	display: contents;
   	width: 100%;
-  	margin-bottom: 20px;
 }
 #menu_report_queue{
 	margin: 1em;
@@ -1207,9 +1196,6 @@ body{
 	background-color:var(--app_theme_menu_background_color);
 	font-weight: bold;
 }
-#secure_menu_close{
-	font-size: 24px;
-}
 .secure_menuitem_selected{
 	background-color: var(--app_theme_secure_menuitem_selected_background_color) !important;
 }
@@ -1376,9 +1362,11 @@ body{
 .common_toolbar_button:hover, 
 .common_toolbar_button:active{
 	color:var(--app_theme_hover_color) !important;
+    fill:var(--app_theme_hover_color) !important;
 }
 .common_toolbar_button{
 	color: var(--app_theme_text_color) !important;
+    fill:var(--app_theme_text_color) !important;
 }
 #common_app_dialogues_message_progressbar_wrap{
 	border-color: var(--app_theme_main_branding_color1) !important;

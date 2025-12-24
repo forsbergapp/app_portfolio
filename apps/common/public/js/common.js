@@ -1175,10 +1175,10 @@ const commonComponentTemplateMessage = props =>`
         }
         <div id='common_app_dialogues_message_buttons'>
             ${props.message_type=='CONFIRM'?
-                '<div id=\'common_app_dialogues_message_cancel\' class=\'common_app_dialogues_button common_icon\' ></div>':''
+                '<div id=\'common_app_dialogues_message_cancel\' class=\'common_app_dialogues_button common_icon_common_icon_button\' ></div>':''
             }
             ${props.message_type!='PROGRESS'?
-                '<div id=\'common_app_dialogues_message_close\' class=\'common_app_dialogues_button common_icon\' ></div>':''
+                '<div id=\'common_app_dialogues_message_close\' class=\'common_app_dialogues_button common_icon common_icon_button\' ></div>':''
             }
         </div>`;
 /**
@@ -2292,9 +2292,9 @@ const commonEvent = async (event_type,event=null) =>{
                         const event_target_id = commonMiscElementId(event.target);
                         switch(event_target_id){
                             case event.target.parentNode.classList.contains('common_select_dropdown_value')?event_target_id:'':
-                            case event.target.parentNode.classList.contains('common_select_dropdown_icon')?event_target_id:'':
+                            case event.target.parentNode.classList.contains('common_icon_select_dropdown')?event_target_id:'':
                             case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
-                            case event.target.classList.contains('common_select_dropdown_icon')?event_target_id:'':{
+                            case event.target.classList.contains('common_icon_select_dropdown')?event_target_id:'':{
                                 COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display = 
                                     COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
                                 break;
@@ -3021,15 +3021,14 @@ const commonGlobals = globals => {
  * @description Init common
  * @function
  * @param {{globals:string,
- *          cssFontsStart:string,
  *          cssCommon:string,
  *          jsCrypto:string}} parameters
  * @returns {Promise.<void>}
  */
 const commonInit = async parameters => {  
 
-    //apply start fonts + common css
-    commonMiscCssApply(commonWindowFromBase64(parameters.cssFontsStart) + commonWindowFromBase64(parameters.cssCommon));
+    //apply common css
+    commonMiscCssApply(commonWindowFromBase64(parameters.cssCommon));
 
     //set globals
     commonGlobals(parameters.globals);

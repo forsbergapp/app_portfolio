@@ -18,8 +18,8 @@ const template = () => `<div id='dialogue_send_broadcast_form'>
                             <div id='dialogue_send_broadcast_client_id_label' class='common_icon'></div><div id='dialogue_send_broadcast_client_id'></div>
                             <div id='dialogue_send_broadcast_select_app_broadcast'></div>
                             <div id='dialogue_send_broadcast_message' contentEditable='true'></div>
-                            <div id='dialogue_send_broadcast_send' class='common_app_dialogues_button common_icon' ></div>
-                            <div id='dialogue_send_broadcast_close' class='common_app_dialogues_button common_icon' ></div>
+                            <div id='dialogue_send_broadcast_send' class='common_app_dialogues_button common_icon common_icon_button' ></div>
+                            <div id='dialogue_send_broadcast_close' class='common_app_dialogues_button common_icon common_icon_button' ></div>
                         </div>`;
 /**
  * @name component

@@ -902,7 +902,7 @@ const iamObserveLimitReached = ip =>{
  */
  const iamAuthenticateRequest = async parameters => {
    
-    const BLOCKED_PATHS = ['/favicon.ico'];
+    const BLOCKED_PATHS = ['/favicon.ico', '/undefined'];
 
     let statusCode;
     let statusMessage;
@@ -961,7 +961,10 @@ const iamObserveLimitReached = ip =>{
             return false;
     };
 
-    if (BLOCKED_PATHS.includes(parameters.req.url)){
+    if (BLOCKED_PATHS.includes(parameters.req.url) && 
+        //block browser font requests with /undefined
+        (   parameters.req.url=='/undefined' && parameters.req.headers['sec-fetch-dest']=='font' ||
+            parameters.req.headers['sec-fetch-dest']!='font')){
         //Browser path to block without any more action
         statusCode = 401;
         statusMessage=' ';    

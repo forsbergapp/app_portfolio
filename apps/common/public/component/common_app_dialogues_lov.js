@@ -34,7 +34,7 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
                                     `).join('')
                                 }
                             </div>
-                            <div id='common_app_dialogues_lov_close' class='common_app_dialogues_button common_icon'></div>
+                            <div id='common_app_dialogues_lov_close' class='common_app_dialogues_button common_icon common_icon_button'></div>
                         </div>`;
 /**
  * @name component
