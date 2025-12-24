@@ -14,19 +14,19 @@
  * @returns {string}
  */
 const template = ()=>`  <div id='toolbar_top'>
-                            <div id='toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
-                            <div id='toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
-                            <div id='toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
-                            <div id='toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
-                            <div id='toolbar_btn_search' class='common_toolbar_button common_icon'></div>
+                            <div id='toolbar_btn_zoomout' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                            <div id='toolbar_btn_zoomin' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                            <div id='toolbar_btn_left' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                            <div id='toolbar_btn_right' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                            <div id='toolbar_btn_search' class='common_toolbar_button common_icon common_icon_toolbar_m'></div>
                         </div>
                         <div id='paper'></div>
                         <div id='toolbar_bottom'>
-                            <div id='toolbar_btn_print' class='common_toolbar_button common_icon' ></div>
-                            <div id='toolbar_btn_day' class='common_toolbar_button common_icon' ></div>
-                            <div id='toolbar_btn_month' class='common_toolbar_button common_icon' ></div>
-                            <div id='toolbar_btn_year' class='common_toolbar_button common_icon' ></div>
-                            <div id='toolbar_btn_settings' class='common_toolbar_button common_icon'></div>
+                            <div id='toolbar_btn_print' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                            <div id='toolbar_btn_day' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                            <div id='toolbar_btn_month' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                            <div id='toolbar_btn_year' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                            <div id='toolbar_btn_settings' class='common_toolbar_button common_icon common_icon_toolbar_m'></div>
                         </div>`;
 /**
  * @name component

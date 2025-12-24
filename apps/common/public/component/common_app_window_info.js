@@ -21,15 +21,15 @@
  * @returns {string}
  */
 const template = props => ` 
-                            <div id='common_app_window_info_toolbar'>
-                                <div id='common_app_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_app_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_app_window_info_toolbar_btn_left' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_app_window_info_toolbar_btn_right' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_app_window_info_toolbar_btn_up' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_app_window_info_toolbar_btn_down' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_app_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon' ></div>
-                                <div id='common_app_window_info_toolbar_btn_close' class='common_toolbar_button common_icon' ></div>
+                            <div id='common_app_window_info_toolbar' >
+                                <div id='common_app_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                                <div id='common_app_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                                <div id='common_app_window_info_toolbar_btn_left' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                                <div id='common_app_window_info_toolbar_btn_right' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                                <div id='common_app_window_info_toolbar_btn_up' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                                <div id='common_app_window_info_toolbar_btn_down' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                                <div id='common_app_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                                <div id='common_app_window_info_toolbar_btn_close' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
                             </div>
                             <div id='common_app_window_info_info' class='${props.class}'>
                                 ${props.info=='IMAGE'?

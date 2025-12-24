@@ -24,7 +24,7 @@ const template = props =>` <div id='common_app_broadcast_info'>
                                 <div id='common_app_broadcast_footer'>
                                     <div id='common_app_broadcast_info_logo' class='common_image common_image_broadcast'></div>
                                     <div id='common_app_broadcast_info_title' class='common_icon'></div>
-                                    <div id='common_app_broadcast_close' class='common_toolbar_button common_icon'></div>
+                                    <div id='common_app_broadcast_close' class='common_toolbar_button common_icon common_icon_button'></div>
                                 </div>
                             </div>
                         </div>`;

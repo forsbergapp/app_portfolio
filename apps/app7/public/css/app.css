@@ -92,7 +92,8 @@ body{
 /*APP THEME COMMON*/
 #common_app_iam_user_menu_avatar_img, 
 #common_app_iam_user_menu_default_avatar{
-	background-color: var(--app_theme_main_branding_color1);
+    color: var(--app_theme_main_branding_color3);
+	background-color: var(--app_theme_main_branding_color2);
 }
 .common_app_dialogues_iam_start_selected,
 .common_map_control_active,
@@ -103,10 +104,12 @@ body{
 	color: var(--app_theme_main_branding_color3);
 	background-color: var(--app_theme_main_branding_color2);
 	box-shadow: 0px -3px 3px var(--app_theme_dialogue_shadow_color1);
+    fill:var(--app_theme_main_branding_color3);
 }
 .common_icon:hover,
 .common_icon:active{
 	color: var(--app_theme_user_menu_hover_color) !important;
+    fill:var(--app_theme_user_menu_hover_color) !important;
 }
 .common_toolbar_selected{
 	background-color: var(--app_theme_main_branding_color1) !important;
@@ -120,7 +123,8 @@ body{
 	box-shadow: 0 4px 8px 0 var(--common_app_color_shadow1),0 6px 20px 0 var(--common_app_color_shadow2);
 }
 #common_map_control{
-    color: var(--app_theme_text_color) !important;
+    color: var(--app_theme_main_branding_color3) !important;
+    background-color: var(--app_theme_main_branding_color2);
 }
 .common_map_control_expand{
 	background-color: var(--app_theme_main_branding_color2) !important;

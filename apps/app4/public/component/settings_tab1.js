@@ -29,7 +29,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_RegionalTimezone_current' class='common_icon'></div>
+                                    <div id='setting_icon_regional_timezone_current' class='common_icon'></div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_timezone_current'>${props.user_timezone}</div>
@@ -47,7 +47,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_RegionalTimezone' class='common_icon'></div>
+                                    <div id='setting_icon_regional_timezone' class='common_icon'></div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_timezone'></div>
@@ -95,7 +95,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_RegionalArabicScript' class='common_icon'></div>
+                                    <div id='setting_icon_regional_arabic_script' class='common_icon'></div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_arabic_script'></div>
@@ -115,7 +115,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_RegionalCalendarHijri_type' class='common_icon'></div>
+                                    <div id='setting_icon_regional_calendar_hijri_type' class='common_icon'></div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_calendar_hijri_type'></div>

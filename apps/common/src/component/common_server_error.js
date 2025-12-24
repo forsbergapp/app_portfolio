@@ -8,15 +8,13 @@ const {server} = await import('../../../../server/server.js');
  * @name template
  * @description Server error
  * @function
- * @param {{message:string|null,
- *          commonStartCss:string}} props
+ * @param {{message:string|null}} props
  * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
                             <html>
                             <head>
                                 <style>
-                                    ${props.commonStartCss}
                                     body{
                                         --common_app_color_black: #404040;
                                         --common_app_color_blue1: rgb(81, 171, 255);
@@ -76,9 +74,6 @@ const template = props =>`  <!DOCTYPE html>
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-    return template({message:props.data.message,
-                    //Use cached CSS with loaded fonts
-                     commonStartCss: server.commonCSSStart
-    });
+    return template({message:props.data.message});
 };
 export default component;

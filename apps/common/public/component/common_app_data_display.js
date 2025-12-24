@@ -102,7 +102,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                             class='common_app_data_display_master_col2 ${Object.values(master_row.Document)[0].Type=='LOV'?'common_app_dialogues_lov_value':''}'
                                                             contentEditable='${(Object.values(master_row.Document)[0].Type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
                                                     ${Object.values(master_row.Document)[0].Type=='LOV'?
-                                                        `<div data-lov='${Object.values(master_row.Document)[0].Lov}' class='common_app_dialogues_lov_button common_list_lov_click common_icon'></div>`:''
+                                                        `<div data-lov='${Object.values(master_row.Document)[0].Lov}' class='common_app_dialogues_lov_button common_list_lov_click common_icon common_icon_button'></div>`:''
                                                     }
                                             </div>
                                             `).join('')
@@ -120,7 +120,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                                     `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
                                                                 ).join('')}
                                                             </div>
-                                                            <div class='common_select_dropdown_icon common_icon'></div>
+                                                            <div class='common_icon common_icon_select_dropdown'></div>
                                                         </div>
                                                         <div class='common_select_options'>
                                                             ${(master_row[1].Value??[]).map((/**@type{*}*/list)=>
@@ -188,16 +188,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             }
                             <div class='common_app_data_display_buttons'>
                                 ${props.button_print?
-                                    `<div <div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_app_dialogues_button common_icon ${props.button_print_icon_class ?? ''}' ></div>`:''
+                                    `<div <div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_app_dialogues_button common_icon common_icon_button ${props.button_print_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_update?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_app_dialogues_button common_icon ${props.button_update_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_app_dialogues_button common_icon common_icon_button ${props.button_update_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_post?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_app_dialogues_button common_icon ${props.button_post_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_app_dialogues_button common_icon common_icon_button ${props.button_post_icon_class ?? ''}' ></div>`:''
                                 }
                                 ${props.button_delete?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_app_dialogues_button common_icon ${props.button_delete_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_app_dialogues_button common_icon common_icon_button ${props.button_delete_icon_class ?? ''}' ></div>`:''
                                 }
                             </div>`;
 /**

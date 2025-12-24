@@ -45,185 +45,155 @@
 	--common_report_color_shadow2: rgb(0 0 0 / 19%);
 	--common_report_color_white: white;
 	/*icons ui*/
-	--common_app_icon_apps:                 url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='11px' height='11px' viewBox='0 0 24 24' enable-background='new 0 0 24 24'><path d='M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z'/></svg>");
+    --common_app_icon_framework_react:      '⚛';
+	--common_app_icon_apps:                 '⊞';
     --common_app_icon_maintenance:          '⚒';
     --common_app_icon_alert:                '🚨';
-    --common_app_icon_mobile:               '\f3cf';
-    --common_app_icon_save:                 '\f0c7';
-    --common_app_icon_add:                  '\2b';
-    --common_app_icon_delete:               '\f2ed';
-    --common_app_icon_update:               '\f0c7';
-    --common_app_icon_edit:                 '\f044';
-    --common_app_icon_lov:                  '\f139';
-	--common_app_icon_select_circle:        '\f13a';
-	--common_app_icon_select:        		'\f078';
-    --common_app_icon_send:                 '\f1d8';
-    --common_app_icon_sendmail:             '\f0e0';
-    --common_app_icon_email:                '\f0e0';
-    --common_app_icon_otp:                  '\f084';
-    --common_app_icon_settings:             '\f013';
-    --common_app_icon_chat:                 '\f075';
-    --common_app_icon_log:                  '\f03a';
-    --common_app_icon_chart:                '\f200';
-    --common_app_icon_server:               '\f233';
-    --common_app_icon_route:                '\f0e8';
-    --common_app_icon_database:             '\f1c0';
-    --common_app_icon_database_schema:      '\f0e8';
-    --common_app_icon_users:                '\f0c0';
-    --common_app_icon_user_connections:     '\e595';
-    --common_app_icon_database_started:     '\f205';
-    --common_app_icon_database_notstarted:  '\f204';
-    --common_app_icon_database_calc:        '\f1ec';
-    --common_app_icon_backup:               '\f0ed';
-    --common_app_icon_install:              '\f019';
-    --common_app_icon_file_path:            '\f802';
-    --common_app_icon_broadcast:            '\f519';
-    --common_app_icon_restore:              '\f0ee';
-    --common_app_icon_checkbox_checked:     '\f14a';
-    --common_app_icon_checkbox_empty:       '\f0c8';
-    --common_app_icon_info:                 '\f05a';
-    --common_app_icon_close:                '\f410';
-    --common_app_icon_online:               '\f111';
-    --common_app_icon_search:               '\f002';
+    --common_app_icon_save:                 '💾';
+    --common_app_icon_add:                  '+';
+    --common_app_icon_delete:               '🗑';
+    --common_app_icon_update:               var(--common_app_icon_save);
+    --common_app_icon_lov:                  '^';
+	--common_app_icon_select:        		'˅';
+    --common_app_icon_send:                 '🖅';
+    --common_app_icon_email:                '🖂';
+    --common_app_icon_otp:                  var(--common_app_icon_user_password)' 123456';
+    --common_app_icon_settings:             '⚙';
+    --common_app_icon_chat:                 '🗩';
+    --common_app_icon_log:                  '☰';
+    --common_app_icon_chart:                '📊';
+    --common_app_icon_monitor:              '📈';
+    --common_app_icon_server:               '🖥';
+    --common_app_icon_database:             '⛃';
+    --common_app_icon_user_connections:     '['var(--common_app_icon_users)']';
+    --common_app_icon_database_started:     '→';
+    --common_app_icon_database_stat:        var(--common_app_icon_chart);
+    --common_app_icon_broadcast:            '🗦🗼🗧';
+    --common_app_icon_checkbox_checked:     '☑';
+    --common_app_icon_checkbox_empty:       '☐';
+    --common_app_icon_info:                 'i';
+    --common_app_icon_close:                '☓';
+    --common_app_icon_online:               '⬤';
+    --common_app_icon_search:               '🔍';
     --common_app_icon_menu_open:            '☰';
-    --common_app_icon_menu_close:           '\f410';
-    --common_app_icon_broadcast_close:      '\f410';
-    --common_app_icon_first:                '\f048';
-    --common_app_icon_previous:             '\f0d9';
-    --common_app_icon_next:                 '\f0da';
-    --common_app_icon_last:                 '\f051';
-    --common_app_icon_slider_left:          '\f137';
-    --common_app_icon_slider_right:         '\f138';
-    --common_app_icon_align_left:           '\f036';
-    --common_app_icon_align_center:         '\f037';
-    --common_app_icon_align_right:          '\f038';
-    --common_app_icon_cancel:               '\f057';
-    --common_app_icon_ok:                   '\f058';
-    --common_app_icon_zoomout:              '\f010';
-    --common_app_icon_zoomin:               '\f00e';
-    --common_app_icon_left:                 '\f359';
-    --common_app_icon_right:                '\f35a';
-    --common_app_icon_up:                   '\f35b';
-    --common_app_icon_down:                 '\f358';
-    --common_app_icon_remove:               '\f00d';
-    --common_app_icon_html:                 '\f1c9';
-    --common_app_icon_copy:                 '\f0c5';
-    --common_app_icon_link:                 '\f0c1';
-    --common_app_icon_print:                '\f02f';
-    --common_app_icon_private:              '\f023';
-    --common_app_icon_papersize:            '\f15b';
+    --common_app_icon_first:                '⏮';
+    --common_app_icon_previous:             '⏴';
+    --common_app_icon_next:                 '⏵';
+    --common_app_icon_last:                 '⏭';
+    --common_app_icon_slider_left:          '⏴';
+    --common_app_icon_slider_right:         '⏵';
+    --common_app_icon_align_left:           '⏮';
+    --common_app_icon_align_center:         '⏹';
+    --common_app_icon_align_right:          '⏭';
+    --common_app_icon_cancel:               '☓';
+    --common_app_icon_ok:                   '🗸';  
+    --common_app_icon_zoomout:              '−';
+    --common_app_icon_zoomin:               '+';
+    --common_app_icon_left:                 '⏴';
+    --common_app_icon_right:                '⏵';
+    --common_app_icon_up:                   '▲';
+    --common_app_icon_down:                 '▼';
+    --common_app_icon_remove:               '−';
+    --common_app_icon_html:                 '🖺';
+    --common_app_icon_print:                '🖶';
+    --common_app_icon_private:              '🔒';
+    --common_app_icon_papersize:            '🖹';
     --common_app_icon_highlight:            '🔦';
-    --common_app_icon_show:                 '\f06e';
-    --common_app_icon_notes:                '\f249';
-    --common_app_icon_login:                '\f2f6';
-    --common_app_icon_logout:               '\f2f5';
-    --common_app_icon_signup:               '\f4ff';
-    --common_app_icon_forgot:               '\f059';
-    --common_app_icon_question:             '\f059';
-    --common_app_icon_timetable:            '\f073';
-    --common_app_icon_role:                 '\f630';
-    --common_app_icon_active:               '\f205';
-    --common_app_icon_inactive:             '\f204';
+    --common_app_icon_show:                 '👁';
+    --common_app_icon_notes:                '🗒';
+    --common_app_icon_login:                '🡆⊃';
+    --common_app_icon_logout:               '⊂🡆';
+    --common_app_icon_signup:               var(--common_app_icon_user) '🖉';
+    --common_app_icon_question:             '?';
+    --common_app_icon_active:               'ACTIVE';
+    --common_app_icon_status:               'STATUS';
+    --common_app_icon_level:                'LEVEL';
+    --common_app_icon_type:                 'TYPE';
     --common_app_icon_reload:				'↻';
 	--common_app_icon_reset:				'↺';
     --common_app_icon_sum:                  '∑';
-    --common_app_icon_start:                '\f015';
-    --common_app_icon_type:                 '\f059';
-    --common_app_icon_internet:             '\f0ac';
-    --common_app_icon_shield:               '\f132';
-    --common_app_icon_browser:              '\f2d2';
+    --common_app_icon_internet:             '🌐';
     --common_app_icon_fullscreen:           '⛶';
     --common_app_icon_init:                 '⭐';
-    --common_app_icon_vue:                  '\f41f';
-    --common_app_icon_react:                '\f41b';
-    --common_app_icon_javascript:           '\f3b9';
-	--common_app_icon_run:					'\f1d8';
-	--common_app_icon_preview:				'\f002';
-    --common_app_icon_arrow_pointer:    	'\f245';
+	--common_app_icon_run:					'🖶';
+	--common_app_icon_preview:				'🔍';
+    --common_app_icon_arrow_pointer:    	'🡔';
     --common_app_icon_arrow_pointer_query:   var(--common_app_icon_arrow_pointer) ' ?';
 
-	--common_app_icon_user:                     '\f007';
-    --common_app_icon_username:                 '\41\42\43';
-    --common_app_icon_user_last_logintime:      '\f2f6';
-    --common_app_icon_user_account_created:     '\f4c6';
-    --common_app_icon_user_account_modified:    '\f044';
-    --common_app_icon_user_password:            '\f084';
-	--common_app_icon_user_password_confirm:    '\f084\21';
-	--common_app_icon_user_password_reminder:   '\f084\f059';
-    --common_app_icon_user_account_reminder:    '\f059';
-    --common_app_icon_user_avatar_edit:         '\f030';
-    --common_app_icon_user_avatar:              '\f2bd';
-    --common_app_icon_user_follow_user:         '\f234';
-    --common_app_icon_user_followed_user:       '\f4fc';
-    --common_app_icon_user_like:                '\f004';
-    --common_app_icon_user_unlike:              '\f7a9';
-    --common_app_icon_user_views:               '\f06e';
-    --common_app_icon_user_follows:             '\f500';
-    --common_app_icon_user_followed:            '\f0c0';
-    --common_app_icon_user_bio:                 '\f2c2\41\42\43';
-    --common_app_icon_user_profile:             '\f2c2';
-    --common_app_icon_user_profile_stat:        '\f5a2';
-	--common_app_icon_user_admin: 				'\f4fe';
+	--common_app_icon_user:                     '👤';
+    --common_app_icon_users:                    '👥';
+    --common_app_icon_username:                 var(--common_app_icon_user) ' ABC';
+    --common_app_icon_user_last_logintime:      '🡆⊃';
+    --common_app_icon_user_account_created:     '🤝';
+    --common_app_icon_user_account_modified:    '🖆';
+    --common_app_icon_user_password:            '🔑';
+	--common_app_icon_user_password_confirm:    var(--common_app_icon_user_password) '!';
+	--common_app_icon_user_password_reminder:   var(--common_app_icon_user_password) '?';
+    --common_app_icon_user_avatar:              var(--common_app_icon_user);
+    --common_app_icon_user_follow_user:         var(--common_app_icon_user)'+';
+    --common_app_icon_user_followed_user:       var(--common_app_icon_user)'✓';
+    --common_app_icon_user_like:                '♥';
+    --common_app_icon_user_unlike:              '💔';
+    --common_app_icon_user_views:               '👁';
+    --common_app_icon_user_follows:             var(--common_app_icon_users);
+    --common_app_icon_user_followed:            var(--common_app_icon_user)var(--common_app_icon_users);
+    /**ID CARD ICON + ABC*/
+    --common_app_icon_user_bio:                 var(--common_app_icon_user) ' ABC';
+    --common_app_icon_user_profile:             '\1FAAA';
+    --common_app_icon_user_profile_stat:        '🏅';
 	--common_app_icon_user_session_expired:		'⛔';
-	--common_app_icon_verification_code:        '\f084';
+	--common_app_icon_verification_code:        var(--common_app_icon_user_password);
 
-    --common_app_icon_provider:                 '\f5ab';
-    --common_app_icon_provider_id:              '\f2c1';
+    --common_app_icon_provider_id:              'ID';
 
-    --common_app_icon_gps:                      '\f3c5';
-    --common_app_icon_gps_country:              '\f57c';
-    --common_app_icon_gps_city:                 '\f64f';
-    --common_app_icon_gps_popular_place:        '\f005';
-    --common_app_icon_gps_position:             '\f276';
-    --common_app_icon_gps_high_latitude:        '\f0ac\f2dc';
-    --common_app_icon_map_my_location:          '\f601';
-    --common_app_icon_map_layer:                '\f5fd';
+    --common_app_icon_gps:                      '📍';
+    --common_app_icon_gps_position:             var(--common_app_icon_gps:);
+    --common_app_icon_gps_high_latitude:        '🌐❄';
+    --common_app_icon_map_my_location:          '⌖';
+    --common_app_icon_map_layer:                '☰';
 
-    --common_app_icon_regional:                 '\f0ac';
-    --common_app_icon_regional_day:             '\f185';
-    --common_app_icon_regional_month:           '\f186';
-    --common_app_icon_regional_year:            '\f073';
-    --common_app_icon_regional_weekday:         '\f784';
-    --common_app_icon_regional_locale:          '\f1ab';
-    --common_app_icon_regional_timezone:        '\f0ac';
-    --common_app_icon_regional_calendar:        '\f073';
-    --common_app_icon_regional_numbersystem:    '\31\32\33';
-    --common_app_icon_regional_direction:       '\f362';
-    --common_app_icon_regional_script:          '\f70e';
-    --common_app_icon_regional_calendartype:    '\f073';
-    --common_app_icon_regional_calendar_hijri_type:'\f073';
-    --common_app_icon_regional_timeformat:      '\31\32/\32\34';
+    --common_app_icon_regional:                 '🌐';
+    --common_app_icon_regional_day:             '📆';
+    --common_app_icon_regional_month:           '📅';
+    --common_app_icon_regional_year:            '📅';
+    --common_app_icon_regional_weekday:         '📆';
+    --common_app_icon_regional_locale:          'abc';
+    --common_app_icon_regional_timezone:        '🌐';
+    --common_app_icon_regional_calendar:        '📆';
+    --common_app_icon_regional_numbersystem:    '123';
+    --common_app_icon_regional_direction:       '⇄';
+    --common_app_icon_regional_script:          '📜';
+    --common_app_icon_regional_calendartype:    '📆';
+    --common_app_icon_regional_calendar_hijri_type:'📆';
+    --common_app_icon_regional_timeformat:      '12/24';
 
-    --common_app_icon_sky_cloud:                '\f0c2';
-    --common_app_icon_sky_sunrise:              '\f185\f30c';
-	--common_app_icon_sky_sunrise_horizont:     '\f6c3';
-	--common_app_icon_sky_midday:               '\f185';
-    --common_app_icon_sky_afternoon:            '\f6c4';
-    --common_app_icon_sky_sunset:               '\f185\f309';
-    --common_app_icon_sky_night:                '\f6c3';
-    --common_app_icon_sky_midnight:             '\f6c3';
+    --common_app_icon_sky_cloud:                '☁';
+    --common_app_icon_sky_sunrise_before:       '🌙';
+    --common_app_icon_sky_sunrise:              '☀⭡';
+	--common_app_icon_sky_midday:               '☀';
+    --common_app_icon_sky_afternoon:            '🌥';
+    --common_app_icon_sky_sunset:               '☀⭣';
+    --common_app_icon_sky_night:                '🌙';
+    --common_app_icon_sky_midnight:             '🌙';
 
-    --common_app_icon_misc_model:               url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-2.5 -2.5 65 65'><path d='M53,41V29H31V19h7V3H22v16h7v10H7v12H0v16h16V41H9V31h20v10h-7v16h16V41h-7V31h20v10h-7v16h16V41H53z M24,5h12v12H24V5z M14,55H2V43h12V55z M36,55H24V43h12V55z M58,55H46V43h12V55z'/></svg>");
-    --common_app_icon_misc_design:              '\f53f';
-    --common_app_icon_misc_image:               '\f03e';
-    --common_app_icon_misc_text:                '\f034';
-    --common_app_icon_misc_text_prayer:         '\f683';
-    --common_app_icon_misc_second:              '\32';
-    --common_app_icon_misc_book:                '\f02d';
-    --common_app_icon_misc_food:                '\f2e7';
-    --common_app_icon_misc_prayer:              '\f683';
+    --common_app_icon_misc_design:              '🎨';
+    --common_app_icon_misc_image:               '🖼';
+    --common_app_icon_misc_text:                '🔠';
+    --common_app_icon_misc_second:              '2';
+    --common_app_icon_misc_book:                '📒';
+    --common_app_icon_misc_food:                '🍴';
+    --common_app_icon_misc_prayer:              '🛐';
     --common_app_icon_misc_calling:             '🗣';
-	--common_app_icon_misc_ban:                 '\f05e';
+	--common_app_icon_misc_ban:                 '🚫';
 	--common_app_icon_misc_solve:               '💡';
 	--common_app_icon_misc_education:           '🎓';
 	--common_app_icon_misc_scramble:            '⤮';
 
 	--common_app_icon_infinite:                 '∞';
 
-    --common_app_icon_message_fail:             '\f057';
-    --common_app_icon_message_success:          '\f058';
-    --common_app_icon_message_error:            '\f00d';
-    --common_app_icon_message_text:             '\41\42\43';
+    --common_app_icon_message_fail:             var(--common_app_icon_cancel);
+    --common_app_icon_message_success:          var(--common_app_icon_ok);
+    --common_app_icon_message_text:             'ABC';
 	/*icons app*/
 	--common_app_icon_verification_code:    	'❂❂❂❂❂❂';
 
@@ -289,7 +259,7 @@
 	--common_app_font_arabic_nastaliq: 	'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 
 									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
 									var(--common_app_font_languages_1), var(--common_app_font_symbols), var(--common_app_font_languages_2);
-	
+	--common_app_font_ui:       "Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Emoji", "Noto Sans";
 }
 /*default font*/
 body
@@ -354,6 +324,9 @@ body.rtl .common_pagination_next::before{										    content:var(--common_app_
 body.rtl .common_pagination_last::before{										    content:var(--common_app_icon_first)}
 
 
+/*Icons app*/
+#common_app_toolbar_framework_react::before{								        content:var(--common_app_icon_framework_react); margin-top: -0.25em;}
+
 /*Icons app data display*/
 .common_app_data_display_button_update::before{							            content:var(--common_app_icon_update)}
 .common_app_data_display_button_post::before{							            content:var(--common_app_icon_add)}
@@ -362,20 +335,14 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 .common_data_display_icon_cancel::before{								            content:var(--common_app_icon_cancel) !important}
 .common_data_display_icon_ok::before{									            content:var(--common_app_icon_ok) !important}
 
-/*Icons app*/
-#common_app_toolbar_start::before{									                content:var(--common_app_icon_start)}
-#common_app_toolbar_framework_js::before{									        content:var(--common_app_icon_javascript)}
-#common_app_toolbar_framework_vue::before{									        content:var(--common_app_icon_vue)}
-#common_app_toolbar_framework_react::before{								        content:var(--common_app_icon_react)}
-
 /*Icons broadcast*/
-#common_app_broadcast_close::before{										        content:var(--common_app_icon_broadcast_close)}
+#common_app_broadcast_close::before{										        content:var(--common_app_icon_close)}
 #common_app_broadcast_info_title::before{									        content:var(--common_app_icon_alert)}
 /* Icons maintenance */
 #common_maintenance_message::before{	                                            content:var(--common_app_icon_maintenance)}
 
 /*Icons dialogue apps*/
-#common_apps_list_title_col_info::before{					            content:var(--common_app_icon_info)}
+#common_apps_list_title_col_info::before{					                        content:var(--common_app_icon_info)}
 
 /*Icons dialogue info*/
 #common_app_dialogues_info_contact_message_title::before{					        content:var(--common_app_icon_email)}
@@ -487,7 +454,7 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 #common_app_dialogues_iam_start_signup_username:empty::before{				        content:var(--common_app_icon_user)}
 #common_app_dialogues_iam_start_signup_password:empty::before{				        content:var(--common_app_icon_user_password)}
 #common_app_dialogues_iam_start_signup_password_confirm:empty::before{		        content:var(--common_app_icon_user_password_confirm)}
-#common_app_dialogues_iam_start_signup_password_reminder:empty::before{		        content:var(--common_app_icon_user_password) ' ' var(--common_app_icon_question)}
+#common_app_dialogues_iam_start_signup_password_reminder:empty::before{		        content:var(--common_app_icon_user_password_reminder)}
 
 #common_app_dialogues_iam_start_close::before{								        content:var(--common_app_icon_close)}
 #common_app_dialogues_iam_start_login_admin_first_time::before{				        content:var(--common_app_icon_init)}
@@ -641,18 +608,9 @@ body,
 	overflow: hidden;
 	line-height: 1.25em;
 }
-.common_select_dropdown_icon::after{
+.common_icon_select_dropdown::after{
 	content: var(--common_app_icon_select);
-}
-.common_select_dropdown_icon{
-	display: inline-block;
-	border-radius: 2px;
-	width: 15px;
-    height: 100%;
-	cursor:pointer;
-	vertical-align: top;
-}
-.common_select_options{
+}.common_select_options{
 	display: none;
 	text-align: start;
 	padding: 2px;
@@ -678,10 +636,10 @@ body,
 	background-color: var(--common_app_color_white3);
 }
 .common_placeholder:empty::before{
-    font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
+    font-family: var(--common_app_font_ui);
 	opacity:0.7;
 	font-style: normal;
-	font-weight: 900;
+	font-weight: bold;
 }
 .common_input{
 	display: inline-block;
@@ -710,20 +668,69 @@ body,
 	cursor: text;
 }
 .common_icon {
-	font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
-	font-weight: 900;
+    font-family: var(--common_app_font_ui);
+	font-weight: bold;
 	font-style: normal;
 	display: inline-block;
-}  
+}
 .common_icon::before{
     white-space: nowrap;
-	vertical-align: middle;
+	vertical-align: top;
+    align-self: center;
+    display:grid;
+    align-items: center;
+    align-self: center;
+    align-content: center;
+}  
+.common_icon_title{
+    font-size:1.5em;
 }
-.common_icon svg{
+.common_icon_avatar{
+    width: 2em;
+    height: 2em;
+    font-size: 1.5em;
+}
+.common_icon_button::before{
+    width: 1.5em;
+    height: 1.5em;
+    font-size: 1.5em;
+    cursor:pointer;
+}
+.common_icon_button svg {
 	font-size: 2em;
 	height: 0.6em;
 	vertical-align: sub;
 }
+.common_icon_button svg *{
+    cursor:pointer;
+}
+.common_icon_select_dropdown{
+    border-radius: 2px;
+    width: 15px;
+    height: 1em;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.common_icon_toolbar_s::before{
+    width: 1.25em;
+    height: 1.25em;
+    font-size: 1.25em;
+    cursor:pointer;
+}
+.common_icon_toolbar_m::before{
+    width: 1.5em;
+    font-size: 2em;
+    height: 1.5em;
+    vertical-align: middle;
+    cursor:pointer;
+}
+.common_icon_toolbar_l::before{
+    width: 1.25em;
+    height: 1.25em;
+    font-size: 2.5em;
+    cursor:pointer;
+}
+
 .common_link:hover,
 .common_link:active{
 	cursor:pointer;
@@ -794,23 +801,15 @@ body,
 .common_app_dialogues_button {
 	background: none;
 	border: none;
-	font-size: 30px;
-	width: 60px;
-	height: 30px;
 	padding:0px;
 	text-transform: uppercase;
-	cursor:pointer;
 	display: inline-block;
 }
 .common_toolbar_button {
 	background: none;
 	border: none;
-	font-size: 30px;
-	width: 50px;
-	height: 60px;
 	padding:0px;
 	text-transform: uppercase;
-	cursor:pointer;
 }
 .common_list_scrollbar{
 	overflow-y: auto;
@@ -841,7 +840,7 @@ body,
 	font-size: 1.5em;
 	margin-inline-start: calc(50% - calc(1.5em * 3/2));
 }
-#common_app_toolbar .common_icon{
+#common_app_toolbar .common_icon.common_icons_toolbar_s{
 	cursor:pointer;
 	width: 1.25em;
 	text-align: center;
@@ -1000,6 +999,9 @@ body,
 }
 #common_apps_list_title_col_info {
     font-size: 1.25em;
+    border-radius: 50%;
+    width: 1.25em;
+    height: 1.25em;
 }
 #common_apps_list .common_apps_app_link_col{
 	width: 100%;
@@ -1573,17 +1575,13 @@ body,
 	width:100%;
 	text-align:end;
 }
-/* profile button top*/
 #common_app_profile_toolbar_stat{
-	font-size: 48px;
 	cursor:pointer;
 	position:fixed;
-	bottom:60px;
-	width:60px;
+	bottom:3em;
 	margin-inline-start: -30px;
 	border-radius: 4px 4px 0px 0px;
     z-index: 10;
-  
 }
 .common_app_profile_search_list_username,
 .common_app_dialogues_profile_stat_list_username,
@@ -1614,18 +1612,14 @@ body,
 	height: 48px;
 }
 #common_app_iam_user_menu_default_avatar{
-	font-size: 48px;
-	height: 48px;
-    display:inline;
-}
-#common_app_iam_user_menu_default_avatar::before{
-	vertical-align: top;
-	display: inline-block;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
 }
 #common_app_iam_user_menu, #common_app_iam_user_menu_avatar_img, #common_app_iam_user_menu_default_avatar{
     border-radius: 50% !important;
 }
-
 
 /* Dialogue user menu*/
 #common_app_dialogues_user_menu.common_app_dialogues_show1{
@@ -2080,8 +2074,6 @@ body,
 }
 .common_map_control_button {
 	text-align: center;
-	height: 2.5em;
-	width: 2.5em;
 	display: block;
 	line-height: 2.5em;
 	cursor:var(--common_app_icon_arrow_pointer);
@@ -2391,8 +2383,5 @@ body,
 	}	
 	#common_map_control_expand_search_list{
 		max-height: calc(8 * 3em);
-	}
-	.common_toolbar_button{
-		width: 60px;
 	}
 }

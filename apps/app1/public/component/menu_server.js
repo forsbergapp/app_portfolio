@@ -39,7 +39,7 @@
  * @returns {string}
  */
 const template = props => ` <div id='menu_server_content_widget1' class='widget'>
-                                <div id='menu_server_os_title' class='common_icon'></div>
+                                <div id='menu_server_os_title' class='common_icon common_title'></div>
                                 <div id='menu_server_os_info'>
                                     ${props.server_info?
                                         `<div id='menu_server_os_info_hostname_title'>HOSTNAME</div><div id='menu_server_os_info_hostname_data'>${props.server_info.os.hostname}</div>
@@ -60,7 +60,7 @@ const template = props => ` <div id='menu_server_content_widget1' class='widget'
                                 </div>
                             </div>
                             <div id='menu_server_content_widget2' class='widget'>
-                                <div id='menu_server_process_title' class='common_icon'></div>
+                                <div id='menu_server_process_title' class='common_icon common_icon_title'></div>
                                 <div id='menu_server_process_info'>
                                 ${props.server_info?
                                     `<div id='menu_server_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_server_process_info_memoryusage_rss_data'>${props.server_info.process.memoryusage_rss}</div>

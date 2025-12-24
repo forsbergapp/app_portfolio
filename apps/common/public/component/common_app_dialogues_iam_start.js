@@ -64,10 +64,10 @@ const template = props =>`  ${props.admin_app?'':
                                             <div id='common_app_dialogues_iam_start_signup_password_confirm_mask' class='common_input common_password_mask'></div>
                                         </div>
                                         <div id='common_app_dialogues_iam_start_signup_password_reminder' contentEditable='true'  class='common_input common_placeholder'></div>
-                                        <div id='common_app_dialogues_iam_start_signup_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon' ></div>
+                                        <div id='common_app_dialogues_iam_start_signup_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon common_icon_button' ></div>
                                     </div>`:''
                                 }
-                                <div id='common_app_dialogues_iam_start_close' class='common_app_dialogues_button common_icon' ></div>`
+                                <div id='common_app_dialogues_iam_start_close' class='common_app_dialogues_button common_icon common_icon_button' ></div>`
                             }`;
 /**
  * @name component

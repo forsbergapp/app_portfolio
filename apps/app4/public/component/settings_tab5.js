@@ -16,7 +16,7 @@
 const template = () =>`   <div class='setting_horizontal_row'>
                         <div class='setting_horizontal_col'></div>
                         <div class='setting_horizontal_col'>
-                            <div id='setting_icon_PrayerMethod' class='common_icon'></div>
+                            <div id='setting_icon_prayer_method' class='common_icon'></div>
                         </div>
                         <div class='setting_horizontal_col'>
                             <div id='setting_select_method'></div>

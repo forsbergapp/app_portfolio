@@ -60,12 +60,12 @@
 #setting_icon_prayer_highlatitude::before{					content:var(--common_app_icon_gps_high_latitude)}
 #setting_icon_prayer_timeformat::before{					content:var(--common_app_icon_regional_timeformat)}
 #setting_icon_prayer_hijri_adjustment::before{				content:var(--common_app_icon_settings) ' ' var(--common_app_icon_regional_calendar)}
-#setting_icon_prayer_report_iqamat_title_fajr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_sunrise_horizont)}
+#setting_icon_prayer_report_iqamat_title_fajr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_sunrise_before)}
 #setting_icon_prayer_report_iqamat_title_dhuhr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_midday)}
 #setting_icon_prayer_report_iqamat_title_asr::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_afternoon)}
 #setting_icon_prayer_report_iqamat_title_maghrib::before{	content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_sunset)}
 #setting_icon_prayer_report_iqamat_title_isha::before{		content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_calling) ' ' var(--common_app_icon_misc_prayer) ' ' var(--common_app_icon_sky_night)}
-#setting_icon_prayer_report_show_imsak::before{				content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_sunrise_horizont) ' ' var(--common_app_icon_misc_food)}
+#setting_icon_prayer_report_show_imsak::before{				content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_sunrise_before) ' ' var(--common_app_icon_misc_food)}
 #setting_icon_prayer_report_show_sunset::before{			content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_sunset)}
 #setting_icon_prayer_report_show_midnight::before{			content:var(--common_app_icon_show) ' ' var(--common_app_icon_sky_midnight) ' ' var(--common_app_icon_misc_prayer)}
 #setting_icon_prayer_report_show_fast_start_end::before{	content:var(--common_app_icon_show) ' ' var(--common_app_icon_misc_food) ' ' var(--common_app_icon_misc_ban)}
@@ -104,31 +104,20 @@
 #toolbar_top {
 	text-align: center;
 	width: 100%;
-	display: flex;
-    justify-content: center;
+	display: block;
 	z-index: 10;
     position: fixed;
     top: 0;
-}
-#toolbar_btn_zoomin,#toolbar_btn_zoomout,#toolbar_btn_left, #toolbar_btn_right, #toolbar_btn_search {
-	font-size: 48px;
 }
 /* TOOLBAR BOTTOM*/
 #toolbar_bottom {
 	width: 100%;
 	text-align: center;
 	bottom: 0;
-	display:grid;
+	display:block;
 	position:fixed;
-	grid-template-columns: 30px 30px 30px 30px 30px 30px;
-    grid-column-gap: 20px;
 	z-index: 10;
-    justify-content: center;
 }
-#toolbar_bottom .common_toolbar_button{
-	font-size: 48px !important;
-}
-
 #profile_user_settings_row{
 	width:100%;
 }
@@ -152,7 +141,7 @@
 /* SETTINGS*/
 #common_app_dialogues_app_custom.common_app_dialogues_show0{
 	width: 30em;
-	height: 40em;
+	height: 35em;
 }
 #settings {
 	width: 100%;
@@ -303,9 +292,6 @@
 .setting_design_next {
 		cursor: pointer;
 	display: inline-block;
-	font-size:30px;
-	width: 40px !important;
-	height: 40px !important;
 }
 /*theme live thumbnail fixes*/
 .setting_design_thumbnail .paper{
@@ -545,10 +531,6 @@
 #profile_info_user_setting_liked_count{
 	margin-inline-start: 0.5em;
 }
-#toolbar_top .common_toolbar_button,
-#toolbar_bottom .common_toolbar_button{
-	width:60px !important;
-}
 /*COMMON*/
 #common_app_profile_search{
 	z-index: 50 !important;
@@ -574,7 +556,7 @@
 }
 #common_app_toolbar{
 	margin-inline-start: 0px !important;
-    bottom: 60px !important;
+    bottom: 2em !important;
     top: unset !important;
 	position: fixed !important;
 }
@@ -818,6 +800,7 @@ body,
 .common_toolbar_button
 {
 	color: var(--app_theme_main_color3) !important;
+    fill:var(--app_theme_main_color3) !important;
 }
 .setting_design_thumbnail {
   	box-shadow: 3px 3px 10px var(--app_theme_thumbnail_shadow);
@@ -837,6 +820,7 @@ body,
 #settings_tab_navigation :hover,
 #settings_tab_navigation :active {
 	color:var(--app_theme_hover) !important;
+    fill:var(--app_theme_hover) !important;
 }
 /*only shadow style on paper, style inside paper is in report*/
 #paper {

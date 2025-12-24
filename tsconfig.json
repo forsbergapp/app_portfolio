@@ -10,7 +10,6 @@
                         "module":"es2022",
                         "target":"es2022"},
     "include": ["apps", "server", "sdk", "serviceregistry", "test"],
-    "exclude":[ "apps/common/public/modules/fontawesome", 
-                "apps/common/public/modules/react",
+    "exclude":[ "apps/common/public/modules/react",
                 "apps/common/public/modules/vue"]
 }

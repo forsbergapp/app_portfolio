@@ -13,9 +13,9 @@
  * @function
  * @returns {string}
  */
-const template = () =>` <div id='common_app_dialogues_profile_home' class='common_app_dialogues_button common_icon' ></div>
+const template = () =>` <div id='common_app_dialogues_profile_home' class='common_app_dialogues_button common_icon common_icon_button' ></div>
                         <div id='common_app_dialogues_profile_content'></div>
-                        <div id='common_app_dialogues_profile_close' class='common_app_dialogues_button common_icon' ></div>`;
+                        <div id='common_app_dialogues_profile_close' class='common_app_dialogues_button common_icon common_icon_button' ></div>`;
 
 /**
  * @name component

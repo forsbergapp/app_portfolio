@@ -46,7 +46,7 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
                                     `<div id='common_app_dialogues_user_menu_logged_in'>
                                         ${props.app_id == props.admin_app_id?
                                             '':
-                                            '<div id=\'common_app_dialogues_user_menu_log_out\' class=\'common_icon\'></div>'
+                                            '<div id=\'common_app_dialogues_user_menu_log_out\' class=\'common_icon common_icon_avatar\'></div>'
                                         }
                                     </div>`:
                                     `${props.app_id == props.admin_app_id?'':
@@ -56,7 +56,7 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
                                         </div>`
                                     }`
                                 }
-                                <div id='common_app_dialogues_user_menu_close' class='common_app_dialogues_button common_icon' ></div>
+                                <div id='common_app_dialogues_user_menu_close' class='common_app_dialogues_button common_icon common_icon_button' ></div>
                             </div>`;
 /**
 * @name component

@@ -23,7 +23,7 @@
  * @returns {string}
  */
 const template = props => ` <div id='menu_start_chart_box1'>
-                                <div id='menu_start_chart_box1_title' class='menu_start_chart_box_title common_icon'></div>
+                                <div id='menu_start_chart_box1_title' class='menu_start_chart_box_title common_icon common_icon_title'></div>
                                 <div id='menu_start_chart_box1_chart' class='menu_start_chart_box_chart'>
                                     <div id='menu_start_chart_box1_pie' style='background-image:conic-gradient(${props.function_chart1_pie_colors(props.chart1_stat)}'></div>
                                 </div>
@@ -40,7 +40,7 @@ const template = props => ` <div id='menu_start_chart_box1'>
                                 </div>
                             </div>
                             <div id='menu_start_chart_box2'>
-                                <div id='menu_start_chart_box2_title' class='menu_start_chart_box_title common_icon'></div>
+                                <div id='menu_start_chart_box2_title' class='menu_start_chart_box_title common_icon common_icon_title'></div>
                                 <div id='menu_start_chart_box2_chart' class='menu_start_chart_box_chart'>
                                     <div id='menu_start_chart_box2_bar_legendY'>
                                         <div id='menu_start_chart_box2_bar_legend_max'>${Math.max(...props.chart2_stat.map(stat=>stat.Amount??0))}</div>

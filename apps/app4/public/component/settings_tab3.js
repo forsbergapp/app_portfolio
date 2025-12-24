@@ -20,22 +20,22 @@ const template = props =>`  <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_design_icon_theme_day' class='common_icon'></div>
                                     <div id='setting_design_theme_day' class='setting_design_thumbnail' data-theme_id='${props.theme_id_day}'></div>
-                                    <div id='setting_design_prev_day' class='common_app_dialogues_button setting_design_prev common_icon'></div>
-                                    <div id='setting_design_next_day' class='common_app_dialogues_button setting_design_next common_icon'></div>
+                                    <div id='setting_design_prev_day' class='common_app_dialogues_button setting_design_prev common_icon common_icon_button'></div>
+                                    <div id='setting_design_next_day' class='common_app_dialogues_button setting_design_next common_icon common_icon_button'></div>
                                     <div id='setting_design_theme_day_id'>${props.theme_id_day}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_design_icon_theme_month' class='common_icon'></div>
                                     <div id='setting_design_theme_month' class='setting_design_thumbnail' data-theme_id='${props.theme_id_month}'></div>
-                                    <div id='setting_design_prev_month' class='common_app_dialogues_button setting_design_prev common_icon'></div>
-                                    <div id='setting_design_next_month' class='common_app_dialogues_button setting_design_next common_icon'></div>
+                                    <div id='setting_design_prev_month' class='common_app_dialogues_button setting_design_prev common_icon common_icon_button'></div>
+                                    <div id='setting_design_next_month' class='common_app_dialogues_button setting_design_next common_icon common_icon_button'></div>
                                     <div id='setting_design_theme_month_id'>${props.theme_id_month}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_design_icon_theme_year' class='common_icon'></div>
                                     <div id='setting_design_theme_year' class='setting_design_thumbnail' data-theme_id='${props.theme_id_year}'></div>
-                                    <div id='setting_design_prev_year' class='common_app_dialogues_button setting_design_prev common_icon'></div>
-                                    <div id='setting_design_next_year' class='common_app_dialogues_button setting_design_next common_icon'></div>
+                                    <div id='setting_design_prev_year' class='common_app_dialogues_button setting_design_prev common_icon common_icon_button'></div>
+                                    <div id='setting_design_next_year' class='common_app_dialogues_button setting_design_next common_icon common_icon_button'></div>
                                     <div id='setting_design_theme_year_id'>${props.theme_id_year}</div>
                                 </div>
                             </div>

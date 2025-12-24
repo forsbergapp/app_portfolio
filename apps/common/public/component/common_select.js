@@ -19,7 +19,7 @@
  */
 const template = props => ` <div class='common_select_dropdown'>
                                 <div class='common_select_dropdown_value' data-value='${props.default_data_value}'>${props.default_value}</div>
-                                <div class='common_select_dropdown_icon common_icon'></div>
+                                <div class='common_icon common_icon_select_dropdown'></div>
                             </div>
                             <div class='common_select_options'>
                                 ${props.options.map(row=>

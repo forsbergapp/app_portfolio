@@ -37,10 +37,6 @@ class serverClass {
         this.socket;
         /**@type {import('../apps/common/src/common.js')}*/
         this.app_common;
-        /**@type{string} */
-        this.commonCSSStart;
-        /**@type{string} */
-        this.commonCSSStartUI;
         /**@type{{css:string, db_records:server['ORM']['Object']['IamEncryption'][]}}*/
         this.commonCssFonts;
         /**@type{import('./db/ORM.js')['ORM']}*/
@@ -692,10 +688,6 @@ const serverStart = async () =>{
         //add objects that need ORM started
         server.serverCircuitBreakerMicroService = new serverCircuitBreakerClass();
         server.serverCircuitBreakerBFE = new serverCircuitBreakerClass();
-        //CSS for app and server error
-        server.commonCSSStart = await server.app_common.commonCSSStart({start:true, ui:false});
-        //CSS for app
-        server.commonCSSStartUI = await server.app_common.commonCSSStart({start:false, ui:true});
         //CSS for REST API from app
         server.commonCssFonts = await server.app_common.commonCssFonts();
         Object.seal(server);

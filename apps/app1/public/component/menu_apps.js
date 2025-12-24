@@ -15,7 +15,7 @@
  * @returns {string}
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
-                                <div id='menu_apps_title' class='common_icon'></div>
+                                <div id='menu_apps_title' class='common_icon common_icon_title'></div>
                                 <div id='menu_apps' class='common_list_scrollbar'>
                                     <div id='menu_apps_row_title' class='menu_apps_row'>
                                         <div data-column='Id' class='menu_apps_col list_title'>ID</div>
@@ -56,11 +56,11 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                             <div id='menu_apps_content_widget2' class='widget'>
                                 <div id='menu_apps_detail_title' class='list_nav'>
                                     <div id='menu_apps_detail_data'    class='list_nav_list list_button common_icon list_nav_selected_tab'></div>
-                                    <div id='menu_apps_detail_module'  class='list_nav_list list_button common_icon'></div>
+                                    <div id='menu_apps_detail_module'  class='list_nav_list list_button common_icon '></div>
                                 </div>
                                 <div id='menu_apps_detail' class='common_list_scrollbar'></div>
                                 <div id='apps_buttons' class="save_buttons">
-                                    <div id='menu_apps_save' class='common_app_dialogues_button button_save common_icon'></div>
+                                    <div id='menu_apps_save' class='common_app_dialogues_button button_save common_icon common_icon_button'></div>
                                 </div>
                             </div>` ;
 /**

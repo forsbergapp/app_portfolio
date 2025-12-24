@@ -1,6 +1,6 @@
 #otp_key:empty::before{						content:var(--common_app_icon_otp)}
 #find_button::before{						content:var(--common_app_icon_search)}
-#clear_button::before{					    content:var(--common_app_icon_remove)}
+#clear_button::before{					    content:var(--common_app_icon_close)}
 /*APP*/
 html, body, #app {
 	height:100%;
@@ -72,12 +72,14 @@ body {
 .common_app_dialogues_button,
 .common_toolbar_button{
 	color: var(--common_app_color_black) !important;
+    fill:var(--common_app_color_black) !important;
 }
 .common_app_dialogues_button:hover,
 .common_app_dialogues_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
+    fill:var(--common_app_color_green) !important;
 }
 .common_app_dialogues_content:hover, 
 .common_app_dialogues_content:active{
