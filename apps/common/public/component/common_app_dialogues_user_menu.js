@@ -33,11 +33,11 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
                                 }
                                 ${props.iam_user_id?
                                     `<div id='common_app_dialogues_user_menu_nav'>
-                                        <div id='common_app_dialogues_user_menu_nav_messages' class='common_nav_selected common_icon'>
+                                        <div id='common_app_dialogues_user_menu_nav_messages' class='common_nav_selected common_icon common_icon_button'>
                                             <div id='common_app_dialogues_user_menu_nav_messages_count'></div>
                                         </div>
-                                        <div id='common_app_dialogues_user_menu_nav_iam_user_app' class='common_icon'></div>
-                                        <div id='common_app_dialogues_user_menu_nav_iam_user' class='common_icon'></div>
+                                        <div id='common_app_dialogues_user_menu_nav_iam_user_app' class='common_icon common_icon_button'></div>
+                                        <div id='common_app_dialogues_user_menu_nav_iam_user' class='common_icon common_icon_button'></div>
                                     </div>`:''
                                 }
                                 <div id='common_app_dialogues_user_menu_detail'>
@@ -46,13 +46,13 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
                                     `<div id='common_app_dialogues_user_menu_logged_in'>
                                         ${props.app_id == props.admin_app_id?
                                             '':
-                                            '<div id=\'common_app_dialogues_user_menu_log_out\' class=\'common_icon common_icon_avatar\'></div>'
+                                            '<div id=\'common_app_dialogues_user_menu_log_out\' class=\'common_icon common_icon_button\'></div>'
                                         }
                                     </div>`:
                                     `${props.app_id == props.admin_app_id?'':
                                         `<div id='common_app_dialogues_user_menu_logged_out'>
-                                            <div id='common_app_dialogues_user_menu_signup' class='common_icon'></div>
-                                            <div id='common_app_dialogues_user_menu_log_in' class='common_icon'></div>
+                                            <div id='common_app_dialogues_user_menu_signup' class='common_icon common_icon_button'></div>
+                                            <div id='common_app_dialogues_user_menu_log_in' class='common_icon common_icon_button'></div>
                                         </div>`
                                     }`
                                 }

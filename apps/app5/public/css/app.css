@@ -52,7 +52,7 @@ body {
 .app_page_start_bank_div{
 	height: 2.5em;
 	width: 10em;
-	cursor:pointer;
+	cursor: pointer;
 	font-size: 0.7em;
 	padding-top: 3em !important;
 	margin: 0.2em;
@@ -68,13 +68,10 @@ body {
 
 .app_page_secure_tab{
 	padding: 0.25em;
-	width: 2em;
-	cursor: pointer;
 	border-top-left-radius:4px;
 	border-top-right-radius:4px;
 }
 #app_page_secure_tab_content{
-	
 	overflow-x: auto;
 	max-height: 100%;
 	max-width: 80%;

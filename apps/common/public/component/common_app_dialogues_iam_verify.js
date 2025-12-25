@@ -14,17 +14,17 @@
  * @returns {string}
  */
 const template = () => `
-                            <div id='common_app_dialogues_iam_verify_verification_code_icon' class='common_icon'></div>
+                            <div id='common_app_dialogues_iam_verify_verification_code_icon' class='common_icon common_icon_title'></div>
                             <div id='common_app_dialogues_iam_verify_token_countdown'>
                                     <div id='common_app_dialogues_iam_verify_token_countdown_time'></div>
                             </div>
-                            <div id='common_app_dialogues_iam_verify_verification_container'>
-                                <div class='common_app_dialogues_iam_verify_verification_wrap'><div id='common_app_dialogues_iam_verify_verification_char1' contentEditable='true' class='common_input common_app_dialogues_iam_verify_input_verification_char'></div></div>
-                                <div class='common_app_dialogues_iam_verify_verification_wrap'><div id='common_app_dialogues_iam_verify_verification_char2' contentEditable='true' class='common_input common_app_dialogues_iam_verify_input_verification_char'></div></div>
-                                <div class='common_app_dialogues_iam_verify_verification_wrap'><div id='common_app_dialogues_iam_verify_verification_char3' contentEditable='true' class='common_input common_app_dialogues_iam_verify_input_verification_char'></div></div>
-                                <div class='common_app_dialogues_iam_verify_verification_wrap'><div id='common_app_dialogues_iam_verify_verification_char4' contentEditable='true' class='common_input common_app_dialogues_iam_verify_input_verification_char'></div></div>
-                                <div class='common_app_dialogues_iam_verify_verification_wrap'><div id='common_app_dialogues_iam_verify_verification_char5' contentEditable='true' class='common_input common_app_dialogues_iam_verify_input_verification_char'></div></div>
-                                <div class='common_app_dialogues_iam_verify_verification_wrap'><div id='common_app_dialogues_iam_verify_verification_char6' contentEditable='true' class='common_input common_app_dialogues_iam_verify_input_verification_char'></div></div>                
+                            <div id='common_app_dialogues_iam_verify_verification_container' class='common_app_dialogues_iam_verify_input_verification_char'>
+                                <div id='common_app_dialogues_iam_verify_verification_char1' contentEditable='true' class='common_input'></div>
+                                <div id='common_app_dialogues_iam_verify_verification_char2' contentEditable='true' class='common_input'></div>
+                                <div id='common_app_dialogues_iam_verify_verification_char3' contentEditable='true' class='common_input'></div>
+                                <div id='common_app_dialogues_iam_verify_verification_char4' contentEditable='true' class='common_input'></div>
+                                <div id='common_app_dialogues_iam_verify_verification_char5' contentEditable='true' class='common_input'></div>
+                                <div id='common_app_dialogues_iam_verify_verification_char6' contentEditable='true' class='common_input'></div>
                             </div>
                             <div id='common_app_dialogues_iam_verify_cancel' class='common_app_dialogues_button common_icon'></div>`;
 /**

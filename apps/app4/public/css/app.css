@@ -157,17 +157,9 @@
 	text-align: center;
 }
 #settings_tab_navigation .settings_tab_nav{
-	display:inline-block;
 	padding:3px;
 	border:0px;
-	width: 1.5em;
-    font-size: 1.5em;
-	cursor: pointer;
 	vertical-align: bottom;
-}
-#settings_tab_navigation .settings_tab_nav:hover,
-#settings_tab_navigation .settings_tab_nav:active{
-	cursor: pointer;
 }
 #user_setting_avatar_img{
     height: 30px;
@@ -288,11 +280,6 @@
 .setting_design_next{
 	text-align: end;
 }
-.setting_design_prev,
-.setting_design_next {
-		cursor: pointer;
-	display: inline-block;
-}
 /*theme live thumbnail fixes*/
 .setting_design_thumbnail .paper{
 	background-color:var(--common_report_color_white);
@@ -395,13 +382,6 @@
 	display: inline-block;
 	width: 60px;
 	vertical-align: top;
-}
-#settings .settings_tab4 #setting_icon_text_theme_col > div{
-    height: 2em;
-	width: 2em;
-}
-#settings .settings_tab4 #setting_icon_text_theme_col .common_icon{
-	cursor: pointer;
 }
 #settings .settings_tab4 #setting_paper_preview_text{
 	transform: scale(0.95) translate(0%, -7%);
@@ -523,7 +503,6 @@
 #profile_user_settings_year:active,
 #profile_user_settings_like:hover,
 #profile_user_settings_like:active{
-	cursor: pointer;
 	transform: scale(1.3);
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
 }

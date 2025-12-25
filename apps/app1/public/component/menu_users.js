@@ -16,7 +16,7 @@ const template = () => `<div id='menu_users_content_widget1' class='widget'>
                             <div id='menu_users_list_title' class='common_icon common_icon_title'></div>
                             <div class='list_search'>
                                 <div id='menu_users_list_search_input' contentEditable='true' class='common_input list_search_input'></div>
-                                <div id='menu_users_search_icon' class='list_search_icon common_icon'></div>
+                                <div id='menu_users_search_icon' class='common_icon common_icon_list'></div>
                             </div>
                             <div id='menu_users_list' class='common_list_scrollbar'></div>
                         </div>

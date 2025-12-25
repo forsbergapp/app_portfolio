@@ -86,11 +86,11 @@
     --common_app_icon_align_center:         '⏹';
     --common_app_icon_align_right:          '⏭';
     --common_app_icon_cancel:               '☓';
-    --common_app_icon_ok:                   '🗸';  
-    --common_app_icon_zoomout:              '−';
-    --common_app_icon_zoomin:               '+';
-    --common_app_icon_left:                 '⏴';
-    --common_app_icon_right:                '⏵';
+    --common_app_icon_ok:                   '🗸'; 
+    --common_app_icon_zoomout:              '➖';
+    --common_app_icon_zoomin:               '➕';
+    --common_app_icon_left:                 '◀';
+    --common_app_icon_right:                '▶';
     --common_app_icon_up:                   '▲';
     --common_app_icon_down:                 '▼';
     --common_app_icon_remove:               '−';
@@ -153,9 +153,9 @@
     --common_app_icon_map_layer:                '☰';
 
     --common_app_icon_regional:                 '🌐';
-    --common_app_icon_regional_day:             '📆';
-    --common_app_icon_regional_month:           '📅';
-    --common_app_icon_regional_year:            '📅';
+    --common_app_icon_regional_day:             '▤';
+    --common_app_icon_regional_month:           '▥';
+    --common_app_icon_regional_year:            '▦';
     --common_app_icon_regional_weekday:         '📆';
     --common_app_icon_regional_locale:          'abc';
     --common_app_icon_regional_timezone:        '🌐';
@@ -405,7 +405,7 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 #common_app_dialogues_user_menu_iam_user_private::before{							content:var(--common_app_icon_private)}
 #common_app_dialogues_user_menu_iam_user_input_username_icon::before{				content:var(--common_app_icon_user)}
 #common_app_dialogues_user_menu_iam_user_input_bio_icon::before{					content:var(--common_app_icon_user_profile)}
-#common_app_dialogues_user_menu_iam_user_input_otp_icon::before{					content:var(--common_app_icon_otp)}
+#common_app_dialogues_user_menu_iam_user_input_otp_icon::before{					content:var(--common_app_icon_user_password)}
 #common_app_dialogues_user_menu_iam_user_input_password_icon::before{				content:var(--common_app_icon_user_password)}
 #common_app_dialogues_user_menu_iam_user_input_password_confirm_icon::before{		content:var(--common_app_icon_user_password_confirm)}
 #common_app_dialogues_user_menu_iam_user_input_password_new_icon::before{			content:var(--common_app_icon_user_password)}
@@ -470,7 +470,7 @@ body.rtl .common_pagination_last::before{										    content:var(--common_app_
 #common_map_control_search::before{					                                content:var(--common_app_icon_search)}
 #common_map_control_expand_search_icon::before{								        content:var(--common_app_icon_search)}
 #common_map_control_fullscreen::before{					                            content:var(--common_app_icon_fullscreen)}
-#common_map_control_my_location::before{					                        content:var(--common_app_icon_map_my_location)}
+#common_map_control_my_location::before{					                        content:var(--common_app_icon_map_my_location);font-size: 2em;}
 #common_map_control_layer::before{					                                content:var(--common_app_icon_map_layer)}
 #common_map_control_query::before{					                                content:var(--common_app_icon_arrow_pointer_query)}
 
@@ -620,7 +620,7 @@ body,
 	min-width: 20px;
 	max-height: 30em;
 	border-radius: 2px;
-	cursor:pointer;
+	cursor: pointer;
 	overflow-y:auto;
 	overflow-x:hidden;
 	background-color: var(--common_app_color_white);
@@ -694,49 +694,52 @@ body,
     width: 1.5em;
     height: 1.5em;
     font-size: 1.5em;
-    cursor:pointer;
+    display:inline-block;
+    vertical-align: super;
 }
 .common_icon_button svg {
 	font-size: 2em;
 	height: 0.6em;
 	vertical-align: sub;
 }
-.common_icon_button svg *{
-    cursor:pointer;
-}
 .common_icon_select_dropdown{
     border-radius: 2px;
     width: 15px;
     height: 1em;
-    cursor: pointer;
     vertical-align: middle;
+}
+.common_icon_list,
+.common_icon_button,
+.common_icon_select_dropdown,
+.common_icon_toolbar_s,
+.common_icon_toolbar_m,
+.common_icon_toolbar_l{
+    cursor: pointer;
 }
 .common_icon_toolbar_s::before{
     width: 1.25em;
     height: 1.25em;
     font-size: 1.25em;
-    cursor:pointer;
+    
 }
 .common_icon_toolbar_m::before{
     width: 1.5em;
     font-size: 2em;
     height: 1.5em;
     vertical-align: middle;
-    cursor:pointer;
 }
 .common_icon_toolbar_l::before{
     width: 1.25em;
     height: 1.25em;
     font-size: 2.5em;
-    cursor:pointer;
 }
 
 .common_link:hover,
 .common_link:active{
-	cursor:pointer;
+	cursor: pointer;
 }
-.common_app_dialogues_lov_button{
-	display: inline-block;
+.common_app_dialogues_lov_button::before{
+    vertical-align: top;
 }
 .common_app_dialogues_lov_search_row{
 	width:100%;
@@ -749,16 +752,12 @@ body,
 }
 #common_app_dialogues_lov_search_icon{
 	width: 15px;
-	display: inline-block;
 }
 .common_list_lov_row{
 	display:inline-block;
 }
 .common_row_hide{
 	display:none !important;
-}
-.common_list_lov_click{
-	cursor:pointer;
 }
 .common_wide_list_column{
 	overflow: auto;
@@ -840,8 +839,7 @@ body,
 	font-size: 1.5em;
 	margin-inline-start: calc(50% - calc(1.5em * 3/2));
 }
-#common_app_toolbar .common_icon.common_icons_toolbar_s{
-	cursor:pointer;
+#common_app_toolbar .common_icon.common_icon_toolbar_s{
 	width: 1.25em;
 	text-align: center;
 	height: 1.25em !important;
@@ -896,7 +894,7 @@ body,
 	text-align: start;
 	word-wrap: break-word;
 	vertical-align: middle;
-	width: calc(50% - 1em);
+	width: calc(50% - 2em);
 }
 .common_app_data_display_master_col2[data-key=Image] > div,
 .common_app_data_display_master_col2[data-key=Image] > svg{
@@ -1047,18 +1045,9 @@ body,
     height: 150px;
     margin-bottom: 100px;
 }
-#common_app_dialogues_info_contact_message_title{
-    font-size: 30px;
-}
 #common_app_dialogues_info_contact_message{
 	display: inline-block;
     height: 100%;
-}
-
-#common_app_dialogues_info_title1, 
-#common_app_dialogues_info_title2{
-    height: 30px;
-    margin: 0 auto;
 }
 #common_app_dialogues_info_start_links, 
 #common_app_dialogues_info_contact, 
@@ -1130,12 +1119,8 @@ body,
 #common_app_dialogues_message_title_icon{
 	display: inline-block;
 }
-#common_app_dialogues_message_cancel{
-	cursor:pointer;
-}
 #common_app_dialogues_message_close{
 	outline:none;
-	cursor:pointer;
 	display:inline-block;
 }
 #common_app_dialogues_message_title .common_icon{
@@ -1165,52 +1150,25 @@ body,
 #common_app_dialogues_iam_verify.common_app_dialogues_show2{
 	height:280px;
 }
-#common_app_dialogues_iam_verify_verification_code_icon{
-	font-size:30px;
-	height:30px;
-}
 #common_app_dialogues_iam_verify_verification_container{
 	margin-top:40px;
 	margin-bottom:40px;	
 }
-.common_app_dialogues_iam_verify_verification_wrap{
-	width: 30px;
-	height: 40px;
-	padding: 0;
-	display:inline-block;
-	margin:5px;
-}
-.common_app_dialogues_iam_verify_input_verification_char{
+.common_app_dialogues_iam_verify_input_verification_char div{
 	border-radius: var(--common_app_css_border_radius);
-	font-size: 30px;
+	font-size: 1em;
 	text-align: center;
-	width:30px;
-	height:40px;
+	width:1em;
+	height:1.5em;
 	border: 1px solid;
+    padding: 0.25em;
+    margin-left: 0.25em;
+    margin-right: 0.25em;
 }
 /*Dialogue app data display*/
 #common_app_dialogues_app_data_display.common_app_dialogues_show1{
 	max-height: 90%;
 	width: 360px;
-}
-
-/*Dialogue user password new*/
-#common_app_dialogues_iam_password_new.common_app_dialogues_show2{
-	width: 300px;
-	height:170px;
-}
-#common_app_dialogues_iam_password_new_icon{
-	font-size: 30px;
-    height: 30px;
-}
-#common_app_dialogues_iam_password_new_password,
-#common_app_dialogues_iam_password_new_password_mask,
-#common_app_dialogues_iam_password_new_confirm,
-#common_app_dialogues_iam_password_new_confirm_mask{
-	margin-top: 10px;
-	height: 30px;
-	padding: 4px 10px;
-    box-sizing: border-box;
 }
 /*Dialogue user start*/
 #common_app_dialogues_iam_start.common_app_dialogues_show1{
@@ -1223,7 +1181,6 @@ body,
 }
 #common_app_dialogues_iam_start_nav > div{
 	margin:10px;
-	cursor: pointer;
 	width: 20%;
 }
 #common_app_dialogues_iam_start .common_input, .common_login_input{
@@ -1234,19 +1191,10 @@ body,
 }
 #common_app_dialogues_iam_start .common_app_dialogues_iam_start_button{
 	display: inline-block;
-	height:30px;
 	padding:1px;
 	border: 0px solid;
 	margin-top:10px;
 	margin-bottom:10px;
-	cursor:pointer;
-}
-#common_app_dialogues_iam_start_forgot_form{
-	width: 100%;
-}
-#common_app_dialogues_iam_start_forgot_button{
-	margin:10px;
-	cursor:pointer;
 }
 #common_app_dialogues_iam_start_close{
 	width: 100%;
@@ -1265,13 +1213,10 @@ body,
     border-radius: var(--common_app_css_border_radius);
     text-align: start;
 }
-#common_app_dialogues_lov_search_icon{
-	cursor:pointer;	
-}
 .common_list_lov_row{
 	width:100%;
 	display:block;
-	cursor:pointer;
+	cursor: pointer;
 }
 .common_list_lov_col1{
 	width:50px;
@@ -1317,10 +1262,6 @@ body,
 	padding: 4px 8px;
 	box-sizing: border-box;
     visibility:hidden;
-}
-#common_app_profile_search_icon{
-	display: inline-block;
-	cursor: pointer;
 }
 #common_app_profile_search_list_wrap{
 	border-radius: var(--common_app_css_border_radius);
@@ -1372,12 +1313,11 @@ body,
 }
 #common_app_dialogues_profile_content {
 	width: 100%;
-	height: 100%;
+	height: calc(100% - 6em);
 }
 #common_app_dialogues_profile_close{
 	display: block;
     inset-inline-start: calc(50% - 30px);
-	bottom:30px;
 	position:fixed;
 }
 #common_app_dialogues_profile_info {
@@ -1465,7 +1405,6 @@ body,
 #common_app_dialogues_profile_info_follow:active,
 #common_app_dialogues_profile_info_like:hover,
 #common_app_dialogues_profile_info_like:active{
-	cursor:pointer;
 	transform: scale(1.3);
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
 }
@@ -1538,7 +1477,7 @@ body,
 #common_app_dialogues_profile_stat_row1{
 	text-align: center;
 }
-#common_app_dialogues_profile_stat_row1 .common_link{
+#common_app_dialogues_profile_stat_row1 div{
 	margin-inline-end:10px;
 	display: inline-block;
 }
@@ -1547,7 +1486,7 @@ body,
 	margin-top: 10px;
 	overflow-x:auto;
 	display: block;
-	height: calc(100% - 160px);
+	height: calc(100% - 4em);
 	inset-inline-start: calc(50% - 40px);
 }
 .common_app_dialogues_profile_stat_list_row{
@@ -1576,7 +1515,6 @@ body,
 	text-align:end;
 }
 #common_app_profile_toolbar_stat{
-	cursor:pointer;
 	position:fixed;
 	bottom:3em;
 	margin-inline-start: -30px;
@@ -1598,7 +1536,7 @@ body,
 	z-index:1;
     margin-inline-start: calc(100% - 4em);
     position: fixed;
-	cursor:pointer;
+	cursor: pointer;
 }
 #common_app_iam_user_menu_logged_in, #common_app_dialogues_user_menu_logged_in{
 	display: none;
@@ -1641,23 +1579,26 @@ body,
 #common_app_dialogues_user_menu_token_countdown > div {
 	display: inline-block;
 }
+#common_app_dialogues_user_menu_nav{
+    vertical-align: middle;
+    display: inline-flex;
+    align-items: flex-end;
+}
 #common_app_dialogues_user_menu_nav>div{
-    cursor: pointer;
     margin-left: 1.5em;
     margin-right: 1.5em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+}
+#common_app_dialogues_user_menu_nav_messages::before{
+    display:inline-block !important;
 }
 #common_app_dialogues_user_menu_nav_messages_count{
     display: inline-block;
     font-size: 0.8em;
     margin-inline-start: 0.5em;
-}
-#common_app_dialogues_user_menu_detail{
-    height: 25em;
+    vertical-align: super;
 }
 #common_app_dialogues_user_menu_username{
-	cursor:pointer;
+	cursor: pointer;
 }
 #common_app_dialogues_user_menu_signup
 {
@@ -1667,11 +1608,6 @@ body,
 #common_app_dialogues_user_menu_logged_out{
 	display: inline-block;
 	width:100%;
-	font-size: 30px !important;
-}
-#common_app_dialogues_user_menu_logged_in div,
-#common_app_dialogues_user_menu_logged_out div{
-	cursor:pointer;
 }
 /* Dialogue user menu - messages */
 #common_app_dialogues_user_menu_messages{
@@ -1685,7 +1621,6 @@ body,
 	display: inline-block;
 	margin-left: 10px;
 	margin-right: 10px;
-	cursor:pointer;
 }
 #common_app_dialogues_user_menu_messages_list{
     overflow: auto;
@@ -2059,7 +1994,7 @@ body,
 #common_map {
     width: 100%;
     height: 100%;
-    cursor:pointer;
+    cursor: pointer;
     position:relative;
     overflow:hidden;
 }
@@ -2106,10 +2041,6 @@ body,
 #common_map_control_expand_search_input{
 	width:90% !important;
 }
-#common_map_control_expand_search_icon{
-	display: inline-block;
-	cursor: pointer;
-}
 #common_map_control_expand_search_list_wrap{
 	width: 100%;
 	display: flex;
@@ -2122,11 +2053,6 @@ body,
 	max-height: calc(10 * 3em);
 	display:inline-block;
 	line-height: unset !important;
-}
-#common_map_control_expand_search_list .common_link {
-	width: unset;
-	text-align: unset;
-	background-color:unset;
 }
 .common_map_control_expand_search_list_row{
 	text-align: start;
@@ -2315,7 +2241,6 @@ body,
 	font-weight:bold;
 }
 #common_app_broadcast_close {
-	cursor:pointer;
 	transform: translateY(-65px);
     margin: 5px;
 }

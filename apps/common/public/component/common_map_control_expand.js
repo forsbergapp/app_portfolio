@@ -18,7 +18,7 @@ const template = props => props.expand_type=='search'?
                                 <div id='common_map_control_expand_select_city'></div>
                                 <div id='common_map_control_expand_search_input_row'>
                                     <div id='common_map_control_expand_search_input' contentEditable='true' class='common_input'/></div>
-                                    <div id='common_map_control_expand_search_icon' class='common_icon'></div>
+                                    <div id='common_map_control_expand_search_icon' class='common_icon common_icon_list'></div>
                                 </div>
                                 <div id='common_map_control_expand_search_list_wrap'>
                                     <div id='common_map_control_expand_search_list'></div>
