@@ -16,9 +16,9 @@ const template = props => ` <div id='app_page_secure'>
                                 ${props.customer.length>0?
                                     `
                                     <div id='app_page_secure_nav'>
-                                        <div id='tab1' class='app_page_secure_tab common_link common_icon'></div>
-                                        <div id='tab2' class='app_page_secure_tab common_link common_icon'></div>
-                                        <div id='tab3' class='app_page_secure_tab common_link common_icon'></div>
+                                        <div id='tab1' class='app_page_secure_tab common_link common_icon common_icon_button'></div>
+                                        <div id='tab2' class='app_page_secure_tab common_link common_icon common_icon_button'></div>
+                                        <div id='tab3' class='app_page_secure_tab common_link common_icon common_icon_button'></div>
                                     </div>
                                     <div id='app_page_secure_tab_content' class='app_bank_div' >
                                     </div>

@@ -55,7 +55,7 @@ const template = props =>`  <div id='app_main'>
                                     </div>
                                     <div class='buttons_row'>
                                         <div class='buttons_col'>
-                                            <div id='button_solve' class='common_app_dialogues_button common_list_lov_click common_icon common_icon_button'></div>
+                                            <div id='button_solve' class='common_app_dialogues_button common_icon common_icon_button'></div>
                                         </div>
                                         <div class='buttons_col'>
                                             <div id='button_solve_cubestate' class='common_app_dialogues_button common_icon common_icon_button'></div>
@@ -73,7 +73,7 @@ const template = props =>`  <div id='app_main'>
                                             </div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_solved_step' class='common_app_dialogues_button common_list_lov_click common_icon common_icon_button'></div>
+                                            <div id='button_solved_step' class='common_app_dialogues_button common_icon common_icon_button'></div>
                                         </div>
                                         <div class='buttons_col'>
                                             <div id='button_solved_step_cubestate' class='common_app_dialogues_button common_icon common_icon_button'></div>

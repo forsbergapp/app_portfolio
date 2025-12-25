@@ -42,8 +42,8 @@ const template = props =>`  <div id='common_app_dialogues_profile_info'>
                                             <div class='common_icon common_user_followed common_link'></div>
                                         </div>
                                         <div id='common_app_dialogues_profile_info_like' data-record_id='${props.profile.LikedId}'>
-                                            <div class='common_icon common_unlike common_link'></div>
-                                            <div class='common_icon common_like common_link'></div>
+                                            <div class='common_icon common_unlike common_link common_icon_list'></div>
+                                            <div class='common_icon common_like common_link common_icon_list'></div>
                                         </div>
                                     </div>
                                 </div>
@@ -56,21 +56,21 @@ const template = props =>`  <div id='common_app_dialogues_profile_info'>
                                             <div id='common_app_dialogues_profile_info_view_count'>${props.profile.CountViews}</div>
                                         </div>
                                         <div id='common_app_dialogues_profile_info_following'>
-                                            <div id='common_app_dialogues_profile_info_btn_following' class='common_link common_icon'></div>
+                                            <div id='common_app_dialogues_profile_info_btn_following' class='common_link common_icon common_icon_list'></div>
                                             <div id='common_app_dialogues_profile_info_following_count'>${props.profile.CountFollowing}</div>
                                         </div>
                                         <div id='common_app_dialogues_profile_info_followers'>
-                                            <div id='common_app_dialogues_profile_info_btn_followed' class='common_link common_icon'></div>
+                                            <div id='common_app_dialogues_profile_info_btn_followed' class='common_link common_icon common_icon_list'></div>
                                             <div id='common_app_dialogues_profile_info_followers_count'>${props.profile.CountFollowed}</div>
                                         </div>
                                         <div id='common_app_dialogues_profile_info_likes'>
-                                            <div id='common_app_dialogues_profile_info_btn_likes' class='common_icon common_link common_like'></div>
+                                            <div id='common_app_dialogues_profile_info_btn_likes' class='common_link common_like common_icon common_icon_list'></div>
                                             <div id='common_app_dialogues_profile_info_likes_count'>${props.profile.CountLikes}</div>
                                         </div>
                                         <div id='common_app_dialogues_profile_info_liked'>
                                             <div id='common_app_dialogues_profile_info_btn_liked' >
-                                                <div id='common_app_dialogues_profile_info_btn_liked_heart' class='common_icon common_link common_like'></div>
-                                                <div id='common_app_dialogues_profile_info_btn_liked_users' class='common_link common_icon'></div>
+                                                <div id='common_app_dialogues_profile_info_btn_liked_heart' class='common_link common_like common_icon common_icon_list'></div>
+                                                <div id='common_app_dialogues_profile_info_btn_liked_users' class='common_link common_icon common_icon_list'></div>
                                             </div>
                                             <div id='common_app_dialogues_profile_info_liked_count'>${props.profile.CountLiked}</div>
                                         </div>

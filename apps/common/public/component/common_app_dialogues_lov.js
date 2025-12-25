@@ -20,7 +20,7 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
                                 <div id='common_app_dialogues_lov_title' class='common_icon'></div>
                                 <div id='common_app_dialogues_lov_search_row'>
                                     <div id='common_app_dialogues_lov_search_input' contentEditable='true' class='common_input'></div>
-                                    <div id='common_app_dialogues_lov_search_icon' class='common_icon'></div>
+                                    <div id='common_app_dialogues_lov_search_icon' class='common_icon common_icon_list'></div>
                                 </div>
                             <div id='common_app_dialogues_lov_list' data-lov='${props.lov}' class='common_list_scrollbar'>
                                 ${props.list.map(list_row=>

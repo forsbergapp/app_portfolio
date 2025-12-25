@@ -19,7 +19,7 @@ const template = props =>`
                                 <div id='common_map_control'>
                                     <div id='common_map_control_zoomin' class='common_map_control_button common_icon common_icon_button'></div>
                                     <div id='common_map_control_zoomout' class='common_map_control_button common_icon common_icon_button'></div>
-                                    <div id='common_map_control_search_container' class='common_map_control_button'>
+                                    <div id='common_map_control_search_container' class='common_map_control_button common_icon common_icon_button'>
                                         <div id='common_map_control_search' class='common_map_control_button common_icon common_icon_button'></div>
                                         <div id='common_map_control_expand_search' class='common_map_control_expand'></div>
                                     </div>

@@ -21,7 +21,7 @@
 */
 const template = props => `
                             <div id='common_app_dialogues_info_contact'>
-                                <div id='common_app_dialogues_info_contact_message_title' class='common_icon'></div>
+                                <div id='common_app_dialogues_info_contact_message_title' class='common_icon common_icon_title'></div>
                                 <div id='common_app_dialogues_info_contact_message' class='common_input' contentEditable='true'></div>
                                 <div id='common_app_dialogues_info_contact_message_send' class='common_app_dialogues_button common_icon common_icon_button' ></div>
                             </div>

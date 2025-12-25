@@ -41,7 +41,7 @@ const template = props => ` <div class='menu_report_queue_row'>
                                     <div data-column='Progress' class='menu_report_queue_col list_readonly'>${props.function_commonMiscRoundOff((report_queue.Progress ?? 0) * 100)}%</div>
                                     <div data-column='Status' class='menu_report_queue_col list_readonly'>${report_queue.Status}</div>
                                     <div data-column='Message' class='menu_report_queue_col list_readonly'>${report_queue.Message ??''}</div>
-                                    <div data-id='${report_queue.Id}' class='menu_report_queue_col report_queue_result list_readonly common_icon'></div>
+                                    <div data-id='${report_queue.Id}' class='menu_report_queue_col report_queue_result list_readonly common_icon common_icon_list'></div>
                                 </div>`
                             ).join('')
                             }`;

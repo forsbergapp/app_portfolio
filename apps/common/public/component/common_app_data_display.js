@@ -102,7 +102,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                             class='common_app_data_display_master_col2 ${Object.values(master_row.Document)[0].Type=='LOV'?'common_app_dialogues_lov_value':''}'
                                                             contentEditable='${(Object.values(master_row.Document)[0].Type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
                                                     ${Object.values(master_row.Document)[0].Type=='LOV'?
-                                                        `<div data-lov='${Object.values(master_row.Document)[0].Lov}' class='common_app_dialogues_lov_button common_list_lov_click common_icon common_icon_button'></div>`:''
+                                                        `<div data-lov='${Object.values(master_row.Document)[0].Lov}' class='common_app_dialogues_lov_button common_icon common_icon_button'></div>`:''
                                                     }
                                             </div>
                                             `).join('')
@@ -319,8 +319,7 @@ const component = async props => {
         switch (event_type){
             case 'click':{
                 switch (true){
-                    case    event.target.classList.contains('common_list_lov_click') && 
-                            event.target.hasAttribute('data-lov'):{
+                    case    event.target.hasAttribute('data-lov'):{
                         if (props.data.lov.filter(row=>row.lov==event.target.getAttribute('data-lov')).length>0)
                             props.methods.COMMON.commonComponentRender({
                                 mountDiv:   'common_app_dialogues_lov',

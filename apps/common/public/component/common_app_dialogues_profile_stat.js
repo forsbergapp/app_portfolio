@@ -14,9 +14,9 @@
  * @returns {string}
  */
 const template = () =>  `   <div id='common_app_dialogues_profile_stat_row1'>
-                                <div id='common_app_dialogues_profile_stat_row1_1' class='common_link common_icon'></div>
-                                <div id='common_app_dialogues_profile_stat_row1_2' class='common_link common_icon'></div>
-                                <div id='common_app_dialogues_profile_stat_row1_3' class='common_link common_icon'></div>
+                                <div id='common_app_dialogues_profile_stat_row1_1' class='common_link common_icon common_icon_list'></div>
+                                <div id='common_app_dialogues_profile_stat_row1_2' class='common_link common_icon common_icon_list'></div>
+                                <div id='common_app_dialogues_profile_stat_row1_3' class='common_link common_icon common_icon_list'></div>
                             </div>
                             <div id='common_app_dialogues_profile_stat_row2'></div>
                             <div id='common_app_dialogues_profile_stat_list'></div>`;

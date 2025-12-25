@@ -17,8 +17,8 @@
  */
 const template = props =>`  ${props.admin_app?'':
                                `<div id='common_app_dialogues_iam_start_nav'>
-                                    <div id='common_app_dialogues_iam_start_login'  class='common_icon ${props.type=='LOGIN'?'common_app_dialogues_iam_start_selected':''}'></div>
-                                    <div id='common_app_dialogues_iam_start_signup' class='common_icon ${props.type=='SIGNUP'?'common_app_dialogues_iam_start_selected':''}'></div>
+                                    <div id='common_app_dialogues_iam_start_login'  class='common_icon common_icon_button ${props.type=='LOGIN'?'common_app_dialogues_iam_start_selected':''}'></div>
+                                    <div id='common_app_dialogues_iam_start_signup' class='common_icon common_icon_button ${props.type=='SIGNUP'?'common_app_dialogues_iam_start_selected':''}'></div>
                                 </div>`
                             }
                             ${props.admin_app?
@@ -40,7 +40,7 @@ const template = props =>`  ${props.admin_app?'':
                                             </div>
                                         </div>`:''
                                     }
-                                    <div id='common_app_dialogues_iam_start_login_admin_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon' ></div>
+                                    <div id='common_app_dialogues_iam_start_login_admin_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon common_icon_button' ></div>
                                 </div>`:
                                 `${props.type=='LOGIN'? 
                                     `<div id='common_app_dialogues_iam_start_login_form' class='common_app_dialogues_iam_start_form'>
@@ -49,7 +49,7 @@ const template = props =>`  ${props.admin_app?'':
                                             <div id='common_app_dialogues_iam_start_login_password' contentEditable='true' class='common_input common_password common_placeholder'></div>
                                             <div id='common_app_dialogues_iam_start_login_password_mask' class='common_input common_password_mask'></div>
                                         </div>
-                                        <div id='common_app_dialogues_iam_start_login_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon' ></div>
+                                        <div id='common_app_dialogues_iam_start_login_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon common_icon_button' ></div>
                                     </div>`:''
                                 }
                                 ${props.type=='SIGNUP'? 

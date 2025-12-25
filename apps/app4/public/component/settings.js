@@ -17,13 +17,13 @@
 const template = props =>`      
                         <div id='settings'>
                             <div id='settings_tab_navigation'>
-                                <div id='settings_tab_nav_1' class='settings_tab_nav settings_tab_nav_selected common_icon'></div>
-                                <div id='settings_tab_nav_2' class='settings_tab_nav common_icon'></div>
-                                <div id='settings_tab_nav_3' class='settings_tab_nav common_icon'></div>
-                                <div id='settings_tab_nav_4' class='settings_tab_nav common_icon'></div>
-                                <div id='settings_tab_nav_5' class='settings_tab_nav common_icon'></div>
+                                <div id='settings_tab_nav_1' class='settings_tab_nav settings_tab_nav_selected common_icon common_icon_button'></div>
+                                <div id='settings_tab_nav_2' class='settings_tab_nav common_icon common_icon_button'></div>
+                                <div id='settings_tab_nav_3' class='settings_tab_nav common_icon common_icon_button'></div>
+                                <div id='settings_tab_nav_4' class='settings_tab_nav common_icon common_icon_button'></div>
+                                <div id='settings_tab_nav_5' class='settings_tab_nav common_icon common_icon_button'></div>
                                 ${props.iam_user_id!=null?
-                                    `<div id='settings_tab_nav_6' class='settings_tab_nav common_icon'>
+                                    `<div id='settings_tab_nav_6' class='settings_tab_nav common_icon common_icon_button'>
                                         <div id='user_setting_avatar_img' class='common_image' style='${props.avatar==null?'':`background-image:url(${props.avatar});`}'></div>
                                     </div>`:
                                     ''

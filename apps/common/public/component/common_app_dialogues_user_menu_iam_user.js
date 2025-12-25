@@ -78,8 +78,8 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
                                </div>
                            </div>
                            <div id='common_app_dialogues_user_menu_iam_user_buttons'>
-                               <div id='common_app_dialogues_user_menu_iam_user_btn_user_update' class='common_app_dialogues_button common_icon' ></div>
-                               <div id='common_app_dialogues_user_menu_iam_user_btn_user_delete_account' class='common_app_dialogues_button common_icon' ></div>
+                               <div id='common_app_dialogues_user_menu_iam_user_btn_user_update' class='common_app_dialogues_button common_icon common_icon_button' ></div>
+                               <div id='common_app_dialogues_user_menu_iam_user_btn_user_delete_account' class='common_app_dialogues_button common_icon common_icon_button' ></div>
                            </div>`;
 /**
 * @name component

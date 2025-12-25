@@ -28,10 +28,10 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
                                 <div id='menu_monitor_pagination'>
                                     <div></div>
                                     <div></div>
-                                    <div id='menu_monitor_pagination_first'     class='common_pagination_first common_icon'></div>
-                                    <div id='menu_monitor_pagination_previous'  class='common_pagination_previous common_icon'></div>
-                                    <div id='menu_monitor_pagination_next'      class='common_pagination_next common_icon'></div>
-                                    <div id='menu_monitor_pagination_last'      class='common_pagination_last common_icon'></div>
+                                    <div id='menu_monitor_pagination_first'     class='common_pagination_first common_icon common_icon_button'></div>
+                                    <div id='menu_monitor_pagination_previous'  class='common_pagination_previous common_icon common_icon_button'></div>
+                                    <div id='menu_monitor_pagination_next'      class='common_pagination_next common_icon common_icon_button'></div>
+                                    <div id='menu_monitor_pagination_last'      class='common_pagination_last common_icon common_icon_button'></div>
                                     <div id='menu_monitor_pagination_page'></div>
                                     <div id='menu_monitor_pagination_page_last'></div>
                                     <div id='menu_monitor_pagination_page_total_count'></div>

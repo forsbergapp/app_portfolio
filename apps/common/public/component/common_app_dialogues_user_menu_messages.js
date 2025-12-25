@@ -17,10 +17,10 @@ const template = () => ` <div id='common_app_dialogues_user_menu_messages'>
                                 <div id='common_app_dialogues_user_menu_messages_pagination'>
                                     <div></div>
                                     <div></div>
-                                    <div id='common_app_dialogues_user_menu_messages_pagination_first'       class='common_pagination_first common_icon'></div>
-                                    <div id='common_app_dialogues_user_menu_messages_pagination_previous'    class='common_pagination_previous common_icon'></div>
-                                    <div id='common_app_dialogues_user_menu_messages_pagination_next'        class='common_pagination_next common_icon'></div>
-                                    <div id='common_app_dialogues_user_menu_messages_pagination_last'        class='common_pagination_last common_icon'></div>
+                                    <div id='common_app_dialogues_user_menu_messages_pagination_first'       class='common_pagination_first common_icon common_icon_button'></div>
+                                    <div id='common_app_dialogues_user_menu_messages_pagination_previous'    class='common_pagination_previous common_icon common_icon_button'></div>
+                                    <div id='common_app_dialogues_user_menu_messages_pagination_next'        class='common_pagination_next common_icon common_icon_button'></div>
+                                    <div id='common_app_dialogues_user_menu_messages_pagination_last'        class='common_pagination_last common_icon common_icon_button'></div>
                                     <div id='common_app_dialogues_user_menu_messages_pagination_page'></div>
                                     <div id='common_app_dialogues_user_menu_messages_pagination_page_last'></div>
                                     <div id='common_app_dialogues_user_menu_messages_pagination_page_total_count'></div>
