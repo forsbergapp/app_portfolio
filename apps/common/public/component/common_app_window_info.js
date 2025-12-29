@@ -17,19 +17,27 @@
  * @param {{info:'IMAGE'|'URL'|'HTML', 
  *          url?:string|null, 
  *          class?:string, 
- *          content?:string}} props
+ *          content?:string,
+ *          icons:{ close: string,
+ *                  zoomout: string,
+ *                  zoomin: string,
+ *                  left: string,
+ *                  right: string,
+ *                  up: string,
+ *                  down: string,
+ *                  fullscreen: string}}} props
  * @returns {string}
  */
 const template = props => ` 
                             <div id='common_app_window_info_toolbar' >
-                                <div id='common_app_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
-                                <div id='common_app_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
-                                <div id='common_app_window_info_toolbar_btn_left' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
-                                <div id='common_app_window_info_toolbar_btn_right' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
-                                <div id='common_app_window_info_toolbar_btn_up' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
-                                <div id='common_app_window_info_toolbar_btn_down' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
-                                <div id='common_app_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
-                                <div id='common_app_window_info_toolbar_btn_close' class='common_toolbar_button common_icon common_icon_toolbar_m' ></div>
+                                <div id='common_app_window_info_toolbar_btn_zoomout' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.zoomout}</div>
+                                <div id='common_app_window_info_toolbar_btn_zoomin' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.zoomin}</div>
+                                <div id='common_app_window_info_toolbar_btn_left' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.left}</div>
+                                <div id='common_app_window_info_toolbar_btn_right' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.right}</div>
+                                <div id='common_app_window_info_toolbar_btn_up' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.up}</div>
+                                <div id='common_app_window_info_toolbar_btn_down' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.down}</div>
+                                <div id='common_app_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.fullscreen}</div>
+                                <div id='common_app_window_info_toolbar_btn_close' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.close}</div>
                             </div>
                             <div id='common_app_window_info_info' class='${props.class}'>
                                 ${props.info=='IMAGE'?
@@ -211,7 +219,16 @@ const component = async props => {
         template:   template({  info:   props.data.info,
                                 url:    props.data.url,
                                 class:  props.data.class??'',
-                                content:props.data.info=='URL'?content_fetch:props.data.content
+                                content:props.data.info=='URL'?content_fetch:props.data.content,
+                                icons: {close: props.methods.COMMON.commonGlobalGet('ICONS')['close'],
+                                        zoomout: props.methods.COMMON.commonGlobalGet('ICONS')['zoomout'],
+                                        zoomin: props.methods.COMMON.commonGlobalGet('ICONS')['zoomin'],
+                                        left: props.methods.COMMON.commonGlobalGet('ICONS')['left'],
+                                        right: props.methods.COMMON.commonGlobalGet('ICONS')['right'],
+                                        up: props.methods.COMMON.commonGlobalGet('ICONS')['up'],
+                                        down: props.methods.COMMON.commonGlobalGet('ICONS')['down'],
+                                        fullscreen: props.methods.COMMON.commonGlobalGet('ICONS')['fullscreen']
+                                    }
         })
     };
 };

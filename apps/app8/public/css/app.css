@@ -86,17 +86,14 @@ body {
 #button_controls .buttons_row{
 	width: 100%;
 	display: block;
-	margin-top: 0.5em;
-  	margin-bottom: 1em;
 }
 #button_controls .buttons_row .buttons_col{
 	display: inline-block;
 	width:calc(15% - 4px);
-	vertical-align: bottom;
+	vertical-align: middle;
 }
 #button_controls .buttons_row .buttons_col .common_app_dialogues_button{
 	width: 100%;
-	
 	font-weight: bold;
 }
 #button_controls .buttons_row .buttons_col .common_app_dialogues_button.common_loading_spinner{
@@ -196,7 +193,6 @@ body {
 .common_app_dialogues_button,
 .common_toolbar_button{
 	color: var(--common_app_color_black) !important;
-    fill:var(--common_app_color_black) !important;
 }
 .common_row_selected,
 .common_list_lov_row:hover,
@@ -206,7 +202,6 @@ body {
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
-    fill:var(--common_app_color_green) !important;
 }
 .common_app_dialogues_content:hover, 
 .common_app_dialogues_content:active{

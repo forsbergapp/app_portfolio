@@ -162,9 +162,9 @@ body {
     background-color: var(--common_app_color_blue2);
     border-inline-start-color: var(--common_app_color_blue1) !important;
 }
-.common_md_note::before{
-  	color: var(--common_app_color_light);
-    background-color: var(--common_app_color_blue1);
+.common_md_note_info{
+  	color: var(--common_app_color_blue1);
+    background-color: var(--common_app_color_light);
 }
 .common_md_tab_row_odd{
     color: var(--common_report_color_black);
@@ -195,7 +195,6 @@ body {
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
-    fill:var(--common_app_color_green) !important;
 }
 .common_app_dialogues_content:hover, 
 .common_app_dialogues_content:active{

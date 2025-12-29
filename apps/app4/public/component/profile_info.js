@@ -10,7 +10,8 @@
  * @name template
  * @description Template
  * @function
- * @param {{setting:boolean}} props
+ * @param {{setting:boolean,
+ *          icons:{unlike:string, like:string}}} props
  * @returns {string}
  */
 const template = props => ` ${props.setting?
@@ -36,8 +37,8 @@ const template = props => ` ${props.setting?
                                         <div id='profile_user_settings_month' class='common_icon'></div>
                                         <div id='profile_user_settings_year' class='common_icon'></div>
                                         <div id='profile_user_settings_like'>
-                                            <div class='common_icon common_unlike common_link'></div>
-                                            <div class='common_icon common_like common_link'></div>
+                                            <div id='profile_user_settings_like_unlike' class='common_unlike common_link'>${props.icons.unlike}</div>
+                                            <div id='profile_user_settings_like_like' class='common_like common_link'>${props.icons.like}</div>
                                         </div>
                                         <div id='profile_user_settings_info_likes' class='common_icon'></div>
                                         <div id='profile_user_settings_info_likes_count'></div>
@@ -96,8 +97,8 @@ const component = async props => {
      */
     const profile_user_setting_detail_show = (liked, count_likes, count_views) => {
         
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_like .common_unlike').style.display = `${liked == 1?'none':'block'}`;
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_like .common_like').style.display = `${liked == 1?'block':'none'}`;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_like #profile_user_settings_like_unlike').style.display = `${liked == 1?'none':'block'}`;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_like #profile_user_settings_like_like').style.display = `${liked == 1?'block':'none'}`;
 
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_info_likes_count').textContent = count_likes;
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_user_settings_info_views_count').textContent = count_views;
@@ -163,7 +164,10 @@ const component = async props => {
                     commonProfileShow_user_setting_detail:profile_user_setting_detail_show,
                     profile_user_setting_stat:profile_user_setting_stat
                     },
-        template:   template({setting:user_settings.length>0})
+        template:   template({  setting:user_settings.length>0,
+                                icons:{ like:props.methods.COMMON.commonGlobalGet('ICONS')['user_like'],
+                                        unlike:props.methods.COMMON.commonGlobalGet('ICONS')['user_unlike']}}
+        )
     };
 };
 export default component;

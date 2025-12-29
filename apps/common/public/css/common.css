@@ -45,7 +45,6 @@
 	--common_report_color_shadow2: rgb(0 0 0 / 19%);
 	--common_report_color_white: white;
 	/*icons ui*/
-    --common_app_icon_framework_react:      '⚛';
 	--common_app_icon_apps:                 '⊞';
     --common_app_icon_maintenance:          '⚒';
     --common_app_icon_alert:                '🚨';
@@ -56,8 +55,6 @@
     --common_app_icon_lov:                  '^';
 	--common_app_icon_select:        		'˅';
     --common_app_icon_send:                 '🖅';
-    --common_app_icon_email:                '🖂';
-    --common_app_icon_otp:                  var(--common_app_icon_user_password)' 123456';
     --common_app_icon_settings:             '⚙';
     --common_app_icon_chat:                 '🗩';
     --common_app_icon_log:                  '☰';
@@ -76,18 +73,11 @@
     --common_app_icon_online:               '⬤';
     --common_app_icon_search:               '🔍';
     --common_app_icon_menu_open:            '☰';
-    --common_app_icon_first:                '⏮';
-    --common_app_icon_previous:             '⏴';
-    --common_app_icon_next:                 '⏵';
-    --common_app_icon_last:                 '⏭';
     --common_app_icon_slider_left:          '⏴';
     --common_app_icon_slider_right:         '⏵';
     --common_app_icon_align_left:           '⏮';
     --common_app_icon_align_center:         '⏹';
-    --common_app_icon_align_right:          '⏭';
-    --common_app_icon_cancel:               '☓';
-    --common_app_icon_ok:                   '🗸'; 
-    --common_app_icon_zoomout:              '➖';
+    --common_app_icon_align_right:          '⏭';;
     --common_app_icon_zoomin:               '➕';
     --common_app_icon_left:                 '◀';
     --common_app_icon_right:                '▶';
@@ -103,8 +93,6 @@
     --common_app_icon_notes:                '🗒';
     --common_app_icon_login:                '🡆⊃';
     --common_app_icon_logout:               '⊂🡆';
-    --common_app_icon_signup:               var(--common_app_icon_user) '🖉';
-    --common_app_icon_question:             '?';
     --common_app_icon_active:               'ACTIVE';
     --common_app_icon_status:               'STATUS';
     --common_app_icon_level:                'LEVEL';
@@ -117,10 +105,8 @@
     --common_app_icon_init:                 '⭐';
 	--common_app_icon_run:					'🖶';
 	--common_app_icon_preview:				'🔍';
-    --common_app_icon_arrow_pointer:    	'🡔';
-    --common_app_icon_arrow_pointer_query:   var(--common_app_icon_arrow_pointer) ' ?';
-
-	--common_app_icon_user:                     '👤';
+	--common_app_icon_user_old:                     '👤';
+    --common_app_icon_user:                     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="48px" width ="48px" viewBox="0 0 448 512"><path fill="currentColor" d="M224 248a120 120 0 1 0 0-240 120 120 0 1 0 0 240zm-29.7 56C95.8 304 16 383.8 16 482.3 16 498.7 29.3 512 45.7 512l356.6 0c16.4 0 29.7-13.3 29.7-29.7 0-98.5-79.8-178.3-178.3-178.3l-59.4 0z"/></svg>');
     --common_app_icon_users:                    '👥';
     --common_app_icon_username:                 var(--common_app_icon_user) ' ABC';
     --common_app_icon_user_last_logintime:      '🡆⊃';
@@ -130,10 +116,7 @@
 	--common_app_icon_user_password_confirm:    var(--common_app_icon_user_password) '!';
 	--common_app_icon_user_password_reminder:   var(--common_app_icon_user_password) '?';
     --common_app_icon_user_avatar:              var(--common_app_icon_user);
-    --common_app_icon_user_follow_user:         var(--common_app_icon_user)'+';
-    --common_app_icon_user_followed_user:       var(--common_app_icon_user)'✓';
     --common_app_icon_user_like:                '♥';
-    --common_app_icon_user_unlike:              '💔';
     --common_app_icon_user_views:               '👁';
     --common_app_icon_user_follows:             var(--common_app_icon_users);
     --common_app_icon_user_followed:            var(--common_app_icon_user)var(--common_app_icon_users);
@@ -141,7 +124,6 @@
     --common_app_icon_user_bio:                 var(--common_app_icon_user) ' ABC';
     --common_app_icon_user_profile:             '\1FAAA';
     --common_app_icon_user_profile_stat:        '🏅';
-	--common_app_icon_user_session_expired:		'⛔';
 	--common_app_icon_verification_code:        var(--common_app_icon_user_password);
 
     --common_app_icon_provider_id:              'ID';
@@ -167,7 +149,6 @@
     --common_app_icon_regional_calendar_hijri_type:'📆';
     --common_app_icon_regional_timeformat:      '12/24';
 
-    --common_app_icon_sky_cloud:                '☁';
     --common_app_icon_sky_sunrise_before:       '🌙';
     --common_app_icon_sky_sunrise:              '☀⭡';
 	--common_app_icon_sky_midday:               '☀';
@@ -191,8 +172,6 @@
 
 	--common_app_icon_infinite:                 '∞';
 
-    --common_app_icon_message_fail:             var(--common_app_icon_cancel);
-    --common_app_icon_message_success:          var(--common_app_icon_ok);
     --common_app_icon_message_text:             'ABC';
 	/*icons app*/
 	--common_app_icon_verification_code:    	'❂❂❂❂❂❂';
@@ -302,202 +281,6 @@ body.font_arabic_nastaliq .common_input{
 .common_md_tab{
 	font-family: "Noto Sans Mono";
 }
-
-/*Icons general use*/
-.common_construction::before{											            content:var(--common_app_icon_maintenance)}	
-.common_unlike::before{													            content:var(--common_app_icon_user_unlike)}	
-.common_like::before{													            content:var(--common_app_icon_user_like)}	
-.common_user_follow::before{											            content:var(--common_app_icon_user_follow_user)}
-.common_user_followed::before{											            content:var(--common_app_icon_user_followed_user)}
-.common_search_icon::before{											            content:var(--common_app_icon_search)}
-.common_reload::before{													            content:var(--common_app_icon_reload)}
-.common_user_session_expired::before{									            content:var(--common_app_icon_user_session_expired)}
-
-.common_pagination_first::before{												    content:var(--common_app_icon_first)}
-.common_pagination_previous::before{											    content:var(--common_app_icon_previous)}
-.common_pagination_next::before{												    content:var(--common_app_icon_next)}
-.common_pagination_last::before{												    content:var(--common_app_icon_last)}
-
-body.rtl .common_pagination_first::before{									        content:var(--common_app_icon_last)}
-body.rtl .common_pagination_previous::before{									    content:var(--common_app_icon_next)}
-body.rtl .common_pagination_next::before{										    content:var(--common_app_icon_previous)}
-body.rtl .common_pagination_last::before{										    content:var(--common_app_icon_first)}
-
-
-/*Icons app*/
-#common_app_toolbar_framework_react::before{								        content:var(--common_app_icon_framework_react); margin-top: -0.25em;}
-
-/*Icons app data display*/
-.common_app_data_display_button_update::before{							            content:var(--common_app_icon_update)}
-.common_app_data_display_button_post::before{							            content:var(--common_app_icon_add)}
-.common_app_data_display_button_delete::before{							            content:var(--common_app_icon_delete)}
-.common_app_data_display_button_print::before{							            content:var(--common_app_icon_print)}
-.common_data_display_icon_cancel::before{								            content:var(--common_app_icon_cancel) !important}
-.common_data_display_icon_ok::before{									            content:var(--common_app_icon_ok) !important}
-
-/*Icons broadcast*/
-#common_app_broadcast_close::before{										        content:var(--common_app_icon_close)}
-#common_app_broadcast_info_title::before{									        content:var(--common_app_icon_alert)}
-/* Icons maintenance */
-#common_maintenance_message::before{	                                            content:var(--common_app_icon_maintenance)}
-
-/*Icons dialogue apps*/
-#common_apps_list_title_col_info::before{					                        content:var(--common_app_icon_info)}
-
-/*Icons dialogue info*/
-#common_app_dialogues_info_contact_message_title::before{					        content:var(--common_app_icon_email)}
-#common_app_dialogues_info_close::before{									        content:var(--common_app_icon_close)}
-#common_app_dialogues_info_contact_message_send::before{						    content:var(--common_app_icon_send)}
-/*Icons dialogue lov*/
-.common_app_dialogues_lov_button::before{											content:var(--common_app_icon_lov)}
-#common_app_dialogues_lov_search_icon::before{										content:var(--common_app_icon_search)}
-#common_app_dialogues_lov_close::before{											content:var(--common_app_icon_close)}
-
-/*Icons dialogue message*/
-#common_app_dialogues_message_close::before{										content:var(--common_app_icon_ok)}
-#common_app_dialogues_message_cancel::before{										content:var(--common_app_icon_cancel)}
-#common_app_dialogues_message_title_icon::before{									content:''}
-#common_app_dialogues_message_title_icon[data-text_class='message_text']::before{	content:var(--common_app_icon_message_text)}
-#common_app_dialogues_message_title_icon[data-text_class='message_success']::before{content:var(--common_app_icon_message_success)}
-#common_app_dialogues_message_title_icon[data-text_class='message_fail']::before{	content:var(--common_app_icon_message_fail)}
-#common_app_dialogues_message_confirm_question:empty::before{						content:var(--common_app_icon_question)}
-
-/*Icons dialogue profile*/
-#common_app_dialogues_profile_info_joined_date_icon::before{						content:var(--common_app_icon_user_account_created)}
-#common_app_dialogues_profile_info_private_title::before{							content:var(--common_app_icon_private)}
-#common_app_dialogues_profile_info_avatar_online_status::before{					content:var(--common_app_icon_online)}
-#common_app_dialogues_profile_stat_row1_1::before{									content:var(--common_app_icon_user_views)}
-#common_app_dialogues_profile_stat_row1_2::before{									content:var(--common_app_icon_user_follows)}
-#common_app_dialogues_profile_stat_row1_3::before{									content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_user_follows)}
-#common_app_dialogues_profile_home::before{									        content:var(--common_app_icon_user_profile_stat)}
-#common_app_dialogues_profile_close::before{									    content:var(--common_app_icon_close)}
-#common_app_dialogues_profile_info_view_count_icon::before{							content:var(--common_app_icon_user_views)}
-#common_app_dialogues_profile_info_btn_following::before{							content:var(--common_app_icon_user_follows)}
-#common_app_dialogues_profile_info_btn_followed::before{							content:var(--common_app_icon_user_followed)}
-#common_app_dialogues_profile_info_btn_liked_users::before{							content:var(--common_app_icon_user_followed)}
-#common_app_profile_toolbar_stat::before{										    content:var(--common_app_icon_user_profile_stat)}
-
-/*Icons dialogue user menu*/
-#common_app_dialogues_user_menu_nav_messages::before{								content:var(--common_app_icon_email)}
-#common_app_dialogues_user_menu_nav_iam_user_app::before{							content:var(--common_app_icon_settings)}
-#common_app_dialogues_user_menu_nav_iam_user::before{								content:var(--common_app_icon_user)}
-#common_app_dialogues_user_menu_signup::before{								        content:var(--common_app_icon_signup)}
-#common_app_dialogues_user_menu_log_in::before{								        content:var(--common_app_icon_login)}
-#common_app_dialogues_user_menu_log_out::before{								    content:var(--common_app_icon_logout)}
-#common_app_dialogues_user_menu_close::before{								        content:var(--common_app_icon_close)}
-
-/*Icons dialogue user menu messages*/
-.common_app_dialogues_user_menu_messages_list_col_delete::before{					content:var(--common_app_icon_delete)}
-#common_app_dialogues_user_menu_messages_list_col_date::before{					    content:var(--common_app_icon_regional_calendar)}
-#common_app_dialogues_user_menu_messages_list_col_sender::before{					content:var(--common_app_icon_user)}
-#common_app_dialogues_user_menu_messages_list_col_subject::before{					content:var(--common_app_icon_message_text)}
-
-#common_app_dialogues_user_menu_messages_message_col_date::before{					content:var(--common_app_icon_regional_calendar)}
-#common_app_dialogues_user_menu_messages_message_col_sender::before{				content:var(--common_app_icon_user) var(--common_app_icon_logout)}
-#common_app_dialogues_user_menu_messages_message_col_receiver::before{				content:var(--common_app_icon_user) var(--common_app_icon_login)}
-#common_app_dialogues_user_menu_messages_message_col_ip::before{					content:var(--common_app_icon_internet)}
-#common_app_dialogues_user_menu_messages_message_col_host::before{					content:var(--common_app_icon_server)}
-#common_app_dialogues_user_menu_messages_message_col_subject::before{				content:var(--common_app_icon_info)}
-#common_app_dialogues_user_menu_messages_message_col_message::before{				content:var(--common_app_icon_email)}
-
-
-/*Icons dialogue user menu iam user*/
-#common_app_dialogues_user_menu_iam_user_private::before{							content:var(--common_app_icon_private)}
-#common_app_dialogues_user_menu_iam_user_input_username_icon::before{				content:var(--common_app_icon_user)}
-#common_app_dialogues_user_menu_iam_user_input_bio_icon::before{					content:var(--common_app_icon_user_profile)}
-#common_app_dialogues_user_menu_iam_user_input_otp_icon::before{					content:var(--common_app_icon_user_password)}
-#common_app_dialogues_user_menu_iam_user_input_password_icon::before{				content:var(--common_app_icon_user_password)}
-#common_app_dialogues_user_menu_iam_user_input_password_confirm_icon::before{		content:var(--common_app_icon_user_password_confirm)}
-#common_app_dialogues_user_menu_iam_user_input_password_new_icon::before{			content:var(--common_app_icon_user_password)}
-#common_app_dialogues_user_menu_iam_user_input_password_new_confirm_icon::before{	content:var(--common_app_icon_user_password_confirm)}
-#common_app_dialogues_user_menu_iam_user_input_password_reminder_icon::before{		content:var(--common_app_icon_user_password_reminder)}
-
-#common_app_dialogues_user_menu_iam_user_label_last_logintime::before{				content:var(--common_app_icon_user_last_logintime)}
-#common_app_dialogues_user_menu_iam_user_label_account_created::before{				content:var(--common_app_icon_user_account_created)}
-#common_app_dialogues_user_menu_iam_user_label_account_modified::before{			content:var(--common_app_icon_user_account_modified)}
-
-#common_app_dialogues_user_menu_iam_user_btn_user_delete_account::before{			content:var(--common_app_icon_delete)}	
-#common_app_dialogues_user_menu_iam_user_btn_user_update.spinner::before{			content: ''}
-#common_app_dialogues_user_menu_iam_user_btn_user_update::before{					content:var(--common_app_icon_update)}	
-
-#common_app_dialogues_user_menu_iam_user_input_username:empty::before{				content:var(--common_app_icon_user)}
-#common_app_dialogues_user_menu_iam_user_input_bio:empty::before{					content:var(--common_app_icon_user_profile)}
-#common_app_dialogues_user_menu_iam_user_input_password:empty::before{				content:var(--common_app_icon_user_password)}
-#common_app_dialogues_user_menu_iam_user_input_password_confirm:empty::before{		content:var(--common_app_icon_user_password_confirm)}
-#common_app_dialogues_user_menu_iam_user_input_password_new:empty::before{			content:var(--common_app_icon_user_password)}
-#common_app_dialogues_user_menu_iam_user_input_password_new_confirm:empty::before{	content:var(--common_app_icon_user_password_confirm)}
-#common_app_dialogues_user_menu_iam_user_input_password_reminder:empty::before{		content:var(--common_app_icon_user_password_reminder)}
-
-/*Icons dialogue user menu iam user app*/
-#common_app_dialogues_user_menu_iam_user_app_theme::before{					        content:var(--common_app_icon_misc_design)}
-#common_app_dialogues_user_menu_iam_user_app_locale::before{					    content:var(--common_app_icon_regional_locale)}
-#common_app_dialogues_user_menu_iam_user_app_timezone::before{				        content:var(--common_app_icon_regional_timezone)}
-#common_app_dialogues_user_menu_iam_user_app_direction::before{				        content:var(--common_app_icon_regional_direction)}
-#common_app_dialogues_user_menu_iam_user_app_arabic_script::before{			        content:var(--common_app_icon_regional_script)}
-
-
-/*Icons dialogue user start*/
-#common_app_dialogues_iam_start_login::before{								        content:var(--common_app_icon_user)}
-#common_app_dialogues_iam_start_login_button::before{						        content:var(--common_app_icon_login)}
-#common_app_dialogues_iam_start_login_admin_button::before{					        content:var(--common_app_icon_login)}
-
-#common_app_dialogues_iam_start_login_username:empty::before{				        content:var(--common_app_icon_user)}
-#common_app_dialogues_iam_start_login_password:empty::before{				        content:var(--common_app_icon_user_password)}
-
-#common_app_dialogues_iam_start_login_admin_username:empty::before{			        content:var(--common_app_icon_user);}
-#common_app_dialogues_iam_start_login_admin_password:empty::before{			        content:var(--common_app_icon_user_password)}
-#common_app_dialogues_iam_start_login_admin_password_confirm:empty::before{	        content:var(--common_app_icon_user_password_confirm)}
-
-#common_app_dialogues_iam_start_signup::before{								        content:var(--common_app_icon_signup)}
-#common_app_dialogues_iam_start_signup_button::before{						        content:var(--common_app_icon_signup)}
-
-#common_app_dialogues_iam_start_signup_username:empty::before{				        content:var(--common_app_icon_user)}
-#common_app_dialogues_iam_start_signup_password:empty::before{				        content:var(--common_app_icon_user_password)}
-#common_app_dialogues_iam_start_signup_password_confirm:empty::before{		        content:var(--common_app_icon_user_password_confirm)}
-#common_app_dialogues_iam_start_signup_password_reminder:empty::before{		        content:var(--common_app_icon_user_password_reminder)}
-
-#common_app_dialogues_iam_start_close::before{								        content:var(--common_app_icon_close)}
-#common_app_dialogues_iam_start_login_admin_first_time::before{				        content:var(--common_app_icon_init)}
-
-
-/*Icons dialogue user verify*/
-#common_app_dialogues_iam_verify_verification_code_icon::before{				    content:var(--common_app_icon_verification_code)}
-#common_app_dialogues_iam_verify_cancel::before{								    content:var(--common_app_icon_cancel)}
-
-/*Icons common map control*/
-#common_map_control_zoomout::before{						                        content:var(--common_app_icon_zoomout)}
-#common_map_control_zoomin::before{							                        content:var(--common_app_icon_zoomin)}
-#common_map_control_search::before{					                                content:var(--common_app_icon_search)}
-#common_map_control_expand_search_icon::before{								        content:var(--common_app_icon_search)}
-#common_map_control_fullscreen::before{					                            content:var(--common_app_icon_fullscreen)}
-#common_map_control_my_location::before{					                        content:var(--common_app_icon_map_my_location);font-size: 2em;}
-#common_map_control_layer::before{					                                content:var(--common_app_icon_map_layer)}
-#common_map_control_query::before{					                                content:var(--common_app_icon_arrow_pointer_query)}
-
-/*Icons common map popup*/
-.common_map_popup_close::before{											        content:var(--common_app_icon_close)}
-.common_map_popup_sub_title_timezone_icon::before{							        content:var(--common_app_icon_regional_timezone)}
-.common_map_popup_sub_title_gps_icon::before{							            content:var(--common_app_icon_gps_position)}
-
-/*Icons profile search*/
-#common_app_profile_search_icon::before{									        content:var(--common_app_icon_search)}
-
-/*Icons user account*/
-#common_app_iam_user_menu_default_avatar::before{								    content:var(--common_app_icon_user_avatar)}
-#common_app_iam_user_menu_message_count::after{								        content:var(--common_app_icon_email)}
-
-/*Icons window info*/
-#common_app_window_info_toolbar_btn_close::before{									content:var(--common_app_icon_close)}
-#common_app_window_info_toolbar_btn_zoomout::before{						        content:var(--common_app_icon_zoomout)}
-#common_app_window_info_toolbar_btn_zoomin::before{							        content:var(--common_app_icon_zoomin)}
-#common_app_window_info_toolbar_btn_left::before{							        content:var(--common_app_icon_left)}
-#common_app_window_info_toolbar_btn_right::before{							        content:var(--common_app_icon_right)}
-#common_app_window_info_toolbar_btn_up::before{								        content:var(--common_app_icon_up)}
-#common_app_window_info_toolbar_btn_down::before{							        content:var(--common_app_icon_down)}
-#common_app_window_info_toolbar_btn_fullscreen::before{						        content:var(--common_app_icon_fullscreen)}
-
-/*Icons markdown*/
-.common_md_note::before{											            content:'!'}
 
 body{
 	font-size: 16px;
@@ -635,12 +418,6 @@ body,
 .common_select_option:active{
 	background-color: var(--common_app_color_white3);
 }
-.common_placeholder:empty::before{
-    font-family: var(--common_app_font_ui);
-	opacity:0.7;
-	font-style: normal;
-	font-weight: bold;
-}
 .common_input{
 	display: inline-block;
 	text-align: start;
@@ -690,17 +467,17 @@ body,
     height: 2em;
     font-size: 1.5em;
 }
-.common_icon_button::before{
-    width: 1.5em;
-    height: 1.5em;
-    font-size: 1.5em;
+.common_icon_button{
+    width: 2em;
+    height: 1.25em;
+    font-size: 2em;
     display:inline-block;
     vertical-align: super;
 }
-.common_icon_button svg {
-	font-size: 2em;
-	height: 0.6em;
-	vertical-align: sub;
+.common_icon_lov{
+    width: 2em;
+    display: inline-block;
+    vertical-align: sub;
 }
 .common_icon_select_dropdown{
     border-radius: 2px;
@@ -708,27 +485,21 @@ body,
     height: 1em;
     vertical-align: middle;
 }
-.common_icon_list,
-.common_icon_button,
-.common_icon_select_dropdown,
-.common_icon_toolbar_s,
-.common_icon_toolbar_m,
-.common_icon_toolbar_l{
-    cursor: pointer;
+.common_icon_list{
+    display: inline_block;
 }
-.common_icon_toolbar_s::before{
+.common_icon_toolbar_s{
     width: 1.25em;
     height: 1.25em;
-    font-size: 1.25em;
-    
+    font-size: 1.25em;    
 }
-.common_icon_toolbar_m::before{
+.common_icon_toolbar_m{
     width: 1.5em;
     font-size: 2em;
     height: 1.5em;
     vertical-align: middle;
 }
-.common_icon_toolbar_l::before{
+.common_icon_toolbar_l{
     width: 1.25em;
     height: 1.25em;
     font-size: 2.5em;
@@ -737,9 +508,6 @@ body,
 .common_link:hover,
 .common_link:active{
 	cursor: pointer;
-}
-.common_app_dialogues_lov_button::before{
-    vertical-align: top;
 }
 .common_app_dialogues_lov_search_row{
 	width:100%;
@@ -752,6 +520,8 @@ body,
 }
 #common_app_dialogues_lov_search_icon{
 	width: 15px;
+    display: inline-block;
+    vertical-align: middle;
 }
 .common_list_lov_row{
 	display:inline-block;
@@ -995,12 +765,6 @@ body,
   	align-items: center;
   	justify-content: space-around;
 }
-#common_apps_list_title_col_info {
-    font-size: 1.25em;
-    border-radius: 50%;
-    width: 1.25em;
-    height: 1.25em;
-}
 #common_apps_list .common_apps_app_link_col{
 	width: 100%;
     display: block;
@@ -1185,7 +949,6 @@ body,
 }
 #common_app_dialogues_iam_start .common_input, .common_login_input{
 	height: 2em;
-	margin-top: 10px;
 	padding: 2px 10px;
 	box-sizing: border-box;
 }
@@ -1202,6 +965,16 @@ body,
 }
 #common_app_dialogues_iam_start_login_button{
 	width: 100%;
+}
+#common_app_dialogues_iam_start .common_app_dialogues_iam_start_row{
+	display: grid;
+    text-align: start;
+    grid-template-columns: 10% 90%;
+    align-items: center;
+    margin-top: 0.5em;
+}
+#common_app_dialogues_iam_start_row div{
+    vertical-align: middle;
 }
 /*Dialogue lov*/
 #common_app_dialogues_lov.common_app_dialogues_show2{
@@ -1520,6 +1293,7 @@ body,
 	margin-inline-start: -30px;
 	border-radius: 4px 4px 0px 0px;
     z-index: 10;
+    display:inline-block;
 }
 .common_app_profile_search_list_username,
 .common_app_dialogues_profile_stat_list_username,
@@ -1541,9 +1315,9 @@ body,
 #common_app_iam_user_menu_logged_in, #common_app_dialogues_user_menu_logged_in{
 	display: none;
 }
-#common_app_iam_user_menu_message_count{
-    display: flex;
-    flex-direction: row;
+#common_app_iam_user_menu_message_count,
+#common_app_iam_user_menu_message_count_icon{
+    display: inline-block;
 }
 #common_app_iam_user_menu_logged_out{
 	display: inline-block;
@@ -1580,17 +1354,15 @@ body,
 	display: inline-block;
 }
 #common_app_dialogues_user_menu_nav{
-    vertical-align: middle;
-    display: inline-flex;
-    align-items: flex-end;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 40% 20% 30%;
 }
 #common_app_dialogues_user_menu_nav>div{
     margin-left: 1.5em;
     margin-right: 1.5em;
 }
-#common_app_dialogues_user_menu_nav_messages::before{
-    display:inline-block !important;
-}
+
 #common_app_dialogues_user_menu_nav_messages_count{
     display: inline-block;
     font-size: 0.8em;
@@ -1609,6 +1381,9 @@ body,
 	display: inline-block;
 	width:100%;
 }
+#common_app_dialogues_user_menu_logged_out >div{
+    width:100%;
+}
 /* Dialogue user menu - messages */
 #common_app_dialogues_user_menu_messages{
     border-radius: var(--common_app_css_border_radius);
@@ -1619,13 +1394,13 @@ body,
 }
 #common_app_dialogues_user_menu_messages_pagination div{
 	display: inline-block;
-	margin-left: 10px;
-	margin-right: 10px;
+	margin-left: 0.1em;
+    margin-right: 0.1em;
+    vertical-align: middle;
 }
 #common_app_dialogues_user_menu_messages_list{
     overflow: auto;
     height: 10em;
-    cursor: pointer;
 }
 #common_app_dialogues_user_menu_message_content{
     text-align: start;
@@ -1697,6 +1472,7 @@ body,
 }
 #common_app_dialogues_user_menu_iam_user .common_app_dialogues_user_menu_iam_user_row_title>div{
     margin:0.5em;
+    display: inline-block;
 }
 #common_app_dialogues_user_menu_iam_user .common_app_dialogues_user_menu_iam_user_row{
 	display: grid;
@@ -1748,7 +1524,9 @@ body,
 .rtl .common_loading_spinner::before{
 	transform: translate(50%, -50%) !important;
 }
-
+.common_loading_spinner svg{
+    display: none;
+}
 /*WINDOW INFO*/
 #common_app_window_info {
 	top: 0px;
@@ -1885,15 +1663,13 @@ body,
 	border-inline-start:2px solid;
 	position:relative;
 }
-.common_md_note::before{
+.common_md_note_info{
 	display: block;
-  	width: 1.25em;
+  	width: 1em;
   	border-radius: 50%;
-  	font-size: 2em;
+  	font-size: 3em;
   	height: 1em;
   	text-align: center;
-  	font-weight: bold;
-  	padding-top: 0.25em;
   	margin-bottom: 0.5em;
 }
 .common_md_tab{
@@ -2006,20 +1782,32 @@ body,
     position:absolute;
     top:0.5em;
     margin-inline-start:0.5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .common_map_control_button {
 	text-align: center;
 	display: block;
 	line-height: 2.5em;
-	cursor:var(--common_app_icon_arrow_pointer);
+    height: 2em;
+    width: 2em;
 	padding-top: unset;
     padding-bottom: unset;
+    font-size:1em;
+}
+#common_map_control>div{
+    font-size:1.5em !important;
+}
+#common_map_control_my_location{
+    font-size: 2em;
 }
 .common_map_control_expand{
     width: 0;
 	position: absolute;
-	inset-inline-start: 2.5em;
+	inset-inline-start: 2em;
     transition: width 0.5s ease;
+    font-size: 0.75em;
 }
 .common_map_control_expand:not(:empty){
     width: 60vw;
@@ -2028,8 +1816,12 @@ body,
 	bottom: 2.5em;
     background-color: white;
 }
+#common_map_control_layer,
+#common_map_control_search{
+    font-size: 1em;
+}
 #common_map_control_expand_search{
-    top: 5em;
+    top: 4em;
     background-color: white;
 }
 #common_map_control_expand_select_country, 
@@ -2038,8 +1830,11 @@ body,
 	width:95%;
 	line-height: 1.5em;
 }
+#common_map_control_expand_search_icon{
+    display: inline-block;
+}
 #common_map_control_expand_search_input{
-	width:90% !important;
+    max-width: calc(95% - 2.25em);
 }
 #common_map_control_expand_search_list_wrap{
 	width: 100%;
@@ -2099,9 +1894,8 @@ body,
     z-index: 10;
     user-select: none;
 }
-#common_map.common_map_control_active #common_map_cursor::before,
-#common_map.common_map_control_active #common_map_cursor::before{
-    content:var(--common_app_icon_arrow_pointer_query)
+#common_map_cursor{
+    font-size:1.75em;
 }
 #common_map_measure, .common_map_line, .common_map_popup{
     z-index: 2;

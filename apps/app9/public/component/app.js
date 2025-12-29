@@ -8,11 +8,14 @@
  */
 
 /**
+ * @function
+ * @param {{icons:{otp:string, clear:string}}} props
  * @returns {string}
  */
-const template = () =>  `   <div id='otp_row'>
-                                <div id='otp_key' class='common_input common_placeholder' contentEditable='true'></div>
-                                <div id='clear_button' class='common_app_dialogues_button common_icon'></div>
+const template = props =>  `<div id='otp_row'>
+                                <div>${props.icons.otp}</div>
+                                <div id='otp_key' class='common_input' contentEditable='true'></div>
+                                <div id='clear_button' class='common_app_dialogues_button common_link'>${props.icons.clear}</div>
                             </div>
                             <div id='totp_row'>
                                 <div id='totp_value'></div>
@@ -33,7 +36,9 @@ const component = async props => {
         lifecycle:  {onMounted:null},
         data:       null,
         methods:    null,
-        template:   template()
+        template:   template({icons:{
+                                    otp:props.methods.COMMON.commonGlobalGet('ICONS')['otp'],
+                                    clear:props.methods.COMMON.commonGlobalGet('ICONS')['close']}})
     };
 };
 export default component;

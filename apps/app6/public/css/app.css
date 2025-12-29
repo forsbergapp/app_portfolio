@@ -88,26 +88,6 @@ body {
 .common_app_data_display_buttons{
 	position: unset !important;
 }
-#app_page_start_shop .common_app_data_display_button_post{
-    border-radius: 20%;
-    height: 2em !important;
-    width: 2em !important;
-	rotate:45deg;
-    display: inline-block;
-}
-@keyframes glowing {
-	0% {background-position: 0 0;}
-	50% {background-position: 400% 0;}
-	100% {background-position: 0 0;}
-}
-#app_page_start_shop .common_app_data_display_button_post::before{
-	margin-inline-start: -0.5em;
-	margin-top: -0.5em;
-	font-weight: bold;
-	rotate:135deg;
-	display: inline-block;
-	font-size: 5em;
-}
 #common_app_dialogues_profile_input_row,
 #common_app_profile_search_list_wrap{
 	visibility: hidden;
@@ -248,19 +228,6 @@ body {
 	fill:var(--common_app_color_blue3);
 	stroke: var(--common_app_color_black);
 }
-#app_page_start_shop .common_app_data_display_button_post{
-	background-color: var(--common_app_color_gold) !important;
-}
-#app_page_start_shop .common_app_data_display_button_post::before{
-	content: var(--common_app_icon_infinite) !important;
-	color: var(--common_app_color_blue3);
-}
-#app_page_start_shop .common_app_data_display_button_post:hover{
-	background-color: var(--common_app_color_green) !important;
-	background:linear-gradient(45deg, var(--common_app_color_blue3), var(--common_app_color_gold), var(--common_app_color_gold), var(--common_app_color_blue3));
-	animation:glowing 2s linear infinite;
-	background-size:400%;
-}
 .common_row_selected{
 	background-color: var(--common_app_color_white3);
 }
@@ -275,14 +242,12 @@ body {
 .common_app_dialogues_button,
 .common_toolbar_button{
 	color: var(--common_app_color_gold) !important;
-    fill:var(--common_app_color_gold) !important;
 }
 .common_app_dialogues_button:hover,
 .common_app_dialogues_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
-    fill:var(--common_app_color_green) !important;
 }
 .common_app_dialogues_content{
 	background-color: var(--common_app_color_white1);

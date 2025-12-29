@@ -13,14 +13,15 @@
  * @param {{list:Object.<string,*>[],
  *          lov:string,
  *          lov_column_id:string,
- *          lov_column_value:string}} props 
+ *          lov_column_value:string,
+ *          icons:{search:string, close:string}}} props 
  * @returns {string}
  */
 const template = props =>`  <div id='common_app_dialogues_lov_form'>
                                 <div id='common_app_dialogues_lov_title' class='common_icon'></div>
                                 <div id='common_app_dialogues_lov_search_row'>
                                     <div id='common_app_dialogues_lov_search_input' contentEditable='true' class='common_input'></div>
-                                    <div id='common_app_dialogues_lov_search_icon' class='common_icon common_icon_list'></div>
+                                    <div id='common_app_dialogues_lov_search_icon' class='common_link common_icon_list'>${props.icons.search}</div>
                                 </div>
                             <div id='common_app_dialogues_lov_list' data-lov='${props.lov}' class='common_list_scrollbar'>
                                 ${props.list.map(list_row=>
@@ -34,7 +35,7 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
                                     `).join('')
                                 }
                             </div>
-                            <div id='common_app_dialogues_lov_close' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                            <div id='common_app_dialogues_lov_close' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.close}</div>
                         </div>`;
 /**
  * @name component
@@ -205,7 +206,10 @@ const component = async props => {
                                             list: setup.lov_rows, 
                                             lov:props.data.lov, 
                                             lov_column_id:setup.lov_column_id,
-                                            lov_column_value:setup.lov_column_value
+                                            lov_column_value:setup.lov_column_value,
+                                            icons:{ search:props.methods.COMMON.commonGlobalGet('ICONS')['search'],
+                                                    close:props.methods.COMMON.commonGlobalGet('ICONS')['close']
+                                            }
                                             })
                     };
 };
