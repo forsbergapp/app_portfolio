@@ -337,9 +337,9 @@ const appPaymentRequestShow = async message =>{
                             button_print: false,
                             button_update: false,
                             button_post: true,
-                            button_post_icon_class:'common_data_display_icon_ok',
+                            button_post_icon:common.commonGlobalGet('ICONS')['ok'],
                             button_delete: true,
-                            button_delete_icon_class:'common_data_display_icon_cancel'
+                            button_delete_icon:common.commonGlobalGet('ICONS')['cancel'],
                             },
                 methods:    {
                             button_print:null,

@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{message:string}} props
+ * @param {{message:string, icon:{alert:string,close:string}}} props
  * @returns {string}
  */
 const template = props =>` <div id='common_app_broadcast_info'>
@@ -23,8 +23,8 @@ const template = props =>` <div id='common_app_broadcast_info'>
                                 </div>
                                 <div id='common_app_broadcast_footer'>
                                     <div id='common_app_broadcast_info_logo' class='common_image common_image_broadcast'></div>
-                                    <div id='common_app_broadcast_info_title' class='common_icon'></div>
-                                    <div id='common_app_broadcast_close' class='common_toolbar_button common_icon common_icon_button'></div>
+                                    <div id='common_app_broadcast_info_title' >${props.icon.alert}</div>
+                                    <div id='common_app_broadcast_close' class='common_link common_toolbar_button common_icon_button'>${props.icon.close}</div>
                                 </div>
                             </div>
                         </div>`;
@@ -77,7 +77,9 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template({message:props.data.message})
+        template:   template({message:props.data.message, 
+                                icon:{  alert:props.methods.COMMON.commonGlobalGet('ICONS')['alert'],
+                                        close:props.methods.COMMON.commonGlobalGet('ICONS')['close']}})
     };
 };
 export default component;

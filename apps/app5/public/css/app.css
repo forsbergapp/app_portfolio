@@ -203,14 +203,12 @@ body {
 .common_app_dialogues_button,
 .common_toolbar_button{
 	color: var(--common_app_color_gold) !important;
-    fill:var(--common_app_color_gold) !important;
 }
 .common_app_dialogues_button:hover,
 .common_app_dialogues_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active{
 	color:var(--common_app_color_green) !important;
-    fill:var(--common_app_color_green) !important;
 }
 .common_app_dialogues_content{
 	background-color: var(--common_app_color_white1);

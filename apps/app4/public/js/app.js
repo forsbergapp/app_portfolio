@@ -1421,7 +1421,7 @@ const appUserSettingsLike = user_account_app_data_post_id => {
         common.commonDialogueShow('LOGIN');
     else {
         let path;
-        if (COMMON_DOCUMENT.querySelector('#profile_user_settings_like .common_unlike').style.display == 'block'){
+        if (COMMON_DOCUMENT.querySelector('#profile_user_settings_like #profile_user_settings_like_unlike').style.display == 'block'){
             path= '/server-db/iamuserappdatapostlike';
             method = 'POST';
         }

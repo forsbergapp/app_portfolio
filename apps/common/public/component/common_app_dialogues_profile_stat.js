@@ -11,12 +11,15 @@
  * @name template
  * @description Template
  * @function
+ * @param {{icons:{ user_views:string,
+ *                  user_follows:string,
+ *                  user_like:string}}} props
  * @returns {string}
  */
-const template = () =>  `   <div id='common_app_dialogues_profile_stat_row1'>
-                                <div id='common_app_dialogues_profile_stat_row1_1' class='common_link common_icon common_icon_list'></div>
-                                <div id='common_app_dialogues_profile_stat_row1_2' class='common_link common_icon common_icon_list'></div>
-                                <div id='common_app_dialogues_profile_stat_row1_3' class='common_link common_icon common_icon_list'></div>
+const template = props =>  `   <div id='common_app_dialogues_profile_stat_row1'>
+                                <div id='common_app_dialogues_profile_stat_row1_1' class='common_link common_icon_list'>${props.icons.user_views}</div>
+                                <div id='common_app_dialogues_profile_stat_row1_2' class='common_link common_icon_list'>${props.icons.user_follows}</div>
+                                <div id='common_app_dialogues_profile_stat_row1_3' class='common_link common_icon_list'>${props.icons.user_like + ' ' + props.icons.user_follows}</div>
                             </div>
                             <div id='common_app_dialogues_profile_stat_row2'></div>
                             <div id='common_app_dialogues_profile_stat_list'></div>`;
@@ -80,7 +83,10 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template()
+        template:   template({icons:{user_views:props.methods.COMMON.commonGlobalGet('ICONS')['user_views'],
+                                    user_follows:props.methods.COMMON.commonGlobalGet('ICONS')['user_follows'],
+                                    user_like:props.methods.COMMON.commonGlobalGet('ICONS')['user_like']}
+                            })
     };
 };
 export default component;

@@ -11,10 +11,13 @@
  * @name template
  * @description Template
  * @function
+ * @param {{icons:{
+ *                 verification_code:string,
+ *                 cancel:string}}} props
  * @returns {string}
  */
-const template = () => `
-                            <div id='common_app_dialogues_iam_verify_verification_code_icon' class='common_icon common_icon_title'></div>
+const template = props => `
+                            <div id='common_app_dialogues_iam_verify_verification_code_icon' class='common_icon_title'>${props.icons.verification_code}</div>
                             <div id='common_app_dialogues_iam_verify_token_countdown'>
                                     <div id='common_app_dialogues_iam_verify_token_countdown_time'></div>
                             </div>
@@ -26,7 +29,7 @@ const template = () => `
                                 <div id='common_app_dialogues_iam_verify_verification_char5' contentEditable='true' class='common_input'></div>
                                 <div id='common_app_dialogues_iam_verify_verification_char6' contentEditable='true' class='common_input'></div>
                             </div>
-                            <div id='common_app_dialogues_iam_verify_cancel' class='common_app_dialogues_button common_icon'></div>`;
+                            <div id='common_app_dialogues_iam_verify_cancel' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.cancel}</div>`;
 /**
  * @name component
  * @description Component
@@ -162,7 +165,9 @@ const component = async props => {
         data:       null,
         methods:    {commonUserVerifyCheckInput:commonUserVerifyCheckInput},
         events:     events,
-        template:   template()
+        template:   template({icons:{
+                                verification_code:props.methods.COMMON.commonGlobalGet('ICONS')['verification_code'],
+                                cancel:props.methods.COMMON.commonGlobalGet('ICONS')['cancel']}})
     };
 };
 export default component;

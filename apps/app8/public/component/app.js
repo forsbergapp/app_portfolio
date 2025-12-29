@@ -127,14 +127,6 @@ const component = async props => {
         cube_goalstate : null
     };
 
-    const ICONS = {
-        robot:'🤖',
-        human:'👤',
-        moves:'⤮',
-        time: '⌛',
-        solution:'💡',
-        solution_list:'∞'
-    };
     const cube_lib = await props.methods.COMMON.commonMiscImport('/component/cube_lib.js');
     
     /**
@@ -300,8 +292,8 @@ const component = async props => {
                                 //use base64 for solution in id column
                                 //replace single quote display with ’ to avoid string issues
                                 Id:props.methods.COMMON.commonWindowToBase64(row.cube_solution, true), 
-                                cube_solution: `${row.cube_solution_model==0?ICONS.robot:ICONS.human} 
-                                                (${ICONS.moves}:${row.cube_solution_length}, ${ICONS.time}:${row.cube_solution_time}) - ${row.cube_solution.replaceAll('\'', '’')}`}; 
+                                cube_solution: `${row.cube_solution_model==0?props.methods.COMMON.commonGlobalGet('ICONS').robot:props.methods.COMMON.commonGlobalGet('ICONS').human} 
+                                                (${props.methods.COMMON.commonGlobalGet('ICONS').misc_scramble}:${row.cube_solution_length}, ${props.methods.COMMON.commonGlobalGet('ICONS').hourglass}:${row.cube_solution_time}) - ${row.cube_solution.replaceAll('\'', '’')}`}; 
                             });
                         }
                         else{
@@ -352,10 +344,10 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template: template({icon_robot:ICONS.robot,
-                            icon_human:ICONS.human, 
-                            icon_solution:ICONS.solution,
-                            icon_solution_list:ICONS.solution_list})
+        template: template({icon_robot:props.methods.COMMON.commonGlobalGet('ICONS').robot,
+                            icon_human:props.methods.COMMON.commonGlobalGet('ICONS').human, 
+                            icon_solution:props.methods.COMMON.commonGlobalGet('ICONS').misc_solve,
+                            icon_solution_list:props.methods.COMMON.commonGlobalGet('ICONS').infinite})
    };
 };
 export default component;

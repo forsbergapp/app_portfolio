@@ -451,8 +451,8 @@ body{
 	color: var(--common_app_color_white1);
 }
 #common_apps_list_title_col_info{
-	background: var(--common_app_color_white1);
-	color: var(--app_theme_background_color);
+	background: var(--app_theme_background_color);
+	color: var(--app_theme_dialogue_background_color);
 }
 #common_apps_list, #common_app_dialogues_info_app_menu_content_apps_list{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
@@ -538,11 +538,9 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_app_dialogues_button:hover, .common_app_dialogues_button:active,
 .common_toolbar_button:hover, .common_toolbar_button:active{
 	color:var(--app_theme_hover_color) !important;
-    fill:var(--app_theme_hover_color) !important;
 }
 .common_toolbar_button{
 	color: var(--app_theme_toolbar_button_color) !important;
-    fill: var(--app_theme_toolbar_button_color);
 }
 .common_input_error{
 	border: 2px solid var(--app_theme_input_error_color) !important;

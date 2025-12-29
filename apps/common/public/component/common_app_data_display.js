@@ -40,9 +40,9 @@
  *                   button_print: false,
  *                   button_update: false,
  *                   button_post: true,
- *                   button_post_icon_class:'common_data_display_icon_ok',
+ *                   button_post_icon:commonGlobalGet('ICONS')['ok'],
  *                   button_delete: true,
- *                   button_delete_icon_class:'common_data_display_icon_cancel'
+ *                   button_delete_icon:commonGlobalGet('ICONS')['cancel']
  *                   },
  *       methods:    {
  *                   button_print:null,
@@ -73,13 +73,14 @@
  *              function_format_value:function,
  *              function_div_id:function,
  *              button_print:boolean,
- *              button_print_icon_class:string,
  *              button_update:boolean,
- *              button_update_icon_class:string,
  *              button_post:boolean,
- *              button_post_icon_class:string,
  *              button_delete:boolean,
- *              button_delete_icon_class:string}} props 
+ *              icons:{ lov:string,
+ *                      print:string,
+ *                      update:string,
+ *                      post:string,
+ *                      delete:string}}} props 
  * @returns {string}
  */
 const template = props =>`  ${(props.master_object && props.new_resource)?
@@ -102,7 +103,7 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                             class='common_app_data_display_master_col2 ${Object.values(master_row.Document)[0].Type=='LOV'?'common_app_dialogues_lov_value':''}'
                                                             contentEditable='${(Object.values(master_row.Document)[0].Type=='LOV'||props.mode=='READ')?'false':'true'}'></div>
                                                     ${Object.values(master_row.Document)[0].Type=='LOV'?
-                                                        `<div data-lov='${Object.values(master_row.Document)[0].Lov}' class='common_app_dialogues_lov_button common_icon common_icon_button'></div>`:''
+                                                        `<div data-lov='${Object.values(master_row.Document)[0].Lov}' class='common_link common_icon_lov'>${props.icons.lov}</div>`:''
                                                     }
                                             </div>
                                             `).join('')
@@ -188,16 +189,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                             }
                             <div class='common_app_data_display_buttons'>
                                 ${props.button_print?
-                                    `<div <div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_app_dialogues_button common_icon common_icon_button ${props.button_print_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_print common_app_dialogues_button common_link common_icon_button' >${props.icons.print}</div>`:''
                                 }
                                 ${props.button_update?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_app_dialogues_button common_icon common_icon_button ${props.button_update_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_update common_app_dialogues_button common_link common_icon_button' >${props.icons.update}</div>`:''
                                 }
                                 ${props.button_post?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_app_dialogues_button common_icon common_icon_button ${props.button_post_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_post common_app_dialogues_button common_link common_icon_button' >${props.icons.post}</div>`:''
                                 }
                                 ${props.button_delete?
-                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_app_dialogues_button common_icon common_icon_button ${props.button_delete_icon_class ?? ''}' ></div>`:''
+                                    `<div id='BUTTON_${props.function_div_id()}' class='common_app_data_display_button_delete common_app_dialogues_button common_link common_icon_button' >${props.icons.delete}</div>`:''
                                 }
                             </div>`;
 /**
@@ -230,13 +231,13 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      new_resource:boolean,
  *                      mode:'EDIT'|'READ',
  *                      button_print: boolean,
- *                      button_print_icon_class:string,
+ *                      button_print_icon:string,
  *                      button_update: boolean,
- *                      button_update_icon_class:string,
+ *                      button_update_icon:string,
  *                      button_post: boolean,
- *                      button_post_icon_class:string,
+ *                      button_post_icon:string,
  *                      button_delete: boolean,
- *                      button_delete_icon_class:string},
+ *                      button_delete_icon:string},
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon'],
  *                      button_print:function,
@@ -318,27 +319,29 @@ const component = async props => {
         const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
         switch (event_type){
             case 'click':{
+                const elementDIV = props.methods.COMMON.commonMiscElementDiv(event.target);
                 switch (true){
-                    case    event.target.hasAttribute('data-lov'):{
-                        if (props.data.lov.filter(row=>row.lov==event.target.getAttribute('data-lov')).length>0)
+                    case    elementDIV.hasAttribute('data-lov'):{
+                        if (props.data.lov.filter(row=>row.lov==elementDIV.getAttribute('data-lov')).length>0)
                             props.methods.COMMON.commonComponentRender({
                                 mountDiv:   'common_app_dialogues_lov',
                                 data:       {
-                                            lov:                event.target.getAttribute('data-lov'),
+                                            lov:                elementDIV.getAttribute('data-lov'),
                                             lov_custom_value:   null
                                             },
                                 methods:    {
-                                            functionData:       props.data.lov.filter(row=>row.lov==event.target.getAttribute('data-lov'))[0].lov_functionData,
-                                            functionRow:        props.data.lov.filter(row=>row.lov==event.target.getAttribute('data-lov'))[0].lov_functionRow,
-                                            event_target:       event.target
+                                            functionData:       props.data.lov.filter(row=>row.lov==elementDIV.getAttribute('data-lov'))[0].lov_functionData,
+                                            functionRow:        props.data.lov.filter(row=>row.lov==elementDIV.getAttribute('data-lov'))[0].lov_functionRow,
+                                            event_target:       elementDIV
                                             },
                                 path:       '/common/component/common_app_dialogues_lov.js'});
                         break;
                     }
-                    case event.target.classList.contains('common_app_data_display_button_print'):
-                    case event.target.classList.contains('common_app_data_display_button_update'):
-                    case event.target.classList.contains('common_app_data_display_button_post'):
-                    case event.target.classList.contains('common_app_data_display_button_delete'):{
+                    case [  'common_app_data_display_button_print', 
+                            'common_app_data_display_button_update',
+                            'common_app_data_display_button_post',
+                            'common_app_data_display_button_delete']
+                            .filter(row=>elementDIV.className.indexOf(row)>-1).length>0:{
                         if (props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function'])
                             props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)['data-function']();
                          break;
@@ -374,13 +377,15 @@ const component = async props => {
                             function_format_value:props.methods.COMMON.commonMiscFormatJsonDate,
                             function_div_id:div_id,
                             button_print:props.data.button_print,
-                            button_print_icon_class:props.data.button_print_icon_class,
                             button_update:props.data.button_update,
-                            button_update_icon_class:props.data.button_update_icon_class,
                             button_post:props.data.button_post,
-                            button_post_icon_class:props.data.button_post_icon_class,
                             button_delete:props.data.button_delete,
-                            button_delete_icon_class:props.data.button_delete_icon_class})
+                            icons:{ lov:props.methods.COMMON.commonGlobalGet('ICONS')['lov'],
+                                    print:props.data.button_print_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['print'],
+                                    update:props.data.button_update_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['save'],
+                                    post:props.data.button_post_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['add'],
+                                    delete:props.data.button_delete_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['delete']
+                            }})
     };
 };
 export default component;

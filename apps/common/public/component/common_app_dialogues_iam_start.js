@@ -12,62 +12,96 @@
  * @function
  * @param {{admin_app:boolean,
  *          type:'LOGIN'|'SIGNUP',
- *          first_time: boolean}} props 
+ *          first_time: boolean,
+ *          icons:{ user: string,
+ *                  login:string,
+ *                  user_password:string,
+ *                  user_password_confirm:string,
+ *                  signup:string,
+ *                  user_password_reminder:string,
+ *                  close:string,
+ *                  init:string}}} props 
  * @returns {string}
  */
 const template = props =>`  ${props.admin_app?'':
                                `<div id='common_app_dialogues_iam_start_nav'>
-                                    <div id='common_app_dialogues_iam_start_login'  class='common_icon common_icon_button ${props.type=='LOGIN'?'common_app_dialogues_iam_start_selected':''}'></div>
-                                    <div id='common_app_dialogues_iam_start_signup' class='common_icon common_icon_button ${props.type=='SIGNUP'?'common_app_dialogues_iam_start_selected':''}'></div>
+                                    <div id='common_app_dialogues_iam_start_login'  class='common_link common_icon_button ${props.type=='LOGIN'?'common_app_dialogues_iam_start_selected':''}'>${props.icons.user}</div>
+                                    <div id='common_app_dialogues_iam_start_signup' class='common_link common_icon_button ${props.type=='SIGNUP'?'common_app_dialogues_iam_start_selected':''}'>${props.icons.signup}</div>
                                 </div>`
                             }
                             ${props.admin_app?
                                 `<div id='common_app_dialogues_iam_start_login_admin_form' class='common_app_dialogues_iam_start_form'>
                                     ${props.first_time?
-                                        `<div id='common_app_dialogues_iam_start_login_admin_first_time'>
-                                        </div>`:''
+                                        `<div id='common_app_dialogues_iam_start_login_admin_first_time'>${props.icons.init}</div>`:''
                                     }
-                                    <div id='common_app_dialogues_iam_start_login_admin_username' contentEditable='true' class='common_input common_placeholder' ></div>
-                                    <div class='common_password_container'>
-                                        <div id='common_app_dialogues_iam_start_login_admin_password' contentEditable='true' class='common_input common_password common_placeholder' ></div>
-                                        <div id='common_app_dialogues_iam_start_login_admin_password_mask' class='common_input common_password_mask'></div>
+                                    <div class='common_app_dialogues_iam_start_row'>
+                                        <div>${props.icons.user}</div>
+                                        <div id='common_app_dialogues_iam_start_login_admin_username' contentEditable='true' class='common_input'></div>
+                                    </div>
+                                    <div class='common_app_dialogues_iam_start_row'>
+                                        <div>${props.icons.user_password}</div>
+                                        <div class='common_password_container'>
+                                            <div id='common_app_dialogues_iam_start_login_admin_password' contentEditable='true' class='common_input common_password' ></div>
+                                            <div id='common_app_dialogues_iam_start_login_admin_password_mask' class='common_input common_password_mask'></div>
+                                        </div>
                                     </div>
                                     ${props.first_time?
                                         `<div id='common_app_dialogues_iam_start_login_admin_password_confirm_container'>
-                                            <div class='common_password_container'>
-                                                <div id='common_app_dialogues_iam_start_login_admin_password_confirm' contentEditable="true" class='common_input common_password common_placeholder' ></div>
-                                                <div id='common_app_dialogues_iam_start_login_admin_password_confirm_mask' class='common_input common_password_mask'></div>
+                                            <div class='common_app_dialogues_iam_start_row'>
+                                                <div>${props.icons.user_password_confirm}</div>
+                                                <div class='common_password_container'>
+                                                    <div id='common_app_dialogues_iam_start_login_admin_password_confirm' contentEditable="true" class='common_input common_password' ></div>
+                                                    <div id='common_app_dialogues_iam_start_login_admin_password_confirm_mask' class='common_input common_password_mask'></div>
+                                                </div>
                                             </div>
                                         </div>`:''
                                     }
-                                    <div id='common_app_dialogues_iam_start_login_admin_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon common_icon_button' ></div>
+                                    <div id='common_app_dialogues_iam_start_login_admin_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_link common_icon_button' >${props.icons.login}</div>
                                 </div>`:
                                 `${props.type=='LOGIN'? 
                                     `<div id='common_app_dialogues_iam_start_login_form' class='common_app_dialogues_iam_start_form'>
-                                        <div id='common_app_dialogues_iam_start_login_username' contentEditable='true' class='common_input common_placeholder' ></div>
-                                        <div class='common_password_container'>
-                                            <div id='common_app_dialogues_iam_start_login_password' contentEditable='true' class='common_input common_password common_placeholder'></div>
-                                            <div id='common_app_dialogues_iam_start_login_password_mask' class='common_input common_password_mask'></div>
+                                        <div class='common_app_dialogues_iam_start_row'>
+                                            <div>${props.icons.user}</div>
+                                            <div id='common_app_dialogues_iam_start_login_username' contentEditable='true' class='common_input' ></div>
                                         </div>
-                                        <div id='common_app_dialogues_iam_start_login_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon common_icon_button' ></div>
+                                        <div class='common_app_dialogues_iam_start_row'>
+                                            <div>${props.icons.user_password}</div>
+                                            <div class='common_password_container'>
+                                                <div id='common_app_dialogues_iam_start_login_password' contentEditable='true' class='common_input common_password'></div>
+                                                <div id='common_app_dialogues_iam_start_login_password_mask' class='common_input common_password_mask'></div>
+                                            </div>
+                                        </div>
+                                        <div id='common_app_dialogues_iam_start_login_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_link common_icon_button' >${props.icons.login}</div>
                                     </div>`:''
                                 }
                                 ${props.type=='SIGNUP'? 
                                     `<div id='common_app_dialogues_iam_start_signup_form' class='common_app_dialogues_iam_start_form'>
-                                        <div id='common_app_dialogues_iam_start_signup_username' contentEditable='true'  class='common_input common_placeholder'></div>
-                                        <div class='common_password_container'>
-                                            <div id='common_app_dialogues_iam_start_signup_password' contentEditable='true'  class='common_input common_password common_placeholder'></div>
-                                            <div id='common_app_dialogues_iam_start_signup_password_mask' class='common_input common_password_mask'></div>
+                                        <div class='common_app_dialogues_iam_start_row'>
+                                            <div>${props.icons.user}</div>
+                                            <div id='common_app_dialogues_iam_start_signup_username' contentEditable='true'  class='common_input'></div>
                                         </div>
-                                        <div class='common_password_container'>
-                                            <div id='common_app_dialogues_iam_start_signup_password_confirm' contentEditable='true'  class='common_input common_password common_placeholder'></div>
-                                            <div id='common_app_dialogues_iam_start_signup_password_confirm_mask' class='common_input common_password_mask'></div>
+                                        <div class='common_app_dialogues_iam_start_row'>
+                                            <div>${props.icons.user_password}</div>
+                                            <div class='common_password_container'>
+                                                <div id='common_app_dialogues_iam_start_signup_password' contentEditable='true'  class='common_input common_password'></div>
+                                                <div id='common_app_dialogues_iam_start_signup_password_mask' class='common_input common_password_mask'></div>
+                                            </div>
                                         </div>
-                                        <div id='common_app_dialogues_iam_start_signup_password_reminder' contentEditable='true'  class='common_input common_placeholder'></div>
-                                        <div id='common_app_dialogues_iam_start_signup_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_icon common_icon_button' ></div>
+                                        <div class='common_app_dialogues_iam_start_row'>
+                                            <div>${props.icons.user_password_confirm}</div>
+                                            <div class='common_password_container'>
+                                                <div id='common_app_dialogues_iam_start_signup_password_confirm' contentEditable='true'  class='common_input common_password'></div>
+                                                <div id='common_app_dialogues_iam_start_signup_password_confirm_mask' class='common_input common_password_mask'></div>
+                                            </div>
+                                        </div>
+                                        <div class='common_app_dialogues_iam_start_row'>
+                                            <div>${props.icons.user_password_reminder}</div>
+                                            <div id='common_app_dialogues_iam_start_signup_password_reminder' contentEditable='true'  class='common_input'></div>
+                                        </div>
+                                        <div id='common_app_dialogues_iam_start_signup_button' class='common_app_dialogues_button common_app_dialogues_iam_start_button common_link common_icon_button' >${props.icons.signup}</div>
                                     </div>`:''
                                 }
-                                <div id='common_app_dialogues_iam_start_close' class='common_app_dialogues_button common_icon common_icon_button' ></div>`
+                                <div id='common_app_dialogues_iam_start_close' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.close}</div>`
                             }`;
 /**
  * @name component
@@ -164,7 +198,16 @@ const component = async props => {
         template:   template({
                             admin_app:props.data.app_id == props.data.admin_app_id,
                             type:props.data.type,
-                            first_time: props.data.admin_first_time == 1})
+                            first_time: props.data.admin_first_time == 1,
+                            icons:{ user: props.methods.COMMON.commonGlobalGet('ICONS')['user'],
+                                    login:props.methods.COMMON.commonGlobalGet('ICONS')['login'],
+                                    user_password:props.methods.COMMON.commonGlobalGet('ICONS')['user_password'],
+                                    user_password_confirm:props.methods.COMMON.commonGlobalGet('ICONS')['user_password_confirm'],
+                                    signup:props.methods.COMMON.commonGlobalGet('ICONS')['signup'],
+                                    user_password_reminder:props.methods.COMMON.commonGlobalGet('ICONS')['user_password_reminder'],
+                                    close:props.methods.COMMON.commonGlobalGet('ICONS')['close'],
+                                    init:props.methods.COMMON.commonGlobalGet('ICONS')['init']
+                            }})
     };
 };
 export default component;

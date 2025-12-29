@@ -144,7 +144,7 @@ const component = async props => {
             html = html.replace(match_code_inline[0], `<div class='common_md_code_inline'>${match_code_inline[1]}</div>`);
         }
         //4.notes
-        html = html.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_md_note'>${row.replace('> **Note:**','')}</div>`:row).join('\n');
+        html = html.split('\n').map(row=>row.indexOf('> **Note:**')==0?`<div class='common_md_note'><div class='common_md_note_info'>${props.methods.COMMON.commonGlobalGet('ICONS')['info'] + '</div>' + row.replace('> **Note:**','')}</div>`:row).join('\n');
         
         //5.images
         //regexp for [![text](small img)](full size img)
@@ -261,21 +261,21 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({ app_logo:props.data.app_logo,
-                        app_copyright:props.data.app_copyright,
-                        app_name:props.data.app_name,
-                        document:await props.methods.COMMON.commonFFB({  path:'/app-common-module/COMMON_DOC', 
-                                                                method:'POST', 
-                                                                authorization_type:'APP_ID',
-                                                                body:{  type:'FUNCTION',
-                                                                        documentType:props.data.documentType,
-                                                                        IAM_data_app_id:props.data.common_app_id,
-                                                                        doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
-                                                .catch(()=>null),
-                        documentType:props.data.documentType,
-                        document_href:props.data.href,
-                        functionMarkdownParse : MarkdownParse
-                    })
+        template:   template({  app_logo:props.data.app_logo,
+                                app_copyright:props.data.app_copyright,
+                                app_name:props.data.app_name,
+                                document:await props.methods.COMMON.commonFFB({  path:'/app-common-module/COMMON_DOC', 
+                                                                        method:'POST', 
+                                                                        authorization_type:'APP_ID',
+                                                                        body:{  type:'FUNCTION',
+                                                                                documentType:props.data.documentType,
+                                                                                IAM_data_app_id:props.data.common_app_id,
+                                                                                doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
+                                                        .catch(()=>null),
+                                documentType:props.data.documentType,
+                                document_href:props.data.href,
+                                functionMarkdownParse : MarkdownParse
+                            })
     };
 };
 export default component;

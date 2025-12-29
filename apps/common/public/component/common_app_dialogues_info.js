@@ -16,14 +16,15 @@
 *          app_link_title:string,
 *          info_link_policy_name:string,
 *          info_link_disclaimer_name:string,
-*          info_link_terms_name:string}} props 
+*          info_link_terms_name:string,
+*          icons:{email:string, close:string, send:string}}} props 
 * @returns {string}
 */
 const template = props => `
                             <div id='common_app_dialogues_info_contact'>
-                                <div id='common_app_dialogues_info_contact_message_title' class='common_icon common_icon_title'></div>
+                                <div id='common_app_dialogues_info_contact_message_title' class='common_icon_title'>${props.icons.email}</div>
                                 <div id='common_app_dialogues_info_contact_message' class='common_input' contentEditable='true'></div>
-                                <div id='common_app_dialogues_info_contact_message_send' class='common_app_dialogues_button common_icon common_icon_button' ></div>
+                                <div id='common_app_dialogues_info_contact_message_send' class='common_link common_app_dialogues_button common_icon_button' >${props.icons.send}</div>
                             </div>
                             <div id='common_app_dialogues_info_start_links'>
                                 <div id='common_app_dialogues_info_app_link_row'>
@@ -36,7 +37,7 @@ const template = props => `
                                 </div>
                             </div>
                             <div id='common_app_dialogues_info_app_copyright'>${props.app_copyright}</div>
-                            <div id='common_app_dialogues_info_close' class='common_app_dialogues_button common_icon common_icon_button' ></div>
+                            <div id='common_app_dialogues_info_close' class='common_link common_app_dialogues_button common_icon_button' >${props.icons.close}</div>
                            `;
 
 /**
@@ -167,7 +168,10 @@ const component = async props => {
                            app_link_title:props.data.app_link_title,
                            info_link_policy_name:props.data.info_link_policy_name,
                            info_link_disclaimer_name:props.data.info_link_disclaimer_name,
-                           info_link_terms_name:props.data.info_link_terms_name
+                           info_link_terms_name:props.data.info_link_terms_name,
+                           icons:{  email:props.methods.COMMON.commonGlobalGet('ICONS')['email'],
+                                    close:props.methods.COMMON.commonGlobalGet('ICONS')['close'],
+                                    send:props.methods.COMMON.commonGlobalGet('ICONS')['send']}
                            })
     };
 };

@@ -11,30 +11,36 @@
  * @description Template
  * @function
  * @param {{longitude:number|null,
- *          latitude:number|null}} props
+ *          latitude:number|null,
+ *          icons:{zoomout:string,
+ *                 zoomin:string,
+ *                 search:string,
+ *                 fullscreen:string,
+ *                 my_location:string,
+ *                 map_layer:string,
+ *                 arrow_pointer:string}}} props
  * @returns {string}
  */
 const template = props =>`  
                             <div id="common_map">
                                 <div id='common_map_control'>
-                                    <div id='common_map_control_zoomin' class='common_map_control_button common_icon common_icon_button'></div>
-                                    <div id='common_map_control_zoomout' class='common_map_control_button common_icon common_icon_button'></div>
-                                    <div id='common_map_control_search_container' class='common_map_control_button common_icon common_icon_button'>
-                                        <div id='common_map_control_search' class='common_map_control_button common_icon common_icon_button'></div>
+                                    <div id='common_map_control_zoomin' class='common_map_control_button common_link common_icon_button'>${props.icons.zoomin}</div>
+                                    <div id='common_map_control_zoomout' class='common_map_control_button common_link common_icon_button'>${props.icons.zoomout}</div>
+                                    <div id='common_map_control_search_container' class='common_map_control_button common_link common_icon_button'>
+                                        <div id='common_map_control_search' class='common_map_control_button common_link common_icon_button'>${props.icons.search}</div>
                                         <div id='common_map_control_expand_search' class='common_map_control_expand'></div>
                                     </div>
-                                    <div id='common_map_control_fullscreen' class='common_map_control_button common_icon common_icon_button'></div>
+                                    <div id='common_map_control_fullscreen' class='common_map_control_button common_link common_icon_button'>${props.icons.fullscreen}</div>
                                     ${(props.longitude == null && props.latitude==null)?'':
-                                        `<div id='common_map_control_my_location' class='common_map_control_button common_icon'>
-                                        </div>`
+                                        `<div id='common_map_control_my_location' class='common_map_control_button common_link'>${props.icons.my_location}</div>`
                                     }
-                                    <div id='common_map_control_layer_container' class='common_map_control_button'>
-                                        <div id='common_map_control_layer' class='common_map_control_button common_icon common_icon_button'></div>
+                                    <div id='common_map_control_layer_container' class='common_map_control_button common_link common_icon_button'>
+                                        <div id='common_map_control_layer' class='common_map_control_button common_link common_icon_button'>${props.icons.map_layer}</div>
                                         <div id='common_map_control_expand_layer' class='common_map_control_expand'></div>
                                     </div>
-                                    <div id='common_map_control_query' class='common_map_control_button common_icon common_icon_button'></div>
+                                    <div id='common_map_control_query' class='common_map_control_button common_link common_icon_button'>${props.icons.arrow_pointer}</div>
                                 </div>
-                                <div id='common_map_cursor' class='common_icon'></div>
+                                <div id='common_map_cursor' ></div>
                                 <div id='common_map_measure'></div>
                                 <div id='common_map_tiles'></div>
                                 <svg id='common_map_lines'></svg>
@@ -583,9 +589,16 @@ const component = async props => {
                         }
                     case event_target_id=='common_map_control_query':{
                         //update button
-                        event.target.classList.contains('common_map_control_active')?
-                            event.target.classList.remove('common_map_control_active'):
-                                event.target.classList.add('common_map_control_active');
+                        if(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.contains('common_map_control_active')){
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.remove('common_map_control_active');
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).innerHTML = props.methods.COMMON.commonGlobalGet('ICONS')['arrow_pointer']
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').innerHTML='';
+                        }
+                        else{
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_map_control_active');
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).innerHTML = props.methods.COMMON.commonGlobalGet('ICONS')['arrow_pointer_query'];
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').innerHTML=props.methods.COMMON.commonGlobalGet('ICONS')['arrow_pointer_query'];
+                        }
                         //add or remove class on map to change cursor
                         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').classList.contains('common_map_control_active')?
                             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').classList.remove('common_map_control_active'):
@@ -685,7 +698,15 @@ const component = async props => {
         },
         events:     events,
         template:   template({  longitude:props.data.longitude?+props.data.longitude:null, 
-                                latitude:props.data.latitude?+props.data.latitude:null})
+                                latitude:props.data.latitude?+props.data.latitude:null,
+                                icons:{ zoomout:props.methods.COMMON.commonGlobalGet('ICONS')['zoomout'],
+                                        zoomin:props.methods.COMMON.commonGlobalGet('ICONS')['zoomin'],
+                                        search:props.methods.COMMON.commonGlobalGet('ICONS')['search'],
+                                        fullscreen:props.methods.COMMON.commonGlobalGet('ICONS')['fullscreen'],
+                                        my_location:props.methods.COMMON.commonGlobalGet('ICONS')['map_my_location'],
+                                        map_layer:props.methods.COMMON.commonGlobalGet('ICONS')['map_layer'],
+                                        arrow_pointer:props.methods.COMMON.commonGlobalGet('ICONS')['arrow_pointer']
+                                }})
     };    
 };
 export default component;

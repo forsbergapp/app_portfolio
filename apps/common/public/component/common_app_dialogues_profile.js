@@ -11,11 +11,12 @@
  * @name template
  * @description Template
  * @function
+ * @param {{icons:{user_profile_stat:string, close:string}}} props
  * @returns {string}
  */
-const template = () =>` <div id='common_app_dialogues_profile_home' class='common_app_dialogues_button common_icon common_icon_button' ></div>
-                        <div id='common_app_dialogues_profile_content'></div>
-                        <div id='common_app_dialogues_profile_close' class='common_app_dialogues_button common_icon common_icon_button' ></div>`;
+const template = props =>`  <div id='common_app_dialogues_profile_home' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.user_profile_stat}</div>
+                            <div id='common_app_dialogues_profile_content'></div>
+                            <div id='common_app_dialogues_profile_close' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.close}</div>`;
 
 /**
  * @name component
@@ -78,7 +79,9 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template()
+        template:   template({icons:{   user_profile_stat:props.methods.COMMON.commonGlobalGet('ICONS')['user_profile_stat'],
+                                        close:props.methods.COMMON.commonGlobalGet('ICONS')['close']}
+                            })
     };
 };
 export default component;

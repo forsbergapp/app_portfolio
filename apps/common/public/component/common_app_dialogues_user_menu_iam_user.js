@@ -11,75 +11,89 @@
  * @description Template
  * @function
  * @param {{user:common['server']['iam']['iam_user'],
- *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate']}} props
+ *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate'],
+ *          icons:{ private:string,
+ *                  username:string,
+ *                  bio:string,
+ *                  otp:string,
+ *                  password:string,
+ *                  password_confirm:string,
+ *                  password_new:string,
+ *                  password_new_confirm:string,
+ *                  password_reminder:string,
+ *                  last_logintime:string,
+ *                  account_created:string,
+ *                  account_modified:string,
+ *                  delete:string,
+ *                  update:string}}} props
  * @returns {string}
  */
 const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
                                <div class='common_app_dialogues_user_menu_iam_user_row_title'>
                                    <div id='common_app_dialogues_user_menu_iam_user_avatar' data-image=${props.user.Avatar} class='common_image common_image_avatar' style='${props.user.Avatar==null?'':`background-image:url(${props.user.Avatar});`}'></div>
-                                   <div id='common_app_dialogues_user_menu_iam_user_private' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_private' >${props.icons.private}</div>
                                    <div id='common_app_dialogues_user_menu_iam_user_checkbox_profile_private' class='common_switch'></div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_username_icon' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_username_icon'>${props.icons.username}</div>
                                    <div id='common_app_dialogues_user_menu_iam_user_input_username' class='common_input common_placeholder' contentEditable='true' >${props.user.Username}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_bio_icon' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_bio_icon'>${props.icons.bio}</div>
                                    <div id='common_app_dialogues_user_menu_iam_user_input_bio' class='common_input common_placeholder' contentEditable='true' >${props.user.Bio??''}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_otp_icon' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_otp_icon'>${props.icons.otp}</div>
                                    <div id='common_app_dialogues_user_menu_iam_user_input_otp_key'>******</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_icon' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_icon' >${props.icons.password}</div>
                                    <div class='common_password_container'>
                                        <div id='common_app_dialogues_user_menu_iam_user_input_password' class='common_input common_password common_placeholder' contentEditable='true'></div>
                                        <div id='common_app_dialogues_user_menu_iam_user_input_password_mask' class='common_input common_password_mask'></div>
                                    </div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_confirm_icon' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_confirm_icon' >${props.icons.password_confirm}</div>
                                    <div class='common_password_container'>
                                        <div id='common_app_dialogues_user_menu_iam_user_input_password_confirm' class='common_input common_password common_placeholder' contentEditable='true'></div>
                                        <div id='common_app_dialogues_user_menu_iam_user_input_password_confirm_mask' class='common_input common_password_mask'></div>
                                    </div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_new_icon' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_new_icon'>${props.icons.password_new}</div>
                                    <div class='common_password_container'>
                                        <div id='common_app_dialogues_user_menu_iam_user_input_password_new' class='common_input common_password common_placeholder' contentEditable='true'></div>
                                        <div id='common_app_dialogues_user_menu_iam_user_input_password_new_mask' class='common_input common_password_mask'></div>
                                    </div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_new_confirm_icon' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_new_confirm_icon'>${props.icons.password_new_confirm}</div>
                                    <div class='common_password_container'>
                                        <div id='common_app_dialogues_user_menu_iam_user_input_password_new_confirm' class='common_input common_password common_placeholder' contentEditable='true'></div>
                                        <div id='common_app_dialogues_user_menu_iam_user_input_password_new_confirm_mask' class='common_input common_password_mask'></div>
                                    </div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_reminder_icon' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_input_password_reminder_icon' >${props.icons.password_reminder}</div>
                                    <div id='common_app_dialogues_user_menu_iam_user_input_password_reminder' class='common_input common_placeholder' contentEditable='true'>${props.user.PasswordReminder??''}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_label_last_logintime' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_label_last_logintime'>${props.icons.last_logintime}</div>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_data_last_logintime'>${props.commonMiscFormatJsonDate(props.user.LastLoginTime ??'', 'LONG')}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_label_account_created' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_label_account_created'>${props.icons.account_created}</div>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_data_account_created'>${props.commonMiscFormatJsonDate(props.user.Created??'', 'LONG')}</div>
                                </div>
                                <div class='common_app_dialogues_user_menu_iam_user_row'>
-                                   <div id='common_app_dialogues_user_menu_iam_user_label_account_modified' class='common_icon'></div>
+                                   <div id='common_app_dialogues_user_menu_iam_user_label_account_modified' >${props.icons.account_modified}</div>
                                    <div id='common_app_dialogues_user_menu_iam_user_label_data_account_modified'>${props.commonMiscFormatJsonDate(props.user.Modified ??'', 'LONG')}</div>
                                </div>
                            </div>
                            <div id='common_app_dialogues_user_menu_iam_user_buttons'>
-                               <div id='common_app_dialogues_user_menu_iam_user_btn_user_update' class='common_app_dialogues_button common_icon common_icon_button' ></div>
-                               <div id='common_app_dialogues_user_menu_iam_user_btn_user_delete_account' class='common_app_dialogues_button common_icon common_icon_button' ></div>
+                               <div id='common_app_dialogues_user_menu_iam_user_btn_user_update' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.update}</div>
+                               <div id='common_app_dialogues_user_menu_iam_user_btn_user_delete_account' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.delete}</div>
                            </div>`;
 /**
 * @name component
@@ -265,7 +279,23 @@ const component = async props => {
         data:   null,
         methods:{commonUserUpdate:commonUserUpdate},
         events:events,
-        template: template({user:user, commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate})
+        template: template({user:user, commonMiscFormatJsonDate:props.methods.COMMON.commonMiscFormatJsonDate,
+                            icons:{ private:props.methods.COMMON.commonGlobalGet('ICONS')['lock'],
+                                    username:props.methods.COMMON.commonGlobalGet('ICONS')['user'],
+                                    bio:props.methods.COMMON.commonGlobalGet('ICONS')['user_profile'],
+                                    otp:props.methods.COMMON.commonGlobalGet('ICONS')['otp'],
+                                    password:props.methods.COMMON.commonGlobalGet('ICONS')['user_password'],
+                                    password_confirm:props.methods.COMMON.commonGlobalGet('ICONS')['user_password_confirm'],
+                                    password_new:props.methods.COMMON.commonGlobalGet('ICONS')['user_password'],
+                                    password_new_confirm:props.methods.COMMON.commonGlobalGet('ICONS')['user_password_confirm'],
+                                    password_reminder:props.methods.COMMON.commonGlobalGet('ICONS')['user_password_reminder'],
+                                    last_logintime:props.methods.COMMON.commonGlobalGet('ICONS')['user_last_logintime'],
+                                    account_created:props.methods.COMMON.commonGlobalGet('ICONS')['user_account_created'],
+                                    account_modified:props.methods.COMMON.commonGlobalGet('ICONS')['user_account_modified'],
+                                    delete:props.methods.COMMON.commonGlobalGet('ICONS')['delete'],
+                                    update:props.methods.COMMON.commonGlobalGet('ICONS')['save']
+                            }
+        })
     };
 };
 export default component;

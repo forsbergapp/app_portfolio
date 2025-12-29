@@ -11,9 +11,14 @@
  * @name template
  * @description Template
  * @function
+ * @param {{icons:{
+ *              first:string,
+ *              previous:string,
+ *              next:string,
+ *              last:string}}} props
  * @returns {string}
  */
-const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
+const template = props => `<div id='menu_monitor_content_widget1' class='widget'>
                                 <div id='menu_monitor' class='list_nav'>
                                     <div id='menu_monitor_connected' class='list_nav_list list_button common_icon'></div>
                                     <div id='menu_monitor_server_log' class='list_nav_list list_button common_icon'></div>
@@ -28,10 +33,10 @@ const template = () => `<div id='menu_monitor_content_widget1' class='widget'>
                                 <div id='menu_monitor_pagination'>
                                     <div></div>
                                     <div></div>
-                                    <div id='menu_monitor_pagination_first'     class='common_pagination_first common_icon common_icon_button'></div>
-                                    <div id='menu_monitor_pagination_previous'  class='common_pagination_previous common_icon common_icon_button'></div>
-                                    <div id='menu_monitor_pagination_next'      class='common_pagination_next common_icon common_icon_button'></div>
-                                    <div id='menu_monitor_pagination_last'      class='common_pagination_last common_icon common_icon_button'></div>
+                                    <div id='menu_monitor_pagination_first'     class='common_link common_icon_button'>${props.icons.first}</div>
+                                    <div id='menu_monitor_pagination_previous'  class='common_link common_icon_button'>${props.icons.previous}</div>
+                                    <div id='menu_monitor_pagination_next'      class='common_link common_icon_button'>${props.icons.next}</div>
+                                    <div id='menu_monitor_pagination_last'      class='common_icon common_icon_button'>${props.icons.last}</div>
                                     <div id='menu_monitor_pagination_page'></div>
                                     <div id='menu_monitor_pagination_page_last'></div>
                                     <div id='menu_monitor_pagination_page_total_count'></div>
@@ -263,7 +268,19 @@ const component = async props => {
                         monitorDetailPage:          monitorDetailPage,
                         monitorDetailClickSort:     monitorDetailClickSort
                     },
-        template:   template()
+        template:   template({icons:{
+                                first:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
+                                        props.methods.COMMON.commonGlobalGet('ICONS')['last']:
+                                            props.methods.COMMON.commonGlobalGet('ICONS')['first'],
+                                previous:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
+                                            props.methods.COMMON.commonGlobalGet('ICONS')['next']:
+                                                props.methods.COMMON.commonGlobalGet('ICONS')['previous'],
+                                next:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
+                                            props.methods.COMMON.commonGlobalGet('ICONS')['previous']:
+                                                props.methods.COMMON.commonGlobalGet('ICONS')['next'],
+                                last:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
+                                        props.methods.COMMON.commonGlobalGet('ICONS')['first']:
+                                            props.methods.COMMON.commonGlobalGet('ICONS')['last']}})
     };
 };
 

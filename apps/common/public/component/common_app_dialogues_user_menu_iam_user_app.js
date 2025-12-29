@@ -11,26 +11,32 @@
  * @name template
  * @description Template
  * @function
-*/
-const template = () =>` 
+ * @param {{icons:{region_locale:string,
+ *                misc_design:string,
+ *                regional_timezone:string,
+ *                regional_direction:string,
+ *                regional_script:string}}} props
+ * @returns {string}
+ */
+const template = props =>` 
                         <div id='common_app_dialogues_user_menu_iam_user_app'>
-                            <div id='common_app_dialogues_user_menu_iam_user_app_theme' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_theme' class='common_app_dialogues_user_menu_iam_user_app_col1'>${props.icons.misc_design}</div>
                             <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
                                 <div id='common_app_dialogues_user_menu_iam_user_app_theme_select'></div>
                             </div>
-                            <div id='common_app_dialogues_user_menu_iam_user_app_locale' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_locale' class='common_app_dialogues_user_menu_iam_user_app_col1'>${props.icons.region_locale}</div>
                             <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
                                 <div id='common_app_dialogues_user_menu_iam_user_app_locale_select'></div>
                             </div>
-                            <div id='common_app_dialogues_user_menu_iam_user_app_timezone' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_timezone' class='common_app_dialogues_user_menu_iam_user_app_col1'>${props.icons.regional_timezone}</div>
                             <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
                                 <div id='common_app_dialogues_user_menu_iam_user_app_timezone_select'></div>
                             </div>
-                            <div id='common_app_dialogues_user_menu_iam_user_app_direction' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_direction' class='common_app_dialogues_user_menu_iam_user_app_col1'>${props.icons.regional_direction}</div>
                             <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
                                 <div id='common_app_dialogues_user_menu_iam_user_app_direction_select'></div>
                             </div>
-                            <div id='common_app_dialogues_user_menu_iam_user_app_arabic_script' class='common_app_dialogues_user_menu_iam_user_app_col1 common_icon'></div>
+                            <div id='common_app_dialogues_user_menu_iam_user_app_arabic_script' class='common_app_dialogues_user_menu_iam_user_app_col1'>${props.icons.regional_script}</div>
                             <div class='common_app_dialogues_user_menu_iam_user_app_col2'>
                                 <div id='common_app_dialogues_user_menu_iam_user_app_arabic_script_select'></div>
                             </div>
@@ -321,7 +327,12 @@ const component = async props => {
        data:       null,
        methods:    null,
        events:     events,
-       template:   template()
+       template:   template({icons:{region_locale:props.methods.COMMON.commonGlobalGet('ICONS')['regional_locale'],
+                                    misc_design:props.methods.COMMON.commonGlobalGet('ICONS')['misc_design'],
+                                    regional_timezone:props.methods.COMMON.commonGlobalGet('ICONS')['regional_timezone'],
+                                    regional_direction:props.methods.COMMON.commonGlobalGet('ICONS')['regional_direction'],
+                                    regional_script:props.methods.COMMON.commonGlobalGet('ICONS')['regional_script']}})
+
    };
 };
 export default component;

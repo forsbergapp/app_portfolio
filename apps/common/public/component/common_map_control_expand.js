@@ -10,7 +10,8 @@
  * @name template
  * @description Template
  * @function
- * @param {{expand_type:string}} props 
+ * @param {{expand_type:string,
+ *          icons:{search:string}}} props 
  * @returns {string}
  */
 const template = props => props.expand_type=='search'?
@@ -18,7 +19,7 @@ const template = props => props.expand_type=='search'?
                                 <div id='common_map_control_expand_select_city'></div>
                                 <div id='common_map_control_expand_search_input_row'>
                                     <div id='common_map_control_expand_search_input' contentEditable='true' class='common_input'/></div>
-                                    <div id='common_map_control_expand_search_icon' class='common_icon common_icon_list'></div>
+                                    <div id='common_map_control_expand_search_icon' class='common_link common_icon_list'>${props.icons.search}</div>
                                 </div>
                                 <div id='common_map_control_expand_search_list_wrap'>
                                     <div id='common_map_control_expand_search_list'></div>
@@ -280,7 +281,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template({expand_type:props.data.expand_type})
+        template:   template({expand_type:props.data.expand_type, icons:{search:props.methods.COMMON.commonGlobalGet('ICONS')['search']}})
     };
 };
 export default component;

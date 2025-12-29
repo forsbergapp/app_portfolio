@@ -12,12 +12,13 @@ const APPS = [];
  * @name template
  * @description Template
  * @function
- * @param {{apps:(common['server']['ORM']['View']['AppGetInfo'])[]}} props 
+ * @param {{apps:(common['server']['ORM']['View']['AppGetInfo'])[],
+ *          icons:{info:string}}} props 
  * @returns {string}
  */
 const template = props => ` <div id='common_apps_list_title'>
                                 <div id='common_apps_list_title_col_date'></div>
-                                <div id='common_apps_list_title_col_info' class='common_link common_icon'></div>
+                                <div id='common_apps_list_title_col_info' class='common_link common_icon_toolbar_s'>${props.icons.info}</div>
                             </div>
                             <div id='common_apps_list'>
                                 ${props.apps.map(row=>
@@ -106,7 +107,8 @@ const component = async props => {
         methods:    null,
         events:     events,
         template:   template({    
-                            apps:APPS
+                            apps:APPS,
+                            icons:{info:props.methods.COMMON.commonGlobalGet('ICONS')['info']}
                             })
     };
 };

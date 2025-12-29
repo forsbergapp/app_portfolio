@@ -67,6 +67,7 @@ const component = async props => {
                             button_print: false,
                             button_update: false,
                             button_post: true,
+                            button_post_icon:props.methods.COMMON.commonGlobalGet('ICONS')['pay'],
                             button_delete: false
                             },
                 methods:    {

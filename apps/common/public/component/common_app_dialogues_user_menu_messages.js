@@ -10,17 +10,22 @@
  * @name template
  * @description Template
  * @function
+ * @param {{icons:{
+ *                 first:string,
+ *                 previous:string,
+ *                 next:string,
+ *                 last:string}}} props
  * @returns {string}
  */
-const template = () => ` <div id='common_app_dialogues_user_menu_messages'>
+const template = props => ` <div id='common_app_dialogues_user_menu_messages'>
                                 <div id='common_app_dialogues_user_menu_messages_list'></div>
                                 <div id='common_app_dialogues_user_menu_messages_pagination'>
                                     <div></div>
                                     <div></div>
-                                    <div id='common_app_dialogues_user_menu_messages_pagination_first'       class='common_pagination_first common_icon common_icon_button'></div>
-                                    <div id='common_app_dialogues_user_menu_messages_pagination_previous'    class='common_pagination_previous common_icon common_icon_button'></div>
-                                    <div id='common_app_dialogues_user_menu_messages_pagination_next'        class='common_pagination_next common_icon common_icon_button'></div>
-                                    <div id='common_app_dialogues_user_menu_messages_pagination_last'        class='common_pagination_last common_icon common_icon_button'></div>
+                                    <div id='common_app_dialogues_user_menu_messages_pagination_first'       class='common_link common_icon_title'>${props.icons.first}</div>
+                                    <div id='common_app_dialogues_user_menu_messages_pagination_previous'    class='common_link common_icon_title'>${props.icons.previous}</div>
+                                    <div id='common_app_dialogues_user_menu_messages_pagination_next'        class='common_link common_icon_title'>${props.icons.next}</div>
+                                    <div id='common_app_dialogues_user_menu_messages_pagination_last'        class='common_link common_icon_title'>${props.icons.last}</div>
                                     <div id='common_app_dialogues_user_menu_messages_pagination_page'></div>
                                     <div id='common_app_dialogues_user_menu_messages_pagination_page_last'></div>
                                     <div id='common_app_dialogues_user_menu_messages_pagination_page_total_count'></div>
@@ -169,7 +174,20 @@ const component = async props => {
        data:   null,
        methods:null,
        events:events,
-       template: template()
+       template: template({icons:{
+                            first:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
+                                    props.methods.COMMON.commonGlobalGet('ICONS')['last']:
+                                        props.methods.COMMON.commonGlobalGet('ICONS')['first'],
+                            previous:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
+                                        props.methods.COMMON.commonGlobalGet('ICONS')['next']:
+                                            props.methods.COMMON.commonGlobalGet('ICONS')['previous'],
+                            next:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
+                                        props.methods.COMMON.commonGlobalGet('ICONS')['previous']:
+                                            props.methods.COMMON.commonGlobalGet('ICONS')['next'],
+                            last:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
+                                    props.methods.COMMON.commonGlobalGet('ICONS')['first']:
+                                        props.methods.COMMON.commonGlobalGet('ICONS')['last']}
+       })
    };
 };
 export default component;

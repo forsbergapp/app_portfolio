@@ -19,21 +19,24 @@
  *          city:string,
  *          timezone_text:string,
  *          latitude:number,
- *          longitude:number}} props 
+ *          longitude:number,
+ *          icons: {close:string,
+ *                  timezone:string,
+ *                  gps:string}}} props 
  * @returns {string}
  */
 const template = props => `<div id='${props.id}' class='common_map_popup' 
                                 style='left:${props.x}px; top: ${props.y-85}px;'> 
-                                <div class='common_map_popup_close common_icon'></div>
+                                <div class='common_map_popup_close common_link'>${props.icons.close}</div>
                                 <div class='common_map_popup_title'>${props.region}, ${props.city}</div>
                                 <div class='common_map_popup_sub_title'>${props.country} (${props.countrycode})</div>
-                                <div class='common_map_popup_sub_title_timezone'><div class='common_map_popup_sub_title_timezone_icon common_icon'></div>${props.timezone_text}</div>
+                                <div class='common_map_popup_sub_title_timezone'><div class='common_map_popup_sub_title_timezone_icon'>${props.icons.timezone}</div>${props.timezone_text}</div>
                                 <div class='common_map_popup_sub_title_gps' 
                                     data-country='${props.country}'
                                     data-city='${props.city}'
                                     data-timezone='${props.timezone_text}'
                                     data-latitude='${props.latitude}' 
-                                    data-longitude='${props.longitude}'><div class='common_map_popup_sub_title_gps_icon common_icon'></div>${props.latitude.toFixed(6) + ', ' + props.longitude.toFixed(6)}
+                                    data-longitude='${props.longitude}'><div class='common_map_popup_sub_title_gps_icon'>${props.icons.gps}</div>${props.latitude.toFixed(6) + ', ' + props.longitude.toFixed(6)}
                                 </div>
                                 <div class="common_map_popup_tip_container">
                                 <div class="common_map_popup_tip"></div>
@@ -70,7 +73,12 @@ const component = async props => {
                         city:           props.data.geoJSON.properties.city,
                         timezone_text:  props.data.geoJSON.properties.timezone_text,
                         latitude:       props.data.geoJSON.geometry.coordinates[0][0],
-                        longitude:      props.data.geoJSON.geometry.coordinates[0][1]
+                        longitude:      props.data.geoJSON.geometry.coordinates[0][1],
+                        icons:          {
+                                        close:props.methods.COMMON.commonGlobalGet('ICONS')['close'],
+                                        timezone:props.methods.COMMON.commonGlobalGet('ICONS')['regional_timezone'],
+                                        gps:props.methods.COMMON.commonGlobalGet('ICONS')['gps_position']
+                                        }
                     })
    };
 };
