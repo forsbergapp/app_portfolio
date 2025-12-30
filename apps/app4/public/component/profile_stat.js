@@ -9,12 +9,17 @@
  * @name template
  * @description Template
  * @function
+ * @param {{icons:{ like:string,
+ *                  view:string,
+ *                  day:string,
+ *                  month:string,
+ *                  year:string}}} props
  * @returns {string}
  */
-const template = () =>` <div id='profile_stat_app2'>
+const template = props =>` <div id='profile_stat_app2'>
                         <div id='profile_stat_row2'>
-                            <div id='profile_stat_row2_1' class='common_link common_icon'></div>
-                            <div id='profile_stat_row2_2' class='common_link common_icon'></div>
+                            <div id='profile_stat_row2_1' class='common_link'>${props.icons.like + props.icons.day+ props.icons.month+ props.icons.year}</div>
+                            <div id='profile_stat_row2_2' class='common_link'>${props.icons.view + props.icons.day+ props.icons.month+ props.icons.year}</div>
                         </div>
                         </div>`;
 /**
@@ -34,7 +39,12 @@ const component = async props => {
         lifecycle:  null,
         data:       null,
         methods:    null,
-        template:   template()
+        template:   template({icons:{   like:props.methods.COMMON.commonGlobalGet('ICONS')['user_like'],
+                                        view:props.methods.COMMON.commonGlobalGet('ICONS')['user_views'],
+                                        day:props.methods.COMMON.commonGlobalGet('ICONS')['regional_day'],
+                                        month:props.methods.COMMON.commonGlobalGet('ICONS')['regional_month'],
+                                        year:props.methods.COMMON.commonGlobalGet('ICONS')['regional_year']}
+        })
     };
 };
 export default component;

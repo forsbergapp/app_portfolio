@@ -2,9 +2,6 @@ body{
     background: inherit !important;
 }
 /*APP*/
-#tab1::before{content:var(--common_app_icon_chart)}
-#tab2::before{content:var(--common_app_icon_user)}
-#tab3::before{content:var(--common_app_icon_info)}
 
 html, body, #app {
 	height:100%;

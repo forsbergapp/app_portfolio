@@ -51,7 +51,6 @@
     --common_app_icon_save:                 '💾';
     --common_app_icon_add:                  '+';
     --common_app_icon_delete:               '🗑';
-    --common_app_icon_update:               var(--common_app_icon_save);
     --common_app_icon_lov:                  '^';
 	--common_app_icon_select:        		'˅';
     --common_app_icon_send:                 '🖅';
@@ -78,9 +77,6 @@
     --common_app_icon_align_left:           '⏮';
     --common_app_icon_align_center:         '⏹';
     --common_app_icon_align_right:          '⏭';;
-    --common_app_icon_zoomin:               '➕';
-    --common_app_icon_left:                 '◀';
-    --common_app_icon_right:                '▶';
     --common_app_icon_up:                   '▲';
     --common_app_icon_down:                 '▼';
     --common_app_icon_remove:               '−';
@@ -101,7 +97,6 @@
 	--common_app_icon_reset:				'↺';
     --common_app_icon_sum:                  '∑';
     --common_app_icon_internet:             '🌐';
-    --common_app_icon_fullscreen:           '⛶';
     --common_app_icon_init:                 '⭐';
 	--common_app_icon_run:					'🖶';
 	--common_app_icon_preview:				'🔍';
@@ -169,10 +164,6 @@
 	--common_app_icon_misc_solve:               '💡';
 	--common_app_icon_misc_education:           '🎓';
 	--common_app_icon_misc_scramble:            '⤮';
-
-	--common_app_icon_infinite:                 '∞';
-
-    --common_app_icon_message_text:             'ABC';
 	/*icons app*/
 	--common_app_icon_verification_code:    	'❂❂❂❂❂❂';
 
@@ -495,7 +486,7 @@ body,
 }
 .common_icon_toolbar_m{
     width: 1.5em;
-    font-size: 2em;
+    font-size: 2.5em;
     height: 1.5em;
     vertical-align: middle;
 }
@@ -1086,7 +1077,7 @@ body,
 }
 #common_app_dialogues_profile_content {
 	width: 100%;
-	height: calc(100% - 6em);
+	height: calc(100% - 5em);
 }
 #common_app_dialogues_profile_close{
 	display: block;
@@ -1289,7 +1280,7 @@ body,
 }
 #common_app_profile_toolbar_stat{
 	position:fixed;
-	bottom:3em;
+	bottom:1em;
 	margin-inline-start: -30px;
 	border-radius: 4px 4px 0px 0px;
     z-index: 10;

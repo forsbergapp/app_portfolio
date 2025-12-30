@@ -1051,7 +1051,7 @@ const appUserSettingLink = (item) => {
     }
 };
 /**
- * @name appUserSettingLink
+ * @name appUserSettingFunction
  * @description User settings function
  * @function
  * @param {'ADD'|'ADD_LOGIN'|'SAVE'} function_name 
@@ -1397,48 +1397,39 @@ const appUserSettingProfileLink = item => {
                     path:       '/common/component/common_app_window_info.js'});
             break;
         }
-        case 'profile_user_settings_like':{
-            appUserSettingsLike(sid);
+        case 'profile_user_settings_like_unlike':
+        case 'profile_user_settings_like_like':{
+            /**@type{common['CommonRESTAPIMethod']} */
+            let method;
+            const json = {  iam_user_app_data_post_id: sid, 
+                            IAM_iam_user_id: common.commonGlobalGet('iam_user_id'),
+                            IAM_data_app_id:common.commonGlobalGet('app_id')};
+            if (common.commonGlobalGet('iam_user_id') == null)
+                common.commonDialogueShow('LOGIN');
+            else {
+                let path;
+                if (COMMON_DOCUMENT.querySelector('#profile_user_settings_like #profile_user_settings_like_unlike').style.display == 'block'){
+                    path= '/server-db/iamuserappdatapostlike';
+                    method = 'POST';
+                }
+                else{
+                    path= '/server-db/iamuserappdatapostlike/';
+                    method = 'DELETE';
+                }
+                common.commonFFB({  path:path, 
+                                    method:method, 
+                                    authorization_type:'APP_ACCESS', 
+                                    body:json})
+                .then(()=>APP_GLOBAL.function_profile_user_setting_update(  COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent,
+                                                                            JSON.parse(COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value')
+                                                                                        .getAttribute('data-value')).sid))
+                .catch(()=>null);
+            }
             break;
         }
     }
 };
 
-/**
- * @name appUserSettingsLike
- * @description User settings like
- * @function
- * @param {number} user_account_app_data_post_id 
- * @returns {void}
- */
-const appUserSettingsLike = user_account_app_data_post_id => {
-    /**@type{common['CommonRESTAPIMethod']} */
-    let method;
-    const json = { iam_user_app_data_post_id: user_account_app_data_post_id, 
-                        IAM_iam_user_id: common.commonGlobalGet('iam_user_id'),
-                        IAM_data_app_id:common.commonGlobalGet('app_id')};
-    if (common.commonGlobalGet('iam_user_id') == null)
-        common.commonDialogueShow('LOGIN');
-    else {
-        let path;
-        if (COMMON_DOCUMENT.querySelector('#profile_user_settings_like #profile_user_settings_like_unlike').style.display == 'block'){
-            path= '/server-db/iamuserappdatapostlike';
-            method = 'POST';
-        }
-        else{
-            path= '/server-db/iamuserappdatapostlike/';
-            method = 'DELETE';
-        }
-        common.commonFFB({  path:path, 
-                            method:method, 
-                            authorization_type:'APP_ACCESS', 
-                            body:json})
-        .then(()=>APP_GLOBAL.function_profile_user_setting_update(  COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent,
-                                                                    JSON.parse(COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value')
-                                                                                .getAttribute('data-value')).sid))
-        .catch(()=>null);
-    }
-};
 /**
  * @name appEventClick
  * @description App event click
@@ -1699,7 +1690,8 @@ const appEventClick = event => {
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
         case 'profile_user_settings_year':
-        case 'profile_user_settings_like':{
+        case 'profile_user_settings_like_unlike':
+        case 'profile_user_settings_like_like':{
             appUserSettingProfileLink(COMMON_DOCUMENT.querySelector(`#${event_target_id}`));
             break;
         }

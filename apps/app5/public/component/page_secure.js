@@ -9,16 +9,19 @@
  * @name template
  * @description Template
  * @function
- * @param {{customer:[]}} props 
+ * @param {{customer:[],
+ *          icons:{ chart:string,
+ *                  user:string,
+ *                  info:string}}} props 
  * @returns {string}
  */
 const template = props => ` <div id='app_page_secure'>
                                 ${props.customer.length>0?
                                     `
                                     <div id='app_page_secure_nav'>
-                                        <div id='tab1' class='app_page_secure_tab common_link common_icon common_icon_button'></div>
-                                        <div id='tab2' class='app_page_secure_tab common_link common_icon common_icon_button'></div>
-                                        <div id='tab3' class='app_page_secure_tab common_link common_icon common_icon_button'></div>
+                                        <div id='tab1' class='app_page_secure_tab common_link common_icon_button'>${props.icons.chart}</div>
+                                        <div id='tab2' class='app_page_secure_tab common_link common_icon_button'>${props.icons.user}</div>
+                                        <div id='tab3' class='app_page_secure_tab common_link common_icon_button'>${props.icons.info}</div>
                                     </div>
                                     <div id='app_page_secure_tab_content' class='app_bank_div' >
                                     </div>
@@ -118,7 +121,12 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({customer:customer.rows})
+        template:   template({customer:customer.rows,
+                                icons:{ chart:props.methods.COMMON.commonGlobalGet('ICONS')['chart_bar'],
+                                        user:props.methods.COMMON.commonGlobalGet('ICONS')['user'],
+                                        info:props.methods.COMMON.commonGlobalGet('ICONS')['info']
+                                }
+        })
     };
 };
 export default component;
