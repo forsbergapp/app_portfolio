@@ -1977,38 +1977,7 @@ const commonLogout = async () => {
 };
 
 
-/**
- * @name commonUserAuthenticateCode
- * @description Activate user
- * @function
- * @param {string} verification_code
- * @param {string}verification_type
- * @returns {Promise.<boolean>}
- */
-const commonUserAuthenticateCode = async (verification_code, verification_type) => {
-    return await commonFFB({ path:`/server-db/iamuser-activate/${COMMON_GLOBAL.iam_user_id ?? ''}`, 
-                method:'PUT', 
-                authorization_type:'APP_ACCESS_VERIFICATION', 
-                body:{   verification_code:  verification_code,
-                        /**
-                        * Verification type
-                        * 1 LOGIN
-                        * 2 SIGNUP      
-                        */
-                        verification_type:  verification_type=='LOGIN'?1:verification_type=='SIGNUP'?2:3}, 
-                spinner_id:'common_app_icon_verification_code'})
-    .then(result=>{
-            if (JSON.parse(result).activated == 1){
-                commonUserSessionClear();
-                return true;
-            }
-            else
-                return false;
-    })
-    .catch(()=>{
-        return false;
-    });
-};
+
 const commonUserMessageShowStat = async () =>{
     if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_nav_messages_count') ||
         COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_message_count')){
@@ -3188,7 +3157,6 @@ const commonGet = () =>{
         commonLogout:commonLogout,
         commonUserSessionClear:commonUserSessionClear,
         commonUserSessionCountdown:commonUserSessionCountdown, 
-        commonUserAuthenticateCode:commonUserAuthenticateCode,
         commonUserMessageShowStat:commonUserMessageShowStat,
         commonUserUpdateAvatar:commonUserUpdateAvatar,
         commonUserLocale:commonUserLocale,
@@ -3340,7 +3308,6 @@ export{/* GLOBALS*/
        commonLogout,
        commonUserSessionClear,
        commonUserSessionCountdown, 
-       commonUserAuthenticateCode,
        commonUserMessageShowStat,
        commonUserUpdateAvatar,
        commonUserLocale,

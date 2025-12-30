@@ -51,6 +51,38 @@ const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show2');
 
     /**
+     * @name commonUserAuthenticateCode
+     * @description Activate user
+     * @function
+     * @param {string} verification_code
+     * @param {string}verification_type
+     * @returns {Promise.<boolean>}
+     */
+    const commonUserAuthenticateCode = async (verification_code, verification_type) => {
+        return await props.methods.COMMON.commonFFB({ path:`/server-db/iamuser-activate/${props.methods.COMMON.commonGlobalGet('iam_user_id') ?? ''}`, 
+                    method:'PUT', 
+                    authorization_type:'APP_ACCESS_VERIFICATION', 
+                    body:{   verification_code:  verification_code,
+                            /**
+                            * Verification type
+                            * 1 LOGIN
+                            * 2 SIGNUP      
+                            */
+                            verification_type:  verification_type=='LOGIN'?1:verification_type=='SIGNUP'?2:3}, 
+                    spinner_id:'common_app_dialogues_iam_verify_cancel'})
+        .then(result=>{
+                if (JSON.parse(result).activated == 1){
+                    props.methods.COMMON.commonUserSessionClear();
+                    return true;
+                }
+                else
+                    return false;
+        })
+        .catch(()=>{
+            return false;
+        });
+    };
+    /**
      * @name commonUserVerifyCheckInput
      * @description User verify check input, used by user events:
      *              TYPE                        COMMENT                                                         BFF endpoint to use when activating
@@ -89,10 +121,10 @@ const component = async props => {
                 if ((props.data.user_verification_type== '3' &&       
                     
                     await props.methods.COMMON.commonGlobalGet('component')[props.methods.COMMON.commonGlobalGet('app_common_app_id') + '_' + 'common_app_dialogues_user_menu_iam_user']?.methods?.commonUserUpdate(verification_code)) ||
-                    await props.methods.COMMON.commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
-                    props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify');
-                    props.methods.COMMON.commonDialogueShow('LOGIN');
-                }
+                    await commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
+                        props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify');
+                        props.methods.COMMON.commonDialogueShow('LOGIN');
+                    }
                 else{
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char1').classList.add('common_input_error');
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char2').classList.add('common_input_error');

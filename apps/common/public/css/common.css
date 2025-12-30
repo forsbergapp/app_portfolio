@@ -47,7 +47,6 @@
 	/*icons ui*/
 	--common_app_icon_apps:                 '⊞';
     --common_app_icon_maintenance:          '⚒';
-    --common_app_icon_alert:                '🚨';
     --common_app_icon_save:                 '💾';
     --common_app_icon_add:                  '+';
     --common_app_icon_delete:               '🗑';
@@ -69,8 +68,6 @@
     --common_app_icon_checkbox_empty:       '☐';
     --common_app_icon_info:                 'i';
     --common_app_icon_close:                '☓';
-    --common_app_icon_online:               '⬤';
-    --common_app_icon_search:               '🔍';
     --common_app_icon_menu_open:            '☰';
     --common_app_icon_slider_left:          '⏴';
     --common_app_icon_slider_right:         '⏵';
@@ -100,28 +97,8 @@
     --common_app_icon_init:                 '⭐';
 	--common_app_icon_run:					'🖶';
 	--common_app_icon_preview:				'🔍';
-	--common_app_icon_user_old:                     '👤';
-    --common_app_icon_user:                     url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="48px" width ="48px" viewBox="0 0 448 512"><path fill="currentColor" d="M224 248a120 120 0 1 0 0-240 120 120 0 1 0 0 240zm-29.7 56C95.8 304 16 383.8 16 482.3 16 498.7 29.3 512 45.7 512l356.6 0c16.4 0 29.7-13.3 29.7-29.7 0-98.5-79.8-178.3-178.3-178.3l-59.4 0z"/></svg>');
     --common_app_icon_users:                    '👥';
-    --common_app_icon_username:                 var(--common_app_icon_user) ' ABC';
-    --common_app_icon_user_last_logintime:      '🡆⊃';
-    --common_app_icon_user_account_created:     '🤝';
-    --common_app_icon_user_account_modified:    '🖆';
     --common_app_icon_user_password:            '🔑';
-	--common_app_icon_user_password_confirm:    var(--common_app_icon_user_password) '!';
-	--common_app_icon_user_password_reminder:   var(--common_app_icon_user_password) '?';
-    --common_app_icon_user_avatar:              var(--common_app_icon_user);
-    --common_app_icon_user_like:                '♥';
-    --common_app_icon_user_views:               '👁';
-    --common_app_icon_user_follows:             var(--common_app_icon_users);
-    --common_app_icon_user_followed:            var(--common_app_icon_user)var(--common_app_icon_users);
-    /**ID CARD ICON + ABC*/
-    --common_app_icon_user_bio:                 var(--common_app_icon_user) ' ABC';
-    --common_app_icon_user_profile:             '\1FAAA';
-    --common_app_icon_user_profile_stat:        '🏅';
-	--common_app_icon_verification_code:        var(--common_app_icon_user_password);
-
-    --common_app_icon_provider_id:              'ID';
 
     --common_app_icon_gps:                      '📍';
     --common_app_icon_gps_position:             var(--common_app_icon_gps:);
@@ -164,8 +141,6 @@
 	--common_app_icon_misc_solve:               '💡';
 	--common_app_icon_misc_education:           '🎓';
 	--common_app_icon_misc_scramble:            '⤮';
-	/*icons app*/
-	--common_app_icon_verification_code:    	'❂❂❂❂❂❂';
 
 	/*fonts*/
 	--common_app_font_languages_1:  	"Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 

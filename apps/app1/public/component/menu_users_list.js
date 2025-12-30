@@ -13,24 +13,39 @@
  * @function
  * @param {{iam_user_id:number,
  *          users:common['server']['ORM']['Object']['IamUser'][],
- *          function_get_order_by:function}} props
+ *          function_get_order_by:function,
+ *          icons:{ avatar:string,
+ *                  id:string,
+ *                  type:string,
+ *                  active:string,
+ *                  status:string,
+ *                  level:string,
+ *                  private:string,
+ *                  username:string,
+ *                  user_bio:string,
+ *                  user_password:string,
+ *                  user_password_reminder:string,
+ *                  verification_code:string,
+ *                  account_created:string,
+ *                  account_modified:string
+ *           }}} props
  * @returns {string}
  */
 const template = props => ` <div class='menu_users_list_row'>
-                                <div data-column='Avatar' class='menu_users_list_col list_title common_icon ${props.function_get_order_by('avatar')}'></div>
-                                <div data-column='Id' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Id')}'></div>
-                                <div data-column='Type' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Type')}'></div>
-                                <div data-column='Active' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Active')}'></div>
-                                <div data-column='Status' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Status')}'></div>
-                                <div data-column='UserLevel' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('UserLevel')}'></div>
-                                <div data-column='Private' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Private')}'></div>
-                                <div data-column='Username' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Username')}'></div>
-                                <div data-column='Bio' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Bio')}'></div>
-                                <div data-column='OtpKey' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('OtpKey')}'></div>
-                                <div data-column='Password' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Password')}'></div>
-                                <div data-column='PasswordReminder' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('PasswordReminder')}'></div>
-                                <div data-column='Created' class='menu_users_list_col list_sort_click list_title common_icon ${props.function_get_order_by('Created')}'></div>
-                                <div data-column='Modified' class='menu_apps_col list_sort_click list_title common_icon ${props.function_get_order_by('Modified')}'></div>
+                                <div data-column='Avatar' class='menu_users_list_col list_title common_link ${props.function_get_order_by('avatar')}'>${props.icons.avatar}</div>
+                                <div data-column='Id' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Id')}'>${props.icons.id}</div>
+                                <div data-column='Type' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Type')}'>${props.icons.type}</div>
+                                <div data-column='Active' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Active')}'>${props.icons.active}</div>
+                                <div data-column='Status' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Status')}'>${props.icons.status}</div>
+                                <div data-column='UserLevel' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('UserLevel')}'>${props.icons.level}</div>
+                                <div data-column='Private' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Private')}'>${props.icons.private}</div>
+                                <div data-column='Username' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Username')}'>${props.icons.username}</div>
+                                <div data-column='Bio' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Bio')}'>${props.icons.user_bio}</div>
+                                <div data-column='OtpKey' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('OtpKey')}'>${props.icons.verification_code}</div>
+                                <div data-column='Password' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Password')}'>${props.icons.user_password}</div>
+                                <div data-column='PasswordReminder' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('PasswordReminder')}'>${props.icons.user_password_reminder}</div>
+                                <div data-column='Created' class='menu_users_list_col list_sort_click list_title common_link ${props.function_get_order_by('Created')}'>${props.icons.account_created}</div>
+                                <div data-column='Modified' class='menu_apps_col list_sort_click list_title common_link ${props.function_get_order_by('Modified')}'>${props.icons.account_modified}</div>
                             </div>
                             ${props.users.map(user=>
                                 `<div data-changed-record='0' data-iam_user_id='${user.Id}' class='menu_users_list_row ${user.Id==props.iam_user_id?'list_current_user_row':''} common_row' >
@@ -94,8 +109,23 @@ const component = async props => {
       methods:      null,
       template:     template({  iam_user_id:props.data.iam_user_id,
                                 users:users,
-                                function_get_order_by:get_order_by
-      })
+                                function_get_order_by:get_order_by,
+                                icons:{ avatar:props.methods.COMMON.commonGlobalGet('ICONS')['user_avatar'],
+                                        id:props.methods.COMMON.commonGlobalGet('ICONS')['provider_id'],
+                                        type:props.methods.COMMON.commonGlobalGet('ICONS')['type'],
+                                        active:props.methods.COMMON.commonGlobalGet('ICONS')['active'],
+                                        status:props.methods.COMMON.commonGlobalGet('ICONS')['status'],
+                                        level:props.methods.COMMON.commonGlobalGet('ICONS')['level'],
+                                        private:props.methods.COMMON.commonGlobalGet('ICONS')['lock'],
+                                        username:props.methods.COMMON.commonGlobalGet('ICONS')['username'],
+                                        user_bio:props.methods.COMMON.commonGlobalGet('ICONS')['id_card'],
+                                        user_password:props.methods.COMMON.commonGlobalGet('ICONS')['user_password'],
+                                        user_password_reminder:props.methods.COMMON.commonGlobalGet('ICONS')['user_password_reminder'],
+                                        verification_code:props.methods.COMMON.commonGlobalGet('ICONS')['verification_code'],
+                                        account_created:props.methods.COMMON.commonGlobalGet('ICONS')['user_account_created'],
+                                        account_modified:props.methods.COMMON.commonGlobalGet('ICONS')['user_account_modified']
+                                }
+                    })
   };
 };
 export default component;
