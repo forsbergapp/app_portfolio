@@ -162,10 +162,6 @@ const component = async props => {
                                         setting.Name.startsWith('PAPER_SIZE'))[0].DisplayData,
                         options: settings_common.filter(setting=>
                                     setting.Name.startsWith('PAPER_SIZE')),
-                        path:null,
-                        query:null,
-                        method:null,
-                        authorization_type:null,
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -184,10 +180,6 @@ const component = async props => {
                         options: settings_app.filter(setting=>
                                     setting.AppId == props.data.app_id && 
                                     setting.Name.startsWith('HIGHLIGHT_ROW')),
-                        path:null,
-                        query:null,
-                        method:null,
-                        authorization_type:null,
                         column_value:'Value',
                         column_text:'DisplayData'
                         },

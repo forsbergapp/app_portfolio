@@ -62,6 +62,10 @@ const template = props => `<div id='menu_monitor_content_widget1' class='widget'
  */
 const component = async props => {
 
+    const apps = await props.methods.COMMON.commonFFB({ path:'/server-db/app', 
+                                                        query:'key=Name', 
+                                                        method:'GET', authorization_type:'ADMIN'})
+                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     /**
      * Page navigation
      * @param {string} item 
@@ -193,10 +197,6 @@ const component = async props => {
                                 {VALUE:new Date().getFullYear() - 3, TEXT:new Date().getFullYear() -3},
                                 {VALUE:new Date().getFullYear() - 4, TEXT:new Date().getFullYear() -4},
                                 {VALUE:new Date().getFullYear() - 5, TEXT:new Date().getFullYear() -5}],
-                        path:'',
-                        query:'',
-                        method:'',
-                        authorization_type:'',
                         column_value:'VALUE',
                         column_text:'TEXT'
                         },
@@ -207,10 +207,6 @@ const component = async props => {
                         default_value:new Date().getMonth()+1,
                         default_data_value:new Date().getMonth()+1,
                         options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
-                        path:'',
-                        query:'',
-                        method:'',
-                        authorization_type:'',
                         column_value:'VALUE',
                         column_text:'TEXT'
                         },
@@ -222,10 +218,6 @@ const component = async props => {
                         default_value:new Date().getDate(),
                         default_data_value:new Date().getDate(),
                         options:Array(...Array(31)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
-                        path:'',
-                        query:'',
-                        method:'',
-                        authorization_type:'',
                         column_value:'VALUE',
                         column_text:'TEXT'
                         },
@@ -236,11 +228,7 @@ const component = async props => {
                 data:   {
                         default_value:'∞',
                         default_data_value:'',
-                        options:[{Id:'', Name:'∞'}],
-                        path:'/server-db/app',
-                        query:'key=Name',
-                        method:'GET',
-                        authorization_type:'ADMIN',
+                        options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}),
                         column_value:'Id',
                         column_text:'Name'
                         },

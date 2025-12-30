@@ -14,17 +14,20 @@
  *          default_value:string,
  *          options:[{value:string, text:string}]|[],
  *          column_value:string,
- *          column_text:string}} props
+ *          column_text:string,
+ *          class_dropdown_value:string|null,
+ *          class_option:string|null,
+ *          icons:{select:string}}} props
  * @returns {string}
  */
 const template = props => ` <div class='common_select_dropdown'>
-                                <div class='common_select_dropdown_value' data-value='${props.default_data_value}'>${props.default_value}</div>
-                                <div class='common_icon common_icon_select_dropdown'></div>
+                                <div class='common_select_dropdown_value ${props.class_dropdown_value??''}' data-value='${props.default_data_value}'>${props.default_value}</div>
+                                <div class='common_link common_icon_select_dropdown'>${props.icons.select}</div>
                             </div>
                             <div class='common_select_options'>
                                 ${props.options.map(row=>
                                     /**@ts-ignore */
-                                    `<div class='common_select_option' data-value='${row[props.column_value]}'>${row[props.column_text]}</div>`).join('')
+                                    `<div class='common_select_option ${props.class_option??''}' data-value='${row[props.column_value]}'>${row[props.column_text]}</div>`).join('')
                                 }
                             </div>` ;
 /**
@@ -36,30 +39,24 @@ const template = props => ` <div class='common_select_dropdown'>
  *                      default_data_value:string,
  *                      default_value:string,
  *                      options:[{value:string, text:string}],
- *                      path:string,
- *                      query:string,
- *                      method:common['CommonRESTAPIMethod'],
- *                      authorization_type:common['CommonRESTAPIAuthorizationType'],
  *                      column_value:string,
- *                      column_text:string
+ *                      column_text:string,
+ *                      class_dropdown_value?:string|null,
+ *                      class_option?: string|null
  *                      },
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon']
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
- *                      template:string}>}
+ *                      template:string}}
  */
-const component = async props => {
-    // add first static option first if any then add fetched options
-    const commonFFB_options = props.data.path?await props.methods.COMMON.commonFFB({path:props.data.path, query:props.data.query, method:props.data.method, authorization_type:props.data.authorization_type})
-                                .then((/**@type{string}*/result)=>JSON.parse(result).rows):[];
-    /**@type{[{value:string, text:string}]|[]} */
-    const options = props.data.options?props.data.options.concat(commonFFB_options):commonFFB_options;
+const component = props => {
 
     const onMounted = async () =>{
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_select');
+        if (props.data.commonMountdiv !=null)
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_select');
    };
    
    return {
@@ -69,9 +66,12 @@ const component = async props => {
        template: template({ 
                             default_data_value:props.data.default_data_value ?? '',
                             default_value:props.data.default_value ?? '',
-                            options:options,
+                            options:props.data.options,
                             column_value:props.data.column_value,
-                            column_text:props.data.column_text
+                            column_text:props.data.column_text,
+                            class_dropdown_value:props.data.class_dropdown_value??null,
+                            class_option: props.data.class_option??null,
+                            icons:{select:props.methods.COMMON.commonGlobalGet('ICONS')['select']}
                         })
    };
 };

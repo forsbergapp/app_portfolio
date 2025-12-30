@@ -41,7 +41,10 @@ const template = props => `<div id='dialogue_send_broadcast_form'>
  */
 const component = async props => {
     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show0');
-
+    const apps = await props.methods.COMMON.commonFFB({ path:'/server-db/app', 
+                                                        query:'key=Name', 
+                                                        method:'GET', authorization_type:'ADMIN'})
+                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     const onMounted = async () =>{
         // select broadcast type
         await props.methods.COMMON.commonComponentRender(
@@ -50,10 +53,6 @@ const component = async props => {
                     default_value:props.methods.COMMON.commonGlobalGet('ICONS')['alert'],
                     default_data_value:'ALERT',
                     options:[{VALUE:'ALERT', TEXT:props.methods.COMMON.commonGlobalGet('ICONS')['alert']}, {VALUE:'MAINTENANCE', TEXT:props.methods.COMMON.commonGlobalGet('ICONS')['maintenance']}],
-                    path:'',
-                    query:'',
-                    method:'',
-                    authorization_type:'',
                     column_value:'VALUE',
                     column_text:'TEXT'
                 },
@@ -65,11 +64,7 @@ const component = async props => {
                 data:{
                     default_value:'∞',
                     default_data_value:'',
-                    options:[{Id:'', Name:'∞'}],
-                    path:'/server-db/app',
-                    query:'key=Name',
-                    method:'GET',
-                    authorization_type:'ADMIN',
+                    options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}),
                     column_value:'Id',
                     column_text:'Name'
                   },

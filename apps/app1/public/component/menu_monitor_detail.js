@@ -453,10 +453,6 @@ const component = async props => {
                             default_value:props.data.SERVICE_LOG_DATA.logObjects.filter(row=>row.VALUE=='LogRequestInfo')[0].VALUE,
                             default_data_value:props.data.SERVICE_LOG_DATA.logObjects.filter(row=>row.TEXT=='LogRequestInfo')[0].TEXT,
                             options:props.data.SERVICE_LOG_DATA.logObjects,
-                            path:'',
-                            query:'',
-                            method:'',
-                            authorization_type:'',
                             column_value:'VALUE',
                             column_text:'TEXT'
                 },

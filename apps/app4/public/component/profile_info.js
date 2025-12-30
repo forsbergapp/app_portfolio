@@ -135,10 +135,6 @@ const component = async props => {
                             default_data_value:   sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].value:user_settings[0].value,
                             default_value:        sid?user_settings.filter(setting=>JSON.parse(setting.value).sid == sid)[0].text:user_settings[0].text,
                             options: user_settings,
-                            path:null,
-                            query:null,
-                            method:null,
-                            authorization_type:null,
                             column_value:'value',
                             column_text:'text'
                             },

@@ -94,10 +94,6 @@ const component = async props => {
                                 default_data_value:'',
                                 default_value:default_value,
                                 options:options,
-                                path:null,
-                                query:null,
-                                method:null,
-                                authorization_type:null,
                                 column_value:'value',
                                 column_text:'text'
                                 },
@@ -240,6 +236,7 @@ const component = async props => {
             }
         }
     };
+    const countries = await map_country(props.methods.COMMON.commonUserLocale());
     const onMounted = async () =>{
         if (props.data.expand_type=='search'){
             await props.methods.COMMON.commonComponentRender({
@@ -247,11 +244,7 @@ const component = async props => {
                 data:       {
                             default_data_value:'',
                             default_value:'...',
-                            options: await map_country(props.methods.COMMON.commonUserLocale()),
-                            path:null,
-                            query:null,
-                            method:null,
-                            authorization_type:null,
+                            options: countries,
                             column_value:'value',
                             column_text:'text'
                             },
@@ -266,10 +259,6 @@ const component = async props => {
                             default_data_value:props.data.map_layers[0].value,
                             default_value:props.data.map_layers[0].title,
                             options:props.data.map_layers,
-                            path:null,
-                            query:null,
-                            method:null,
-                            authorization_type:null,
                             column_value:'value',
                             column_text:'title'
                             },

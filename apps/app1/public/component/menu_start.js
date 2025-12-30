@@ -88,6 +88,10 @@ const component = async props => {
     /**@type{{status_codes:[number, string][]}} */
     const result_obj = await props.methods.COMMON.commonFFB({path:'/server-info-statuscode', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
+    const apps = await props.methods.COMMON.commonFFB({ path:'/server-db/app', 
+                                                        query:'key=Name', 
+                                                        method:'GET', authorization_type:'ADMIN'})
+                .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     // syntax {VALUE:'[ADMIN_statGroup]#[value]#[unique 0/1]#[statgroup]', TEXT:['[ADMIN_STATGROUP] - [VALUE replaced '_' with ' ']']}
     // response has empty statgroup
     const stat_options = [
@@ -118,10 +122,6 @@ const component = async props => {
                     default_value:'REQUEST - IP TOTAL',
                     default_data_value:'request#ip_total#0#Ip',
                     options:stat_options,
-                    path:'',
-                    query:'',
-                    method:'',
-                    authorization_type:'',
                     column_value:'VALUE',
                     column_text:'TEXT'
                     },
@@ -138,10 +138,6 @@ const component = async props => {
                                 {VALUE:new Date().getFullYear() - 3, TEXT:new Date().getFullYear() -3},
                                 {VALUE:new Date().getFullYear() - 4, TEXT:new Date().getFullYear() -4},
                                 {VALUE:new Date().getFullYear() - 5, TEXT:new Date().getFullYear() -5}],
-                        path:'',
-                        query:'',
-                        method:'',
-                        authorization_type:'',
                         column_value:'VALUE',
                         column_text:'TEXT'
                         },
@@ -153,10 +149,6 @@ const component = async props => {
                         default_value:new Date().getMonth()+1,
                         default_data_value:new Date().getMonth()+1,
                         options:Array(...Array(12)).map((row,index)=>{return {VALUE:index+1, TEXT:index+1};}),
-                        path:'',
-                        query:'',
-                        method:'',
-                        authorization_type:'',
                         column_value:'VALUE',
                         column_text:'TEXT'
                         },
@@ -166,11 +158,7 @@ const component = async props => {
                 data:   {
                         default_value:'∞',
                         default_data_value:'',
-                        options:[{Id:'', Name:'∞'}],
-                        path:'/server-db/app',
-                        query:'key=Name',
-                        method:'GET',
-                        authorization_type:'ADMIN',
+                        options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}),
                         column_value:'Id',
                         column_text:'Name'
                         },

@@ -1,12 +1,4 @@
 /*APP*/
-#button_solve::before{										content:var(--common_app_icon_misc_solve)}
-#button_solve_cubestate::before{							content:'?'}
-#button_solved_step::before{								content:var(--common_app_icon_misc_education)}
-#button_solved_step_cubestate::before{						content:'?'}
-#button_info::before{										content:'i'}
-#button_scramble::before{									content:var(--common_app_icon_misc_scramble)}
-#button_reset::before{										content:var(--common_app_icon_reset)}
-
 html, body, #app {
 	height:100%;
 }

@@ -76,11 +76,14 @@
  *              button_update:boolean,
  *              button_post:boolean,
  *              button_delete:boolean,
+ *              function_commonSelect:function,
+ *              COMMON:common['CommonModuleCommon'],
  *              icons:{ lov:string,
  *                      print:string,
  *                      update:string,
  *                      post:string,
- *                      delete:string}}} props 
+ *                      delete:string,
+ *                      select:string}}} props 
  * @returns {string}
  */
 const template = props =>`  ${(props.master_object && props.new_resource)?
@@ -114,24 +117,26 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                     `<div class='common_app_data_display_master'>
                                         ${Object.entries(props.master_object).filter(key=>key[0]!='Title' && key[0]!='TitleSub').map((/**@type{*}*/master_row)=>
                                             master_row[1].Value.constructor===Array?
-                                                    `<div id='LIST_${props.function_div_id()}' class='common_app_data_display_master_row'>
-                                                        <div class='common_select_dropdown'>
-                                                            <div class='common_select_dropdown_value common_app_data_display_master_row_list' data-value=''>
-                                                                ${(master_row[1].Value[0]??[]).map((/**@type{*}*/key)=>
-                                                                    `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
-                                                                ).join('')}
-                                                            </div>
-                                                            <div class='common_icon common_icon_select_dropdown'></div>
-                                                        </div>
-                                                        <div class='common_select_options'>
-                                                            ${(master_row[1].Value??[]).map((/**@type{*}*/list)=>
-                                                                `<div class='common_select_option common_app_data_display_master_row_list'>
-                                                                    ${list.map((/**@type{*}*/key)=>
-                                                                        `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
-                                                                    ).join('')}
-                                                                </div>`
-                                                            ).join('')}
-                                                        </div>
+                                                    `<div id='LIST_${props.function_div_id()}' class='common_select common_app_data_display_master_row'>
+                                                        ${props.function_commonSelect({ mountDiv:   null,
+                                                                    data:  {default_data_value:'',
+                                                                            default_value:(master_row[1].Value[0]??[]).map((/**@type{*}*/key)=>
+                                                                                                    `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
+                                                                                                ).join(''),
+                                                                            options:(master_row[1].Value??[]).map((/**@type{*}*/list)=>{
+                                                                                        return {VALUE:'',
+                                                                                                TEXT:list.map((/**@type{*}*/key)=>
+                                                                                                    `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
+                                                                                                    )
+                                                                                                }
+                                                                                    }),
+                                                                            column_value:'VALUE',
+                                                                            column_text:'TEXT',
+                                                                            class_dropdown_value:'common_app_data_display_master_row_list',
+                                                                            class_option: 'common_app_data_display_master_row_list' 
+                                                                            },
+                                                                    methods:{COMMON:props.COMMON},
+                                                                    path: '/common/component/common_select.js'}).template}
                                                     </div>`:
                                             `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
@@ -380,11 +385,15 @@ const component = async props => {
                             button_update:props.data.button_update,
                             button_post:props.data.button_post,
                             button_delete:props.data.button_delete,
+                            //use component direct in template without commonComponentRender()
+                            function_commonSelect:(await props.methods.COMMON.commonMiscImport('/common/component/common_select.js')).default,
+                            COMMON:props.methods.COMMON,
                             icons:{ lov:props.methods.COMMON.commonGlobalGet('ICONS')['lov'],
                                     print:props.data.button_print_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['print'],
                                     update:props.data.button_update_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['save'],
                                     post:props.data.button_post_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['add'],
-                                    delete:props.data.button_delete_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['delete']
+                                    delete:props.data.button_delete_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['delete'],
+                                    select:props.data.button_delete_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['select']
                             }})
     };
 };
