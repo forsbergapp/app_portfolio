@@ -1,20 +1,4 @@
 /*APP */
-
-#info_close::before{										content:var(--common_app_icon_close)}
-#profile_main_btn_user_settings::before{					content:var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
-#profile_main_btn_user_setting_likes_user_setting::before{	content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_follows)}
-#profile_main_btn_user_setting_liked_user_setting::before{	content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year) ' ' var(--common_app_icon_user_followed)}
-    
-#profile_user_settings_day::before{							content:var(--common_app_icon_regional_day)}
-#profile_user_settings_month::before{						content:var(--common_app_icon_regional_month)}
-#profile_user_settings_year::before{						content:var(--common_app_icon_regional_year)}
-
-#profile_stat_row2_1::before{								content:var(--common_app_icon_user_like) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
-#profile_stat_row2_2::before{								content:var(--common_app_icon_user_views) ' ' var(--common_app_icon_regional_day) ' ' var(--common_app_icon_regional_month) ' ' var(--common_app_icon_regional_year)}
-
-#profile_user_settings_info_likes::before{					content:var(--common_app_icon_user_like)}
-#profile_user_settings_info_views::before{					content:var(--common_app_icon_user_views)}
-
 #settings_tab_nav_1::before{								content:var(--common_app_icon_regional)}
 #settings_tab_nav_2::before{								content:var(--common_app_icon_gps)}
 #settings_tab_nav_3::before{								content:var(--common_app_icon_misc_design)}
@@ -83,40 +67,29 @@
 #setting_btn_user_add::before{								content:var(--common_app_icon_add)}
 #setting_btn_user_delete::before{							content:var(--common_app_icon_delete)}
 
-#toolbar_btn_print::before{									content:var(--common_app_icon_print)}
-#toolbar_btn_day::before{									content:var(--common_app_icon_regional_day)}
-#toolbar_btn_month::before{									content:var(--common_app_icon_regional_month)}
-#toolbar_btn_year::before{									content:var(--common_app_icon_regional_year)}
-#toolbar_btn_settings::before{								content:var(--common_app_icon_settings)}
-
-#toolbar_btn_zoomout::before{								content:var(--common_app_icon_zoomout)}
-#toolbar_btn_zoomin::before{								content:var(--common_app_icon_zoomin)}
-#toolbar_btn_left::before{									content:var(--common_app_icon_left)}
-#toolbar_btn_right::before{									content:var(--common_app_icon_right)}
-#toolbar_btn_search::before{								content:var(--common_app_icon_search)}
-
 /* PAPER, PREVIEW AND PRINT*/
 #common_app_window_info #paper {
 	margin-top: 10px;
 }
 
 /* TOOLBAR TOP*/
-#toolbar_top {
+#toolbar_top,
+#toolbar_bottom {
 	text-align: center;
 	width: 100%;
-	display: block;
+	display: grid;
 	z-index: 10;
     position: fixed;
+    
+    justify-content: center;
+    grid-template-columns: 4em 4em 4em 4em 4em;
+    height: 3em;
+}
+#toolbar_top{
     top: 0;
 }
-/* TOOLBAR BOTTOM*/
 #toolbar_bottom {
-	width: 100%;
-	text-align: center;
 	bottom: 0;
-	display:block;
-	position:fixed;
-	z-index: 10;
 }
 #profile_user_settings_row{
 	width:100%;

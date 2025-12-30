@@ -12,18 +12,6 @@
 #secure_menu_9::before{															    content: var(--common_app_icon_server)}
 #secure_menu_10::before{															content: var(--common_app_icon_logout)}
 
-#dialogue_send_broadcast_select_broadcast_type .common_select_dropdown_value[data-value='ALERT']::before{			content:var(--common_app_icon_alert)}
-#dialogue_send_broadcast_select_broadcast_type .common_select_dropdown_value[data-value='MAINTENANCE']::before{		content:var(--common_app_icon_maintenance)}
-
-#dialogue_send_broadcast_select_broadcast_type .common_select_option[data-value='ALERT']::before{					content:var(--common_app_icon_alert)}
-#dialogue_send_broadcast_select_broadcast_type .common_select_option[data-value='MAINTENANCE']::before{				content:var(--common_app_icon_maintenance)}
- 
-#dialogue_send_broadcast_send::before{												content:var(--common_app_icon_send)}
-#dialogue_send_broadcast_close::before{												content:var(--common_app_icon_close)}
-#dialogue_send_broadcast_title::before{												content:var(--common_app_icon_broadcast)}
-#dialogue_send_broadcast_client_id_label::before{									content:var(--common_app_icon_user)}
-.icon_infinite::before{																content:var(--common_app_icon_infinite)}
-
 #menu_start_chart_box1_title::before{												content:var(--common_app_icon_internet) ' ' var(--common_app_icon_server) ' ' var(--common_app_icon_chart)}
 #menu_start_chart_box2_title::before{												content:var(--common_app_icon_internet) ' ' var(--common_app_icon_server) ' ' var(--common_app_icon_regional_numbersystem)}
 #menu_start_maintenance_title::before{												content:var(--common_app_icon_maintenance)}

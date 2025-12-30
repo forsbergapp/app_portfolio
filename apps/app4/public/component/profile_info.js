@@ -11,38 +11,38 @@
  * @description Template
  * @function
  * @param {{setting:boolean,
- *          icons:{unlike:string, like:string}}} props
+ *          icons:{unlike:string, like:string, day:string, month:string, year:string, user_follows:string, user_followed:string, user_views:string}}} props
  * @returns {string}
  */
 const template = props => ` ${props.setting?
                                 `<div id='profile_info_user_settings'>
-                                    <div id='profile_main_btn_user_settings' class='common_link common_icon'></div>
+                                    <div id='profile_main_btn_user_settings' class='common_link'>${props.icons.day + props.icons.month +props.icons.year}</div>
                                 </div>
                                 <div id='profile_info_user_setting_likes'>
                                     <div id='profile_main_btn_user_setting_likes'>
-                                        <div id='profile_main_btn_user_setting_likes_user_setting' class='common_link common_icon'></div>
+                                        <div id='profile_main_btn_user_setting_likes_user_setting' class='common_link'>${props.icons.like + props.icons.day + props.icons.month +props.icons.year + props.icons.user_follows}</div>
                                     </div>
                                     <div id='profile_info_user_setting_likes_count'></div>
                                 </div>
                                 <div id='profile_info_user_setting_liked'>
                                     <div id='profile_main_btn_user_setting_liked'>
-                                        <div id='profile_main_btn_user_setting_liked_user_setting' class='common_link common_icon'></div>
+                                        <div id='profile_main_btn_user_setting_liked_user_setting' class='common_link'>${props.icons.like + props.icons.day + props.icons.month +props.icons.year + props.icons.user_followed}</div>
                                     </div>
                                     <div id='profile_info_user_setting_liked_count'></div>
                                 </div>
                                 <div id='profile_user_settings_row'>
                                     <div id='profile_select_user_settings'></div>
                                     <div id='profile_user_settings_detail'>
-                                        <div id='profile_user_settings_day' class='common_icon'></div>
-                                        <div id='profile_user_settings_month' class='common_icon'></div>
-                                        <div id='profile_user_settings_year' class='common_icon'></div>
+                                        <div id='profile_user_settings_day' class='common_link'>${props.icons.day}</div>
+                                        <div id='profile_user_settings_month' class='common_link'>${props.icons.month}</div>
+                                        <div id='profile_user_settings_year' class='common_link'>${props.icons.year}</div>
                                         <div id='profile_user_settings_like'>
                                             <div id='profile_user_settings_like_unlike' class='common_unlike common_link'>${props.icons.unlike}</div>
                                             <div id='profile_user_settings_like_like' class='common_like common_link'>${props.icons.like}</div>
                                         </div>
-                                        <div id='profile_user_settings_info_likes' class='common_icon'></div>
+                                        <div id='profile_user_settings_info_likes'>${props.icons.like}</div>
                                         <div id='profile_user_settings_info_likes_count'></div>
-                                        <div id='profile_user_settings_info_views' class='common_icon'></div>
+                                        <div id='profile_user_settings_info_views'>${props.icons.user_views}</div>
                                         <div id='profile_user_settings_info_views_count'></div>
                                     </div>
                                 </div>`:
@@ -166,8 +166,14 @@ const component = async props => {
                     },
         template:   template({  setting:user_settings.length>0,
                                 icons:{ like:props.methods.COMMON.commonGlobalGet('ICONS')['user_like'],
-                                        unlike:props.methods.COMMON.commonGlobalGet('ICONS')['user_unlike']}}
-        )
+                                        unlike:props.methods.COMMON.commonGlobalGet('ICONS')['user_unlike'],
+                                        day:props.methods.COMMON.commonGlobalGet('ICONS')['regional_day'],
+                                        month:props.methods.COMMON.commonGlobalGet('ICONS')['regional_month'],
+                                        year:props.methods.COMMON.commonGlobalGet('ICONS')['regional_year'],
+                                        user_follows: props.methods.COMMON.commonGlobalGet('ICONS')['user_follows'],
+                                        user_followed:props.methods.COMMON.commonGlobalGet('ICONS')['user_followed'],
+                                        user_views:props.methods.COMMON.commonGlobalGet('ICONS')['user_views']}
+                            })
     };
 };
 export default component;
