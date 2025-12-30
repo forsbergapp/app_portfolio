@@ -12,7 +12,15 @@
  * @function
  * @param {{maintenance:0|1|null,
  *          user_stat:(common['server']['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[],
- *          count_not_connected:number}} props
+ *          count_not_connected:number,
+ *          icons:{
+ *                   maintenance:string,
+ *                   broadcast:string,
+ *                   chat:string,
+ *                   stat_count_users:string,
+ *                   stat_count_connected:string,
+ *                   stat_count_notconnected:string
+ *               }}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_start_content_widget1' class='widget'>
@@ -24,24 +32,24 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
                                 </div>
                                 <div id='menu_start_graphBox'></div>
                                 <div id='menu_start_user_stat'>
-                                    <div id="menu_start_user_stat_count_users" class='menu_start_user_stat_col common_icon common_icon_title'></div>
+                                    <div id="menu_start_user_stat_count_users" class='menu_start_user_stat_col common_icon_title'>${props.icons.stat_count_users}</div>
                                     <div class='menu_start_user_stat_col'>${props.user_stat[0].CountUsers}</div>
-                                    <div id="menu_start_user_stat_count_connected" class='menu_start_user_stat_col common_icon common_icon_title'></div>
+                                    <div id="menu_start_user_stat_count_connected" class='menu_start_user_stat_col common_icon_title'>${props.icons.stat_count_connected}</div>
                                     <div class='menu_start_user_stat_col'>${props.user_stat[0].count_connected}</div>
-                                    <div id="menu_start_user_stat_count_notconnected" class='menu_start_user_stat_col common_icon common_icon_title'></div>
+                                    <div id="menu_start_user_stat_count_notconnected" class='menu_start_user_stat_col common_icon_title'>${props.icons.stat_count_notconnected}</div>
                                     <div class='menu_start_user_stat_col'>${props.count_not_connected}</div>
                                 </div>
                             </div>
                             <div id='menu_start_content_widget2' class='widget'>
                                 <div id='menu_start_maintenance'>
-                                    <div id='menu_start_maintenance_title' class='common_icon common_icon_title'></div>
+                                    <div id='menu_start_maintenance_title' class='common_icon_title'>${props.icons.maintenance}</div>
                                     <div id='menu_start_maintenance_checkbox'>
                                         <div id='menu_start_checkbox_maintenance' class='common_switch ${props.maintenance==1?'checked':''}'></div>
                                     </div>
                                 </div>
                                 <div id='menu_start_broadcast'>
-                                    <div id='menu_start_broadcast_title' class='common_icon common_icon_title'></div>
-                                    <div id='menu_start_broadcast_button' class='chat_click common_icon common_icon_button'></div>
+                                    <div id='menu_start_broadcast_title' class='common_icon_title'>${props.icons.broadcast}</div>
+                                    <div id='menu_start_broadcast_button' class='common_link common_icon_button'>${props.icons.chat}</div>
                                 </div>
                             </div>`;
 /**
@@ -175,8 +183,16 @@ const component = async props => {
         methods:null,
         template: template({maintenance:maintenance,
                             user_stat:user_stat,
-                            count_not_connected:count_not_connected     
-        })
+                            count_not_connected:count_not_connected,
+                            icons:{
+                                    maintenance:props.methods.COMMON.commonGlobalGet('ICONS')['maintenance'],
+                                    broadcast:props.methods.COMMON.commonGlobalGet('ICONS')['broadcast'],
+                                    chat:props.methods.COMMON.commonGlobalGet('ICONS')['chat'],
+                                    stat_count_users:props.methods.COMMON.commonGlobalGet('ICONS')['user_connections'] + props.methods.COMMON.commonGlobalGet('ICONS')['sum'],
+                                    stat_count_connected:props.methods.COMMON.commonGlobalGet('ICONS')['user_connections'] + props.methods.COMMON.commonGlobalGet('ICONS')['login'],
+                                    stat_count_notconnected:props.methods.COMMON.commonGlobalGet('ICONS')['user_connections'] + props.methods.COMMON.commonGlobalGet('ICONS')['logout']
+                                }
+                        })
     };
 };
 export default component;

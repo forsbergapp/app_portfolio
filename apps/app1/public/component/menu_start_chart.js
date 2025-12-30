@@ -19,11 +19,15 @@
  *          chart2_color_app:string,
  *          chart2_stat:common['server']['ORM']['View']['LogGetStat'][],
  *          chart2_legend_text:string,
- *          chart2_legend_text_apps:string}} props
+ *          chart2_legend_text_apps:string,
+ *          icons:{
+ *                   box1_title:string,
+ *                   box2_title:string
+ *               }}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_start_chart_box1'>
-                                <div id='menu_start_chart_box1_title' class='menu_start_chart_box_title common_icon common_icon_title'></div>
+                                <div id='menu_start_chart_box1_title' class='menu_start_chart_box_title common_icon_title'>${props.icons.box1_title}</div>
                                 <div id='menu_start_chart_box1_chart' class='menu_start_chart_box_chart'>
                                     <div id='menu_start_chart_box1_pie' style='background-image:conic-gradient(${props.function_chart1_pie_colors(props.chart1_stat)}'></div>
                                 </div>
@@ -40,7 +44,7 @@ const template = props => ` <div id='menu_start_chart_box1'>
                                 </div>
                             </div>
                             <div id='menu_start_chart_box2'>
-                                <div id='menu_start_chart_box2_title' class='menu_start_chart_box_title common_icon common_icon_title'></div>
+                                <div id='menu_start_chart_box2_title' class='menu_start_chart_box_title common_icon_title'>${props.icons.box2_title}</div>
                                 <div id='menu_start_chart_box2_chart' class='menu_start_chart_box_chart'>
                                     <div id='menu_start_chart_box2_bar_legendY'>
                                         <div id='menu_start_chart_box2_bar_legend_max'>${Math.max(...props.chart2_stat.map(stat=>stat.Amount??0))}</div>
@@ -158,7 +162,13 @@ const component = async props => {
                                 chart2_color_app:'rgb(197 227 255)',
                                 chart2_stat:charts.filter(row=> row.Chart==2),
                                 chart2_legend_text:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_stat .common_select_dropdown_value').textContent,
-                                chart2_legend_text_apps:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').textContent})
+                                chart2_legend_text_apps:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#menu_start_select_app .common_select_dropdown_value').textContent,
+                                icons:{
+                                    box1_title:props.methods.COMMON.commonGlobalGet('ICONS')['internet'] + props.methods.COMMON.commonGlobalGet('ICONS')['server'] + props.methods.COMMON.commonGlobalGet('ICONS')['chart_pie'],
+                                    box2_title:props.methods.COMMON.commonGlobalGet('ICONS')['internet'] + props.methods.COMMON.commonGlobalGet('ICONS')['server'] + props.methods.COMMON.commonGlobalGet('ICONS')['regional_numbersystem']
+                                }
+
+                            })
         };
 };
 export default component;
