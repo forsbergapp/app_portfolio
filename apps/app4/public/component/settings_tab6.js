@@ -94,10 +94,6 @@ const component = async props => {
                         default_data_value:props.data.user_settings.current_id,
                         default_value:props.data.user_settings.data[props.data.user_settings.current_id].Document.Description,
                         options: props.data.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.Description};}),
-                        path:null,
-                        query:null,
-                        method:null,
-                        authorization_type:null,
                         column_value:'value',
                         column_text:'text'
                         },

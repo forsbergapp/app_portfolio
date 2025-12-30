@@ -8,10 +8,14 @@
 /**
  * @name template
  * @description Template
- * @param {{icon_robot:string,
- *          icon_human:string, 
- *          icon_solution:string,
- *          icon_solution_list:string}} props
+ * @param {{icons:{
+ *               solve:string,
+ *               solve_cubestate:string,
+ *               solved_step:string,
+ *               solved_step_cubestate:string,
+ *               info:string,
+ *               scramble:string,
+ *               reset:string}}} props
  * @function
  * @returns {string}
  */
@@ -55,52 +59,34 @@ const template = props =>`  <div id='app_main'>
                                     </div>
                                     <div class='buttons_row'>
                                         <div class='buttons_col'>
-                                            <div id='button_solve' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                                            <div id='button_solve' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.solve}</div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_solve_cubestate' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                                            <div id='button_solve_cubestate' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.solve_cubestate}</div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='app_select_model' class='common_select'>
-                                                <div class='common_select_dropdown'>
-                                                    <div class='common_select_dropdown_value' data-value='0'>${props.icon_robot}</div>
-                                                    <div class='common_icon common_icon_select_dropdown'></div>
-                                                </div>
-                                                <div class='common_select_options'>
-                                                    <div class='common_select_option' data-value='0'>${props.icon_robot}</div>
-                                                    <div class='common_select_option' data-value='1'>${props.icon_human}</div>
-                                                </div>
-                                            </div>
+                                            <div id='app_select_model'></div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_solved_step' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                                            <div id='button_solved_step' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.solved_step}</div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_solved_step_cubestate' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                                            <div id='button_solved_step_cubestate' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.solved_step_cubestate}</div>
                                         </div>
                                     </div>
                                     <div class='buttons_row'>
                                         <div class='buttons_col'>
-                                            <div id='button_scramble' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                                            <div id='button_scramble' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.scramble}</div>
                                         </div>
                                         <div class='buttons_col'></div>
                                         <div class='buttons_col'>
-                                            <div id='app_select_temperature' class='common_select'>
-                                                <div class='common_select_dropdown'>
-                                                    <div class='common_select_dropdown_value' data-value='0'>${props.icon_solution}</div>
-                                                    <div class='common_icon common_icon_select_dropdown'></div>
-                                                </div>
-                                                <div class='common_select_options'>
-                                                    <div class='common_select_option' data-value='0'>${props.icon_solution}</div>
-                                                    <div class='common_select_option' data-value='1'>${props.icon_solution_list}</div>
-                                                </div>
-                                            </div>
+                                            <div id='app_select_temperature'></div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_reset' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                                            <div id='button_reset' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.reset}</div>
                                         </div>
                                         <div class='buttons_col'>
-                                            <div id='button_info' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                                            <div id='button_info' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.info}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -336,7 +322,34 @@ const component = async props => {
         CONSTANTS.cube.render();
         CONSTANTS.cube_controls = new cube_lib.RubiksCubeControls('button_controls', CONSTANTS.cube);
     };
-    const onMounted =() =>{
+    const onMounted = async () =>{
+        //Locale using setting locale
+        await props.methods.COMMON.commonComponentRender({
+            mountDiv:   'app_select_model',
+            data:       {
+                        default_data_value:0,
+                        default_value:props.methods.COMMON.commonGlobalGet('ICONS').robot,
+                        options:[   {Id:0, Name:props.methods.COMMON.commonGlobalGet('ICONS').robot},
+                                    {Id:1, Name:props.methods.COMMON.commonGlobalGet('ICONS').human}
+                        ],
+                        column_value:'Id',
+                        column_text:'Name'
+                        },
+            methods:    null,
+            path:       '/common/component/common_select.js'});
+        await props.methods.COMMON.commonComponentRender({
+            mountDiv:   'app_select_temperature',
+            data:       {
+                        default_data_value:0,
+                        default_value:props.methods.COMMON.commonGlobalGet('ICONS').misc_solve,
+                        options:[   {Id:0, Name:props.methods.COMMON.commonGlobalGet('ICONS').misc_solve},
+                                    {Id:1, Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}
+                        ],
+                        column_value:'Id',
+                        column_text:'Name'
+                        },
+            methods:    null,
+            path:       '/common/component/common_select.js'});
         initCube();
     };
     return {
@@ -344,10 +357,15 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template: template({icon_robot:props.methods.COMMON.commonGlobalGet('ICONS').robot,
-                            icon_human:props.methods.COMMON.commonGlobalGet('ICONS').human, 
-                            icon_solution:props.methods.COMMON.commonGlobalGet('ICONS').misc_solve,
-                            icon_solution_list:props.methods.COMMON.commonGlobalGet('ICONS').infinite})
+        template: template({icons:{
+                                solve:props.methods.COMMON.commonGlobalGet('ICONS').misc_solve,
+                                solve_cubestate:props.methods.COMMON.commonGlobalGet('ICONS').question,
+                                solved_step:props.methods.COMMON.commonGlobalGet('ICONS').misc_education,
+                                solved_step_cubestate:props.methods.COMMON.commonGlobalGet('ICONS').question,
+                                info:props.methods.COMMON.commonGlobalGet('ICONS').info,
+                                scramble:props.methods.COMMON.commonGlobalGet('ICONS').misc_scramble,
+                                reset:props.methods.COMMON.commonGlobalGet('ICONS').reset
+                                }})
    };
 };
 export default component;

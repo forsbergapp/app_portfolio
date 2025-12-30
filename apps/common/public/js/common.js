@@ -185,7 +185,7 @@ const COMMON_GLOBAL = {
         robot:                  '<svg $1 viewBox="0 0 640 512"><path $2 d="M352 0c0-17.7-14.3-32-32-32S288-17.7 288 0l0 64-96 0c-53 0-96 43-96 96l0 224c0 53 43 96 96 96l256 0c53 0 96-43 96-96l0-224c0-53-43-96-96-96l-96 0 0-64zM160 368c0-13.3 10.7-24 24-24l32 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-32 0c-13.3 0-24-10.7-24-24zm120 0c0-13.3 10.7-24 24-24l32 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-32 0c-13.3 0-24-10.7-24-24zm120 0c0-13.3 10.7-24 24-24l32 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-32 0c-13.3 0-24-10.7-24-24zM224 176a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm144 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM64 224c0-17.7-14.3-32-32-32S0 206.3 0 224l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96zm544-32c-17.7 0-32 14.3-32 32l0 96c0 17.7 14.3 32 32 32s32-14.3 32-32l0-96c0-17.7-14.3-32-32-32z"/></svg>',
         human:                  ICON_DUPLICATE.user,
         hourglass:              '<svg $1 viewBox="0 0 384 512"><path $2 d="M32 0C14.3 0 0 14.3 0 32S14.3 64 32 64l0 11c0 42.4 16.9 83.1 46.9 113.1l67.9 67.9-67.9 67.9C48.9 353.9 32 394.6 32 437l0 11c-17.7 0-32 14.3-32 32s14.3 32 32 32l320 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l0-11c0-42.4-16.9-83.1-46.9-113.1l-67.9-67.9 67.9-67.9c30-30 46.9-70.7 46.9-113.1l0-11c17.7 0 32-14.3 32-32S369.7 0 352 0L32 0zM96 75l0-11 192 0 0 11c0 19-5.6 37.4-16 53L112 128c-10.3-15.6-16-34-16-53zm16 309c3.5-5.3 7.6-10.3 12.1-14.9l67.9-67.9 67.9 67.9c4.6 4.6 8.6 9.6 12.2 14.9L112 384z"/></svg>',
-        misc_solve:             '💡',
+        misc_solve:             ICON_DUPLICATE.sun,
         misc_education:         '<svg $1 viewBox="0 0 576 512"><path $2 d="M48 195.8l209.2 86.1c9.8 4 20.2 6.1 30.8 6.1s21-2.1 30.8-6.1l242.4-99.8c9-3.7 14.8-12.4 14.8-22.1s-5.8-18.4-14.8-22.1L318.8 38.1C309 34.1 298.6 32 288 32s-21 2.1-30.8 6.1L14.8 137.9C5.8 141.6 0 150.3 0 160L0 456c0 13.3 10.7 24 24 24s24-10.7 24-24l0-260.2zm48 71.7L96 384c0 53 86 96 192 96s192-43 192-96l0-116.6-142.9 58.9c-15.6 6.4-32.2 9.7-49.1 9.7s-33.5-3.3-49.1-9.7L96 267.4z"/></svg>',
         misc_scramble:          '<svg $1 viewBox="0 0 512 512"><path $2 d="M403.8 34.4c12-5 25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64c-9.2 9.2-22.9 11.9-34.9 6.9S384 204.9 384 192l0-32-32 0c-10.1 0-19.6 4.7-25.6 12.8l-32.4 43.2-40-53.3 21.2-28.3C293.3 110.2 321.8 96 352 96l32 0 0-32c0-12.9 7.8-24.6 19.8-29.6zM154 296l40 53.3-21.2 28.3C154.7 401.8 126.2 416 96 416l-64 0c-17.7 0-32-14.3-32-32s14.3-32 32-32l64 0c10.1 0 19.6-4.7 25.6-12.8L154 296zM438.6 470.6c-9.2 9.2-22.9 11.9-34.9 6.9S384 460.9 384 448l0-32-32 0c-30.2 0-58.7-14.2-76.8-38.4L121.6 172.8c-6-8.1-15.5-12.8-25.6-12.8l-64 0c-17.7 0-32-14.3-32-32S14.3 96 32 96l64 0c30.2 0 58.7 14.2 76.8 38.4L326.4 339.2c6 8.1 15.5 12.8 25.6 12.8l32 0 0-32c0-12.9 7.8-24.6 19.8-29.6s25.7-2.2 34.9 6.9l64 64c6 6 9.4 14.1 9.4 22.6s-3.4 16.6-9.4 22.6l-64 64z"/></svg>',
         infinite:               '<svg $1 viewBox="0 0 640 512"><path $2 d="M0 256c0-88.4 71.6-160 160-160 50.4 0 97.8 23.7 128 64l32 42.7 32-42.7c30.2-40.3 77.6-64 128-64 88.4 0 160 71.6 160 160S568.4 416 480 416c-50.4 0-97.8-23.7-128-64l-32-42.7-32 42.7c-30.2 40.3-77.6 64-128 64-88.4 0-160-71.6-160-160zm280 0l-43.2-57.6c-18.1-24.2-46.6-38.4-76.8-38.4-53 0-96 43-96 96s43 96 96 96c30.2 0 58.7-14.2 76.8-38.4L280 256zm80 0l43.2 57.6c18.1 24.2 46.6 38.4 76.8 38.4 53 0 96-43 96-96s-43-96-96-96c-30.2 0-58.7 14.2-76.8 38.4L360 256z"/></svg>',
@@ -1406,15 +1406,27 @@ const commonComponentRender = async parameters => {
             .then((({default:module})=>module()
                                         .then((/**@type{common['CommonComponentResult']}*/component)=>component.template)))
             .catch(()=>'');
-
+    //manage async and synchronous function with corresponding syntax        
     /**@type{common['CommonComponentResult']}*/
-    const component = await ComponentCreate({   data:       {...parameters.data,       ...{commonMountdiv:parameters.mountDiv}},
+    const component = Object.prototype.toString.call(ComponentCreate).toLowerCase().indexOf('async')>-1?
+                        await ComponentCreate({ data:       {...parameters.data,       ...{commonMountdiv:parameters.mountDiv}},
                                                 methods:    {...parameters.methods,    ...{ COMMON:commonGet()}}})
                                                 .catch((/**@type{Error}*/error)=>{
                                                     parameters.mountDiv?commonComponentRemove(parameters.mountDiv):null;
                                                     commonMessageShow('EXCEPTION', null, null, error);
                                                     return null;
-                                                });
+                                                }):
+                            (()=>{
+                                try {
+                                    return ComponentCreate({   data:       {...parameters.data,       ...{commonMountdiv:parameters.mountDiv}},
+                                                        methods:    {...parameters.methods,    ...{ COMMON:commonGet()}}});    
+                                } catch (error) {
+                                    parameters.mountDiv?commonComponentRemove(parameters.mountDiv):null;
+                                    commonMessageShow('EXCEPTION', null, null, error);
+                                    return null;
+                                }
+                                })()
+                            
     if (component){
         if (component.lifecycle?.onBeforeMounted){
             await component.lifecycle.onBeforeMounted();
@@ -2450,8 +2462,15 @@ const commonEvent = async (event_type,event=null) =>{
         await (async ()=>{
             switch (event_type){
                 case 'click':{
+                    const elementDiv = commonMiscElementDiv(event.target);
                     //close all open div selects except current target
-                    if (typeof event.target.className=='string' && event.target.className.indexOf('common_select')>-1){
+                    if (typeof commonMiscElementDiv(event.target).className=='string' && 
+                            ['common_select_dropdown', 
+                            'common_select_dropdown_value',
+                            'common_icon_select_dropdown',
+                            'common_select_options',
+                            'common_select_option']
+                            .filter(row=>elementDiv.className.indexOf(row)>-1).length>0){
                         Array.from(COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`))
                             .filter((/**@type{HTMLElement}*/element)=>commonMiscElementId(element) != commonMiscElementId(event.target))
                             .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');

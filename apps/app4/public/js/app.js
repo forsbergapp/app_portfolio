@@ -1118,10 +1118,6 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
                                     default_data_value:APP_GLOBAL.user_settings.current_id,
                                     default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.Description,
                                     options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.Description};}),
-                                    path:null,
-                                    query:null,
-                                    method:null,
-                                    authorization_type:null,
                                     column_value:'value',
                                     column_text:'text'
                                     },
@@ -1176,10 +1172,6 @@ const appUserSettingDelete = (choice=null) => {
                                     default_value:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.Description,
                                     /**@ts-ignore */
                                     options: APP_GLOBAL.user_settings.data.map((setting, index)=>{return {value:index, text:setting.Document.Description};}),
-                                    path:null,
-                                    query:null,
-                                    method:null,
-                                    authorization_type:null,
                                     column_value:'value',
                                     column_text:'text'
                                     },

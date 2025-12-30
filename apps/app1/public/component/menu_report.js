@@ -104,10 +104,6 @@ const component = async props => {
                 default_value:reports[0].ModuleName,
                 default_data_value:JSON.stringify(reports[0]),
                 options:reports.map(row=>{return{value:JSON.stringify(row), text:row.ModuleName};}),
-                path:null,
-                query:null,
-                method:null,
-                authorization_type:null,
                 column_value:'value',
                 column_text:'text'
                 },
