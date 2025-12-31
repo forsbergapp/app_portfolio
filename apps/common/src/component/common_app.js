@@ -205,11 +205,10 @@
             /**@type{server['app']['commonGlobals']} */
             const globals = {
                                 //update COMMON_GLOBAL keys:
-                                //Config Server	
+                                apps:                           (await server.ORM.db.App.getViewInfo({app_id:common_app_id, resource_id:null})).result,
                                 rest_resource_bff:              rest_resource_bff,
                                 app_rest_api_version:           app_rest_api_version,
                                 app_rest_api_basepath:          props.data.basePathRESTAPI,
-                                //Config ServiceApp
                                 app_common_app_id:              common_app_id,
                                 app_admin_app_id:               admin_app_id,
                                 app_start_app_id:               start_app_id,

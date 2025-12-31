@@ -275,6 +275,7 @@
  *                      message_fail: string,
  *                      message_success: string,
  *                      message_text:string},
+ *              apps:common['server']['ORM']['Object']['App'][],
  *              app_id:number,
  *              app_logo:string|null,
  *              app_copyright:string|null,

@@ -32,6 +32,7 @@
 /**
  * @description APP server_apps_globals
  * @typedef {object}        server_apps_globals
+ * @property {server_db_table_App[]} apps
  * @property {string}       rest_resource_bff
  * @property {string}       app_rest_api_version
  * @property {string}       app_rest_api_basepath
