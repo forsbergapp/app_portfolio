@@ -11,159 +11,147 @@
 /**
  * @name template
  * @description Template
+ * @function
+ * @param {{icons:{
+ *                  method:string,
+ *                  asr:string,
+ *                  highlatitude:string,
+ *                  timeformat:string,
+ *                  hijri_adjustment:string,
+ *                  iqamat_fajr:string,
+ *                  iqamat_dhuhr:string,
+ *                  iqamat_asr:string,
+ *                  iqamat_maghrib:string,
+ *                  iqamat_isha:string,
+ *                  show_imsak:string,
+ *                  show_sunset:string,
+ *                  show_midnight:string,
+ *                  show_fast_start_end:string}}} props
  * @returns {string}
  */
-const template = () =>`   <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_method' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_method'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_method_params'>
-                                <div id='setting_method_param_fajr'></div>
-                                <div id='setting_method_param_isha'></div>
+const template = props =>`   <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.method}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_method'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
                             </div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_asr' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_asr'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_highlatitude' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_highlatitude'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_timeformat' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_timeformat'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_hijri_adjustment' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_hijri_adjustment'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_iqamat_title_fajr' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_report_iqamat_title_fajr'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_iqamat_title_dhuhr' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_report_iqamat_title_dhuhr'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_iqamat_title_asr' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_report_iqamat_title_asr'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_iqamat_title_maghrib' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_report_iqamat_title_maghrib'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_iqamat_title_isha' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_report_iqamat_title_isha'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_show_imsak' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_checkbox_report_show_imsak' class='common_switch'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_show_sunset' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_checkbox_report_show_sunset' class='common_switch'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_show_midnight' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_checkbox_report_show_midnight' class='common_switch'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>
-                    <div class='setting_horizontal_row'>
-                        <div class='setting_horizontal_col'></div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_icon_prayer_report_show_fast_start_end' class='common_icon'></div>
-                        </div>
-                        <div class='setting_horizontal_col'>
-                            <div id='setting_select_report_show_fast_start_end'></div>
-                        </div>
-                        <div class='setting_horizontal_col'></div>
-                    </div>`;
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_method_params'>
+                                        <div id='setting_method_param_fajr'></div>
+                                        <div id='setting_method_param_isha'></div>
+                                    </div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.asr}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_asr'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.highlatitude}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_highlatitude'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.timeformat}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_timeformat'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.hijri_adjustment}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_hijri_adjustment'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.iqamat_fajr}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_report_iqamat_title_fajr'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.iqamat_dhuhr}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_report_iqamat_title_dhuhr'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.iqamat_asr}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_report_iqamat_title_asr'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.iqamat_maghrib}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_report_iqamat_title_maghrib'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.iqamat_isha}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_report_iqamat_title_isha'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.show_imsak}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_checkbox_report_show_imsak' class='common_switch'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.show_sunset}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_checkbox_report_show_sunset' class='common_switch'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.show_midnight}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_checkbox_report_show_midnight' class='common_switch'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>
+                            <div class='setting_horizontal_row'>
+                                <div class='setting_horizontal_col'></div>
+                                <div class='setting_horizontal_col'>${props.icons.show_fast_start_end}</div>
+                                <div class='setting_horizontal_col'>
+                                    <div id='setting_select_report_show_fast_start_end'></div>
+                                </div>
+                                <div class='setting_horizontal_col'></div>
+                            </div>`;
 /**
  * @name component
  * @description Component
@@ -349,7 +337,21 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template()
-    };
+        template:   template({icons:{
+                                    method:props.methods.COMMON.commonGlobalGet('ICONS').misc_book,
+                                    asr:props.methods.COMMON.commonGlobalGet('ICONS').misc_book + props.methods.COMMON.commonGlobalGet('ICONS').sky_afternoon,
+                                    highlatitude:props.methods.COMMON.commonGlobalGet('ICONS').gps_high_latitude,
+                                    timeformat:props.methods.COMMON.commonGlobalGet('ICONS').regional_timeformat,
+                                    hijri_adjustment:props.methods.COMMON.commonGlobalGet('ICONS').settings + props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar,
+                                    iqamat_fajr:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').misc_calling + props.methods.COMMON.commonGlobalGet('ICONS').misc_prayer + props.methods.COMMON.commonGlobalGet('ICONS').sky_sunrise_before,
+                                    iqamat_dhuhr:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').misc_calling + props.methods.COMMON.commonGlobalGet('ICONS').misc_prayer + props.methods.COMMON.commonGlobalGet('ICONS').sky_midday,
+                                    iqamat_asr:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').misc_calling + props.methods.COMMON.commonGlobalGet('ICONS').misc_prayer + props.methods.COMMON.commonGlobalGet('ICONS').sky_afternoon,
+                                    iqamat_maghrib:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').misc_calling + props.methods.COMMON.commonGlobalGet('ICONS').misc_prayer + props.methods.COMMON.commonGlobalGet('ICONS').sky_sunset,
+                                    iqamat_isha:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').misc_calling + props.methods.COMMON.commonGlobalGet('ICONS').misc_prayer + props.methods.COMMON.commonGlobalGet('ICONS').sky_night,
+                                    show_imsak:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').sky_sunrise_before + props.methods.COMMON.commonGlobalGet('ICONS').misc_food,
+                                    show_sunset:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').sky_sunset,
+                                    show_midnight:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').sky_midnight + props.methods.COMMON.commonGlobalGet('ICONS').misc_prayer,
+                                    show_fast_start_end:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').misc_food + props.methods.COMMON.commonGlobalGet('ICONS').misc_ban
+        }})    };
 };
 export default component;

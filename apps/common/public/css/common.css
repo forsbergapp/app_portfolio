@@ -67,13 +67,6 @@
     --common_app_icon_checkbox_empty:       '☐';
     --common_app_icon_info:                 'i';
     --common_app_icon_menu_open:            '☰';
-    --common_app_icon_align_left:           '⏮';
-    --common_app_icon_align_center:         '⏹';
-    --common_app_icon_align_right:          '⏭';;
-    --common_app_icon_html:                 '🖺';
-    --common_app_icon_print:                '🖶';
-    --common_app_icon_private:              '🔒';
-    --common_app_icon_show:                 '👁';
     --common_app_icon_notes:                '🗒';
     --common_app_icon_reload:				'↻';
 	--common_app_icon_reset:				'↺';
@@ -85,26 +78,12 @@
     --common_app_icon_users:                    '👥';
     --common_app_icon_user_password:            '🔑';
 
-    --common_app_icon_gps:                      '📍';
-    --common_app_icon_gps_position:             var(--common_app_icon_gps:);
-    --common_app_icon_gps_high_latitude:        '🌐❄';
-    --common_app_icon_map_my_location:          '⌖';
-    --common_app_icon_map_layer:                '☰';
-
     --common_app_icon_regional:                 '🌐';
-    --common_app_icon_regional_day:             '▤';
-    --common_app_icon_regional_month:           '▥';
-    --common_app_icon_regional_year:            '▦';
+    
     --common_app_icon_regional_weekday:         '📆';
-    --common_app_icon_regional_locale:          'abc';
     --common_app_icon_regional_timezone:        '🌐';
     --common_app_icon_regional_calendar:        '📆';
     --common_app_icon_regional_numbersystem:    '123';
-    --common_app_icon_regional_direction:       '⇄';
-    --common_app_icon_regional_script:          '📜';
-    --common_app_icon_regional_calendartype:    '📆';
-    --common_app_icon_regional_calendar_hijri_type:'📆';
-    --common_app_icon_regional_timeformat:      '12/24';
 
     --common_app_icon_sky_sunrise_before:       '🌙';
     --common_app_icon_sky_sunrise:              '☀⭡';
@@ -114,11 +93,9 @@
     --common_app_icon_sky_night:                '🌙';
     --common_app_icon_sky_midnight:             '🌙';
 
-    --common_app_icon_misc_book:                '📒';
     --common_app_icon_misc_food:                '🍴';
     --common_app_icon_misc_prayer:              '🛐';
     --common_app_icon_misc_calling:             '🗣';
-	--common_app_icon_misc_ban:                 '🚫';
 
 	/*fonts*/
 	--common_app_font_languages_1:  	"Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 

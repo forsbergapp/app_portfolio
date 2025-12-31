@@ -182,6 +182,7 @@
  *                      up: string,
  *                      down: string,                     
  *                      print: string,
+ *                      html:string,
  *                      lock: string,
  *                      papersize: string,
  *                      highlight: string,

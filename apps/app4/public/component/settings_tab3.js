@@ -53,9 +53,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_papersize' >${props.icons.papersize}</div>
-                                </div>
+                                <div class='setting_horizontal_col'>${props.icons.papersize}</div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_papersize' ></div>
                                 </div>
@@ -63,9 +61,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_highlight_row' >${props.icons.highlight}</div>
-                                </div>
+                                <div class='setting_horizontal_col'>${props.icons.highlight}</div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_highlight_row' ></div>
                                 </div>
@@ -73,9 +69,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_weekday' >${props.icons.show_weekday}</div>
-                                </div>
+                                <div class='setting_horizontal_col'>${props.icons.show_weekday}</div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_weekday' class='common_switch'></div>
                                 </div>
@@ -83,9 +77,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_calendartype' >${props.icons.show_calendartype}</div>
-                                </div>
+                                <div class='setting_horizontal_col'>${props.icons.show_calendartype}</div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_calendartype' class='common_switch'></div>
                                 </div>
@@ -93,9 +85,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_notes' >${props.icons.show_notes}</div>
-                                </div>
+                                <div class='setting_horizontal_col'>${props.icons.show_notes}</div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_notes' class='common_switch'></div>
                                 </div>
@@ -103,9 +93,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_gps' >${props.icons.show_gps}</div>
-                                </div>
+                                <div class='setting_horizontal_col'>${props.icons.show_gps}</div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_gps' class='common_switch'></div>
                                 </div>
@@ -113,9 +101,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_timezone' >${props.icons.show_timezone}</div>
-                                </div>
+                                <div class='setting_horizontal_col'>${props.icons.show_timezone}</div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_timezone' class='common_switch'></div>
                                 </div>
