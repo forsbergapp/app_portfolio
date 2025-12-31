@@ -13,36 +13,48 @@
  * @description Template
  * @param {{theme_id_day:string,
  *          theme_id_month:string,
- *          theme_id_year:string}} props
+ *          theme_id_year:string,
+ *          icons:{ theme_day:string,
+ *                  theme_month:string,
+ *                  theme_year:string,
+ *                  papersize:string,
+ *                  highlight:string,
+ *                  show_weekday:string,
+ *                  show_calendartype:string,
+ *                  show_notes:string,
+ *                  show_gps:string,
+ *                  show_timezone:string,
+ *                  slider_left:string,
+ *                  slider_right:string}}} props
  * @returns {string}
  */
 const template = props =>`  <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_design_icon_theme_day' class='common_icon'></div>
+                                    <div id='setting_design_icon_theme_day'>${props.icons.theme_day}</div>
                                     <div id='setting_design_theme_day' class='setting_design_thumbnail' data-theme_id='${props.theme_id_day}'></div>
-                                    <div id='setting_design_prev_day' class='common_app_dialogues_button setting_design_prev common_icon common_icon_button'></div>
-                                    <div id='setting_design_next_day' class='common_app_dialogues_button setting_design_next common_icon common_icon_button'></div>
+                                    <div id='setting_design_prev_day' class='common_app_dialogues_button setting_design_prev common_link common_icon_title'>${props.icons.slider_left}</div>
+                                    <div id='setting_design_next_day' class='common_app_dialogues_button setting_design_next common_link common_icon_title'>${props.icons.slider_right}</div>
                                     <div id='setting_design_theme_day_id'>${props.theme_id_day}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_design_icon_theme_month' class='common_icon'></div>
+                                    <div id='setting_design_icon_theme_month'>${props.icons.theme_month}</div>
                                     <div id='setting_design_theme_month' class='setting_design_thumbnail' data-theme_id='${props.theme_id_month}'></div>
-                                    <div id='setting_design_prev_month' class='common_app_dialogues_button setting_design_prev common_icon common_icon_button'></div>
-                                    <div id='setting_design_next_month' class='common_app_dialogues_button setting_design_next common_icon common_icon_button'></div>
+                                    <div id='setting_design_prev_month' class='common_app_dialogues_button setting_design_prev common_link common_icon_title'>${props.icons.slider_left}</div>
+                                    <div id='setting_design_next_month' class='common_app_dialogues_button setting_design_next common_link common_icon_title'>${props.icons.slider_right}</div>
                                     <div id='setting_design_theme_month_id'>${props.theme_id_month}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_design_icon_theme_year' class='common_icon'></div>
+                                    <div id='setting_design_icon_theme_year'>${props.icons.theme_year}</div>
                                     <div id='setting_design_theme_year' class='setting_design_thumbnail' data-theme_id='${props.theme_id_year}'></div>
-                                    <div id='setting_design_prev_year' class='common_app_dialogues_button setting_design_prev common_icon common_icon_button'></div>
-                                    <div id='setting_design_next_year' class='common_app_dialogues_button setting_design_next common_icon common_icon_button'></div>
+                                    <div id='setting_design_prev_year' class='common_app_dialogues_button setting_design_prev common_link common_icon_title'>${props.icons.slider_left}</div>
+                                    <div id='setting_design_next_year' class='common_app_dialogues_button setting_design_next common_link common_icon_title'>${props.icons.slider_right}</div>
                                     <div id='setting_design_theme_year_id'>${props.theme_id_year}</div>
                                 </div>
                             </div>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_papersize' class='common_icon'></div>
+                                    <div id='setting_icon_design_papersize' >${props.icons.papersize}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_papersize' ></div>
@@ -52,7 +64,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_highlight_row' class='common_icon'></div>
+                                    <div id='setting_icon_design_highlight_row' >${props.icons.highlight}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_highlight_row' ></div>
@@ -62,7 +74,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_weekday' class='common_icon'></div>
+                                    <div id='setting_icon_design_show_weekday' >${props.icons.show_weekday}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_weekday' class='common_switch'></div>
@@ -72,7 +84,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_calendartype' class='common_icon'></div>
+                                    <div id='setting_icon_design_show_calendartype' >${props.icons.show_calendartype}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_calendartype' class='common_switch'></div>
@@ -82,7 +94,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_notes' class='common_icon'></div>
+                                    <div id='setting_icon_design_show_notes' >${props.icons.show_notes}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_notes' class='common_switch'></div>
@@ -92,7 +104,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_gps' class='common_icon'></div>
+                                    <div id='setting_icon_design_show_gps' >${props.icons.show_gps}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_gps' class='common_switch'></div>
@@ -102,7 +114,7 @@ const template = props =>`  <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_design_show_timezone' class='common_icon'></div>
+                                    <div id='setting_icon_design_show_timezone' >${props.icons.show_timezone}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_checkbox_report_show_timezone' class='common_switch'></div>
@@ -222,7 +234,21 @@ const component = async props => {
         template:   template({
                             theme_id_day:props.data.user_settings.DesignThemeDayId,
                             theme_id_month:props.data.user_settings.DesignThemeMonthId,
-                            theme_id_year:props.data.user_settings.DesignThemeYearId})
+                            theme_id_year:props.data.user_settings.DesignThemeYearId,
+                            icons:{ theme_day:props.methods.COMMON.commonGlobalGet('ICONS').regional_day,
+                                    theme_month:props.methods.COMMON.commonGlobalGet('ICONS').regional_month,
+                                    theme_year:props.methods.COMMON.commonGlobalGet('ICONS').regional_year,
+                                    papersize:props.methods.COMMON.commonGlobalGet('ICONS').papersize,
+                                    highlight:props.methods.COMMON.commonGlobalGet('ICONS').highlight,
+                                    show_weekday:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').regional_weekday,
+                                    show_calendartype:props.methods.COMMON.commonGlobalGet('ICONS').show + props.methods.COMMON.commonGlobalGet('ICONS').regional_calendartype,
+                                    show_notes:props.methods.COMMON.commonGlobalGet('ICONS').show +  props.methods.COMMON.commonGlobalGet('ICONS').notes,
+                                    show_gps:props.methods.COMMON.commonGlobalGet('ICONS').show +  props.methods.COMMON.commonGlobalGet('ICONS').gps_position,
+                                    show_timezone:props.methods.COMMON.commonGlobalGet('ICONS').show +  props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone,
+                                    slider_left:props.methods.COMMON.commonGlobalGet('ICONS').slider_left,
+                                    slider_right:props.methods.COMMON.commonGlobalGet('ICONS').slider_right
+                            }
+                        })
     };
 };
 export default component;

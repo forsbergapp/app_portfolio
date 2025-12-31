@@ -66,18 +66,13 @@
     --common_app_icon_checkbox_checked:     '☑';
     --common_app_icon_checkbox_empty:       '☐';
     --common_app_icon_info:                 'i';
-    --common_app_icon_close:                '☓';
     --common_app_icon_menu_open:            '☰';
-    --common_app_icon_slider_left:          '⏴';
-    --common_app_icon_slider_right:         '⏵';
     --common_app_icon_align_left:           '⏮';
     --common_app_icon_align_center:         '⏹';
     --common_app_icon_align_right:          '⏭';;
     --common_app_icon_html:                 '🖺';
     --common_app_icon_print:                '🖶';
     --common_app_icon_private:              '🔒';
-    --common_app_icon_papersize:            '🖹';
-    --common_app_icon_highlight:            '🔦';
     --common_app_icon_show:                 '👁';
     --common_app_icon_notes:                '🗒';
     --common_app_icon_reload:				'↻';
@@ -119,18 +114,11 @@
     --common_app_icon_sky_night:                '🌙';
     --common_app_icon_sky_midnight:             '🌙';
 
-    --common_app_icon_misc_design:              '🎨';
-    --common_app_icon_misc_image:               '🖼';
-    --common_app_icon_misc_text:                '🔠';
-    --common_app_icon_misc_second:              '2';
     --common_app_icon_misc_book:                '📒';
     --common_app_icon_misc_food:                '🍴';
     --common_app_icon_misc_prayer:              '🛐';
     --common_app_icon_misc_calling:             '🗣';
 	--common_app_icon_misc_ban:                 '🚫';
-	--common_app_icon_misc_solve:               '💡';
-	--common_app_icon_misc_education:           '🎓';
-	--common_app_icon_misc_scramble:            '⤮';
 
 	/*fonts*/
 	--common_app_font_languages_1:  	"Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 
