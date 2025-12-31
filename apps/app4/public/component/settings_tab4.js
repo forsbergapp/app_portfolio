@@ -11,15 +11,23 @@
 /**
  * @name template
  * @description Template
+ * @function
+ * @param{{icons:{
+ *               theme_day:string,
+ *               theme_month:string,
+ *               theme_year:string,
+ *               aleft:string,
+ *               acenter:string,
+ *               aright:string}}} props
  * @returns {string}
  */
-const template = () =>` <div class='setting_horizontal_row'>
+const template = props =>` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_col'></div>
                             <div class='setting_horizontal_col'>
                                 <div id='setting_icon_text_theme_col'>
-                                    <div id='setting_icon_text_theme_day' class='common_app_dialogues_button common_icon common_icon_button'></div>
-                                    <div id='setting_icon_text_theme_month' class='common_app_dialogues_button common_icon common_icon_button'></div>
-                                    <div id='setting_icon_text_theme_year' class='common_app_dialogues_button common_icon common_icon_button'></div>
+                                    <div id='setting_icon_text_theme_day' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.theme_day}</div>
+                                    <div id='setting_icon_text_theme_month' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.theme_month}</div>
+                                    <div id='setting_icon_text_theme_year' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.theme_year}</div>
                                 </div>
                                 <div id='setting_paper_preview_text' class='setting_paper_preview'>
                                     <div id='setting_paper_preview_header_text' class='setting_paper_preview_header'>
@@ -28,15 +36,14 @@ const template = () =>` <div class='setting_horizontal_row'>
                                             <div id='setting_input_reportheader2' contentEditable='true' class='common_input setting_report_title display_font'></div>
                                             <div id='setting_input_reportheader3' contentEditable='true' class='common_input setting_report_title display_font'></div>
                                         </div>
-                                        <div id='setting_icon_text_header_aleft' class='setting_button common_icon common_icon_button' ></div>
-                                        <div id='setting_icon_text_header_acenter' class='setting_button common_icon common_icon_button' ></div>
-                                        <div id='setting_icon_text_header_aright' class='setting_button common_icon common_icon_button' ></div>
+                                        <div id='setting_icon_text_header_aleft' class='setting_button common_link common_icon_button' >${props.icons.aleft}</div>
+                                        <div id='setting_icon_text_header_acenter' class='setting_button common_link common_icon_button' >${props.icons.acenter}</div>
+                                        <div id='setting_icon_text_header_aright' class='setting_button common_link common_icon_button' >${props.icons.aright}</div>
                                     </div>
-                                    <div class='setting_paper_preview_space'></div>
                                     <div id='setting_paper_preview_footer_text' class='setting_paper_preview_footer'>
-                                        <div id='setting_icon_text_footer_aleft' class='setting_button common_icon common_icon_button' ></div>
-                                        <div id='setting_icon_text_footer_acenter' class='setting_button common_icon common_icon_button' ></div>
-                                        <div id='setting_icon_text_footer_aright' class='setting_button common_icon common_icon_button' ></div>
+                                        <div id='setting_icon_text_footer_aleft' class='setting_button common_link common_icon_button' >${props.icons.aleft}</div>
+                                        <div id='setting_icon_text_footer_acenter' class='setting_button common_link common_icon_button' >${props.icons.acenter}</div>
+                                        <div id='setting_icon_text_footer_aright' class='setting_button common_link common_icon_button' >${props.icons.aright}</div>
                                         <div id='setting_input_footer'>
                                             <div id='setting_input_reportfooter1' contentEditable='true' class='common_input setting_report_title display_font'></div>
                                             <div id='setting_input_reportfooter2' contentEditable='true' class='common_input setting_report_title display_font'></div>
@@ -98,7 +105,14 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template()
+        template:   template({icons:{
+                                        theme_day:props.methods.COMMON.commonGlobalGet('ICONS').regional_day,
+                                        theme_month:props.methods.COMMON.commonGlobalGet('ICONS').regional_month,
+                                        theme_year:props.methods.COMMON.commonGlobalGet('ICONS').regional_year,
+                                        aleft:props.methods.COMMON.commonGlobalGet('ICONS').align_left,
+                                        acenter:props.methods.COMMON.commonGlobalGet('ICONS').align_center,
+                                        aright:props.methods.COMMON.commonGlobalGet('ICONS').align_right
+                            }})
     };
 };
 export default component;

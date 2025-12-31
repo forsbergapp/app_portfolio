@@ -1,14 +1,4 @@
 /*APP */
-#setting_icon_text_theme_day::before{						content:var(--common_app_icon_regional_day)}
-#setting_icon_text_theme_month::before{						content:var(--common_app_icon_regional_month)}
-#setting_icon_text_theme_year::before{						content:var(--common_app_icon_regional_year)}
-#setting_icon_text_header_aleft::before{					content:var(--common_app_icon_align_left)}
-#setting_icon_text_header_acenter::before{					content:var(--common_app_icon_align_center)}
-#setting_icon_text_header_aright::before{					content:var(--common_app_icon_align_right)}
-#setting_icon_text_footer_aleft::before{					content:var(--common_app_icon_align_left)}
-#setting_icon_text_footer_acenter::before{					content:var(--common_app_icon_align_center)}
-#setting_icon_text_footer_aright::before{					content:var(--common_app_icon_align_right)}
-
 #setting_icon_prayer_method::before{						content:var(--common_app_icon_misc_book)}
 #setting_icon_prayer_asr::before{							content:var(--common_app_icon_misc_book) ' ' var(--common_app_icon_sky_afternoon)}
 #setting_icon_prayer_highlatitude::before{					content:var(--common_app_icon_gps_high_latitude)}
@@ -310,14 +300,15 @@
 	justify-content:space-between;
 	border: 1px solid;
 }
-.setting_paper_preview_space{
-	height: 240px;
-}
 .setting_paper_preview_header,
 .setting_paper_preview_footer{
 	text-align: center;
+    display: inline-block;
+  width: 100%;
 }
-
+#setting_paper_preview_footer_text{
+    margin-top: calc(100% - 7em);
+}
 #settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
 #settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
 	width:5%;
@@ -352,8 +343,8 @@
 	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nastaliq) !important;
 	line-height: initial;
 }
-#settings .settings_tab4 #setting_paper_preview_header_text .common_input,
-#settings .settings_tab4 #setting_paper_preview_footer_text .common_input{
+#settings .settings_tab4 #setting_input_header .common_input,
+#settings .settings_tab4 #setting_input_footer .common_input{
 	font-size: 0.4em;
 }
 #settings .settings_tab4 .setting_report_title{
@@ -369,13 +360,6 @@
 	margin-top: 4px;
 }
 
-/* Settings for alignment buttons*/
-#settings .setting_button {
-	border: none;
-	width: 26px;
-	display: inline-block;
-	cursor: pointer;
-}
 /*SETTINGS PRAYER*/
 #setting_method_params div{
 	display:inline-block;
@@ -563,7 +547,7 @@
 	.profile_user_settings_row div:nth-child(1){
 		width:200px;
 	}
-	#settings .settings_tab4 #setting_paper_preview_footer_text{
+	#settings .settings_tab4 #setting_input_footer{
 		font-size: 0.8em;
 	}
 }
@@ -591,8 +575,6 @@
 	--app_theme_button_active_background_color:var(--common_app_color_white);
 	--app_theme_user_menu_hover_color:var(--common_app_color_green);
 	--app_theme_user_menu_hover_background_color:var(--common_app_color_white2);
-	--app_theme_setting_button_color:var(--common_app_color_white);
-	--app_theme_setting_button_background_color:var(--common_app_color_gold);
 	--app_theme_input_error_border_color:var(--common_app_color_blue1);
 	--app_theme_input_border_color:var(--common_app_color_white2);
 	--app_theme_input_background_color:var(--common_app_color_white);
@@ -635,8 +617,6 @@
 	--app_theme_button_active_background_color:var(--common_app_color_white);
 	--app_theme_user_menu_hover_color:var(--common_app_color_green);
 	--app_theme_user_menu_hover_background_color:var(--common_app_color_white2);
-	--app_theme_setting_button_color:var(--common_app_color_white);
-	--app_theme_setting_button_background_color:var(--common_app_color_gold);
 	--app_theme_input_error_border_color:var(--common_app_color_gold);
 	--app_theme_input_border_color:var(--common_app_color_white2);
 	--app_theme_input_background_color:var(--common_app_color_white);
@@ -678,8 +658,6 @@
 	--app_theme_button_active_background_color:var(--common_app_color_white);
 	--app_theme_user_menu_hover_color:var(--common_app_color_cafe_latte2);
 	--app_theme_user_menu_hover_background_color:var(--common_app_color_cafe_latte3);
-	--app_theme_setting_button_color:var(--common_app_color_white);
-	--app_theme_setting_button_background_color:var(--common_app_color_gold);
 	--app_theme_input_error_border_color:var(--common_app_color_cafe_latte3);
 	--app_theme_input_border_color:var(--common_app_color_white2);
 	--app_theme_input_background_color:var(--common_app_color_white);
@@ -752,13 +730,9 @@ body,
 #paper {
 	box-shadow: 0 4px 8px 0 var(--app_theme_paper_shadow_color1), 0 6px 20px 0 var(--app_theme_paper_shadow_color2);
 }
-#settings .setting_button {
-	color: var(--app_theme_setting_button_color);
-	background-color: var(--common_app_color_gold);
-}
 #settings .setting_button_active {
-	color: var(--app_theme_button_active_color) !important;
-	background-color: var(--app_theme_button_active_background_color) !important;
+	color: var(--app_theme_button_active_background_color) !important;
+	background-color: var(--app_theme_button_active_color) !important;
 }
 #settings .settings_tab3 .setting_design_thumbnail #timetable_day,
 #settings .settings_tab3 .setting_design_thumbnail #timetable_month,
