@@ -13,13 +13,23 @@
  * @name template
  * @description Template
  * @function
- * @param {{user_timezone:string}} props
+ * @param {{user_timezone:string,
+ *          icons:{
+ *                   regional_locale:string,
+ *                   regional_timezone_current:string,
+ *                   regional_timezone:string,
+ *                   regional_numbersystem:string,
+ *                   regional_direction:string,
+ *                   regional_locale_second:string,
+ *                   regional_arabic_script:string,
+ *                   regional_calendartype:string,
+ *                   regional_calendar_hijri_type:string}}} props
  * @returns {string}
  */
 const template = props => ` <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_locale' class='common_icon'></div>
+                                    <div id='setting_icon_regional_locale' >${props.icons.regional_locale}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_locale'></div>	
@@ -29,7 +39,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_timezone_current' class='common_icon'></div>
+                                    <div id='setting_icon_regional_timezone_current' >${props.icons.regional_timezone_current}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_timezone_current'>${props.user_timezone}</div>
@@ -47,7 +57,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_timezone' class='common_icon'></div>
+                                    <div id='setting_icon_regional_timezone' >${props.icons.regional_timezone}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_timezone'></div>
@@ -65,7 +75,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_numbersystem' class='common_icon'></div>
+                                    <div id='setting_icon_regional_numbersystem' >${props.icons.regional_numbersystem}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_numbersystem'></div>
@@ -75,7 +85,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_direction' class='common_icon'></div>
+                                    <div id='setting_icon_regional_direction' >${props.icons.regional_direction}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_direction'></div>
@@ -85,7 +95,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_locale_second' class='common_icon'></div>
+                                    <div id='setting_icon_regional_locale_second' >${props.icons.regional_locale_second}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_locale_second'></div>
@@ -95,7 +105,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_arabic_script' class='common_icon'></div>
+                                    <div id='setting_icon_regional_arabic_script' >${props.icons.regional_arabic_script}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_report_arabic_script'></div>
@@ -105,7 +115,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_calendartype' class='common_icon'></div>
+                                    <div id='setting_icon_regional_calendartype' >${props.icons.regional_calendartype}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_calendartype'></div>
@@ -115,7 +125,7 @@ const template = props => ` <div class='setting_horizontal_row'>
                             <div class='setting_horizontal_row'>
                                 <div class='setting_horizontal_col'></div>
                                 <div class='setting_horizontal_col'>
-                                    <div id='setting_icon_regional_calendar_hijri_type' class='common_icon'></div>
+                                    <div id='setting_icon_regional_calendar_hijri_type' >${props.icons.regional_calendar_hijri_type}</div>
                                 </div>
                                 <div class='setting_horizontal_col'>
                                     <div id='setting_select_calendar_hijri_type'></div>
@@ -277,7 +287,19 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({user_timezone:props.data.user_timezone})
+        template: template({user_timezone:props.data.user_timezone,
+                            icons:{
+                                regional_locale:props.methods.COMMON.commonGlobalGet('ICONS').regional_locale,
+                                regional_timezone_current:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone + props.methods.COMMON.commonGlobalGet('ICONS').gps_position,
+                                regional_timezone:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone + props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar,
+                                regional_numbersystem:props.methods.COMMON.commonGlobalGet('ICONS').regional_numbersystem,
+                                regional_direction:props.methods.COMMON.commonGlobalGet('ICONS').regional_direction,
+                                regional_locale_second:props.methods.COMMON.commonGlobalGet('ICONS').regional_locale + props.methods.COMMON.commonGlobalGet('ICONS').misc_second,
+                                regional_arabic_script:props.methods.COMMON.commonGlobalGet('ICONS').regional_script,
+                                regional_calendartype:props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar,
+                                regional_calendar_hijri_type:props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar_hijri_type
+                            }
+        })
     };
 };
 export default component;

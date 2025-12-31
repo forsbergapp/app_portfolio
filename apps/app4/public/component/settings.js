@@ -11,26 +11,33 @@
  * @description Template
  * @function
  * @param {{iam_user_id:number|null,
- *          avatar:string|null}} props
+ *          avatar:string|null,
+ *          icons:{
+ *                   regional:string,
+ *                   gps:string,
+ *                   design:string,
+ *                   text:string,
+ *                   prayer:string,
+ *                   close:string}}} props
  * @returns {string}
  */
 const template = props =>`      
                         <div id='settings'>
                             <div id='settings_tab_navigation'>
-                                <div id='settings_tab_nav_1' class='settings_tab_nav settings_tab_nav_selected common_icon common_icon_button'></div>
-                                <div id='settings_tab_nav_2' class='settings_tab_nav common_icon common_icon_button'></div>
-                                <div id='settings_tab_nav_3' class='settings_tab_nav common_icon common_icon_button'></div>
-                                <div id='settings_tab_nav_4' class='settings_tab_nav common_icon common_icon_button'></div>
-                                <div id='settings_tab_nav_5' class='settings_tab_nav common_icon common_icon_button'></div>
+                                <div id='settings_tab_nav_1' class='settings_tab_nav settings_tab_nav_selected common_link common_icon_button'>${props.icons.regional}</div>
+                                <div id='settings_tab_nav_2' class='settings_tab_nav common_link common_icon_button'>${props.icons.gps}</div>
+                                <div id='settings_tab_nav_3' class='settings_tab_nav common_link common_icon_button'>${props.icons.design}</div>
+                                <div id='settings_tab_nav_4' class='settings_tab_nav common_link common_icon_button'>${props.icons.text}</div>
+                                <div id='settings_tab_nav_5' class='settings_tab_nav common_link common_icon_button'>${props.icons.prayer}</div>
                                 ${props.iam_user_id!=null?
-                                    `<div id='settings_tab_nav_6' class='settings_tab_nav common_icon common_icon_button'>
+                                    `<div id='settings_tab_nav_6' class='settings_tab_nav common_link common_icon_button'>
                                         <div id='user_setting_avatar_img' class='common_image' style='${props.avatar==null?'':`background-image:url(${props.avatar});`}'></div>
                                     </div>`:
                                     ''
                                 }
                             </div>
                             <div id='settings_content' class='settings_tab_content'></div>
-                            <div id='settings_close' class='common_app_dialogues_button common_icon common_icon_button' ></div>
+                            <div id='settings_close' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.close}</div>
                         </div>
                         `;
 /**
@@ -60,7 +67,15 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({  iam_user_id:props.data.iam_user_id,
-                                avatar:props.data.avatar
+                                avatar:props.data.avatar,
+                                icons:{
+                                    regional:props.methods.COMMON.commonGlobalGet('ICONS').regional,
+                                    gps:props.methods.COMMON.commonGlobalGet('ICONS').gps,
+                                    design:props.methods.COMMON.commonGlobalGet('ICONS').misc_design,
+                                    text:props.methods.COMMON.commonGlobalGet('ICONS').misc_text,
+                                    prayer:props.methods.COMMON.commonGlobalGet('ICONS').misc_prayer,
+                                    close:props.methods.COMMON.commonGlobalGet('ICONS').close
+                                }
                             })
     };
 };

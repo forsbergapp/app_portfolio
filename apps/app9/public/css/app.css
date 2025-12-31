@@ -46,7 +46,6 @@ body {
 	background: var(--common_app_color_blue1);
 	caret-color: var(--common_app_color_black);
 }
-#clear_button::before,
 #totp_row{
     color: var(--common_app_color_white1);
 }

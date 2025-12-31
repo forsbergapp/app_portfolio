@@ -1,34 +1,4 @@
 /*APP */
-#settings_tab_nav_1::before{								content:var(--common_app_icon_regional)}
-#settings_tab_nav_2::before{								content:var(--common_app_icon_gps)}
-#settings_tab_nav_3::before{								content:var(--common_app_icon_misc_design)}
-#settings_tab_nav_4::before{								content:var(--common_app_icon_misc_text)}
-#settings_tab_nav_5::before{								content:var(--common_app_icon_misc_prayer)}
-#settings_close::before{									content:var(--common_app_icon_close)}
-#setting_icon_regional_locale::before{						content:var(--common_app_icon_regional_locale)}
-#setting_icon_regional_timezone_current::before{			content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_gps_position)}
-#setting_icon_regional_timezone::before{					content:var(--common_app_icon_regional_timezone) ' ' var(--common_app_icon_regional_calendar)}
-#setting_icon_regional_numbersystem::before{				content:var(--common_app_icon_regional_numbersystem)}
-#setting_icon_regional_direction::before{					content:var(--common_app_icon_regional_direction)}
-#setting_icon_regional_locale_second::before{				content:var(--common_app_icon_regional_locale) ' ' var(--common_app_icon_misc_second)}
-#setting_icon_regional_arabic_script::before{				content:var(--common_app_icon_regional_script)}
-#setting_icon_regional_calendartype::before{				content:var(--common_app_icon_regional_calendar)}
-#setting_icon_regional_calendar_hijri_type::before{			content:var(--common_app_icon_regional_calendar_hijri_type)}
-
-#setting_design_icon_theme_day::before{						content:var(--common_app_icon_regional_day)}
-#setting_design_icon_theme_month::before{					content:var(--common_app_icon_regional_month)}
-#setting_design_icon_theme_year::before{					content:var(--common_app_icon_regional_year)}
-#setting_icon_design_papersize::before{						content:var(--common_app_icon_papersize)}
-#setting_icon_design_highlight_row::before{					content:var(--common_app_icon_highlight)}
-#setting_icon_design_show_weekday::before{					content:var(--common_app_icon_show) ' ' var(--common_app_icon_regional_weekday)}
-#setting_icon_design_show_calendartype::before{				content:var(--common_app_icon_show) ' ' var(--common_app_icon_regional_calendartype)}
-#setting_icon_design_show_notes::before{					content:var(--common_app_icon_show) ' ' var(--common_app_icon_notes)} 
-#setting_icon_design_show_gps::before{						content:var(--common_app_icon_show) ' ' var(--common_app_icon_gps_position)}
-#setting_icon_design_show_timezone::before{					content:var(--common_app_icon_show) ' ' var(--common_app_icon_regional_timezone)}
-
-.setting_design_prev::before{								content:var(--common_app_icon_slider_left)}
-.setting_design_next::before{								content:var(--common_app_icon_slider_right)}
-
 #setting_icon_text_theme_day::before{						content:var(--common_app_icon_regional_day)}
 #setting_icon_text_theme_month::before{						content:var(--common_app_icon_regional_month)}
 #setting_icon_text_theme_year::before{						content:var(--common_app_icon_regional_year)}
@@ -252,6 +222,12 @@
 }
 .setting_design_next{
 	text-align: end;
+}
+.setting_design_prev,
+.setting_design_next{
+    margin-top: 0.25em;
+    margin-right: 0.5em !important;
+    margin-left: 0.5em !important;
 }
 /*theme live thumbnail fixes*/
 .setting_design_thumbnail .paper{
