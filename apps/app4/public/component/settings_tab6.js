@@ -10,14 +10,22 @@
 /**
  * @name template
  * @description Template
+ * @function
+ * @param {{icons:{
+ *                  user_settings:string,
+ *                  user_url_day:string,
+ *                  user_url_month:string,
+ *                  user_url_year:string,
+ *                  html:string,
+ *                  save:string,
+ *                  add:string,
+ *                  delete:string}}} props
  * @returns {string}
  */
-const template = () =>`  <div id='user_settings'>
+const template = props =>`  <div id='user_settings'>
                                 <div class='setting_horizontal_row'>
                                     <div class='setting_horizontal_col'></div>
-                                    <div class='setting_horizontal_col'>
-                                        <div id='setting_icon_user_settings' class='common_icon'></div>
-                                    </div>
+                                    <div class='setting_horizontal_col'>${props.icons.user_settings}</div>
                                     <div class='setting_horizontal_col'>
                                         <div id='setting_select_user_setting'></div>
                                     </div>
@@ -25,37 +33,25 @@ const template = () =>`  <div id='user_settings'>
                                 </div>
                                 <div class='setting_horizontal_row'>
                                     <div class='setting_horizontal_col'></div>
+                                    <div class='setting_horizontal_col'>${props.icons.html}</div>
                                     <div class='setting_horizontal_col'>
-                                        <div id='setting_icon_user_url_day' class='common_icon'></div>
-                                    </div>
-                                    <div class='setting_horizontal_col'>
-                                        <div id='setting_data_user_url_day'>
-                                            <div id='user_day_html' class='common_app_dialogues_button common_icon'> </div>
-                                        </div>
+                                        <div id='user_day_html' class='common_app_dialogues_button common_link'>${props.icons.user_url_day}</div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
                                 </div>
                                 <div class='setting_horizontal_row'>
                                     <div class='setting_horizontal_col'></div>
+                                    <div class='setting_horizontal_col'>${props.icons.html}</div>
                                     <div class='setting_horizontal_col'>
-                                        <div id='setting_icon_user_url_month' class='common_icon'></div>
-                                    </div>
-                                    <div class='setting_horizontal_col'>
-                                        <div id='setting_data_user_url_month'>
-                                            <div id='user_month_html' class='common_app_dialogues_button common_icon'> </div>
-                                        </div>
+                                        <div id='user_month_html' class='common_app_dialogues_button common_link'>${props.icons.user_url_month}</div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
                                 </div>
                                 <div class='setting_horizontal_row'>
                                     <div class='setting_horizontal_col'></div>
+                                    <div class='setting_horizontal_col'>${props.icons.html}</div>
                                     <div class='setting_horizontal_col'>
-                                        <div id='setting_icon_user_url_year' class='common_icon'></div>
-                                    </div>
-                                    <div class='setting_horizontal_col'>
-                                        <div id='setting_data_user_url_year'>
-                                            <div id='user_year_html' class='common_app_dialogues_button common_icon'> </div>
-                                        </div>
+                                        <div id='user_year_html' class='common_app_dialogues_button common_link'>${props.icons.user_url_year}</div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
                                 </div>
@@ -63,9 +59,9 @@ const template = () =>`  <div id='user_settings'>
                                     <div class='setting_horizontal_col'></div>
                                     <div class='setting_horizontal_col'></div>
                                     <div class='setting_horizontal_col'>
-                                        <div id='setting_btn_user_save' class='common_app_dialogues_button common_icon' ></div>
-                                        <div id='setting_btn_user_add' class='common_app_dialogues_button common_icon' ></div>
-                                        <div id='setting_btn_user_delete' class='common_app_dialogues_button common_icon' ></div>
+                                        <div id='setting_btn_user_save' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.save}</div>
+                                        <div id='setting_btn_user_add' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.add}</div>
+                                        <div id='setting_btn_user_delete' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.delete}</div>
                                     </div>
                                     <div class='setting_horizontal_col'></div>
                                 </div>
@@ -104,7 +100,16 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template()
+        template:   template({icons:{
+                                    user_settings:props.methods.COMMON.commonGlobalGet('ICONS').settings + props.methods.COMMON.commonGlobalGet('ICONS').gps_position,
+                                    user_url_day:props.methods.COMMON.commonGlobalGet('ICONS').regional_day,
+                                    user_url_month:props.methods.COMMON.commonGlobalGet('ICONS').regional_month,
+                                    user_url_year:props.methods.COMMON.commonGlobalGet('ICONS').regional_year,
+                                    html:props.methods.COMMON.commonGlobalGet('ICONS').html,
+                                    save:props.methods.COMMON.commonGlobalGet('ICONS').save,
+                                    add:props.methods.COMMON.commonGlobalGet('ICONS').add,
+                                    delete:props.methods.COMMON.commonGlobalGet('ICONS').delete
+                            }})
     };
 };
 export default component;
