@@ -193,6 +193,7 @@ const COMMON_GLOBAL = {
         message_success:        ICON_DUPLICATE.ok,
         message_text:           'ABC'
     },
+    apps:[],
     app_id:0,
     app_logo:null,
     app_copyright:null,
