@@ -1,6 +1,5 @@
 /**
- * Print template
- * @module apps/app4/component/print
+ * @module apps/common/component/common_print
  */
 
 /**
@@ -11,8 +10,9 @@
  * @name template
  * @description Template
  * @function
- * @param {{app_link_app_report_css:string|void,
- *          cssRoot:string|void,
+ * @param {{app_link_app_css:string,
+ *          app_link_app_report_css:string,
+ *          cssCommon:string,
  *          html:string}} props
  * @returns {string}
  */
@@ -22,8 +22,9 @@ const template = props =>`  <!DOCTYPE html>
                                <meta charset='UTF-8'>
                                <title></title>
                                <style>
-                                    ${props.cssRoot} 
+                                    ${props.cssCommon} 
                                </style>
+                               <link rel='stylesheet' type='text/css' href='${props.app_link_app_css}' />
                                <link rel='stylesheet' type='text/css' href='${props.app_link_app_report_css}' />
                             </head>
                             <body id="printbody">
@@ -48,20 +49,20 @@ const template = props =>`  <!DOCTYPE html>
  *                      template:string}>}
  */
 const component = async props => {
-    //get css with variables in :root
-    let cssRoot ='';
-    props.methods.COMMON.COMMON_DOCUMENT.adoptedStyleSheets.forEach(sheet => { 
-        for (const i in sheet.cssRules) { 
-            //load variables in :root so css works, fonts already loaded when print is chosen
-            if (sheet.cssRules[i].cssText?.startsWith(':root')){ 
-                cssRoot += sheet.cssRules[i].cssText + '\n'; 
-            }
+    //get common css 
+    let cssCommon ='';
+     props.methods.COMMON.COMMON_DOCUMENT.adoptedStyleSheets.forEach(sheet => { 
+        for (const i in sheet.cssRules) {
+            //skip fonts
+            if (sheet.cssRules[i].cssText?.indexOf('@font-face')==-1)
+                cssCommon += sheet.cssRules[i].cssText + '\n'; 
         }
+        return;
     });
-
     const templateRendered =  template({  
+                                app_link_app_css:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_link_app_css').attributes['href'].textContent,
                                 app_link_app_report_css:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent,
-                                cssRoot:cssRoot,
+                                cssCommon:cssCommon,
                                 html: props.data.appHtml});
     return {
         lifecycle:  null,

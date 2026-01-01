@@ -19,6 +19,7 @@
  *          class?:string, 
  *          content?:string,
  *          icons:{ close: string,
+ *                  print:string,
  *                  zoomout: string,
  *                  zoomin: string,
  *                  left: string,
@@ -37,6 +38,7 @@ const template = props => `
                                 <div id='common_app_window_info_toolbar_btn_up' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.up}</div>
                                 <div id='common_app_window_info_toolbar_btn_down' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.down}</div>
                                 <div id='common_app_window_info_toolbar_btn_fullscreen' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.fullscreen}</div>
+                                <div id='common_app_window_info_toolbar_btn_print' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.print}</div>
                                 <div id='common_app_window_info_toolbar_btn_close' class='common_toolbar_button common_link common_icon_toolbar_m' >${props.icons.close}</div>
                             </div>
                             <div id='common_app_window_info_info' class='${props.class}'>
@@ -165,10 +167,6 @@ const component = async props => {
         switch (event_type){
             case 'click':{
                 switch (true){
-                    case event_target_id=='common_app_window_info_toolbar_btn_close':{
-                        WindoInfoClose();
-                        break;
-                    }
                     case event_target_id=='common_app_window_info':{
                         WindoInfoToolbarShowHide();
                         break;
@@ -204,6 +202,14 @@ const component = async props => {
                             props.methods.COMMON.COMMON_DOCUMENT.body.requestFullscreen();
                         break;
                     }
+                    case event_target_id=='common_app_window_info_toolbar_btn_print':{
+                        props.methods.COMMON.commonMiscPrint('common_app_window_info_info');
+                        break;
+                    }
+                    case event_target_id=='common_app_window_info_toolbar_btn_close':{
+                        WindoInfoClose();
+                        break;
+                    }
                 }
             }
         }
@@ -220,14 +226,15 @@ const component = async props => {
                                 url:    props.data.url,
                                 class:  props.data.class??'',
                                 content:props.data.info=='URL'?content_fetch:props.data.content,
-                                icons: {close: props.methods.COMMON.commonGlobalGet('ICONS')['close'],
-                                        zoomout: props.methods.COMMON.commonGlobalGet('ICONS')['zoomout'],
-                                        zoomin: props.methods.COMMON.commonGlobalGet('ICONS')['zoomin'],
-                                        left: props.methods.COMMON.commonGlobalGet('ICONS')['left'],
-                                        right: props.methods.COMMON.commonGlobalGet('ICONS')['right'],
-                                        up: props.methods.COMMON.commonGlobalGet('ICONS')['up'],
-                                        down: props.methods.COMMON.commonGlobalGet('ICONS')['down'],
-                                        fullscreen: props.methods.COMMON.commonGlobalGet('ICONS')['fullscreen']
+                                icons: {close: props.methods.COMMON.commonGlobalGet('ICONS').close,
+                                        print: props.methods.COMMON.commonGlobalGet('ICONS').print,
+                                        zoomout: props.methods.COMMON.commonGlobalGet('ICONS').zoomout,
+                                        zoomin: props.methods.COMMON.commonGlobalGet('ICONS').zoomin,
+                                        left: props.methods.COMMON.commonGlobalGet('ICONS').left,
+                                        right: props.methods.COMMON.commonGlobalGet('ICONS').right,
+                                        up: props.methods.COMMON.commonGlobalGet('ICONS').up,
+                                        down: props.methods.COMMON.commonGlobalGet('ICONS').down,
+                                        fullscreen: props.methods.COMMON.commonGlobalGet('ICONS').fullscreen
                                     }
         })
     };

@@ -12,17 +12,9 @@
  *          }} props
  * @returns {Promise.<string>}
  */
-const template = async props =>`  <!DOCTYPE html>
-                            <html>
-                            <head>
-                                <meta charset='UTF-8'>
-                            </head>	
-                            <body id='printbody'>
-                                <div id='paper' class='${props.papersize}'>
+const template = async props =>`  <div id='paper' class='${props.papersize}'>
                                     ${await props.function_report(props.data)}
-                                </div>
-                            </body>
-                            </html>`;
+                                </div>`;
 /**
  * @name component
  * @description Component
