@@ -741,15 +741,18 @@ const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
  * @name commonMiscPrint
  * @description Prints element id
  * @param {string} element_id
+ * @param {boolean} inner?
  * @function 
  * @returns {Promise.<void>}
  */
-const commonMiscPrint = async element_id => {
+const commonMiscPrint = async (element_id, inner=true) => {
     /**@type{common['CommonComponentResult']}*/
         const {template} = await commonComponentRender({ mountDiv:   null,
                                                                 data:  {   
                                                                         commonMountdiv:null, 
-                                                                        appHtml:COMMON_DOCUMENT.querySelector(`#${element_id}`).outerHTML
+                                                                        appHtml:inner?
+                                                                                    COMMON_DOCUMENT.querySelector(`#${element_id}`).innerHTML:
+                                                                                        COMMON_DOCUMENT.querySelector(`#${element_id}`).outerHTML
                                                                         },
                                                                 methods:null,
                                                                 path: '/common/component/common_print.js'});
