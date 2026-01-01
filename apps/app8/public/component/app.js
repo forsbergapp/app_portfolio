@@ -52,10 +52,10 @@ const template = props =>`  <div id='app_main'>
                                         </div>
                                     </div>
                                     <div id='button_solve_speed'>
-                                        <div id='button_solve_speed_250' data-speed=250 class='button_solve_speed common_app_dialogues_button button_speed_selected'>250</div>
-                                        <div id='button_solve_speed_500' data-speed=500 class='button_solve_speed common_app_dialogues_button'>500</div>
-                                        <div id='button_solve_speed_1000' data-speed=1000 class='button_solve_speed common_app_dialogues_button'>1000</div>
-                                        <div id='button_solve_speed_5000' data-speed=5000 class='button_solve_speed common_app_dialogues_button'>5000</div>
+                                        <div id='button_solve_speed_250' data-speed=250 class='common_link button_solve_speed common_app_dialogues_button button_speed_selected'>250</div>
+                                        <div id='button_solve_speed_500' data-speed=500 class='common_link button_solve_speed common_app_dialogues_button'>500</div>
+                                        <div id='button_solve_speed_1000' data-speed=1000 class='common_link button_solve_speed common_app_dialogues_button'>1000</div>
+                                        <div id='button_solve_speed_5000' data-speed=5000 class='common_link button_solve_speed common_app_dialogues_button'>5000</div>
                                     </div>
                                     <div class='buttons_row'>
                                         <div class='buttons_col'>

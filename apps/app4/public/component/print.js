@@ -12,7 +12,7 @@
  * @description Template
  * @function
  * @param {{app_link_app_report_css:string|void,
- *          app_fonts_css:string|void,
+ *          cssRoot:string|void,
  *          html:string}} props
  * @returns {string}
  */
@@ -22,7 +22,7 @@ const template = props =>`  <!DOCTYPE html>
                                <meta charset='UTF-8'>
                                <title></title>
                                <style>
-                                    ${props.app_fonts_css} 
+                                    ${props.cssRoot} 
                                </style>
                                <link rel='stylesheet' type='text/css' href='${props.app_link_app_report_css}' />
                             </head>
@@ -52,9 +52,8 @@ const component = async props => {
     let cssRoot ='';
     props.methods.COMMON.COMMON_DOCUMENT.adoptedStyleSheets.forEach(sheet => { 
         for (const i in sheet.cssRules) { 
-            //load css with base64 strings and variables in :root
-            if (sheet.cssRules[i].cssText?.indexOf('data:font/woff2;') ||
-                sheet.cssRules[i].cssText?.startsWith(':root')){ 
+            //load variables in :root so css works, fonts already loaded when print is chosen
+            if (sheet.cssRules[i].cssText?.startsWith(':root')){ 
                 cssRoot += sheet.cssRules[i].cssText + '\n'; 
             }
         }
@@ -62,7 +61,7 @@ const component = async props => {
 
     const templateRendered =  template({  
                                 app_link_app_report_css:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent,
-                                app_fonts_css:cssRoot,
+                                cssRoot:cssRoot,
                                 html: props.data.appHtml});
     return {
         lifecycle:  null,

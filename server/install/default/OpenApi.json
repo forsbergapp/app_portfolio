@@ -4890,7 +4890,7 @@
                     "description":"0=NO, 1=YES"
                 },
                 "IAM_CONTENT_SECURITY_POLICY":{
-                    "default":"default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;script-src-attr 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' blob:;font-src 'self' data:;img-src * data: blob:;connect-src *;child-src 'self' blob:;object-src 'self' data:;frame-src 'self' data: ;base-uri 'self';form-action 'self';frame-ancestors 'self'",
+                    "default":"default-src 'self';script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;script-src-attr 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline' blob:;font-src 'self' data:;img-src * data: blob:;connect-src 'self' blob:;child-src 'self' blob:;object-src 'self' data:;frame-src 'self' data: ;base-uri 'self';form-action 'self';frame-ancestors 'self'",
                     "description":"Content security policy"
                 },
                 "IAM_ENABLE_GEOLOCATION":{
