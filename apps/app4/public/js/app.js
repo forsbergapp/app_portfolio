@@ -535,7 +535,7 @@ const appToolbarButton = async (choice) => {
             {
                 if (common.commonMiscMobile())
                     COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
-                common.commonMiscPrint('paper');
+                common.commonMiscPrint('paper', false);
                 break;
             }
         case 2:
