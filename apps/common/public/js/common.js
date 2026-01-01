@@ -739,32 +739,43 @@ const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
 };
 /**
  * @name commonMiscPrint
- * @description Prints html loading fonts using FontFace() and calls browser print() 
- * @param {string} html
+ * @description Prints element id
+ * @param {string} element_id
  * @function 
  * @returns {Promise.<void>}
  */
-const commonMiscPrint = async html => {
-    COMMON_DOCUMENT.querySelector('#common_app_print').innerHTML = '<iframe/>';
-    const print = COMMON_DOCUMENT.querySelector('#common_app_print iframe').contentWindow
-    await print.document.open();
-    await print.document.write(html);
+const commonMiscPrint = async element_id => {
+    /**@type{common['CommonComponentResult']}*/
+        const {template} = await commonComponentRender({ mountDiv:   null,
+                                                                data:  {   
+                                                                        commonMountdiv:null, 
+                                                                        appHtml:COMMON_DOCUMENT.querySelector(`#${element_id}`).outerHTML
+                                                                        },
+                                                                methods:null,
+                                                                path: '/common/component/common_print.js'});
+     if (template){
+        COMMON_DOCUMENT.querySelector('#common_app_print').innerHTML = '<iframe/>';
+        const print = COMMON_DOCUMENT.querySelector('#common_app_print iframe').contentWindow
+        await print.document.open();
+        await print.document.write(template);
 
-    for (const font of COMMON_GLOBAL.app_fonts_loaded) {         
-        const fontNew = new FontFace(
-            font.family,
-            'url(' + font.url + ')',
-            font.attributes
-        );  
-        fontNew.load().then(()=>{
-            print.document.fonts.add(fontNew);
-        });
-    }  
-    await print.focus();
+        for (const font of COMMON_GLOBAL.app_fonts_loaded) {         
+            const fontNew = new FontFace(
+                font.family,
+                'url(' + font.url + ')',
+                font.attributes
+            );  
+            fontNew.load().then(()=>{
+                print.document.fonts.add(fontNew);
+            });
+        }  
+        await print.focus();
 
-    //await delay to avoid browser render error
-    await new Promise (resolve=>commonWindowSetTimeout(()=> {print.print();resolve(null);}, 100));    
-    COMMON_DOCUMENT.querySelector('#common_app_print').textContent='';
+        //await delay to avoid browser render error
+        await new Promise (resolve=>commonWindowSetTimeout(()=> {print.print();resolve(null);}, 100));    
+        COMMON_DOCUMENT.querySelector('#common_app_print').textContent='';
+     }
+    
 };
 /**
  * @name commonMiscResourceFetch

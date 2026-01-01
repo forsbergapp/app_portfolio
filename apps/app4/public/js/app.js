@@ -147,23 +147,6 @@ const APP_GLOBAL = {
 Object.seal(APP_GLOBAL);
 
 /**
- * @name appReportTimetablePrint
- * @description Print timetable
- * @function
- * @returns {Promise.<void>}
- */
-const appReportTimetablePrint = async () => {
-    /**@type{common['CommonComponentResult']}*/
-    const {template} = await common.commonComponentRender({ mountDiv:   null,
-                                                            data:  {   
-                                                                    commonMountdiv:null, 
-                                                                    appHtml:COMMON_DOCUMENT.querySelector('#paper').outerHTML
-                                                                    },
-                                                            methods:null,
-                                                            path: '/component/print.js'});
-    template?common.commonMiscPrint(template):null;
-};
-/**
  * @name appReportTimetableSettings
  * @description Get report settings
  * @function
@@ -552,7 +535,7 @@ const appToolbarButton = async (choice) => {
             {
                 if (common.commonMiscMobile())
                     COMMON_DOCUMENT.querySelector('#paper').style.display = 'block';
-                appReportTimetablePrint();
+                common.commonMiscPrint('paper');
                 break;
             }
         case 2:
