@@ -149,11 +149,12 @@ Object.seal(APP_GLOBAL);
 /**
  * @name appReportTimetableSettings
  * @description Get report settings
+ * @param {APP_user_setting_record|null} other_settings
  * @function
  * @returns {APP_REPORT_settings}
  */
-const appReportTimetableSettings = () => {
-    const setting_global = APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document;
+const appReportTimetableSettings = (other_settings=null) => {
+    const setting_global = (other_settings ?? APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document);
     return {    locale              	: setting_global.RegionalLanguageLocale,
                 timezone            	: setting_global.RegionalTimezone,
                 number_system       	: setting_global.RegionalNumberSystem,
@@ -169,8 +170,8 @@ const appReportTimetableSettings = () => {
 
                 theme_day           	: 'theme_day_' + setting_global.DesignThemeDayId,
                 theme_month         	: 'theme_month_' + setting_global.DesignThemeMonthId,
-                theme_year          	: 'theme_year_' + setting_global.DesignThemeYearId,    
-                //papersize missing
+                theme_year          	: 'theme_year_' + setting_global.DesignThemeYearId,
+                paper_size              : setting_global.DesignPaperSize,
                 highlight           	: setting_global.DesignRowHighlight,
                 show_weekday        	: setting_global.DesignColumnWeekdayChecked,
                 show_calendartype   	: setting_global.DesignColumnCalendarTypeChecked,
@@ -225,104 +226,54 @@ const appReportTimetableSettings = () => {
  */
 const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, settings) => {
     APP_GLOBAL.timetable_type = timetable_type;
-    switch (timetable_type){
-        //create timetable month or day or year if they are visible instead
-        case 0:{
-            /**@type{APP_REPORT_day_user_account_app_data_posts[]} */
-            const current_user_settings =[];
-            for (const setting of APP_GLOBAL.user_settings.data){
-                current_user_settings.push(
-                {
-                Description : setting.Document.Description??'',
-                RegionalLanguageLocale : setting.Document.RegionalLanguageLocale,
-                RegionalTimezone : setting.Document.RegionalTimezone,
-                RegionalNumberSystem : setting.Document.RegionalNumberSystem,
-                RegionalCalendarHijri_type : setting.Document.RegionalCalendarHijriType,
-                GpsLatText : setting.Document.GpsLatText,
-                GpsLongText : setting.Document.GpsLongText,
-                PrayerMethod : setting.Document.PrayerMethod,
-                PrayerAsrMethod : setting.Document.PrayerAsrMethod,
-                PrayerHighLatitudeAdjustment : setting.Document.PrayerHighLatitudeAdjustment,
-                PrayerTimeFormat : setting.Document.PrayerTimeFormat,
-                PrayerHijriDateAdjustment : setting.Document.PrayerHijriDateAdjustment
-                });
-            }
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = APP_GLOBAL.appLibTimetable.component({	data:		{
-                                                                                        commonMountdiv:null,
-                                                                                        button_id:item_id,
-                                                                                        timetable:'DAY',
-                                                                                        user_account_app_data_post:settings,
-                                                                                        user_account_app_data_posts_parameters:current_user_settings
-                                                                                        },
-                                                                            methods:	{
-                                                                                        COMMON_DOCUMENT:null
-                                                                                        }
-                                                                            }).template;
-            break;
-        }
-        //1=create timetable month
-        case 1:{
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = APP_GLOBAL.appLibTimetable.component({	data:		{
-                                                                                        commonMountdiv:null,
-                                                                                        button_id:item_id,
-                                                                                        timetable:'MONTH',
-                                                                                        user_account_app_data_post:settings,
-                                                                                        user_account_app_data_posts_parameters:null
-                                                                                        },
-                                                                            methods:	{
-                                                                                        COMMON_DOCUMENT:null
-                                                                                        }
-                                                                            }).template;
-            break;
-        }
-        //2=create timetable year
-        case 2:{
-            COMMON_DOCUMENT.querySelector('#paper').innerHTML = APP_GLOBAL.appLibTimetable.component({	data:		{
-                                                                                        commonMountdiv:null,
-                                                                                        button_id:item_id,
-                                                                                        timetable:'YEAR',
-                                                                                        user_account_app_data_post:settings,
-                                                                                        user_account_app_data_posts_parameters:null
-                                                                                        },
-                                                                            methods:	{
-                                                                                        COMMON_DOCUMENT:null
-                                                                                        }
-                                                                            }).template;
-            break;
-        }
-        default:{
-            break;
-        }
-    }
+
+    COMMON_DOCUMENT.querySelector('#paper').innerHTML = 
+        appReportTimetable( timetable_type==0?
+                                'DAY':
+                                timetable_type==1?
+                                    'MONTH':
+                                        'YEAR', item_id, settings);
 };
 /**
- * @name appReportUrl
- * @description Get report url
+ * @name appReportTimetable
+ * @description Timetable update
  * @function
- * @param {number|null} id 
- * @param {number} sid 
- * @param {string} papersize 
- * @param {string} item 
- * @param {string} format 
- * @param {boolean} profile_display 
+ * @param {'DAY'|'MONTH'|'YEAR'} timetable_type 
+ * @param {'toolbar_btn_left' | 'toolbar_btn_right' | null} item_id 
+ * @param {APP_REPORT_settings} settings?
+ * @param {APP_user_setting_data[]|null}all_user_settings
  * @returns {string}
  */
-const appReportUrl = (id, sid, papersize, item, format, profile_display=true) => {
-    let module_parameters = `&id=${id}&sid=${sid}`;
-    if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
-        module_parameters += '&type=0';
-    if (item =='profile_user_settings_month' || item.substr(0,10)=='user_month')
-        module_parameters += '&type=1';
-    if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
-        module_parameters += '&type=2';
-    if (profile_display)
-        module_parameters += `&uid_view=${common.commonGlobalGet('iam_user_app_id')??''}`;
-    const service_parameter = `&format=${format}&ps=${papersize}`;
-    const encodedurl = common.commonWindowToBase64( module_parameters + service_parameter);
-    //url query parameters are decoded in report module and in report service
-    return `/app-common-module-report/${APP_GLOBAL.app_report_timetable}?parameters=${common.commonWindowToBase64(`type=REPORT&reportid=${encodedurl}`)}`;
-
-};
+const appReportTimetable = (timetable_type = 'DAY', item_id = null, settings, all_user_settings=null) =>
+    APP_GLOBAL.appLibTimetable.component({	
+                data:		{
+                            commonMountdiv:null,
+                            button_id:item_id,
+                            timetable:timetable_type,
+                            user_account_app_data_post:settings,
+                            user_account_app_data_posts_parameters:timetable_type=='DAY'?
+                                                                    (all_user_settings ?? APP_GLOBAL.user_settings.data).map(setting=>{
+                                                                        return {
+                                                                            Description : setting.Document.Description??'',
+                                                                            RegionalLanguageLocale : setting.Document.RegionalLanguageLocale,
+                                                                            RegionalTimezone : setting.Document.RegionalTimezone,
+                                                                            RegionalNumberSystem : setting.Document.RegionalNumberSystem,
+                                                                            RegionalCalendarHijri_type : setting.Document.RegionalCalendarHijriType,
+                                                                            GpsLatText : setting.Document.GpsLatText,
+                                                                            GpsLongText : setting.Document.GpsLongText,
+                                                                            PrayerMethod : setting.Document.PrayerMethod,
+                                                                            PrayerAsrMethod : setting.Document.PrayerAsrMethod,
+                                                                            PrayerHighLatitudeAdjustment : setting.Document.PrayerHighLatitudeAdjustment,
+                                                                            PrayerTimeFormat : setting.Document.PrayerTimeFormat,
+                                                                            PrayerHijriDateAdjustment : setting.Document.PrayerHijriDateAdjustment
+                                                                            }
+                                                                    }):
+                                                                        null
+                            },
+                methods:	{
+                            COMMON_DOCUMENT:null
+                            }
+                }).template;
 
 /**
  * @name appSettingThemeThumbnailsUpdate
@@ -334,75 +285,26 @@ const appReportUrl = (id, sid, papersize, item, format, profile_display=true) =>
  */
 const appSettingThemeThumbnailsUpdate = async (theme=null) => {
     if (theme?.type =='day' || theme==null){
-        const current_user_settings = APP_GLOBAL.user_settings.data.map(setting=>{
-            return {
-                Description : setting.Document.Description??'',
-                RegionalLanguageLocale : setting.Document.RegionalLanguageLocale,
-                RegionalTimezone : setting.Document.RegionalTimezone,
-                RegionalNumberSystem : setting.Document.RegionalNumberSystem,
-                RegionalCalendarHijri_type : setting.Document.RegionalCalendarHijriType,
-                GpsLatText : setting.Document.GpsLatText,
-                GpsLongText : setting.Document.GpsLongText,
-                PrayerMethod : setting.Document.PrayerMethod,
-                PrayerAsrMethod : setting.Document.PrayerAsrMethod,
-                PrayerHighLatitudeAdjustment : setting.Document.PrayerHighLatitudeAdjustment,
-                PrayerTimeFormat : setting.Document.PrayerTimeFormat,
-                PrayerHijriDateAdjustment : setting.Document.PrayerHijriDateAdjustment
-            };
-        });
-        
-        const result = APP_GLOBAL.appLibTimetable.component({	data:		{
-                                                commonMountdiv:null,
-                                                button_id:null,
-                                                timetable:'DAY',
-                                                user_account_app_data_post:appReportTimetableSettings(),
-                                                user_account_app_data_posts_parameters:current_user_settings
-                                                },
-                                    methods:	{
-                                                COMMON_DOCUMENT:null
-                                                }
-                                    });
-
         await common.commonComponentRender({
             mountDiv:   'setting_design_theme_day',
             data:       { 
                         class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                         theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_day').getAttribute('data-theme_id'),
                         type:'day',
-                        html:result.template
+                        html:appReportTimetable( 'DAY', null, appReportTimetableSettings())
                         },
             methods:    null,
             path:       '/component/settings_tab3_theme_thumbnail.js'});
     }
     if (theme?.type =='month' || theme?.type=='year' || theme==null){
-        const result_month = APP_GLOBAL.appLibTimetable.component({	data:		{
-                                                        commonMountdiv:null,
-                                                        button_id:null,
-                                                        timetable:'MONTH',
-                                                        user_account_app_data_post:appReportTimetableSettings(),
-                                                        user_account_app_data_posts_parameters:null
-                                                        },
-                                            methods:	{
-                                                        COMMON_DOCUMENT:null
-                                                        }
-                                            });
-        const result_year = APP_GLOBAL.appLibTimetable.component({	data:		{
-                                                    commonMountdiv:null,
-                                                    button_id:null,
-                                                    timetable:'YEAR',
-                                                    user_account_app_data_post:appReportTimetableSettings(),
-                                                    user_account_app_data_posts_parameters:null
-                                                    },
-                                        methods:	{
-                                                    COMMON_DOCUMENT:null
-                                                    }
-                                        });
+        const result_month = appReportTimetable( 'MONTH', null, appReportTimetableSettings());
+        const result_year = appReportTimetable( 'YEAR', null, appReportTimetableSettings());
         await common.commonComponentRender({  mountDiv:   'setting_design_theme_month',
                                         data:       { 
                                                     class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                                                     theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
                                                     type:'month',
-                                                    html:result_month.template
+                                                    html:result_month
                                                     },
                                         methods:    null,
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
@@ -411,7 +313,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
                                                     class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                                                     theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
                                                     type:'year',
-                                                    html:result_year.template
+                                                    html:result_year
                                                     },
                                         methods:    null,
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
@@ -859,17 +761,20 @@ const appUserLoginPost = async () =>{
         const result = await common.commonFFB({ path:'/server-db/iamuserappdatapost/', 
                                                 query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${common.commonGlobalGet('iam_user_id')??''}`, 
                                                 method:'GET', authorization_type:'APP_ID'});
+         let settings = []
         if (JSON.parse(result).rows.length==0){
             await appUserSettingFunction('ADD_LOGIN', true);
+            settings = await appUserSettingsGet({iam_user_id:common.commonGlobalGet('iam_user_id')});
         }
+        else
+            settings = await appUserSettingsGet({iam_user_id:common.commonGlobalGet('iam_user_id'), settings_fetched:result})
         common.commonComponentRemove('common_app_dialogues_app_custom')
         common.commonComponentRemove('common_app_dialogues_profile');
         
         COMMON_DOCUMENT.querySelector('#paper').textContent='';
-        appUserSettingsGet().then(() => {
-            //show default startup
-            appToolbarButton(APP_GLOBAL.app_default_startup_page);
-        });
+        APP_GLOBAL.user_settings = {current_id:0,   data:settings};
+        //show default startup
+        appToolbarButton(APP_GLOBAL.app_default_startup_page);
     }
     
 };
@@ -935,70 +840,73 @@ const appUserProfileDetail = (detailchoice) => {
 };
 /**
  * @name appUserSettingsGet
- * @description User settings get
+ * @description User settings get, formats saved data
  * @function
- * @returns {Promise.<null>}
+ * @param {{iam_user_id:number, settings_fetched?:APP_user_setting_record[]}} parameters
+ * 
+ * @returns {Promise.<[APP_user_setting_data]>}
  */
-const appUserSettingsGet = async () => {
-    return new Promise(resolve=>{
-        common.commonFFB({path:'/server-db/iamuserappdatapost/', query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${common.commonGlobalGet('iam_user_id')??''}`, method:'GET', authorization_type:'APP_ID'})
-        .then((/**@type{string}*/result)=>{
-            const settings = JSON.parse(result).rows.map((/** @type{APP_user_setting_record}*/setting)=>{
-                const json = {Description:setting.Description,
-                    RegionalLanguageLocale:setting.RegionalLanguageLocale,
-                    RegionalTimezone:setting.RegionalTimezone,
-                    RegionalNumberSystem:setting.RegionalNumberSystem,
-                    RegionalLayoutDirection:setting.RegionalLayoutDirection,
-                    RegionalSecondLanguageLocale:setting.RegionalSecondLanguageLocale,
-                    RegionalArabicScript:setting.RegionalArabicScript,
-                    RegionalCalendarType:setting.RegionalCalendarType,
-                    RegionalCalendarHijriType:setting.RegionalCalendarHijriType,
-                    GpsLatText:typeof setting.GpsLatText== 'string'?appCommonFixFloat(setting.GpsLatText):setting.GpsLatText,
-                    GpsLongText:typeof setting.GpsLongText=='string'?appCommonFixFloat(setting.GpsLongText):setting.GpsLongText,
-                    DesignThemeDayId:setting.DesignThemeDayId,
-                    DesignThemeMonthId:setting.DesignThemeMonthId,
-                    DesignThemeYearId:setting.DesignThemeYearId,
-                    DesignPaperSize:setting.DesignPaperSize,
-                    DesignRowHighlight:setting.DesignRowHighlight,
-                    DesignColumnWeekdayChecked:Number(setting.DesignColumnWeekdayChecked),
-                    DesignColumnCalendarTypeChecked:Number(setting.DesignColumnCalendarTypeChecked),
-                    DesignColumnNotesChecked:Number(setting.DesignColumnNotesChecked),
-                    DesignColumnGpsChecked:Number(setting.DesignColumnGpsChecked),
-                    DesignColumnTimezoneChecked:Number(setting.DesignColumnTimezoneChecked),
-                    ImageHeaderImageImg:setting.ImageHeaderImageImg,
-                    ImageFooterImageImg:setting.ImageFooterImageImg,
-                    TextHeader1Text:setting.TextHeader1Text,
-                    TextHeader2Text:setting.TextHeader2Text,
-                    TextHeader3Text:setting.TextHeader3Text,
-                    TextHeaderAlign:setting.TextHeaderAlign==''?null:setting.TextHeaderAlign,
-                    TextFooter1Text:setting.TextFooter1Text,
-                    TextFooter2Text:setting.TextFooter2Text,
-                    TextFooter3Text:setting.TextFooter3Text,
-                    TextFooterAlign:setting.TextFooterAlign==''?null:setting.TextFooterAlign,
-                    PrayerMethod:setting.PrayerMethod,
-                    PrayerAsrMethod:setting.PrayerAsrMethod,
-                    PrayerHighLatitudeAdjustment:setting.PrayerHighLatitudeAdjustment,
-                    PrayerTimeFormat:setting.PrayerTimeFormat,
-                    PrayerHijriDateAdjustment:Number(setting.PrayerHijriDateAdjustment),
-                    PrayerFajrIqamat:setting.PrayerFajrIqamat,
-                    PrayerDhuhrIqamat:setting.PrayerDhuhrIqamat,
-                    PrayerAsrIqamat:setting.PrayerAsrIqamat,
-                    PrayerMaghribIqamat:setting.PrayerMaghribIqamat,
-                    PrayerIshaIqamat:setting.PrayerIshaIqamat,
-                    PrayerColumnImsakChecked:Number(setting.PrayerColumnImsakChecked),
-                    PrayerColumnSunsetChecked:Number(setting.PrayerColumnSunsetChecked),
-                    PrayerColumnMidnightChecked:Number(setting.PrayerColumnMidnightChecked),
-                    PrayerColumnFastStartEnd:Number(setting.PrayerColumnFastStartEnd) 
+const appUserSettingsGet = async parameters => {
+    const result = parameters.settings_fetched?
+                        parameters.settings_fetched:
+                            await common.commonFFB({path:'/server-db/iamuserappdatapost/', 
+                                                    query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${parameters.iam_user_id ??''}`, 
+                                                    method:'GET', 
+                                                    authorization_type:'APP_ID'});
+    const settings = JSON.parse(result).rows.map((/** @type{APP_user_setting_record}*/setting)=>{
+        const json = {Description:setting.Description,
+            RegionalLanguageLocale:setting.RegionalLanguageLocale,
+            RegionalTimezone:setting.RegionalTimezone,
+            RegionalNumberSystem:setting.RegionalNumberSystem,
+            RegionalLayoutDirection:setting.RegionalLayoutDirection,
+            RegionalSecondLanguageLocale:setting.RegionalSecondLanguageLocale,
+            RegionalArabicScript:setting.RegionalArabicScript,
+            RegionalCalendarType:setting.RegionalCalendarType,
+            RegionalCalendarHijriType:setting.RegionalCalendarHijriType,
+            GpsLatText:typeof setting.GpsLatText== 'string'?appCommonFixFloat(setting.GpsLatText):setting.GpsLatText,
+            GpsLongText:typeof setting.GpsLongText=='string'?appCommonFixFloat(setting.GpsLongText):setting.GpsLongText,
+            DesignThemeDayId:setting.DesignThemeDayId,
+            DesignThemeMonthId:setting.DesignThemeMonthId,
+            DesignThemeYearId:setting.DesignThemeYearId,
+            DesignPaperSize:setting.DesignPaperSize,
+            DesignRowHighlight:setting.DesignRowHighlight,
+            DesignColumnWeekdayChecked:Number(setting.DesignColumnWeekdayChecked),
+            DesignColumnCalendarTypeChecked:Number(setting.DesignColumnCalendarTypeChecked),
+            DesignColumnNotesChecked:Number(setting.DesignColumnNotesChecked),
+            DesignColumnGpsChecked:Number(setting.DesignColumnGpsChecked),
+            DesignColumnTimezoneChecked:Number(setting.DesignColumnTimezoneChecked),
+            ImageHeaderImageImg:setting.ImageHeaderImageImg,
+            ImageFooterImageImg:setting.ImageFooterImageImg,
+            TextHeader1Text:setting.TextHeader1Text,
+            TextHeader2Text:setting.TextHeader2Text,
+            TextHeader3Text:setting.TextHeader3Text,
+            TextHeaderAlign:setting.TextHeaderAlign==''?null:setting.TextHeaderAlign,
+            TextFooter1Text:setting.TextFooter1Text,
+            TextFooter2Text:setting.TextFooter2Text,
+            TextFooter3Text:setting.TextFooter3Text,
+            TextFooterAlign:setting.TextFooterAlign==''?null:setting.TextFooterAlign,
+            PrayerMethod:setting.PrayerMethod,
+            PrayerAsrMethod:setting.PrayerAsrMethod,
+            PrayerHighLatitudeAdjustment:setting.PrayerHighLatitudeAdjustment,
+            PrayerTimeFormat:setting.PrayerTimeFormat,
+            PrayerHijriDateAdjustment:Number(setting.PrayerHijriDateAdjustment),
+            PrayerFajrIqamat:setting.PrayerFajrIqamat,
+            PrayerDhuhrIqamat:setting.PrayerDhuhrIqamat,
+            PrayerAsrIqamat:setting.PrayerAsrIqamat,
+            PrayerMaghribIqamat:setting.PrayerMaghribIqamat,
+            PrayerIshaIqamat:setting.PrayerIshaIqamat,
+            PrayerColumnImsakChecked:Number(setting.PrayerColumnImsakChecked),
+            PrayerColumnSunsetChecked:Number(setting.PrayerColumnSunsetChecked),
+            PrayerColumnMidnightChecked:Number(setting.PrayerColumnMidnightChecked),
+            PrayerColumnFastStartEnd:Number(setting.PrayerColumnFastStartEnd) 
+        };
+        return {
+                Id:setting.Id,
+                Document:json
                 };
-                return {
-                        Id:setting.Id,
-                        Document:json
-                        };
-            });
-            APP_GLOBAL.user_settings = {current_id:0,   data:settings};
-            resolve(null);
-        });
     });
+    return settings;
+        
 };
 /**
  * @name appUserSettingLink
@@ -1013,22 +921,15 @@ const appUserSettingLink = (item) => {
         case 'user_day_html':
         case 'user_month_html':
         case 'user_year_html':{
-            const url = appReportUrl( common.commonGlobalGet('iam_user_id'), 
-                                        sid ?? 0, 
-                                        '',
-                                        item.id,
-                                        'HTML');
-            common.commonComponentRender({
-                    mountDiv:   'common_app_window_info',
-                    data:       {
-                                info:'URL',
-                                path:url,
-                                method:'GET',
-                                authorization:'APP_ID',
-                                class:''
-                                },
-                    methods:    null,
-                    path:       '/common/component/common_app_window_info.js'});
+            /**@ts-ignore */
+            appTimetablePreview({   type:item.id
+                                            .replace('user_','')
+                                            .replace('_html','')
+                                            .toUpperCase(),
+                                    iam_user_id:common.commonGlobalGet('iam_user_id'),
+                                    sid:sid ??0,
+                                    current:true
+            })
             break;
         }
     }
@@ -1336,7 +1237,44 @@ const appUserSettingUpdate = setting_tab => {
                     };
     APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document = Document;
 };
-
+/**
+ * @name appTimetablePreview
+ * @description Preview 
+ * @param {{type:'DAY'|'MONTH'|'YEAR',
+ *          iam_user_id:number,
+ *          sid:number,
+ *          current:boolean}} parameters
+ * @returns  {Promise.<void>}
+ */
+const appTimetablePreview = async parameters => {
+    const settings = parameters.current?
+                        APP_GLOBAL.user_settings.data:
+                            await appUserSettingsGet({iam_user_id:parameters.iam_user_id});
+    const curren_setting = settings
+                                    .filter((/**@type{APP_user_setting_data}*/row)=>row.Id== parameters.sid)[0].Document;
+    common.commonComponentRender({   mountDiv:   null,
+            data:  {   
+                    commonMountdiv:null, 
+                    paper_class : curren_setting.DesignPaperSize,
+                    /**@ts-ignore */
+                    appHtml:appReportTimetable(parameters.type, 
+                                                null, 
+                                                appReportTimetableSettings(curren_setting),
+                                                settings)
+                    },
+            methods:null,
+            path: '/common/component/common_preview.js'})
+            .then(html=>{
+                common.commonComponentRender({
+                    mountDiv:   'common_app_window_info',
+                    data:       {
+                                info:'HTML',
+                                content:html.template
+                                },
+                    methods:    null,
+                    path:       '/common/component/common_app_window_info.js'});
+            })
+}
 /**
  * @name appUserSettingProfileLink
  * @description Profile user setting show link
@@ -1347,29 +1285,15 @@ const appUserSettingUpdate = setting_tab => {
 const appUserSettingProfileLink = item => {
     const select_user_setting = COMMON_DOCUMENT.querySelector('#profile_select_user_settings .common_select_dropdown_value').getAttribute('data-value');
     const sid = JSON.parse(select_user_setting).sid;
-    const paper_size = JSON.parse(select_user_setting).paper_size;
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
-        case 'profile_user_settings_year':{
-            const url = appReportUrl(JSON.parse(select_user_setting).iam_user_id, 
-                                     sid, 
-                                     paper_size,
-                                     item.id,
-                                     'HTML',
-                                     true);
-            common.commonComponentRender({
-                    mountDiv:   'common_app_window_info',
-                    data:       {
-                                info:'URL',
-                                class:paper_size,
-                                path:url,
-                                method:'GET',
-                                body:null,
-                                authorization:'APP_ID'
-                                },
-                    methods:    null,
-                    path:       '/common/component/common_app_window_info.js'});
+        case 'profile_user_settings_year':{     
+            /**@ts-ignore */
+            appTimetablePreview({   type:item.id.replace('profile_user_settings_','').toUpperCase(),
+                                    iam_user_id:JSON.parse(select_user_setting).iam_user_id,
+                                    sid:sid
+            })       
             break;
         }
         case 'profile_user_settings_like_unlike':
