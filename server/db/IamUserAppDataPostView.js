@@ -9,13 +9,29 @@ const {server} = await import ('../server.js');
  * @description Get
  * @function
  * @param {{app_id:number,
+ *          resource_id:number|null}} parameters
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPostView'][] }}
+ */
+const get = parameters =>{
+    const result = server.ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).result
+    if (result.length>0 || parameters.resource_id==null)
+        return {result:result, type:'JSON'};
+    else
+        return server.ORM.getError(parameters.app_id, 404);
+};
+
+/**
+ * @name getViewUser
+ * @description getViewUser
+ * @function
+ * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{  iam_user_app_data_post_id:number|null,
  *                  iam_user_id:number|null,
  *                  data_app_id:number}}} parameters
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPostView'][] }}
  */
-const get = parameters =>{
+const getViewUser = parameters =>{
     const IamUserApp_records =  server.ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                                 resource_id:null, 
                                                 data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result;
@@ -88,4 +104,4 @@ const deleteRecord = async parameters =>{
     });
 };
 
-export {get, post, deleteRecord};
+export {get, getViewUser, post, deleteRecord};
