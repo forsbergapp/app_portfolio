@@ -110,8 +110,23 @@ Object.seal(APP_REPORT_GLOBAL);
  * 			settings:APP_REPORT_settings, 
  * 			function_StyleGet:function,
  *          icons:{ timezone:string,
- *                  gps_position_lat:string,
- *                  gps_position_long:string}}} props
+ *                   gps_position_lat:string,
+ *                   gps_position_long:string,
+ *                   timetable_header_col_weekday:string,
+ *                   timetable_header_col_caltype:string,
+ *                   timetable_header_col_gregorian:string,
+ *                   timetable_header_col_hijri:string,
+ *                   timetable_header_col_iqamat:string,
+ *                   timetable_header_col_imsak:string,
+ *                   timetable_header_col_fajr:string,
+ *                   timetable_header_col_sunrise:string,
+ *                   timetable_header_col_dhuhr:string,
+ *                   timetable_header_col_asr:string,
+ *                   timetable_header_col_sunset:string,
+ *                   timetable_header_col_maghrib:string,
+ *                   timetable_header_col_isha:string,
+ *                   timetable_header_col_midnight:string,
+ *                   timetable_header_col_notes:string}}} props
  */
 const template = props => `<div id='${props.TIMETABLE_ID}' 
 								class='${props.TIMETABLE_CLASS}' 
@@ -135,15 +150,15 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
 							${props.TIMETABLE=='DAY'?
 								`<div id='timetable_day_timetable' class='default_font'>
 									<div class='timetable_day_timetable_header_row'>
-										${props.settings.show_imsak==1?'<div class=\'timetable_icon timetable_header_col_imsak\'></div>':''}
-										<div class='timetable_icon timetable_header_col_fajr'></div>
-										<div class='timetable_icon timetable_header_col_sunrise'></div>
-										<div class='timetable_icon timetable_header_col_dhuhr'></div>
-										<div class='timetable_icon timetable_header_col_asr'></div>
-										${props.settings.show_sunset==1?'<div class=\'timetable_icon timetable_header_col_sunset\'></div>':''}
-										<div class='timetable_icon timetable_header_col_maghrib'></div>
-										<div class='timetable_icon timetable_header_col_isha'></div>
-										${props.settings.show_midnight==1?'<div class=\'timetable_icon timetable_header_col_midnight\'></div>':''}
+										${props.settings.show_imsak==1?`<div class='timetable_header_col_imsak'>${props.icons.timetable_header_col_imsak}</div>`:''}
+										<div class='timetable_header_col_fajr'>${props.icons.timetable_header_col_fajr}</div>
+										<div class='timetable_header_col_sunrise'>${props.icons.timetable_header_col_sunrise}</div>
+										<div class='timetable_header_col_dhuhr'>${props.icons.timetable_header_col_dhuhr}</div>
+										<div class='timetable_header_col_asr'>${props.icons.timetable_header_col_asr}</div>
+										${props.settings.show_sunset==1?`<div class='timetable_header_col_sunset'>${props.icons.timetable_header_col_sunset}</div>`:''}
+										<div class='timetable_header_col_maghrib'>${props.icons.timetable_header_col_maghrib}</div>
+										<div class='timetable_header_col_isha'>${props.icons.timetable_header_col_isha}</div>
+										${props.settings.show_midnight==1?`<div class='timetable_header_col_midnight'>${props.icons.timetable_header_col_midnight}</div>`:''}
 									</div>
 									${props.TIMETABLE_DAY_DATA.map(setting=>
 										`<div class='${setting.row_class}'>
@@ -178,26 +193,26 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
 							${props.TIMETABLE =='MONTH'?
 								`<div id='timetable_month_data' class='${props.settings.number_system=='hanidec'?'default_font bignumbers':'default_font'}'>
 																														 <div class='timetable_month_data_row timetable_month_data_header_row'>
-																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_day'></div>
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_weekday==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
+																														 <div class='timetable_month_data_col timetable_header_col_day'></div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_weekday==1?		`<div class='timetable_month_data_col timetable_header_col_weekday'>${props.icons.timetable_header_col_weekday}</div>`:''}
 										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.second_locale !='' 
-																					&& props.settings.show_weekday==1?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_weekday\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_calendartype==1?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_caltype\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_imsak==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_imsak\'></div>':''}
-																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_fajr'></div>
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_fajr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false?											'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunrise\'></div>':''}
-																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_dhuhr'></div>
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_dhuhr!='0'?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_asr'></div>
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_asr!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_sunset==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_sunset\'></div>':''}
-																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_maghrib'></div>
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_maghrib!='0'?	'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-																														 <div class='timetable_month_data_col timetable_icon timetable_header_col_isha'></div>
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_isha!='0'?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_iqamat\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_midnight==1?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_midnight\'></div>':''}
-										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_notes==1 ?		'<div class=\'timetable_month_data_col timetable_icon timetable_header_col_notes\'></div>':''}
+																					&& props.settings.show_weekday==1?	`<div class='timetable_month_data_col timetable_header_col_weekday'>${props.icons.timetable_header_col_weekday}</div>`:''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_calendartype==1?	`<div class='timetable_month_data_col timetable_header_col_caltype'>${props.icons.timetable_header_col_caltype}</div>`:''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_imsak==1?		`<div class='timetable_month_data_col timetable_header_col_imsak'>${props.icons.timetable_header_col_imsak}</div>`:''}
+																														 <div class='timetable_month_data_col timetable_header_col_fajr'>${props.icons.timetable_header_col_fajr}</div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_fajr!='0'?		`<div class='timetable_month_data_col timetable_header_col_iqamat'>${props.icons.timetable_header_col_iqamat}</div>`:''}
+										${props.TIMETABLE_YEAR_MONTH==false?											`<div class='timetable_month_data_col timetable_header_col_sunrise'>${props.icons.timetable_header_col_sunrise}</div>`:''}
+																														 <div class='timetable_month_data_col timetable_header_col_dhuhr'>${props.icons.timetable_header_col_dhuhr}</div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_dhuhr!='0'?	`<div class='timetable_month_data_col timetable_header_col_iqamat'>${props.icons.timetable_header_col_iqamat}</div>`:''}
+																														 <div class='timetable_month_data_col timetable_header_col_asr'>${props.icons.timetable_header_col_asr}</div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_asr!='0'?		`<div class='timetable_month_data_col timetable_header_col_iqamat'>${props.icons.timetable_header_col_iqamat}</div>`:''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_sunset==1?		`<div class='timetable_month_data_col timetable_header_col_sunset'>${props.icons.timetable_header_col_sunset}</div>`:''}
+																														 <div class='timetable_month_data_col timetable_header_col_maghrib'>${props.icons.timetable_header_col_maghrib}</div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_maghrib!='0'?	`<div class='timetable_month_data_col timetable_header_col_iqamat'>${props.icons.timetable_header_col_iqamat}</div>`:''}
+																														 <div class='timetable_month_data_col timetable_header_col_isha'>${props.icons.timetable_header_col_isha}</div>
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.iqamat_isha!='0'?		`<div class='timetable_month_data_col timetable_header_col_iqamat'>${props.icons.timetable_header_col_iqamat}</div>`:''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_midnight==1?		`<div class='timetable_month_data_col timetable_header_col_midnight'>${props.icons.timetable_header_col_midnight}</div>`:''}
+										${props.TIMETABLE_YEAR_MONTH==false 	&& props.settings.show_notes==1 ?		`<div class=\'timetable_month_data_col timetable_header_col_notes\'>${props.icons.timetable_header_col_notes}</div>`:''}
 									</div>
 									${props.TIMETABLE_MONTH_DATA.map(row=>
 										`<div class='${row.class}'>
@@ -294,8 +309,25 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
  *                      template:string}}
  */
 const component = props => {
-
-	/**
+    const ICONS = { timezone:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone,
+                    gps_position_lat:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_lat,
+                    gps_position_long:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_long,
+                    timetable_header_col_weekday:props.methods.COMMON.commonGlobalGet('ICONS').regional_weekday,
+                    timetable_header_col_caltype:props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar,
+                    timetable_header_col_gregorian:props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar,
+                    timetable_header_col_hijri:props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar,
+                    timetable_header_col_iqamat:props.methods.COMMON.commonGlobalGet('ICONS').misc_calling,
+                    timetable_header_col_imsak:props.methods.COMMON.commonGlobalGet('ICONS').sky_sunrise_before +  props.methods.COMMON.commonGlobalGet('ICONS').misc_food,
+                    timetable_header_col_fajr:props.methods.COMMON.commonGlobalGet('ICONS').sky_sunrise_before,
+                    timetable_header_col_sunrise:props.methods.COMMON.commonGlobalGet('ICONS').sky_sunrise,
+                    timetable_header_col_dhuhr:props.methods.COMMON.commonGlobalGet('ICONS').sky_midday,
+                    timetable_header_col_asr:props.methods.COMMON.commonGlobalGet('ICONS').sky_afternoon,
+                    timetable_header_col_sunset:props.methods.COMMON.commonGlobalGet('ICONS').sky_sunset,
+                    timetable_header_col_maghrib:props.methods.COMMON.commonGlobalGet('ICONS').sky_sunset,
+                    timetable_header_col_isha:props.methods.COMMON.commonGlobalGet('ICONS').sky_night,
+                    timetable_header_col_midnight:props.methods.COMMON.commonGlobalGet('ICONS').sky_midnight,
+                    timetable_header_col_notes:props.methods.COMMON.commonGlobalGet('ICONS').notes};
+/**
 	 * Praytimes third party code
 	 * placed here to simplify app and server share of same component
 	 * converted function to class to simplify type declarations
@@ -1887,10 +1919,7 @@ const component = props => {
 							TIMETABLE_COPYRIGHT:APP_REPORT_GLOBAL.app_copyright,
 							settings:settings, 
 							function_StyleGet:StyleGet,
-                            icons:{timezone:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone,
-                                    gps_position_lat:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_lat,
-                                    gps_position_long:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_long
-                            }
+                            icons:ICONS
                         });
 	};
 /**
@@ -2267,10 +2296,7 @@ const component = props => {
 							TIMETABLE_COPYRIGHT:APP_REPORT_GLOBAL.app_copyright,
 							settings:settings, 
 							function_StyleGet:StyleGet,
-                            icons:{timezone:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone,
-                                    gps_position_lat:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_lat,
-                                    gps_position_long:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_long
-                            }
+                            icons:ICONS
                         });
 	};
 
@@ -2338,10 +2364,7 @@ const component = props => {
 							TIMETABLE_COPYRIGHT:APP_REPORT_GLOBAL.app_copyright,
 							settings:settings, 
 							function_StyleGet:StyleGet,
-                            icons:{timezone:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone,
-                                    gps_position_lat:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_lat,
-                                    gps_position_long:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_long
-                            }
+                            icons:ICONS
                         });
 	};
 	let html = '';

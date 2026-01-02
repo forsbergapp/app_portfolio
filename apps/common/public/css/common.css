@@ -80,22 +80,7 @@
 
     --common_app_icon_regional:                 '🌐';
     
-    --common_app_icon_regional_weekday:         '📆';
-    --common_app_icon_regional_timezone:        '🌐';
-    --common_app_icon_regional_calendar:        '📆';
     --common_app_icon_regional_numbersystem:    '123';
-
-    --common_app_icon_sky_sunrise_before:       '🌙';
-    --common_app_icon_sky_sunrise:              '☀⭡';
-	--common_app_icon_sky_midday:               '☀';
-    --common_app_icon_sky_afternoon:            '🌥';
-    --common_app_icon_sky_sunset:               '☀⭣';
-    --common_app_icon_sky_night:                '🌙';
-    --common_app_icon_sky_midnight:             '🌙';
-
-    --common_app_icon_misc_food:                '🍴';
-    --common_app_icon_misc_prayer:              '🛐';
-    --common_app_icon_misc_calling:             '🗣';
 
 	/*fonts*/
 	--common_app_font_languages_1:  	"Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 

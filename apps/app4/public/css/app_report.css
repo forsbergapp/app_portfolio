@@ -50,38 +50,6 @@
 	margin-top: 0px !important;
 }
 
-/*Common styles for all timetables*/
-.timetable_header_col_weekday::before{		content:	var(--common_app_icon_regional_weekday)}
-.timetable_header_col_caltype::before{		content:	var(--common_app_icon_regional_calendar)}
-.timetable_header_col_gregorian::before{	content:	var(--common_app_icon_regional_calendar)}
-.timetable_header_col_hijri::before{		content:	var(--common_app_icon_regional_calendar)}
-.timetable_header_col_iqamat::before{		content:	var(--common_app_icon_misc_calling)}
-.timetable_header_col_imsak::before{		content:	var(--common_app_icon_sky_sunrise_before) ' ' var(--common_app_icon_misc_food)}
-.timetable_header_col_fajr::before{			content:	var(--common_app_icon_sky_sunrise_before)}
-.timetable_header_col_sunrise::before{		content:	var(--common_app_icon_sky_sunrise)}
-.timetable_header_col_dhuhr::before{		content:	var(--common_app_icon_sky_midday)}
-.timetable_header_col_asr::before{			content:	var(--common_app_icon_sky_afternoon)}
-.timetable_header_col_sunset::before{		content:	var(--common_app_icon_sky_sunset)}
-.timetable_header_col_maghrib::before{		content:	var(--common_app_icon_sky_sunset)}
-.timetable_header_col_isha::before{			content:	var(--common_app_icon_sky_night)}
-.timetable_header_col_midnight::before{		content:	var(--common_app_icon_sky_midnight)}
-.timetable_header_col_notes::before{		content:	var(--common_app_icon_notes)}
-
-.timetable_icon {
-	font-family: var(--common_app_font_ui);
-	font-weight: 900;
-	font-style: normal;
-	display: inline-block;
-}  
-.timetable_icon::before{
-    white-space: nowrap;
-	vertical-align: middle;
-}
-.timetable_icon svg{
-	font-size: 2em;
-	height: 0.6em;
-	vertical-align: sub;
-}
 /*Fasting columns*/
 .timetable_class .timetable_data_fast_start,
 .timetable_class .timetable_data_fast_end {
