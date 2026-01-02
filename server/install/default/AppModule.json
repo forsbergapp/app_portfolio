@@ -163,15 +163,6 @@
     },
     {
         "Id":19,
-        "AppId": 4,
-        "ModuleType": "REPORT",
-        "ModuleName": "TIMETABLE",
-        "ModuleRole": "APP_ID",
-        "ModulePath": "/apps/app4/src/report/timetable.js",
-        "ModuleDescription": "Timetable day, month and year"
-    },
-    {
-        "Id":20,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "ACCOUNT_CREATE",
@@ -180,7 +171,7 @@
         "ModuleDescription": "ACCOUNT create"
     },
     {
-        "Id":21,
+        "Id":20,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "ACCOUNT_GET",
@@ -189,7 +180,7 @@
         "ModuleDescription": "ACCOUNT get"
     },
     {
-        "Id":22,
+        "Id":21,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "ACCOUNT_STATEMENT",
@@ -198,7 +189,7 @@
         "ModuleDescription": "ACCOUNT get statement"
     },
     {
-        "Id":23,
+        "Id":22,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "ACCOUNT_TRANSACTIONS",
@@ -207,7 +198,7 @@
         "ModuleDescription": "ACCOUNT get transactions"
     },
     {
-        "Id":24,
+        "Id":23,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "CUSTOMER_CREATE",
@@ -216,7 +207,7 @@
         "ModuleDescription": "CUSTOMER create"
     },
     {
-        "Id":25,
+        "Id":24,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "CUSTOMER_GET",
@@ -225,7 +216,7 @@
         "ModuleDescription": "CUSTOMER get"
     },
     {
-        "Id":26,
+        "Id":25,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_UPDATE",
@@ -234,7 +225,7 @@
         "ModuleDescription": "PAYMENT REQUEST update"
     },
     {
-        "Id":27,
+        "Id":26,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_CREATE",
@@ -243,7 +234,7 @@
         "ModuleDescription": "PAYMENT REQUEST create"
     },
     {
-        "Id":28,
+        "Id":27,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_GET_STATUS",
@@ -252,7 +243,7 @@
         "ModuleDescription": "PAYMENT REQUEST get status"
     },
     {
-        "Id":29,
+        "Id":28,
         "AppId": 5,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_GET",
@@ -261,7 +252,7 @@
         "ModuleDescription": "PAYMENT REQUEST get"
     },
     {
-        "Id":30,
+        "Id":29,
         "AppId": 6,
         "ModuleType": "FUNCTION",
         "ModuleName": "PRODUCT_GET",
@@ -270,7 +261,7 @@
         "ModuleDescription": "PRODUCT get"
     },
     {
-        "Id":31,
+        "Id":30,
         "AppId": 6,
         "ModuleType": "FUNCTION",
         "ModuleName": "PRODUCT_LOCATION_GET",
@@ -279,7 +270,7 @@
         "ModuleDescription": "PRODUCT location get"
     },
     {
-        "Id":32,
+        "Id":31,
         "AppId": 6,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_CREATE",
@@ -288,7 +279,7 @@
         "ModuleDescription": "PAYMENT REQUEST create"
     },
     {
-        "Id":33,
+        "Id":32,
         "AppId": 6,
         "ModuleType": "FUNCTION",
         "ModuleName": "PAYMENT_REQUEST_GET_STATUS",
@@ -297,7 +288,7 @@
         "ModuleDescription": "PAYMENT REQUEST get status"
     },
     {
-        "Id":34,
+        "Id":33,
         "AppId": 8, 
         "ModuleType": "FUNCTION",
         "ModuleName": "CUBE_SOLVE",
@@ -306,7 +297,7 @@
         "ModuleDescription": "Cube solve"
     },
     {
-        "Id":35,
+        "Id":34,
         "AppId": 9, 
         "ModuleType": "FUNCTION",
         "ModuleName": "TOTP_GET",

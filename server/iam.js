@@ -1430,6 +1430,44 @@ const iamAdminServerConfigUpdate = async parameters =>{
         
 }
 /**
+ * @name IamUserAppDataPostGet
+ * @description IamUserAppDataPost get and adds user view stat record
+ * @function
+ * @memberof ROUTE_REST_API
+ * @param {{app_id:number,
+ *          resource_id:number|null,
+ *          idToken:string,
+ *          ip:string,
+ *          user_agent:string
+ *          data:{  id_view?:number|null,
+ *                  data_app_id:number|null,
+ *                  iam_user_id:number|null}}} parameters
+ * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPost'][] }}
+ */
+const IamUserAppDataPostGet = parameters =>{
+    if (parameters.data.id_view!=null){
+        /**@type{server['ORM']['Object']['IamUserAppDataPostView']} */
+        const data_ViewStat = { Document:{	client_ip:          		parameters.ip,
+                                            client_user_agent:  		parameters.user_agent},
+                                IamUserAppId:    		server['socket'].socketConnectedGetAppIdTokenRecord(parameters.idToken)[0].IamUserid!=null?
+                                                            (server.ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
+                                                                                        resource_id:null, 
+                                                                                        data:{  data_app_id:parameters.data.data_app_id, 
+                                                                                                iam_user_id:server['socket'].socketConnectedGetAppIdTokenRecord(parameters.idToken)[0].IamUserid}})
+                                                            .result[0]?.Id??null):
+                                                                null,
+                                /**@ts-ignore */
+                                IamUserAppDataPostId: 	server.ORM.UtilNumberValue(parameters.data.id_view)};
+        server.ORM.db.IamUserAppDataPostView.post(parameters.app_id, data_ViewStat)
+    }
+    return server.ORM.db.IamUserAppDataPost.get({   app_id:parameters.app_id, 
+                                                    resource_id:parameters.resource_id, 
+                                                    data:{data_app_id:parameters.data.data_app_id,
+                                                            iam_user_id:parameters.data.iam_user_id
+                                                    }})
+}
+
+/**
  * @name iamUserGet
  * @description User get
  * @function
@@ -1623,6 +1661,7 @@ export{ iamUtilMessageNotAuthorized,
         iamAppAccessGet,
         iamAdminServerConfigGet,
         iamAdminServerConfigUpdate,
+        IamUserAppDataPostGet,
         iamUserGet,
         iamUserGetAdmin,
         iamUserGetLastLogin,
