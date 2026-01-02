@@ -73,10 +73,7 @@ const APP_REPORT_GLOBAL = {
 	regional_def_locale_ext_number_system:'',
 	regional_def_locale_ext_calendar:'',
 	regional_def_calendar_type_greg:'',
-	regional_def_calendar_number_system:'',
-	timezone_text: '🌐',
-	GpsLatText:'📍',
-	GpsLongText:''
+	regional_def_calendar_number_system:''
 };
 Object.seal(APP_REPORT_GLOBAL);
 
@@ -111,7 +108,10 @@ Object.seal(APP_REPORT_GLOBAL);
  * 			TIMETABLE_YEAR_MONTH_DATA: string[]|[],
  * 			TIMETABLE_COPYRIGHT:string,
  * 			settings:APP_REPORT_settings, 
- * 			function_StyleGet:function}} props
+ * 			function_StyleGet:function,
+ *          icons:{ timezone:string,
+ *                  gps_position_lat:string,
+ *                  gps_position_long:string}}} props
  */
 const template = props => `<div id='${props.TIMETABLE_ID}' 
 								class='${props.TIMETABLE_CLASS}' 
@@ -242,13 +242,13 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
 											<div >${props.settings.place}</div>
 											${props.settings.show_gps == 1?
 												`
-												<div >${APP_REPORT_GLOBAL.GpsLatText}</div>
+												<div >${props.icons.gps_position_lat}</div>
 												<div >${Number(props.settings.gps_lat).toLocaleString(
 																						props.settings.locale + 
 																						APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																						APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																						props.settings.number_system)}</div>
-												<div >${APP_REPORT_GLOBAL.GpsLongText}</div>
+												<div >${props.icons.gps_position_long}</div>
 												<div >${Number(props.settings.gps_long).toLocaleString(
 																						props.settings.locale + 
 																						APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
@@ -256,7 +256,7 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
 																						props.settings.number_system)}</div>`
 												:''}
 											${props.settings.show_timezone == 1?
-												`<div >${APP_REPORT_GLOBAL.timezone_text}</div>
+												`<div >${props.icons.timezone}</div>
 												<div >${props.settings.timezone}</div>`
 												:''}
 											<div class='copyright'>${APP_REPORT_GLOBAL.app_copyright}</div>
@@ -287,7 +287,7 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
  * 						button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
  * 						user_account_app_data_posts_parameters:APP_REPORT_day_user_account_app_data_posts[]|null
  * 						},
- *          methods:    {COMMON:common['CommonModuleCommon']|null}}} props
+ *          methods:    {COMMON:common['CommonModuleCommon']}}} props
  * @returns {{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   	null,
  *                      methods:	null,
@@ -1832,11 +1832,11 @@ const component = props => {
 					col_isha : 		show_col('DAY', 'isha', times.isha, show_col_data),
 					col_midnight : 	settings.show_midnight == 1? show_col('DAY', 'midnight', times.midnight ?? 0, show_col_data):null,
 					footer1:		user_place,
-					footer2:		settings.show_gps == 1 ? APP_REPORT_GLOBAL.GpsLatText:'',
+					footer2:		settings.show_gps == 1 ? props.methods.COMMON.commonGlobalGet('ICONS').gps_position_lat:'',
 					footer3:		settings.show_gps == 1 ? user_gps_latitude?.toLocaleString(user_locale + APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system) ?? '':'',
-					footer4:		settings.show_gps == 1 ? APP_REPORT_GLOBAL.GpsLongText:'',
+					footer4:		settings.show_gps == 1 ? props.methods.COMMON.commonGlobalGet('ICONS').gps_position_long:'',
 					footer5:		settings.show_gps == 1 ? user_gps_longitude?.toLocaleString(user_locale + APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system) ?? '':'',
-					user_timezone:APP_REPORT_GLOBAL.timezone_text + ' ' + user_timezone
+					user_timezone:props.methods.COMMON.commonGlobalGet('ICONS').timezone + ' ' + user_timezone
 				};
 			};
 			return user_settings.map(user_setting=>{
@@ -1884,7 +1884,12 @@ const component = props => {
 							TIMETABLE_YEAR_MONTH_DATA: [],
 							TIMETABLE_COPYRIGHT:APP_REPORT_GLOBAL.app_copyright,
 							settings:settings, 
-							function_StyleGet:StyleGet});
+							function_StyleGet:StyleGet,
+                            icons:{timezone:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone,
+                                    gps_position_lat:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_lat,
+                                    gps_position_long:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_long
+                            }
+                        });
 	};
 /**
 	 * Make a timetable month row
@@ -2259,7 +2264,12 @@ const component = props => {
 							TIMETABLE_YEAR_MONTH_DATA: [],
 							TIMETABLE_COPYRIGHT:APP_REPORT_GLOBAL.app_copyright,
 							settings:settings, 
-							function_StyleGet:StyleGet});
+							function_StyleGet:StyleGet,
+                            icons:{timezone:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone,
+                                    gps_position_lat:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_lat,
+                                    gps_position_long:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_long
+                            }
+                        });
 	};
 
 	/**
@@ -2325,7 +2335,12 @@ const component = props => {
 							TIMETABLE_YEAR_MONTH_DATA: months,
 							TIMETABLE_COPYRIGHT:APP_REPORT_GLOBAL.app_copyright,
 							settings:settings, 
-							function_StyleGet:StyleGet});
+							function_StyleGet:StyleGet,
+                            icons:{timezone:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone,
+                                    gps_position_lat:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_lat,
+                                    gps_position_long:props.methods.COMMON.commonGlobalGet('ICONS').gps_position_long
+                            }
+                        });
 	};
 	let html = '';
 	switch (props.data.timetable){

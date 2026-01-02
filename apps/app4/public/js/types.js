@@ -3,7 +3,7 @@
  * @module apps/app4/app/types
  */
 /**
- * @import {CommonComponentLifecycle} from '../../../common_types.js'
+ * @import {CommonModuleCommon, CommonComponentLifecycle} from '../../../common_types.js'
  */
 /**
  * @description Type CommonModuleLibTimetableParam
@@ -15,7 +15,7 @@
  * 						    button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
  * 						    user_account_app_data_posts_parameters:APP_REPORT_day_user_account_app_data_posts[]|null
  * 						    },
- *              methods:    {COMMON_DOCUMENT:null}}} CommonModuleLibTimetableParam
+ *              methods:    {COMMON:CommonModuleCommon}}} CommonModuleLibTimetableParam
  */
 /**
  * @description Type CommonModuleLibTimetable
@@ -356,10 +356,7 @@
  * 			regional_def_locale_ext_number_system:string,
  * 			regional_def_locale_ext_calendar:string,
  * 			regional_def_calendar_type_greg:string,
- * 			regional_def_calendar_number_system:string,
- * 			timezone_text: string,
- * 		    GpsLatText: string,
- * 		    GpsLongText: string
+ * 			regional_def_calendar_number_system:string
  * 			}} APP_REPORT_GLOBAL
  */
 
