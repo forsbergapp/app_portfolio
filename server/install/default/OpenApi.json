@@ -525,10 +525,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/server-db/iamuserappdatapost/${resource_id_number}": {
+        "/bff/app_id/v1/server-iam/iamuserappdatapost/${resource_id_number}": {
             "get": {
                 "summary": "",
-                "operationId": "server_db.IamUserAppDataPost.get",
+                "operationId": "server.iam.IamUserAppDataPostGet",
                 "security":[
                     {"$ref": "#/components/securitySchemes/SecurityApp"},
                     {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
@@ -545,6 +545,24 @@
                             "$ref": "#/components/parameters/paths/iam_user_id",
                             "in":"query",
                             "required":true
+                        },
+                        {
+                            "name":"id_view",
+                            "description":"view stat id",
+                            "in":"query",
+                            "required":false,
+                            "schema":{
+                                "type": "number"
+                            }    
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_ip"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_user_agent"
+                        },
+                        {
+                            "$ref": "#/components/parameters/paths/server_idtoken"
                         },
                         {
                             "$ref": "#/components/parameters/paths/IAM_data_app_id",

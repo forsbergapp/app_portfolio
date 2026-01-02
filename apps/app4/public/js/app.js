@@ -757,7 +757,7 @@ const appUserLogin = async () => {
 const appUserLoginPost = async () =>{
     if (common.commonGlobalGet('iam_user_id') !=null){
         //if user has not any posts saved then create default
-        const result = await common.commonFFB({ path:'/server-db/iamuserappdatapost/', 
+        const result = await common.commonFFB({ path:'/server-iam/iamuserappdatapost/', 
                                                 query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${common.commonGlobalGet('iam_user_id')??''}`, 
                                                 method:'GET', authorization_type:'APP_ID'});
          let settings = []
@@ -841,15 +841,15 @@ const appUserProfileDetail = (detailchoice) => {
  * @name appUserSettingsGet
  * @description User settings get, formats saved data
  * @function
- * @param {{iam_user_id:number, settings_fetched?:APP_user_setting_record[]}} parameters
+ * @param {{iam_user_id:number, settings_fetched?:APP_user_setting_record[], sid?:number}} parameters
  * 
  * @returns {Promise.<[APP_user_setting_data]>}
  */
 const appUserSettingsGet = async parameters => {
     const result = parameters.settings_fetched?
                         parameters.settings_fetched:
-                            await common.commonFFB({path:'/server-db/iamuserappdatapost/', 
-                                                    query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${parameters.iam_user_id ??''}`, 
+                            await common.commonFFB({path:'/server-iam/iamuserappdatapost/', 
+                                                    query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${parameters.iam_user_id ??''}${parameters.sid==null?'':'&id_view=' + parameters.sid}`, 
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'});
     const settings = JSON.parse(result).rows.map((/** @type{APP_user_setting_record}*/setting)=>{
@@ -1248,7 +1248,7 @@ const appUserSettingUpdate = setting_tab => {
 const appTimetablePreview = async parameters => {
     const settings = parameters.current?
                         APP_GLOBAL.user_settings.data:
-                            await appUserSettingsGet({iam_user_id:parameters.iam_user_id});
+                            await appUserSettingsGet({iam_user_id:parameters.iam_user_id, sid:parameters.sid});
     const curren_setting = settings
                                     .filter((/**@type{APP_user_setting_data}*/row)=>row.Id== parameters.sid)[0].Document;
     common.commonComponentRender({   mountDiv:   null,

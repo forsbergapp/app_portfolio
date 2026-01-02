@@ -15,6 +15,16 @@ let SOCKET_CONNECTED_CLIENTS = [];
  * @description Socket get conections for given user
  *              
  * @function
+ * @param {server['socket']['SocketConnectedServer']['IdToken']} idToken
+ * @returns {server['socket']['SocketConnectedServer'][]}
+ */
+const socketConnectedGetAppIdTokenRecord = idToken => SOCKET_CONNECTED_CLIENTS.filter(client => client.IdToken == idToken);
+
+/**
+ * @name socketConnectedUserGet
+ * @description Socket get conections for given user
+ *              
+ * @function
  * @param {server['ORM']['Object']['IamUser']['Id']} IamUserId
  * @returns {server['socket']['SocketConnectedServer'][]}
  */
@@ -514,7 +524,7 @@ const socketClientPostMessage = async parameters => {
             res:client.Response});
     }
 };
-export {socketConnectedUserGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
+export {socketConnectedGetAppIdTokenRecord, socketConnectedUserGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
         socketAdminSend, 
         socketIntervalCheck, socketExpiredTokenSendSSE, CheckOnline, 
         socketClientPostMessage};
