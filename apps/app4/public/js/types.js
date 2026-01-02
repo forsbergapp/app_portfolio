@@ -247,6 +247,7 @@
  * @property {string}	theme_day
  * @property {string}	theme_month
  * @property {string}	theme_year
+ * @property {string}	paper_size
  * @property {string}	highlight
  * @property {number}	show_weekday
  * @property {number}	show_calendartype
