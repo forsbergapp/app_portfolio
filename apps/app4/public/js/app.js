@@ -9,7 +9,6 @@
  *          APP_user_setting} from './types.js'
  */
 
-
 /**@type{common['COMMON_DOCUMENT']} */
 const COMMON_DOCUMENT = document;
 
@@ -271,7 +270,7 @@ const appReportTimetable = (timetable_type = 'DAY', item_id = null, settings, al
                                                                         null
                             },
                 methods:	{
-                            COMMON_DOCUMENT:null
+                            COMMON:common
                             }
                 }).template;
 

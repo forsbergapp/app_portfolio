@@ -233,6 +233,8 @@
  *                      pay:string,
  *                      gps: string,
  *                      gps_position: string,
+ *                      gps_position_lat:string,
+ *                      gps_position_long:string,
  *                      gps_high_latitude: string,
  *                      map_my_location: string,
  *                      map_layer: string,
