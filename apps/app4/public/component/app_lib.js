@@ -1757,7 +1757,9 @@ const component = props => {
 		/**@type{*}*/
 		const date_current = new Date(	APP_REPORT_GLOBAL.session_currentDate.getFullYear(),
 										APP_REPORT_GLOBAL.session_currentDate.getMonth(),
-										APP_REPORT_GLOBAL.session_currentDate.getDate());
+										APP_REPORT_GLOBAL.session_currentDate.getDate(),
+                                        APP_REPORT_GLOBAL.session_currentDate.getHours(),
+                                        APP_REPORT_GLOBAL.session_currentDate.getMinutes());
 		const title_gregorian = date_current.toLocaleDateString(settings.locale + 
 										APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 										APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + 
