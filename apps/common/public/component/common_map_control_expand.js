@@ -36,13 +36,14 @@ const template = props => props.expand_type=='search'?
 *                       commonMountdiv:string,
 *                       data_app_id:number,
 *                       expand_type:'search'|'layer',
-*                       map_layers:common['commonMapLayers'][]
 *                       },
 *          methods:     {
 *                       COMMON:common['CommonModuleCommon'],
 *                       goTo:(arg0:{ip:string|null,
 *                                   longitude:string|number|null,
 *                                   latitude:string|number|null})=>void,
+*                       dataGet:(arg0?:string)=>*,
+*                       getLayer:(arg0?:string)=>common['commonMapLayers'][],
 *                       setLayer:(arg0:string)=>void
 *                       }}} props
 * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
@@ -256,9 +257,9 @@ const component = async props => {
             await props.methods.COMMON.commonComponentRender({
                 mountDiv:   'common_map_control_expand_select_mapstyle', 
                 data:       {
-                            default_data_value:props.data.map_layers[0].value,
-                            default_value:props.data.map_layers[0].title,
-                            options:props.data.map_layers,
+                            default_data_value:props.methods.getLayer()[props.methods.dataGet('layer')].value,
+                            default_value:props.methods.getLayer()[props.methods.dataGet('layer')].title,
+                            options:props.methods.getLayer(),
                             column_value:'value',
                             column_text:'title'
                             },
