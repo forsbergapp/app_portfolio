@@ -85,43 +85,59 @@ const component = async props => {
         attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }];
 
-    /**
-     * @name ZOOM_LEVEL_GOTO
-     * @description Constant for zoom level for goto
-     * @constant
-     */
-    const ZOOM_LEVEL_GOTO = 5;
-    /**
-     * @name MEASURE_DISTANCE_PIXEL
-     * @description Constant for distance pixels
-     * @constant
-     */
-    const MEASURE_DISTANCE_PIXEL = 100;
-    /**
-     * @name TILE_SIZE
-     * @description Constant for map tile size
-     * @constant
-     */
-    const TILE_SIZE = 256;
-
-    // calculate the radian measure of one degree (π/180)
-    const RAD = Math.PI / 180;
-
     //import components without returned lifecycle, data or methods once for high speed performance
     const {default:common_map_tile} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_tile.js');
     const {default:common_map_line} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_line.js');
     const {default:common_map_popup} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_popup.js');
     const {default:common_map_measure} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_measure.js');
 
-    //set default layer
-    let TILE_URL = MAP_LAYERS[0].url;
-    let zoom_level = 3;
-    let offsetX = 0, offsetY = 0;
-    let dragging = false;
-    /**@type{number} */
-    let startX;
-    /**@type{number} */
-    let startY;
+    /**
+     * @name DATA
+     * @description Constant for all current values and constants
+     * @constant
+     * @typedef {{  layer:number, 
+     *              zoom_level:number, 
+     *              offsetX:number,
+     *              offsetY:number,
+     *              dragging:boolean,
+     *              startX:number|null,
+     *              startY:number|null,
+     *              ZOOM_LEVEL_GOTO:number,
+     *              MEASURE_DISTANCE_PIXEL:number,
+     *              TILE_SIZE:number,
+     *              RAD:number}} DATA
+     * @type {DATA}
+     */
+    const DATA = {  layer:0,
+                    zoom_level:3,
+                    offsetX:0,
+                    offsetY:0,
+                    dragging:false,
+                    startX:null,
+                    startY:null,
+                    ZOOM_LEVEL_GOTO:5,
+                    MEASURE_DISTANCE_PIXEL:100,
+                    TILE_SIZE:256,
+                    // calculate the radian measure of one degree (π/180)
+                    RAD:Math.PI / 180
+
+    }
+    /**
+     * @param {keyof DATA} key
+     * @function
+     * @returns {*}
+     */
+    const dataGet = key => DATA[key]
+    /**
+     * @param {keyof DATA} key
+     * @param {*} value
+     * @function
+     * @returns {void}
+     */
+    const dataSet = (key, value) =>{ 
+        /**@ts-ignore */
+        DATA[key] = value;
+    };
 
     /**
      * @name drawTiles
@@ -130,10 +146,10 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const drawTiles = async () => {
-        const cols =        Math.ceil(window.innerWidth / TILE_SIZE) + 2;
-        const rows =        Math.ceil(window.innerHeight / TILE_SIZE) + 2;
-        const startTileX =  Math.floor(-offsetX / TILE_SIZE);
-        const startTileY =  Math.floor(-offsetY / TILE_SIZE);
+        const cols =        Math.ceil(window.innerWidth / dataGet('TILE_SIZE')) + 2;
+        const rows =        Math.ceil(window.innerHeight / dataGet('TILE_SIZE')) + 2;
+        const startTileX =  Math.floor(-dataGet('offsetX') / dataGet('TILE_SIZE'));
+        const startTileY =  Math.floor(-dataGet('offsetY') / dataGet('TILE_SIZE'));
         //save result in variable for highest performance
         let tiles = '';
         for (let x = startTileX; x < startTileX + cols; x++) {
@@ -145,13 +161,13 @@ const component = async props => {
                                                 commonMountdiv:'',
                                                 geoJSON:{   id:  id,
                                                 type:'Feature',
-                                                properties:{left:       x * TILE_SIZE + offsetX,
-                                                            top:        y * TILE_SIZE + offsetY,
-                                                            tileSize:   TILE_SIZE,
-                                                            url:        TILE_URL
+                                                properties:{left:       x * dataGet('TILE_SIZE') + dataGet('offsetX'),
+                                                            top:        y * dataGet('TILE_SIZE') + dataGet('offsetY'),
+                                                            tileSize:   dataGet('TILE_SIZE'),
+                                                            url:        MAP_LAYERS[dataGet('layer')].url
                                                                             .replace('{x}', x.toString())
                                                                             .replace('{y}', y.toString())
-                                                                            .replace('{z}', zoom_level.toString())},
+                                                                            .replace('{z}', dataGet('zoom_level').toString())},
                                                 geometry:{
                                                             type:'Point',
                                                             coordinates:null
@@ -175,7 +191,7 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const drawVectors = async vectorLinesgeoJSON => {
-        vectorLinesgeoJSON.map(row=>{row.properties.offsetX=offsetX;row.properties.offsetY=offsetY;});
+        vectorLinesgeoJSON.map(row=>{row.properties.offsetX=dataGet('offsetX');row.properties.offsetY=dataGet('offsetY');});
         
         //save result in variable for highest performance
         let lines = '';
@@ -187,8 +203,8 @@ const component = async props => {
                                                 commonMountdiv:'',
                                                 geoJSON:{   id:  id,
                                                 type:'Feature',
-                                                properties:{offsetX:offsetX, 
-                                                            offsetY:offsetY,
+                                                properties:{offsetX:dataGet('offsetX'), 
+                                                            offsetY:dataGet('offsetY'),
                                                             title:line.properties.title,
                                                             color:line.properties.color,
                                                             width:line.properties.width},
@@ -223,7 +239,7 @@ const component = async props => {
             const points = JSON.parse(line.getAttribute('data-gps'))
                             .map((/**@type{[string, string]}*/[long, lat])=>{
                                 const [wx, wy] = project(+long, +lat);
-                                return `${wx + offsetX},${wy + offsetY}`;
+                                return `${wx + dataGet('offsetX')},${wy + dataGet('offsetY')}`;
                             })
                             .join(' ');
             line.setAttribute('points', points);
@@ -256,8 +272,8 @@ const component = async props => {
             const [wx, wy] = project(   Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-longitude')), 
             Number(popup.querySelectorAll('.common_map_popup_sub_title_gps')[0].getAttribute('data-latitude')));
             const rect = popup.getBoundingClientRect();
-            popup.style.left = `${(wx+offsetX -(rect.width/2))}px`;
-            popup.style.top  = `${(wy+offsetY)-85}px`;
+            popup.style.left = `${(wx+dataGet('offsetX') -(rect.width/2))}px`;
+            popup.style.top  = `${(wy+dataGet('offsetY'))-85}px`;
         };
         if (popup)
             calc(popup);
@@ -354,9 +370,9 @@ const component = async props => {
      * @returns {[number, number]}
      */
     const project = (lon, lat) =>{
-        const n = 2 ** zoom_level;
-        const x = (lon + 180) / 360 * n * TILE_SIZE;
-        const y = (1 - Math.log(Math.tan(lat * RAD) + 1 / Math.cos(lat * RAD)) / Math.PI) / 2 * n * TILE_SIZE;
+        const n = 2 ** dataGet('zoom_level');
+        const x = (lon + 180) / 360 * n * dataGet('TILE_SIZE');
+        const y = (1 - Math.log(Math.tan(lat * dataGet('RAD')) + 1 / Math.cos(lat * dataGet('RAD'))) / Math.PI) / 2 * n * dataGet('TILE_SIZE');
         return [x, y];
     };
 
@@ -368,9 +384,9 @@ const component = async props => {
      * @param {number} py
      */
     const unproject = (px, py) => {
-        const n = 2 ** zoom_level;
-        const lon = px / (n * TILE_SIZE) * 360 - 180;
-        const latRad = Math.atan(Math.sinh(Math.PI * (1 - 2 * py / (n * TILE_SIZE))));
+        const n = 2 ** dataGet('zoom_level');
+        const lon = px / (n * dataGet('TILE_SIZE')) * 360 - 180;
+        const latRad = Math.atan(Math.sinh(Math.PI * (1 - 2 * py / (n * dataGet('TILE_SIZE')))));
         const lat = latRad * 180 / Math.PI;
         return [lon, lat];
     };
@@ -388,8 +404,8 @@ const component = async props => {
         const mouseY = y - rect.top;
     
         // Convert to "world pixel" coordinates
-        const worldX = mouseX - offsetX;
-        const worldY = mouseY - offsetY;
+        const worldX = mouseX - dataGet('offsetX');
+        const worldY = mouseY - dataGet('offsetY');
     
         // Get GPS coordinates
         const [lon, lat] = unproject(worldX, worldY);
@@ -402,9 +418,9 @@ const component = async props => {
      */
     const updateDistance = async () => {
         // Approximate meters per pixel at equator
-        const metersPerPixel = 156543.03392 / Math.pow(2, zoom_level);
+        const metersPerPixel = 156543.03392 / Math.pow(2, dataGet('zoom_level'));
     
-        const meters = metersPerPixel * MEASURE_DISTANCE_PIXEL;
+        const meters = metersPerPixel * dataGet('MEASURE_DISTANCE_PIXEL');
         const km = (meters / 1000).toFixed(2);
         const miles = (meters / 1609.344).toFixed(2);
 
@@ -427,13 +443,13 @@ const component = async props => {
      * @param {number} level
      */
     const setZoom = level =>{
-        if (MAP_LAYERS.some(row=>row.url==TILE_URL && (row.max_zoom !=null &&  row.max_zoom< level)))
-            zoom_level = MAP_LAYERS.filter(row=>row.url==TILE_URL)[0].max_zoom ?? 0;
+        if (MAP_LAYERS[dataGet('layer')].max_zoom!=null && (MAP_LAYERS[dataGet('layer')].max_zoom??0)<level)
+            dataSet('zoom_level', MAP_LAYERS[dataGet('layer')].max_zoom ?? 0);
         else
             if (level<0)
-                zoom_level = 0;
+                dataSet('zoom_level', 0);
             else
-                zoom_level = level;
+                dataSet('zoom_level', level);
     };
     /**
      * @name getZoom
@@ -446,9 +462,9 @@ const component = async props => {
      */
     const getZoom = parameters => {
         const zoomDelta = parameters.deltaY < 0 ? 1 : -1;
-        const newZ = Math.min(Math.max(zoom_level + zoomDelta, 1), 19);
+        const newZ = Math.min(Math.max(dataGet('zoom_level') + zoomDelta, 1), 19);
     
-        if (newZ === zoom_level) return;
+        if (newZ === dataGet('zoom_level')) return;
     
         // Mouse position relative to map
         const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
@@ -462,16 +478,15 @@ const component = async props => {
                                 (parameters.y - rect.top);
                                 
         // World coordinates before zoom
-        const worldXBefore = (mouseX - offsetX);
-        const worldYBefore = (mouseY - offsetY);
+        const worldXBefore = (mouseX - dataGet('offsetX'));
+        const worldYBefore = (mouseY - dataGet('offsetY'));
     
         // Scale factor between zoom levels
-        const scale = 2 ** (newZ - zoom_level);
+        const scale = 2 ** (newZ - dataGet('zoom_level'));
     
         // Adjust offsets so zoom centers on mouse
-        offsetX = mouseX - worldXBefore * scale;
-        offsetY = mouseY - worldYBefore * scale;
-    
+        dataSet('offsetX', mouseX - worldXBefore * scale);
+        dataSet('offsetY', mouseY - worldYBefore * scale);    
         setZoom(newZ);
         
         draw();
@@ -485,9 +500,17 @@ const component = async props => {
      * @returns {void}
      */
     const setLayer = value =>{
-        TILE_URL = MAP_LAYERS.filter(layer=>layer.value==value)[0].url;
+        dataSet('layer', MAP_LAYERS.findIndex((layer,index)=>layer.value==value))
         draw();
     };
+    /**
+     * @name getLayer
+     * @descripton Get map layer
+     * @function
+     * @param {string|null} value?
+     * @returns {common['commonMapLayers'][]}
+     */
+    const getLayer = (value=null) => MAP_LAYERS.filter(layer=>layer.value==(value??layer.value))
     
     /**
      * @name goTo
@@ -516,13 +539,13 @@ const component = async props => {
         const longitude =   place?+place.longitude:parameters.longitude;
         const latitude  =   place?+place.latitude:parameters.latitude;
         if (longitude && latitude){
-            setZoom(ZOOM_LEVEL_GOTO);
+            setZoom(dataGet('ZOOM_LEVEL_GOTO'));
             const [wx, wy] = project(+longitude, +latitude);
             const rect = props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect();
-            offsetX = ((window.innerWidth-rect.left - ((window.innerWidth - rect.width)/2)) / 2) - wx;
-            offsetY = ((window.innerHeight-rect.top - ((window.innerHeight - rect.height)/2)) / 2) - wy;
+            dataSet('offsetX', ((window.innerWidth-rect.left - ((window.innerWidth - rect.width)/2)) / 2) - wx);
+            dataSet('offsetY', ((window.innerHeight-rect.top - ((window.innerHeight - rect.height)/2)) / 2) - wy);
             draw();
-            await addPopup({place:place, x:wx+offsetX, y:wy+offsetY});
+            await addPopup({place:place, x:wx+dataGet('offsetX'), y:wy+dataGet('offsetY')});
         }
     };
     /**
@@ -563,10 +586,11 @@ const component = async props => {
                                 data:       {  
                                             data_app_id:props.data.data_app_id,
                                             expand_type:expand_type,
-                                            map_layers:MAP_LAYERS
                                             },
                                 methods:    {
                                             goTo:goTo,
+                                            dataGet:dataGet,
+                                            getLayer:getLayer,
                                             setLayer:setLayer
                                             },
                                 path:       '/common/component/common_map_control_expand.js'});    
@@ -612,8 +636,8 @@ const component = async props => {
                                 null;
                         break;
                     }
-                    case event.target.classList.contains('common_map_popup_close'):{
-                        event.target.parentNode.remove();
+                    case props.methods.COMMON.commonMiscElementDiv(event.target).classList.contains('common_map_popup_close'):{
+                        props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).remove();
                         break;
                     }
                 }
@@ -624,9 +648,9 @@ const component = async props => {
                     case event_target_id=='common_map_measure':
                     case event.target.classList.contains('common_map_tile'):
                     case event.target.classList.contains('common_map_line'):{
-                        dragging = true;
-                        startX = event.clientX - offsetX;
-                        startY = event.clientY - offsetY;
+                        dataSet('dragging',true);
+                        dataSet('startX',event.clientX - dataGet('offsetX'));
+                        dataSet('startY',event.clientY - dataGet('offsetY'));
                         break;
                     }
                 }
@@ -638,7 +662,7 @@ const component = async props => {
                     case event_target_id=='common_map_measure':
                     case event.target.classList.contains('common_map_tile'):
                     case event.target.classList.contains('common_map_line'):{
-                        dragging = false;
+                        dataSet('dragging',false);
                         break;
                     }
                 }
@@ -653,9 +677,9 @@ const component = async props => {
                     case event_target_id=='common_map_measure':
                     case event.target.classList.contains('common_map_tile'):
                     case event.target.classList.contains('common_map_line'):{
-                        if (!dragging) return;
-                        offsetX = event.clientX - startX;
-                        offsetY = event.clientY - startY;
+                        if (!dataGet('dragging')) return;
+                        dataSet('offsetX',event.clientX - dataGet('startX'));
+                        dataSet('offsetY',event.clientY - dataGet('startY'));
                         draw();
                         break;
                     }

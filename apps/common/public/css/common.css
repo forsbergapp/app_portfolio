@@ -292,7 +292,7 @@ body,
 	cursor: pointer;
 	text-align: start;
 	display: inline-block;
-	width: calc(100% - 25px);
+	width: calc(100% - 2em);
 	min-height: 1em;
 	overflow: hidden;
 	line-height: 1.25em;
