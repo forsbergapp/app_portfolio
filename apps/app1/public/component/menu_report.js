@@ -11,15 +11,19 @@
  * @name template
  * @description Template
  * @function
+ * @param {{icons:{
+ *                run:string,
+ *                reload:string
+ *                 }}} props
  * @returns {string}
  */
-const template = () => ` <div id='menu_report_content_widget1' class='widget'>
+const template = props => ` <div id='menu_report_content_widget1' class='widget'>
                                 <div id='menu_report_select_report'></div>
                                 <div id='menu_report_metadata' class='common_list_scrollbar'></div>
-                                <div id='menu_report_run' class='common_app_dialogues_button common_icon common_icon_button' ></div>
+                                <div id='menu_report_run' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.run}</div>
                             </div>
                             <div id='menu_report_content_widget2' class='widget'>
-                                <div id='menu_report_queue_reload' class='common_app_dialogues_button common_icon common_icon_button' ></div>
+                                <div id='menu_report_queue_reload' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.reload}</div>
                                 <div id='menu_report_queue' class='common_list_scrollbar'></div>
                             </div>`;
 /**
@@ -120,7 +124,11 @@ const component = async props => {
                             reportRun:reportRun,
                             reportQueueUpdate:reportQueueUpdate,
                             reportPreview:reportPreview},
-            template:    template()
+            template:    template({icons:{
+                                    run:props.methods.COMMON.commonGlobalGet('ICONS').run,
+                                    reload:props.methods.COMMON.commonGlobalGet('ICONS').reload
+                                    }
+                                })
    };
 };
 export default component;

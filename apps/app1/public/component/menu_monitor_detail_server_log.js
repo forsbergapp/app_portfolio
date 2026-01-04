@@ -107,7 +107,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                         <div class='menu_monitor_detail_server_log_request_log_col'>
                                             ${log.AppIdAuth}
                                         </div>
-                                        <div class='menu_monitor_detail_server_log_request_log_col gps_click' data-ip='${log.Ip}'>
+                                        <div class='menu_monitor_detail_server_log_request_log_col common_link gps_click' data-ip='${log.Ip}'>
                                             ${log.Ip}
                                         </div>
                                         <div class='menu_monitor_detail_server_log_request_log_col'>

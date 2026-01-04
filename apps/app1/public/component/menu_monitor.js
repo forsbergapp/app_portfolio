@@ -15,13 +15,15 @@
  *              first:string,
  *              previous:string,
  *              next:string,
- *              last:string}}} props
+ *              last:string,
+ *              connected:string,
+ *              server_log:string}}} props
  * @returns {string}
  */
 const template = props => `<div id='menu_monitor_content_widget1' class='widget'>
                                 <div id='menu_monitor' class='list_nav'>
-                                    <div id='menu_monitor_connected' class='list_nav_list list_button common_icon'></div>
-                                    <div id='menu_monitor_server_log' class='list_nav_list list_button common_icon'></div>
+                                    <div id='menu_monitor_connected' class='list_nav_list list_button common_link'>${props.icons.connected}</div>
+                                    <div id='menu_monitor_server_log' class='list_nav_list list_button common_link'>${props.icons.server_log}</div>
                                 </div>
                                 <div id='menu_monitor_sample'>
                                     <div id='menu_monitor_select_app'></div>
@@ -268,7 +270,12 @@ const component = async props => {
                                                 props.methods.COMMON.commonGlobalGet('ICONS')['next'],
                                 last:props.methods.COMMON.COMMON_DOCUMENT.body.classList.contains('rtl')?
                                         props.methods.COMMON.commonGlobalGet('ICONS')['first']:
-                                            props.methods.COMMON.commonGlobalGet('ICONS')['last']}})
+                                            props.methods.COMMON.commonGlobalGet('ICONS')['last'],
+                                connected:props.methods.COMMON.commonGlobalGet('ICONS').user_connections+props.methods.COMMON.commonGlobalGet('ICONS').log,
+                                server_log:props.methods.COMMON.commonGlobalGet('ICONS').server+props.methods.COMMON.commonGlobalGet('ICONS').log
+                                }
+
+                            })
     };
 };
 

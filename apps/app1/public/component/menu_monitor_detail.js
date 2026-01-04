@@ -23,7 +23,17 @@
  *                                      REQUEST_LEVEL:number,
  *                                      BFF_LEVEL:number,
  *                                      DB_LEVEL:number,
- *                                      FILE_INTERVAL:string}}} props
+ *                                      FILE_INTERVAL:string},
+ *          icons:{
+ *              filesearch:string,
+ *              chat:string,
+ *              scope_request:string,
+ *              scope_bff:string,
+ *              scope_database:string,
+ *              checked:string,
+ *              empty:string,
+ *              search:string
+ *          }}} props
  * @returns {string}
  */
 const template = props => ` ${props.monitor_detail=='CONNECTED'?
@@ -90,15 +100,15 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.IamUserType ?? ''}
                                                 </div>
-                                                <div class='menu_monitor_detail_connected_col gps_click' data-ip='${log.Ip}'>
+                                                <div class='menu_monitor_detail_connected_col common_link gps_click' data-ip='${log.Ip}'>
                                                     ${log.Ip}
                                                 </div>
-                                                <div class='menu_monitor_detail_connected_col gps_click' 
+                                                <div class='menu_monitor_detail_connected_col common_link gps_click' 
                                                     data-latitude='${log.GpsLatitude ?? ''}'
                                                     data-longitude='${log.GpsLongitude ?? ''}'>
                                                     ${log.GpsLatitude ?? ''}
                                                 </div>
-                                                <div class='menu_monitor_detail_connected_col gps_click'
+                                                <div class='menu_monitor_detail_connected_col common_link gps_click'
                                                     data-latitude='${log.GpsLatitude ?? ''}'
                                                     data-longitude='${log.GpsLongitude ?? ''}'>
                                                     ${log.GpsLongitude ?? ''}
@@ -112,7 +122,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 <div class='menu_monitor_detail_connected_col common_wide_list_column'>
                                                     ${props.function_commonWindowUserAgentPlatform(log.UserAgent) ?? ''}
                                                 </div>
-                                                <div class='menu_monitor_detail_connected_col chat_click common_icon' data-id='${log.Id}'></div>
+                                                <div class='menu_monitor_detail_connected_col chat_click common_link' data-id='${log.Id}'>${props.icons.chat}</div>
                                             </div>`
                                             ).join('')
                                         }
@@ -123,33 +133,33 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                             ${props.monitor_detail=='SERVER_LOG'?
                                 `<div id='menu_monitor_detail_server_log_form'>
                                     <div id='menu_monitor_detail_select_logobject'></div>
-                                    <div id='menu_monitor_detail_filesearch' class='common_app_dialogues_button common_icon common_icon_list'></div>
+                                    <div id='menu_monitor_detail_filesearch' class='common_app_dialogues_button common_link common_icon_list'>${props.icons.filesearch}</div>
                                     <div id='menu_monitor_detail_parameters_row'>
                                         <div class='menu_monitor_detail_parameters_row_col'>
-                                            <div id='menu_monitor_detail_parameters_row_col1' class='common_icon'></div>
+                                            <div id='menu_monitor_detail_parameters_row_col1' >${props.icons.scope_request}</div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.REQUEST_LEVEL==1 ||props.SERVICE_LOG_DATA_PARAMETERS.REQUEST_LEVEL==2)?
-                                                '<div id=\'menu_monitor_detail_parameters_row_col1_1\' class=\'common_icon\'></div>':
-                                                '<div id=\'menu_monitor_detail_parameters_row_col1_0\' class=\'common_icon\'></div>'
+                                                `<div id='menu_monitor_detail_parameters_row_col1_1' >${props.icons.checked}</div>`:
+                                                `<div id='menu_monitor_detail_parameters_row_col1_0'>${props.icons.empty}</div>`
                                             }
                                         </div>
                                         <div class='menu_monitor_detail_parameters_row_col'>
-                                            <div id='menu_monitor_detail_parameters_row_col2' class='common_icon'></div>
+                                            <div id='menu_monitor_detail_parameters_row_col2'>${props.icons.scope_bff}</div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.BFF_LEVEL==1 || props.SERVICE_LOG_DATA_PARAMETERS.BFF_LEVEL==2)?
-                                                '<div id=\'menu_monitor_detail_parameters_row_col2_1\' class=\'common_icon\'></div>':
-                                                '<div id=\'menu_monitor_detail_parameters_row_col2_0\' class=\'common_icon\'></div>'
+                                                `<div id='menu_monitor_detail_parameters_row_col2_1' >${props.icons.checked}</div>`:
+                                                `<div id='menu_monitor_detail_parameters_row_col2_0' >${props.icons.empty}</div>`
                                             }
                                         </div>
                                         <div class='menu_monitor_detail_parameters_row_col'>
-                                            <div id='menu_monitor_detail_parameters_row_col3' class='common_icon'></div>
+                                            <div id='menu_monitor_detail_parameters_row_col3'>${props.icons.scope_database}</div>
                                             ${(props.SERVICE_LOG_DATA_PARAMETERS.DB_LEVEL==1 || props.SERVICE_LOG_DATA_PARAMETERS.DB_LEVEL==2)?
-                                                '<div id=\'menu_monitor_detail_parameters_row_col3_1\' class=\'common_icon\'></div>':
-                                                '<div id=\'menu_monitor_detail_parameters_row_col3_0\' class=\'common_icon\'></div>'
+                                                `<div id='menu_monitor_detail_parameters_row_col3_1' >${props.icons.checked}</div>`:
+                                                `<div id='menu_monitor_detail_parameters_row_col3_0' >${props.icons.empty}</div>`
                                             }
                                         </div>
                                     </div>
                                     <div class='list_search'>
                                         <div id='menu_monitor_detail_server_log_search_input' contentEditable='true' class='common_input list_search_input'/></div>
-                                        <div id='menu_monitor_detail_server_log_search_icon' class='common_icon common_icon_list'></div>
+                                        <div id='menu_monitor_detail_server_log_search_icon' class='common_link common_icon_list'>${props.icons.search}</div>
                                     </div>
                                 </div>
                                 <div id='menu_monitor_detail_server_log' class='common_list_scrollbar'></div>`:
@@ -475,7 +485,18 @@ const component = async props => {
                                 function_get_order_by:get_order_by,
                                 function_roundOff: props.methods.COMMON.commonMiscRoundOff,
                                 logs:logs.rows,
-                                SERVICE_LOG_DATA_PARAMETERS:props.data.SERVICE_LOG_DATA.parameters})
+                                SERVICE_LOG_DATA_PARAMETERS:props.data.SERVICE_LOG_DATA.parameters,
+                                icons:{
+                                    filesearch:props.methods.COMMON.commonGlobalGet('ICONS').lov,
+                                    chat:props.methods.COMMON.commonGlobalGet('ICONS').chat,
+                                    scope_request:props.methods.COMMON.commonGlobalGet('ICONS').server+'REQUEST',
+                                    scope_bff:props.methods.COMMON.commonGlobalGet('ICONS').server+'BFF',
+                                    scope_database:props.methods.COMMON.commonGlobalGet('ICONS').database,
+                                    checked:props.methods.COMMON.commonGlobalGet('ICONS').checkbox_checked,
+                                    empty:props.methods.COMMON.commonGlobalGet('ICONS').checkbox_empty,
+                                    search:props.methods.COMMON.commonGlobalGet('ICONS').reload
+                                }
+                            })
     };
 };
 export default component;

@@ -718,8 +718,8 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                     APP_SECURE_GLOBAL.component.MENU_REPORT.reportQueueUpdate();
                     break;
                 }
-                case event.target?.classList.contains('report_queue_result')?event_target_id:'':
-                    APP_SECURE_GLOBAL.component.MENU_REPORT.reportPreview(event.target.getAttribute('data-id'));
+                case common.commonMiscElementDiv(event.target)?.classList.contains('report_queue_result')?event_target_id:'':
+                    APP_SECURE_GLOBAL.component.MENU_REPORT.reportPreview(common.commonMiscElementDiv(event.target).getAttribute('data-id'));
                     break;
                 case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
                     if (event_target_id == 'menu_users_list')
@@ -731,19 +731,19 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                                         ):null;
                     break;
                 }
-                case event.target.classList.contains('gps_click')?event_target_id:'':{
+                case common.commonMiscElementDiv(event.target).classList.contains('gps_click')?event_target_id:'':{
                     common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map']?.methods?.goTo?
                         common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map'].methods.goTo({
-                            latitude:   event.target.getAttribute('data-latitude') ?? '',
-                            longitude:  event.target.getAttribute('data-longitude') ?? '',
-                            ip:         event.target.getAttribute('data-ip') ?? ''
+                            latitude:   common.commonMiscElementDiv(event.target).getAttribute('data-latitude') ?? '',
+                            longitude:  common.commonMiscElementDiv(event.target).getAttribute('data-longitude') ?? '',
+                            ip:         common.commonMiscElementDiv(event.target).getAttribute('data-ip') ?? ''
                         }):
                         null;
                     
                     break;
                 }
-                case event.target.classList.contains('chat_click')?event_target_id:'':{
-                    appSecureDialogueSendBroadcastShow('CHAT', Number(event.target.getAttribute('data-id')));
+                case common.commonMiscElementDiv(event.target).classList.contains('chat_click')?event_target_id:'':{
+                    appSecureDialogueSendBroadcastShow('CHAT', Number(common.commonMiscElementDiv(event.target).getAttribute('data-id')));
                     break;
                 }
                 case 'dialogue_send_broadcast_send':{

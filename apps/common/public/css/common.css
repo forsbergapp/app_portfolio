@@ -44,43 +44,6 @@
 	--common_report_color_shadow1: rgb(0 0 0 / 20%);
 	--common_report_color_shadow2: rgb(0 0 0 / 19%);
 	--common_report_color_white: white;
-	/*icons ui*/
-	--common_app_icon_apps:                 '⊞';
-    --common_app_icon_maintenance:          '⚒';
-    --common_app_icon_save:                 '💾';
-    --common_app_icon_add:                  '+';
-    --common_app_icon_delete:               '🗑';
-    --common_app_icon_lov:                  '^';
-    --common_app_icon_send:                 '🖅';
-    --common_app_icon_settings:             '⚙';
-    --common_app_icon_chat:                 '🗩';
-    --common_app_icon_log:                  '☰';
-    --common_app_icon_chart:                '📊';
-    --common_app_icon_monitor:              '📈';
-    --common_app_icon_server:               '🖥';
-    --common_app_icon_database:             '⛃';
-    --common_app_icon_user_connections:     '['var(--common_app_icon_users)']';
-    --common_app_icon_database_started:     '→';
-    --common_app_icon_database_stat:        var(--common_app_icon_chart);
-    --common_app_icon_broadcast:            '🗦🗼🗧';
-    --common_app_icon_checkbox_checked:     '☑';
-    --common_app_icon_checkbox_empty:       '☐';
-    --common_app_icon_info:                 'i';
-    --common_app_icon_menu_open:            '☰';
-    --common_app_icon_notes:                '🗒';
-    --common_app_icon_reload:				'↻';
-	--common_app_icon_reset:				'↺';
-    --common_app_icon_sum:                  '∑';
-    --common_app_icon_internet:             '🌐';
-    --common_app_icon_init:                 '⭐';
-	--common_app_icon_run:					'🖶';
-	--common_app_icon_preview:				'🔍';
-    --common_app_icon_users:                    '👥';
-    --common_app_icon_user_password:            '🔑';
-
-    --common_app_icon_regional:                 '🌐';
-    
-    --common_app_icon_regional_numbersystem:    '123';
 
 	/*fonts*/
 	--common_app_font_languages_1:  	"Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 
@@ -387,7 +350,7 @@ body,
     display: inline-block;
 }
 .common_icon_list{
-    display: inline_block;
+    display: inline-block;
 }
 .common_icon_toolbar_s{
     width: 1.25em;

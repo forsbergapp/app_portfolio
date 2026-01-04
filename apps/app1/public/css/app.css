@@ -1,51 +1,4 @@
 /*APP*/
-#menu_apps_title::before{															content:var(--common_app_icon_apps)}
-#menu_apps_detail_data::before{												        content:var(--common_app_icon_settings)}
-#menu_apps_detail_secret::before{													content:var(--common_app_icon_user_password)}
-#menu_apps_detail_module::before{													content:var(--common_app_icon_init)}
-#menu_apps_save::before{															content:var(--common_app_icon_save)}
-
-#menu_openapi_save::before{															content:var(--common_app_icon_save)}
-
-#menu_monitor_connected::before{													content:var(--common_app_icon_user_connections)  ' '  var(--common_app_icon_log)}
-#menu_monitor_server_log::before{													content:var(--common_app_icon_server) ' ' var(--common_app_icon_log)}
-#menu_monitor_detail_filesearch::before{											content:var(--common_app_icon_lov)}
-
-.chat_click::before{																content:var(--common_app_icon_chat)}
-
-#menu_monitor_detail_parameters_row_col1::before{									content:var(--common_app_icon_server) ' REQUEST'}
-#menu_monitor_detail_parameters_row_col1_1::before{									content:var(--common_app_icon_checkbox_checked)}
-#menu_monitor_detail_parameters_row_col1_0::before{									content:var(--common_app_icon_checkbox_empty)}
-
-#menu_monitor_detail_parameters_row_col2::before{									content:var(--common_app_icon_server) ' BFF'}
-#menu_monitor_detail_parameters_row_col2_1::before{									content:var(--common_app_icon_checkbox_checked)}
-#menu_monitor_detail_parameters_row_col2_0::before{									content:var(--common_app_icon_checkbox_empty)}
-
-#menu_monitor_detail_parameters_row_col3::before{									content:var(--common_app_icon_database)}
-#menu_monitor_detail_parameters_row_col3_1::before{									content:var(--common_app_icon_checkbox_checked)}
-#menu_monitor_detail_parameters_row_col3_0::before{									content:var(--common_app_icon_checkbox_empty)}
-
-#menu_monitor_detail_server_log_search_icon::before{								content:var(--common_app_icon_reload)}
-
-#menu_openapi_detail_config::before{												content:var(--common_app_icon_server) ' ' var(--common_app_icon_settings)}
-#menu_openapi_detail_servers::before{												content:var(--common_app_icon_server) ' ' var(--common_app_icon_internet)}
-
-#menu_db_info_database_title::before{												content:var(--common_app_icon_database) ' ' var(--common_app_icon_regional_numbersystem)}
-#menu_db_info_name_title::before{													content:var(--common_app_icon_database)}
-#menu_db_info_version_title::before{												content:var(--common_app_icon_database) ' ' var(--common_app_icon_regional_numbersystem) ' ' var(--common_app_icon_info)}
-#menu_db_info_host_title::before{													content:var(--common_app_icon_server)}
-#menu_db_info_connections_title::before{											content:var(--common_app_icon_user_connections)}
-#menu_db_info_started_title::before{												content:var(--common_app_icon_database_started)}
-#menu_db_info_title::before{														content:var(--common_app_icon_database) ' ' var(--common_app_icon_database_stat)}
-#menu_db_info_db_sum::before{														content:var(--common_app_icon_sum)}
-
-#menu_report_run::before{															content:var(--common_app_icon_run)}
-#menu_report_queue_reload::before{													content:var(--common_app_icon_reload)}
-.menu_report_queue_row .report_queue_result::before{								content:var(--common_app_icon_preview)}
-
-#menu_server_os_title::before{														content:var(--common_app_icon_server)}
-#menu_server_process_title::before{													content:var(--common_app_icon_server) ' ' var(--common_app_icon_apps)}
-
 
 /* Dialogue send broadcast*/
 #common_app_dialogues_app_custom.common_app_dialogues_show0{
@@ -174,7 +127,7 @@
 	display: inline-block;
 	border-radius: var(--common_app_css_border_radius);
 }
-.list_sort_click, .gps_click, .chat_click {
+.list_sort_click {
 	cursor: pointer;
 }
 .list_button{
@@ -347,9 +300,6 @@
 
 #menu_users_list_search_input{
 	max-width: 85%;
-}
-#menu_users_search_icon{
-    display:inline-block;
 }
 #menu_users_list_title, #menu_users_iam_app_access_title{
 	text-transform: uppercase;
@@ -767,7 +717,7 @@
 	flex-direction: column;
 }
 #menu_report_queue_reload{
-	display: contents;
+	display: inline-block;
   	width: 100%;
 }
 #menu_report_queue{
