@@ -11,11 +11,16 @@
  * @name template
  * @description Template
  * @function
- * @param {{apps:common['server']['ORM']['Object']['App'][]}} props
+ * @param {{apps:common['server']['ORM']['Object']['App'][],
+ *          icons:{ title:string,
+ *                  data:string,
+ *                  module:string,
+ *                  save:string
+ *          }}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
-                                <div id='menu_apps_title' class='common_icon common_icon_title'></div>
+                                <div id='menu_apps_title' class='common_icon_title'>${props.icons.title}</div>
                                 <div id='menu_apps' class='common_list_scrollbar'>
                                     <div id='menu_apps_row_title' class='menu_apps_row'>
                                         <div data-column='Id' class='menu_apps_col list_title'>ID</div>
@@ -55,12 +60,12 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                             </div>
                             <div id='menu_apps_content_widget2' class='widget'>
                                 <div id='menu_apps_detail_title' class='list_nav'>
-                                    <div id='menu_apps_detail_data'    class='list_nav_list list_button common_icon list_nav_selected_tab'></div>
-                                    <div id='menu_apps_detail_module'  class='list_nav_list list_button common_icon '></div>
+                                    <div id='menu_apps_detail_data'    class='list_nav_list list_button common_link list_nav_selected_tab'>${props.icons.data}</div>
+                                    <div id='menu_apps_detail_module'  class='list_nav_list list_button common_link '>${props.icons.module}</div>
                                 </div>
                                 <div id='menu_apps_detail' class='common_list_scrollbar'></div>
                                 <div id='apps_buttons' class="save_buttons">
-                                    <div id='menu_apps_save' class='common_app_dialogues_button button_save common_icon common_icon_button'></div>
+                                    <div id='menu_apps_save' class='common_app_dialogues_button button_save common_link common_icon_button'>${props.icons.save}</div>
                                 </div>
                             </div>` ;
 /**
@@ -90,7 +95,14 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({apps:apps})
-};
+        template:   template({apps:apps,
+                                icons:{ title:props.methods.COMMON.commonGlobalGet('ICONS').apps,
+                                        data:props.methods.COMMON.commonGlobalGet('ICONS').settings,
+                                        module:props.methods.COMMON.commonGlobalGet('ICONS').init,
+                                        save:props.methods.COMMON.commonGlobalGet('ICONS').save
+                                }
+                            })
+
+    };
 };
 export default component;

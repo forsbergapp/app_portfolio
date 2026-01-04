@@ -10,16 +10,19 @@
  * @name template
  * @description Template
  * @function
+ * @param {{icons:{ save:string,
+ *                  detail_config:string,
+ *                  detail_servers:string}}} props
  * @returns {string}
  */
-const template = () => ` <div id='menu_openapi_content_widget1' class='widget'>
+const template = props => ` <div id='menu_openapi_content_widget1' class='widget'>
                                 <div id='menu_openapi_detail_title' class='list_nav'>
-                                    <div id='menu_openapi_detail_config'  class='list_nav_list list_button common_icon'></div>
-                                    <div id='menu_openapi_detail_servers' class='list_nav_list list_button common_icon list_nav_selected_tab'></div>
+                                    <div id='menu_openapi_detail_config'  class='list_nav_list list_button common_link list_nav_selected_tab'>${props.icons.detail_config}</div>
+                                    <div id='menu_openapi_detail_servers' class='list_nav_list list_button common_link'>${props.icons.detail_servers}</div>
                                 </div>
                                 <div id='menu_openapi_detail' class='common_list_scrollbar'></div>
                                 <div id='menu_openapi_buttons' class="save_buttons">
-                                    <div id='menu_openapi_save' class='common_app_dialogues_button button_save common_icon common_icon_button'></div>
+                                    <div id='menu_openapi_save' class='common_app_dialogues_button button_save common_link common_icon_button'>${props.icons.save}</div>
                                 </div>
                             </div>`;
 /**
@@ -78,7 +81,10 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template()
+        template:   template({icons:{   save:props.methods.COMMON.commonGlobalGet('ICONS').save,
+                                        detail_config:props.methods.COMMON.commonGlobalGet('ICONS').server + props.methods.COMMON.commonGlobalGet('ICONS').settings,
+                                        detail_servers:props.methods.COMMON.commonGlobalGet('ICONS').server + props.methods.COMMON.commonGlobalGet('ICONS').internet}
+                            })
     };
 };
 export default component;
