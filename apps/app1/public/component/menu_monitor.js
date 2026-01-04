@@ -38,7 +38,7 @@ const template = props => `<div id='menu_monitor_content_widget1' class='widget'
                                     <div id='menu_monitor_pagination_first'     class='common_link common_icon_button'>${props.icons.first}</div>
                                     <div id='menu_monitor_pagination_previous'  class='common_link common_icon_button'>${props.icons.previous}</div>
                                     <div id='menu_monitor_pagination_next'      class='common_link common_icon_button'>${props.icons.next}</div>
-                                    <div id='menu_monitor_pagination_last'      class='common_icon common_icon_button'>${props.icons.last}</div>
+                                    <div id='menu_monitor_pagination_last'      class='common_link common_icon_button'>${props.icons.last}</div>
                                     <div id='menu_monitor_pagination_page'></div>
                                     <div id='menu_monitor_pagination_page_last'></div>
                                     <div id='menu_monitor_pagination_page_total_count'></div>

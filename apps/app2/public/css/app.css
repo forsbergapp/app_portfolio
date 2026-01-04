@@ -593,10 +593,10 @@ border-left: 12px solid var(--app_theme_sun_color);
 	border: 1px solid var(--app_theme_input_border_color);
 	background-color: var(--app_theme_dialogue_background_color);	
 }
-#common_app_dialogues_profile_info_avatar_online_status.online{
+#common_app_dialogues_profile_info_avatar_online_status.common_online{
 	color:var(--app_theme_online_status_online_color);
 }
-#common_app_dialogues_profile_info_avatar_online_status.offline{
+#common_app_dialogues_profile_info_avatar_online_status.common_offline{
 	color:var(--app_theme_online_status_offline_color);
 }
 .common_app_dialogues_profile_btn_selected{

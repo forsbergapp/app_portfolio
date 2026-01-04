@@ -19,18 +19,18 @@
  *          }}} props
  * @returns {string}
  */
-const template = props => ` <div class='menu_report_queue_row'>
-                                <div data-column='Id' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Id')}'>ID</div>
-                                <div data-column='Type' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Type')}'>TYPE</div>
-                                <div data-column='Name' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Name')}'>NAME</div>
-                                <div data-column='Parameters' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Parameters')}'>PARAMETERS</div>
-                                <div data-column='User' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('User')}'>USER</div>
-                                <div data-column='Start' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Start')}'>START</div>
-                                <div data-column='End' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('End')}'>END</div>
-                                <div data-column='Progress' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Progress')}'>PROGRESS</div>
-                                <div data-column='Status' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Status')}'>STATUS</div>
-                                <div data-column='Message' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Message')}'>MESSAGE</div>
-                                <div data-column='Result' class='menu_report_queue_col list_sort_click list_title ${props.function_get_order_by('Result')}'>RESULT</div>
+const template = props => ` <div class='menu_report_queue_row row_title'>
+                                <div data-column='Id' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Id')}'>ID</div>
+                                <div data-column='Type' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Type')}'>TYPE</div>
+                                <div data-column='Name' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Name')}'>NAME</div>
+                                <div data-column='Parameters' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Parameters')}'>PARAMETERS</div>
+                                <div data-column='User' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('User')}'>USER</div>
+                                <div data-column='Start' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Start')}'>START</div>
+                                <div data-column='End' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('End')}'>END</div>
+                                <div data-column='Progress' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Progress')}'>PROGRESS</div>
+                                <div data-column='Status' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Status')}'>STATUS</div>
+                                <div data-column='Message' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Message')}'>MESSAGE</div>
+                                <div data-column='Result' class='menu_report_queue_col list_sort_click ${props.function_get_order_by('Result')}'>RESULT</div>
                             </div>
                             ${props.report_queue.map(report_queue=>
                                 `<div class='menu_report_queue_row common_row' >

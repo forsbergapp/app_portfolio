@@ -54,7 +54,7 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
                                     `<div id='common_app_dialogues_user_menu_logged_in'>
                                         ${props.app_id == props.admin_app_id?
                                             '':
-                                            `<div id='common_app_dialogues_user_menu_log_out' class='common_icon common_icon_button'>${props.icons.logout}</div>`
+                                            `<div id='common_app_dialogues_user_menu_log_out' class='common_link common_icon_button'>${props.icons.logout}</div>`
                                         }
                                     </div>`:
                                     `${props.app_id == props.admin_app_id?'':
