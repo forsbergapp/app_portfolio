@@ -39,44 +39,44 @@
 const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                 `<div id='menu_monitor_detail_connected_form'>    
                                     <div id='menu_monitor_detail_connected' class='common_list_scrollbar'>
-                                        <div class='menu_monitor_detail_connected_row'>
-                                            <div data-column='Id' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Id')}'>
+                                        <div class='menu_monitor_detail_connected_row row_title'>
+                                            <div data-column='Id' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('Id')}'>
                                                 ID
                                             </div>
-                                            <div data-column='Created' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Created')}'>
+                                            <div data-column='Created' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('Created')}'>
                                                 CONNECTION DATE
                                             </div>
-                                            <div data-column='AppId' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('AppId')}'>
+                                            <div data-column='AppId' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('AppId')}'>
                                                 APP ID
                                             </div>
-                                            <div data-column='IamUserId' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('IamUserId')}'>
+                                            <div data-column='IamUserId' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('IamUserId')}'>
                                                 IAM ID
                                             </div>
-                                            <div data-column='IamUserUsername' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('IamUserUsername')}'>
+                                            <div data-column='IamUserUsername' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('IamUserUsername')}'>
                                                 IAM USERNAME
                                             </div>
-                                            <div data-column='IamUserType' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('IamUserType')}'>
+                                            <div data-column='IamUserType' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('IamUserType')}'>
                                                 IAM TYPE
                                             </div>
-                                            <div data-column='Ip' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Ip')}'>
+                                            <div data-column='Ip' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('Ip')}'>
                                                 IP
                                             </div>
-                                            <div data-column='GpsLatitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('GpsLatitude')}'>
+                                            <div data-column='GpsLatitude' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('GpsLatitude')}'>
                                                 GPS LAT
                                             </div>
-                                            <div data-column='GpsLongitude' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('GpsLongitude')}'>
+                                            <div data-column='GpsLongitude' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('GpsLongitude')}'>
                                                 GPS LONG
                                             </div>
-                                            <div data-column='Place' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Place')}'>
+                                            <div data-column='Place' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('Place')}'>
                                                 PLACE
                                             </div>
-                                            <div data-column='Timezone' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('Timezone')}'>
+                                            <div data-column='Timezone' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('Timezone')}'>
                                                 TIMEZONE
                                             </div>
-                                            <div data-column='UserAgent' class='menu_monitor_detail_connected_col list_sort_click list_title ${props.function_get_order_by('UserAgent')}'>
+                                            <div data-column='UserAgent' class='menu_monitor_detail_connected_col list_sort_click ${props.function_get_order_by('UserAgent')}'>
                                                 USER AGENT
                                             </div>
-                                            <div data-column='Broadcast' class='menu_monitor_detail_connected_col list_title ${props.function_get_order_by('Broadcast')}'>
+                                            <div data-column='Broadcast' class='menu_monitor_detail_connected_col ${props.function_get_order_by('Broadcast')}'>
                                                 BROADCAST
                                             </div>
                                         </div>
@@ -284,7 +284,7 @@ const component = async props => {
          */
         const get_sort = (order_by=0) => {
             const sort = '';
-            for (const col_title of props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#menu_monitor_detail_${props.data.monitor_detail.toLowerCase()} .list_title`)){
+            for (const col_title of props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#menu_monitor_detail_${props.data.monitor_detail.toLowerCase()}.row_title >div`)){
                 if (col_title.classList.contains('asc'))
                     if (order_by==0)
                             return col_title.getAttribute('data-column');

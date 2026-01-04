@@ -594,10 +594,9 @@ const appSecureMenuInstallationDemoUninstall = () =>{
  * @param {string} event_type 
  * @param {common['CommonAppEvent']} event 
  * @param {string} event_target_id 
- * @param {HTMLElement|null} event_list_title 
  * @returns {void}
  */
-const appSecureEvents = (event_type, event, event_target_id, event_list_title=null)=> {
+const appSecureEvents = (event_type, event, event_target_id)=> {
     switch (event_type){
         case 'click':{
             switch (event_target_id){
@@ -721,14 +720,15 @@ const appSecureEvents = (event_type, event, event_target_id, event_list_title=nu
                 case common.commonMiscElementDiv(event.target)?.classList.contains('report_queue_result')?event_target_id:'':
                     APP_SECURE_GLOBAL.component.MENU_REPORT.reportPreview(common.commonMiscElementDiv(event.target).getAttribute('data-id'));
                     break;
-                case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
+                case event.target.classList.contains('list_sort_click')?event_target_id:'':{
                     if (event_target_id == 'menu_users_list')
-                        appSecureMenuUsers(event_list_title?.getAttribute('data-column') ?? '', event_list_title?.classList.contains('desc')?'asc':'desc');
+                        appSecureMenuUsers(event.target.getAttribute('data-column') ?? '', event.target.classList.contains('desc')?'asc':'desc');
                     else
-                        event_list_title!=null?APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailClickSort(event_target_id, 
-                                        event_list_title.getAttribute('data-column') ?? '',
-                                        event_list_title.classList.contains('desc')?'asc':'desc'
-                                        ):null;
+                        APP_SECURE_GLOBAL.component.MENU_MONITOR.monitorDetailClickSort(
+                                event_target_id, 
+                                event.target.getAttribute('data-column') ?? '',
+                                event.target.classList.contains('desc')?'asc':'desc'
+                            );
                     break;
                 }
                 case common.commonMiscElementDiv(event.target).classList.contains('gps_click')?event_target_id:'':{
@@ -895,7 +895,6 @@ const appLogin = async () => {
  */
 const appEventClick = event => {
     const event_target_id = common.commonMiscElementId(event.target);
-    const list_title = common.commonMiscElementListTitle(event.target);
     switch (event_target_id){
         case 'secure_menu_open':{
             COMMON_DOCUMENT.querySelector('#secure_menu').style.display = 'block';
@@ -928,7 +927,7 @@ const appEventClick = event => {
             break;
         }
         default:{
-            appSecureEvents('click', event, event_target_id, list_title);
+            appSecureEvents('click', event, event_target_id);
             break;
         }
     }

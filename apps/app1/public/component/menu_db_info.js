@@ -41,17 +41,17 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                             <div id='menu_db_info_content_widget2' class='widget'>
                                 <div id='menu_db_info_title' >${props.icons.title}</div>
                                 <div id='menu_db_info_detail' class='common_list_scrollbar'>
-                                    <div id='menu_db_info_detail_row_title' class='menu_db_info_detail_row'>
-                                        <div class='menu_db_info_detail_col list_title'>NAME</div>
-                                        <div class='menu_db_info_detail_col list_title'>TYPE</div>
-                                        <div class='menu_db_info_detail_col list_title'>IN MEMORY</div>
-                                        <div class='menu_db_info_detail_col list_title'>LOCK</div>
-                                        <div class='menu_db_info_detail_col list_title'>TRANSACTION ID</div>
-                                        <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>ROWS</div>
-                                        <div class='menu_db_info_detail_col menu_db_info_detail_col_number list_title'>SIZE ${props.size}</div>
-                                        <div class='menu_db_info_detail_col list_title'>PK</div>
-                                        <div class='menu_db_info_detail_col list_title'>UK</div>
-                                        <div class='menu_db_info_detail_col list_title'>FK (FK column, ref PK column, ref object)</div>
+                                    <div id='menu_db_info_detail_row_title' class='menu_db_info_detail_row row_title'>
+                                        <div class='menu_db_info_detail_col'>NAME</div>
+                                        <div class='menu_db_info_detail_col'>TYPE</div>
+                                        <div class='menu_db_info_detail_col'>IN MEMORY</div>
+                                        <div class='menu_db_info_detail_col'>LOCK</div>
+                                        <div class='menu_db_info_detail_col'>TRANSACTION ID</div>
+                                        <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>ROWS</div>
+                                        <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>SIZE ${props.size}</div>
+                                        <div class='menu_db_info_detail_col'>PK</div>
+                                        <div class='menu_db_info_detail_col'>UK</div>
+                                        <div class='menu_db_info_detail_col'>FK (FK column, ref PK column, ref object)</div>
                                     </div>
                                     ${props.db_detail.map(row=>
                                         `<div class='menu_db_info_detail_row' >

@@ -861,10 +861,10 @@ body,
 .common_list_scrollbar{
 	scrollbar-color: var(--app_theme_scrollbar_color1) var(--app_theme_scrollbar_color2);
 }
-#common_app_dialogues_profile_info_avatar_online_status.online{
+#common_app_dialogues_profile_info_avatar_online_status.common_online{
 	color:var(--app_theme_online_status_online_color);
 }
-#common_app_dialogues_profile_info_avatar_online_status.offline{
+#common_app_dialogues_profile_info_avatar_online_status.common_offline{
 	color:var(--app_theme_online_status_offline_color);
 }
 #common_dialouge_user_menu{

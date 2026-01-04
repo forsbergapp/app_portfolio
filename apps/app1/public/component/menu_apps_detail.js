@@ -17,24 +17,24 @@
  *
  * @returns {string}
  */
-const template = props => ` <div class='menu_apps_detail_row'>
-                                    <div class='menu_apps_detail_col list_title' data-column='AppId'>AppId</div>
+const template = props => ` <div class='menu_apps_detail_row row_title'>
+                                    <div class='menu_apps_detail_col' data-column='AppId'>AppId</div>
                                     ${props.detail=='menu_apps_detail_module'?
-                                        `<div class='menu_apps_detail_col list_title' data-column='ModuleType'>TYPE</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='ModuleName'>NAME</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='ModuleRole'>ROLE</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='ModulePath'>PATH</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='ModuleDescription'>DESCRIPTION</div>`:
+                                        `<div class='menu_apps_detail_col' data-column='ModuleType'>TYPE</div>
+                                         <div class='menu_apps_detail_col' data-column='ModuleName'>NAME</div>
+                                         <div class='menu_apps_detail_col' data-column='ModuleRole'>ROLE</div>
+                                         <div class='menu_apps_detail_col' data-column='ModulePath'>PATH</div>
+                                         <div class='menu_apps_detail_col' data-column='ModuleDescription'>DESCRIPTION</div>`:
                                             ''
                                     }
                                     ${props.detail=='menu_apps_detail_data'?
-                                        `<div class='menu_apps_detail_col list_title' data-column='Name'>NAME</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='Value'>VALUE</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='DisplayData'>DISPLAY_DATA</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='Data2'>DATA2</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='Data3'>DATA3</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='Data4'>DATA4</div>
-                                         <div class='menu_apps_detail_col list_title' data-column='Data5'>DATA5</div>`:
+                                        `<div class='menu_apps_detail_col' data-column='Name'>NAME</div>
+                                         <div class='menu_apps_detail_col' data-column='Value'>VALUE</div>
+                                         <div class='menu_apps_detail_col' data-column='DisplayData'>DISPLAY_DATA</div>
+                                         <div class='menu_apps_detail_col' data-column='Data2'>DATA2</div>
+                                         <div class='menu_apps_detail_col' data-column='Data3'>DATA3</div>
+                                         <div class='menu_apps_detail_col' data-column='Data4'>DATA4</div>
+                                         <div class='menu_apps_detail_col' data-column='Data5'>DATA5</div>`:
                                             ''
                                     }
                             </div>

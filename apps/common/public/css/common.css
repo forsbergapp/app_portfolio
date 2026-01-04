@@ -998,10 +998,10 @@ body,
 	border-radius: 50%;
 	font-size:11px;
 }
-#common_app_dialogues_profile_info_avatar_online_status.online{
+#common_app_dialogues_profile_info_avatar_online_status.common_online{
 	display: inline-block;
 }
-#common_app_dialogues_profile_info_avatar_online_status.offline{
+#common_app_dialogues_profile_info_avatar_online_status.common_offline{
 	display: inline-block;
 }
 #common_app_dialogues_profile_info_bio{

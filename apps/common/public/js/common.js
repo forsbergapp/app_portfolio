@@ -335,14 +335,6 @@ const commonMiscElementDiv = element => element.nodeName.toUpperCase() == 'DIV'?
  */
 const commonMiscElementRow = (element, className) => element?.classList?.contains(className ?? 'common_row')?element:commonMiscElementRow(element.parentNode, className);
 /**
- * @name commonMiscElementListTitle
- * @description Returns current target or parent with class list_title or returns empty. Use when clicking in a list title
- * @function
- * @param {*} element 
- * @returns {HTMLElement|null} 
- */
-const commonMiscElementListTitle = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
-/**
  * @name commonMiscFormatJsonDate
  * @description Format JSON date for given format and with optional locale and timezone or COMMON_GLOBAL values will be used
  * @function
@@ -2451,7 +2443,7 @@ const commonSocketSSEShow = async (sse_message) => {
  */
 const commonSocketConnectOnlineCheck = (div_icon_online, iam_user_id) => {
    commonFFB({path:`/server-socket/socket-status/${iam_user_id}`, method:'GET', authorization_type:'APP_ID'})
-    .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = 'common_icon ' + (JSON.parse(result).online==1?'online':'offline'));
+    .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = JSON.parse(result).online==1?'common_online':'common_offline');
 };
 /**
  * @name commonTextEditingDisabled
@@ -3149,7 +3141,6 @@ const commonGet = () =>{
         commonMiscElementId:commonMiscElementId, 
         commonMiscElementDiv:commonMiscElementDiv,
         commonMiscElementRow:commonMiscElementRow, 
-        commonMiscElementListTitle:commonMiscElementListTitle, 
         commonMiscFormatJsonDate:commonMiscFormatJsonDate,
         commonMiscImport:commonMiscImport,
         commonMiscImportmap:commonMiscImportmap,
@@ -3300,7 +3291,6 @@ export{/* GLOBALS*/
        commonMiscElementId, 
        commonMiscElementDiv,
        commonMiscElementRow, 
-       commonMiscElementListTitle, 
        commonMiscFormatJsonDate,
        commonMiscImport,
        commonMiscImportmap,

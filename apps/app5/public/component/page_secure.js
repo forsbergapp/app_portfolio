@@ -28,7 +28,7 @@ const template = props => ` <div id='app_page_secure'>
                                     `:
                                     `
                                     <div id='app_page_secure_nav'>
-                                        <div id='tab0' class='app_page_secure_tab common_link common_icon'></div>
+                                        <div id='tab0' class='app_page_secure_tab common_link'></div>
                                     </div>
                                     <div id='app_page_secure_tab_content' class='app_bank_div' >
                                     </div>

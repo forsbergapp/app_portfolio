@@ -14,14 +14,14 @@
  * @param {{user_logons:common['server']['ORM']['Object']['IamAppAccess'][]}} props
  * @returns {string}
  */
-const template = props => ` <div id='menu_users_iam_app_access_row_title' class='menu_users_iam_app_access_row'>
-                                <div class='menu_users_iam_app_access_col list_title'>USER ACCOUNT ID</div>
-                                <div class='menu_users_iam_app_access_col list_title'>DATE CREATED</div>
-                                <div class='menu_users_iam_app_access_col list_title'>APP ID</div>
-                                <div class='menu_users_iam_app_access_col list_title'>RESULT</div>
-                                <div class='menu_users_iam_app_access_col list_title'>IP</div>
-                                <div class='menu_users_iam_app_access_col list_title'>USER AGENT</div>
-                                <div class='menu_users_iam_app_access_col list_title'>ACCESS TOKEN</div>
+const template = props => ` <div id='menu_users_iam_app_access_row_title' class='menu_users_iam_app_access_row row_title'>
+                                <div class='menu_users_iam_app_access_col'>USER ACCOUNT ID</div>
+                                <div class='menu_users_iam_app_access_col'>DATE CREATED</div>
+                                <div class='menu_users_iam_app_access_col'>APP ID</div>
+                                <div class='menu_users_iam_app_access_col'>RESULT</div>
+                                <div class='menu_users_iam_app_access_col'>IP</div>
+                                <div class='menu_users_iam_app_access_col'>USER AGENT</div>
+                                <div class='menu_users_iam_app_access_col'>ACCESS TOKEN</div>
                             </div>
                             ${props.user_logons.map(user_logon=>
                                 `<div data-changed-record='0' class='menu_users_iam_app_access_row'>

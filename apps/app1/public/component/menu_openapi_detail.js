@@ -18,19 +18,19 @@
  */
 const template = props => ` 
                             ${props.detail=='menu_openapi_detail_config'?
-                                `<div id='menu_openapi_row_title' class='menu_openapi_detail_config_row'>
-                                    <div class='menu_openapi_col list_title'>PARAMETER NAME</div>
-                                    <div class='menu_openapi_col list_title'>PARAMETER VALUE</div>
-                                    <div class='menu_openapi_col list_title'>DESCRIPTION</div>
+                                `<div id='menu_openapi_row_title' class='menu_openapi_detail_config_row row_title'>
+                                    <div class='menu_openapi_col'>PARAMETER NAME</div>
+                                    <div class='menu_openapi_col'>PARAMETER VALUE</div>
+                                    <div class='menu_openapi_col'>DESCRIPTION</div>
                                 </div>`:
-                                    `<div id='menu_openapi_row_title' class='menu_openapi_detail_servers_row'>
-                                        <div class='list_title' >URL</div>
-                                        <div class='list_title' >DESCRIPTION</div>
-                                        <div class='list_title' >TYPE</div>
-                                        <div class='list_title' >PROTOCOL</div>
-                                        <div class='list_title' >HOST</div>
-                                        <div class='list_title' >PORT</div>
-                                        <div class='list_title' >BASEPATH</div>
+                                    `<div id='menu_openapi_row_title' class='menu_openapi_detail_servers_row row_title'>
+                                        <div >URL</div>
+                                        <div >DESCRIPTION</div>
+                                        <div >TYPE</div>
+                                        <div >PROTOCOL</div>
+                                        <div >HOST</div>
+                                        <div >PORT</div>
+                                        <div >BASEPATH</div>
                                     </div>`
                             }
                             ${props.detail=='menu_openapi_detail_config'?

@@ -22,21 +22,21 @@
 const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                 <div id='menu_apps_title' class='common_icon_title'>${props.icons.title}</div>
                                 <div id='menu_apps' class='common_list_scrollbar'>
-                                    <div id='menu_apps_row_title' class='menu_apps_row'>
-                                        <div data-column='Id' class='menu_apps_col list_title'>ID</div>
-                                        <div data-column='Name' class='menu_apps_col list_title'>NAME</div>
-                                        <div data-column='Path' class='menu_apps_col list_title'>PATH</div>
-                                        <div data-column='Logo' class='menu_apps_col list_title'>LOGO</div>
-                                        <div data-column='Js' class='menu_apps_col list_title'>JS</div>
-                                        <div data-column='Css' class='menu_apps_col list_title'>CSS</div>
-                                        <div data-column='CssReport' class='menu_apps_col list_title'>CSS_REPORT</div>
-                                        <div data-column='Favicon32x32' class='menu_apps_col list_title'>FAVICON_32x32</div>
-                                        <div data-column='Favicon192x192' class='menu_apps_col list_title'>FAVICON_192x192</div>
-                                        <div data-column='TextEdit' class='menu_apps_col list_title'>TEXT_EDIT</div>
-                                        <div data-column='Copyright' class='menu_apps_col list_title'>COPYRIGHT</div>
-                                        <div data-column='LinkTitle' class='menu_apps_col list_title'>LINK_TITLE</div>
-                                        <div data-column='LinkUrl' class='menu_apps_col list_title'>LINK_URL</div>
-                                        <div id='menu_apps_col_title5' data-column='Status' class='menu_apps_col list_title'>STATUS</div>
+                                    <div id='menu_apps_row_title' class='menu_apps_row row_title'>
+                                        <div data-column='Id' class='menu_apps_col'>ID</div>
+                                        <div data-column='Name' class='menu_apps_col'>NAME</div>
+                                        <div data-column='Path' class='menu_apps_col'>PATH</div>
+                                        <div data-column='Logo' class='menu_apps_col'>LOGO</div>
+                                        <div data-column='Js' class='menu_apps_col'>JS</div>
+                                        <div data-column='Css' class='menu_apps_col'>CSS</div>
+                                        <div data-column='CssReport' class='menu_apps_col'>CSS_REPORT</div>
+                                        <div data-column='Favicon32x32' class='menu_apps_col'>FAVICON_32x32</div>
+                                        <div data-column='Favicon192x192' class='menu_apps_col'>FAVICON_192x192</div>
+                                        <div data-column='TextEdit' class='menu_apps_col'>TEXT_EDIT</div>
+                                        <div data-column='Copyright' class='menu_apps_col'>COPYRIGHT</div>
+                                        <div data-column='LinkTitle' class='menu_apps_col'>LINK_TITLE</div>
+                                        <div data-column='LinkUrl' class='menu_apps_col'>LINK_URL</div>
+                                        <div id='menu_apps_col_title5' data-column='Status' class='menu_apps_col'>STATUS</div>
                                     </div>
                                     ${props.apps.map(app=>
                                         `<div data-changed-record='0' data-app_id = '${app.Id}' class='menu_apps_row common_row' >

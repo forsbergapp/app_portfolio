@@ -75,12 +75,12 @@ const template = props =>`  <div id='common_app_dialogues_profile_info'>
                                             <div id='common_app_dialogues_profile_info_followers_count'>${props.profile.CountFollowed}</div>
                                         </div>
                                         <div id='common_app_dialogues_profile_info_likes'>
-                                            <div id='common_app_dialogues_profile_info_btn_likes' class='common_link common_like common_icon common_icon_list'></div>
+                                            <div id='common_app_dialogues_profile_info_btn_likes' class='common_link common_like common_link common_icon_list'>${props.icons.like}</div>
                                             <div id='common_app_dialogues_profile_info_likes_count'>${props.profile.CountLikes}</div>
                                         </div>
                                         <div id='common_app_dialogues_profile_info_liked'>
                                             <div id='common_app_dialogues_profile_info_btn_liked' >
-                                                <div id='common_app_dialogues_profile_info_btn_liked_heart' class='common_link common_like common_icon common_icon_list'></div>
+                                                <div id='common_app_dialogues_profile_info_btn_liked_heart' class='common_link common_like common_link common_icon_list'>${props.icons.like}</div>
                                                 <div id='common_app_dialogues_profile_info_btn_liked_users' class='common_link common_icon_list'>${props.icons.user_followed}</div>
                                             </div>
                                             <div id='common_app_dialogues_profile_info_liked_count'>${props.profile.CountLiked}</div>

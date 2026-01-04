@@ -1121,7 +1121,7 @@ body{
 	color: var(--app_theme_list_even_color);
 	background-color: var(--app_theme_list_even_background_color);
 }
-.list_title{
+.row_title >div{
 	display: inline-block;
 	font-weight: bold;
 	vertical-align: middle;
