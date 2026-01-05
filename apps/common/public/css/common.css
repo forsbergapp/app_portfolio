@@ -1317,6 +1317,7 @@ body,
 #common_app_dialogues_user_menu_iam_user_label_data_account_created,
 #common_app_dialogues_user_menu_iam_user_label_data_account_modified {
 	font-size: 0.5em;
+    line-height: 2.5em;
 }
 #common_app_dialogues_user_menu_iam_user_btn_user_update{
     margin-inline-end: 2em;
