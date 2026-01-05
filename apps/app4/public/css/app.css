@@ -375,25 +375,12 @@
 #settings #setting_data_user_url_year{
 	display:flex;
 }
-#profile_info_user_setting_likes_count,
-#profile_info_user_setting_liked_count{
-    vertical-align: sub;
-}
+
 #settings_close{
 	position: absolute;
     bottom: 40px;
 }
 /*Profile */
-#profile_main_btn_user_settings,
-#profile_main_btn_user_setting_likes,
-#profile_main_btn_user_setting_liked{
-	height:20px;
-	text-align:start;
-}
-#profile_main_btn_user_setting_likes,
-#profile_main_btn_user_setting_liked{
-	width:100px;
-}
 #profile_user_settings_day:hover,
 #profile_user_settings_day:active,
 #profile_user_settings_month:hover,
@@ -404,10 +391,6 @@
 #profile_user_settings_like:active{
 	transform: scale(1.3);
 	transition: transform 0.5s ease, background 0.5s ease, box-shadow 0.5s ease;
-}
-#profile_info_user_setting_likes_count,
-#profile_info_user_setting_liked_count{
-	margin-inline-start: 0.5em;
 }
 /*COMMON*/
 #common_app_profile_search{

@@ -21,14 +21,15 @@ const template = props => ` ${props.setting?
                                 <div id='profile_info_user_setting_likes'>
                                     <div id='profile_main_btn_user_setting_likes'>
                                         <div id='profile_main_btn_user_setting_likes_user_setting' class='common_link'>${props.icons.like + props.icons.day + props.icons.month +props.icons.year + props.icons.user_follows}</div>
-                                    </div>
-                                    <div id='profile_info_user_setting_likes_count'></div>
+                                        <div id='profile_info_user_setting_likes_count'></div>
+                                    </div>                                    
                                 </div>
                                 <div id='profile_info_user_setting_liked'>
                                     <div id='profile_main_btn_user_setting_liked'>
                                         <div id='profile_main_btn_user_setting_liked_user_setting' class='common_link'>${props.icons.like + props.icons.day + props.icons.month +props.icons.year + props.icons.user_followed}</div>
+                                        <div id='profile_info_user_setting_liked_count'></div>
                                     </div>
-                                    <div id='profile_info_user_setting_liked_count'></div>
+                                    
                                 </div>
                                 <div id='profile_user_settings_row'>
                                     <div id='profile_select_user_settings'></div>
@@ -112,8 +113,8 @@ const component = async props => {
     const profile_user_setting_stat = id => {
         props.methods.COMMON.commonFFB({path:`/server-db/iamuserappdatapost-profile-stat-like/${id}`, method:'GET', authorization_type:'APP_ID'})
         .then((/**@type{string}*/result)=>{
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_info_user_setting_likes_count').textContent = JSON.parse(result)[0].count_user_post_likes;
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_info_user_setting_liked_count').textContent = JSON.parse(result)[0].count_user_post_liked;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_info_user_setting_likes_count').textContent = JSON.parse(result).CountUserPostLikes;
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#profile_info_user_setting_liked_count').textContent = JSON.parse(result).CountUserPostLiked;
         })
         .catch(()=>null);
     };
