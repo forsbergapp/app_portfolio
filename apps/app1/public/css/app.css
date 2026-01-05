@@ -448,11 +448,6 @@
 	flex-direction: column;
 	height: 100%;
 }
-#menu_monitor_detail_app_data_stat_form{
-	display:flex;
-	flex-direction: column;
-	height: 100%;
-}
 #menu_monitor_detail_server_log_form{
 	display:block;
 	height: 60px;
@@ -469,25 +464,21 @@
 	margin-left: 10px;
 	margin-right: 10px;
 }
-/*CONNECTED + APP LOG*/
+/*CONNECTED*/
 .menu_monitor_detail_connected_row{
 	display:grid;
 	grid-template-columns: 9em 14em 4em 9em 9em 10em 8em 10em 7em 20em 15em 15em 12em 8em !important;
 }
-#menu_monitor_detail_app_data_stat, #menu_monitor_detail_connected{
+#menu_monitor_detail_connected{
 	border-radius: var(--common_app_css_border_radius);
 }
-.menu_monitor_detail_app_data_stat_row, .menu_monitor_detail_connected_row{
+.menu_monitor_detail_connected_row{
 	height: auto;
 	padding-top:4px;
 	padding-inline-start: 5px;
 	text-align: start;
 }   
-.menu_monitor_detail_app_data_stat_row {
-	display:grid;
-	grid-template-columns: 12em 9em 12em 23em 20em 100em !important
-}
-.menu_monitor_detail_app_data_stat_col, .menu_monitor_detail_connected_col{
+.menu_monitor_detail_connected_col{
 	display:inline-block;
 	margin-inline-end: 10px;
 }
@@ -515,30 +506,32 @@
 	border-radius: var(--common_app_css_border_radius);
 	height: calc(100% - 62px);
 }
-.menu_monitor_detail_server_log_row{
+#menu_monitor_detail_server_log > div{
 	padding-top:4px;
 	padding-inline-start: 5px;
 	text-align: start;
     display:grid;
-    grid-template-columns: 80px 120px 90px 70px 70px 70px 170px 170px 250px 1000px 70px 70px 70px 70px 100px 80px 200px 200px 70px 70px 100px;
 }
-.menu_monitor_detail_server_log_row>div{
+#menu_monitor_detail_server_log > div >div{
 	display:inline-block;
 	width:auto;
 	margin-inline-end: 10px;
 	overflow: auto;
 }
+.menu_monitor_detail_server_log_request_row{
+    grid-template-columns: 10em 15em 10em 8em 8em 8em 18em 18em 26em 100em 8em 8em 8em 8em 10em 9em 20em 20em 8em 8em 10em 100em;
+}
 .menu_monitor_detail_server_log_server_row{
-    grid-template-columns: 80px 120px auto !important;
+    grid-template-columns: 10em 14em auto !important
 }
 .menu_monitor_detail_server_log_app_row{
-    grid-template-columns: 80px 120px 30px 150px 100px 100px !important;
+    grid-template-columns: 10em 14em 4em 16em 11em 11em !important;
 }
 .menu_monitor_detail_server_log_bff_row{
-    grid-template-columns: 80px 120px 50px 70px 70px 250px 500px 500px 100px !important
+    grid-template-columns: 10em 14em 6em 10em 10em 30em 55em 55em 11em !important
 }
 .menu_monitor_detail_server_log_db_row{
-    grid-template-columns: 80px 120px 70px 100px 50px 500px 400px 100px !important;
+    grid-template-columns: 10em 14em 10em 11em 6em 55em 45em 11em !important;
 }
 
 /*MAP*/
@@ -1105,7 +1098,7 @@ body{
 .list_lov_row:nth-child(odd),
 .menu_monitor_detail_app_data_stat_row:nth-child(odd),
 .menu_monitor_detail_connected_row:nth-child(odd),
-.menu_monitor_detail_server_log_row:nth-of-type(odd),
+#menu_monitor_detail_server_log > div:nth-of-type(odd),
 .menu_report_queue_row:nth-of-type(odd){
 	color: var(--app_theme_list_odd_color);
 	background-color: var(--app_theme_list_odd_background_color);
@@ -1116,7 +1109,7 @@ body{
 .list_lov_row:nth-child(even),
 .menu_monitor_detail_app_data_stat_row:nth-child(even),
 .menu_monitor_detail_connected_row:nth-child(even),
-.menu_monitor_detail_server_log_row:nth-of-type(even),
+#menu_monitor_detail_server_log > div:nth-of-type(even),
 .menu_report_queue_row:nth-of-type(even){
 	color: var(--app_theme_list_even_color);
 	background-color: var(--app_theme_list_even_background_color);
@@ -1133,7 +1126,7 @@ body{
 .menu_apps_detail_row,
 .menu_monitor_detail_app_data_stat_row,
 .menu_monitor_detail_connected_row,
-.menu_monitor_detail_server_log_row,
+#menu_monitor_detail_server_log > div,
 .menu_openapi_detail_config_row,
 .menu_openapi_detail_servers_row{
 	font-size: 9px;
