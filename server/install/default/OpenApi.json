@@ -2776,12 +2776,6 @@
                                             "logo":{
                                                 "type":"string"
                                             },
-                                            "showparam":{
-                                                "type":"number"
-                                            },
-                                            "manifest":{
-                                                "type":"string"
-                                            },
                                             "js":{
                                                 "type":"string"
                                             },
