@@ -62,9 +62,9 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender( 
             {   mountDiv:'dialogue_send_broadcast_select_app_broadcast',
                 data:{
-                    default_value:'∞',
+                    default_value:props.methods.COMMON.commonGlobalGet('ICONS').infinite,
                     default_data_value:'',
-                    options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}),
+                    options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}).concat({Id:'',Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}),
                     column_value:'Id',
                     column_text:'Name'
                   },

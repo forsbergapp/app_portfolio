@@ -156,9 +156,9 @@ const component = async props => {
                 path:   '/common/component/common_select.js'});
         await props.methods.COMMON.commonComponentRender({mountDiv:'menu_start_select_app',
                 data:   {
-                        default_value:'∞',
+                        default_value:props.methods.COMMON.commonGlobalGet('ICONS').infinite,
                         default_data_value:'',
-                        options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}),
+                        options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}).concat({Id:'',Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}),
                         column_value:'Id',
                         column_text:'Name'
                         },
