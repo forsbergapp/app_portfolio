@@ -643,19 +643,22 @@ const component = async props => {
                 }
                 break;
             }
+            case 'touchstart':
             case 'mousedown':{
                 switch (true){
                     case event_target_id=='common_map_measure':
                     case event.target.classList.contains('common_map_tile'):
                     case event.target.classList.contains('common_map_line'):{
                         dataSet('dragging',true);
-                        dataSet('startX',event.clientX - dataGet('offsetX'));
-                        dataSet('startY',event.clientY - dataGet('offsetY'));
+                        dataSet('startX',(event.clientX ?? event.touches[0].clientX) - dataGet('offsetX'));
+                        dataSet('startY',(event.clientY ?? event.touches[0].clientY)- dataGet('offsetY'));
                         break;
                     }
                 }
                 break;
             }
+            case 'touchend':
+            case 'touchcancel':
             case 'mouseup':
             case 'mouseleave':{
                 switch (true){
@@ -668,18 +671,19 @@ const component = async props => {
                 }
                 break;
             }
+            case 'touchmove':
             case 'mousemove':{
                 if (event_target_id.startsWith('common_map')){
-                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.left = `${event.clientX - props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect().left}px`;
-                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.top = `${event.clientY - props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect().top}px`;
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.left = `${(event.clientX ?? event.touches[0].clientX) - props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect().left}px`;
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_cursor').style.top = `${(event.clientY ?? event.touches[0].clientY) - props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map').getBoundingClientRect().top}px`;
                 }
                 switch (true){
                     case event_target_id=='common_map_measure':
                     case event.target.classList.contains('common_map_tile'):
                     case event.target.classList.contains('common_map_line'):{
                         if (!dataGet('dragging')) return;
-                        dataSet('offsetX',event.clientX - dataGet('startX'));
-                        dataSet('offsetY',event.clientY - dataGet('startY'));
+                        dataSet('offsetX',(event.clientX ?? event.touches[0].clientX) - dataGet('startX'));
+                        dataSet('offsetY',(event.clientY ?? event.touches[0].clientY) - dataGet('startY'));
                         draw();
                         break;
                     }
