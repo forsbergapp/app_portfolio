@@ -1,0 +1,6 @@
+<svg width="192px" height="192px" viewBox="0 0 0 0" >
+	<rect fill="none" x="0" y="0" width="1200px" height="1200px"/>
+	<rect fill="#006dbf" x="0" y="216" width="1200px" height="768px"/>
+	<text x="60" y="456" fill="#61cd8f" font-family="Noto Sans" font-weight="900" font-size="230px" >BANK</text>
+	<text fill="rgb(245,245,245)" x="60" y="736" font-family="Noto Sans Mono" font-weight="400" font-size="90px" >1234 5678 9012 3456</text>
+</svg>
