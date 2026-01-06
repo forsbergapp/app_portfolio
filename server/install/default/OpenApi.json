@@ -4703,6 +4703,10 @@
                     "default":0,
                     "description":""
                 },
+                "SERVER_MAINTENANCE_MESSAGE":{
+                    "default":"",
+                    "description":"Optional message to display in maintenance page in maintenance mode"
+                },
                 "SERVER_JSON_LIMIT": {
                     "default": "10MB", 
                     "description": ""
