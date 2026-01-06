@@ -82,7 +82,7 @@ class serverClass {
      */
     request = async (req, res)=>{
         res.on('close',()=>{
-            if (server.iam.iamObserveLimitReached(req.socket.remoteAddress.replace('::ffff:',''))){
+            if (server.iam.iamObserveLimitReached(req.socket.remoteAddress?.replace('::ffff:',''))){
                 //do not log blocked ip that could cause unwanted logs
                 res.statusMessage = '';
                 res.end();

@@ -2,6 +2,7 @@
  * @module apps/common/src/component/common_maintenance
  */
 
+const {server} = await import('../../../../server/server.js');
 /**
  * @name template
  * @description Template
@@ -102,6 +103,7 @@ const template = props =>`  <!DOCTYPE html>
                                         align-items: center;
                                         display: flex;
                                         justify-content: center;
+                                        text-align:center;
                                     }
                                     #common_maintenance_countdown{
                                         font-size: 30px;
@@ -153,7 +155,7 @@ const component = async props =>{
                                                         content_type:'font/woff2',
                                                         data_app_id:0
                                                     })).result.resource,
-                        message:'',
+                        message:server.ORM.OpenApiComponentParameters.config.SERVER_MAINTENANCE_MESSAGE.default,
                         footer:''
     });
 };
