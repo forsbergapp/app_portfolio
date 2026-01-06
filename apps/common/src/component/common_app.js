@@ -109,37 +109,26 @@
     * @function
     * @param {{data:       {   
     *                      app_id:number,
-    *                      app_admin_app_id:number,
     *                      ip:string, 
     *                      user_agent:string, 
     *                      accept_language:string,
-    *                      basePathRESTAPI:string
+    *                      host:string,
     *                      },
-    *        methods:      {
-    *                      commonAppStart:import('../common.js')['commonAppStart'],
-    *                      commonGeodata:import('../common.js')['commonGeodata'],
-    *                      AppData:import('../../../../server/db/AppData.js'),
-    *                      IamEncryption:import('../../../../server/db/IamEncryption.js'),
-    *                      IamUser:import('../../../../server/db/IamUser.js'),
-    *                      iamAuthorizeIdToken:import('../../../../server/iam.js')['iamAuthorizeIdToken'],
-    *                      serverProcess:import('../../../../server/info.js')['serverProcess'],
-    *                      UtilNumberValue:import('../../../../server/server.js')['server']['ORM']['UtilNumberValue'],
-    *                      Security:import('../../../../server/security.js'),
-    *                      commonResourceFile:import('../common.js')['commonResourceFile'],
-    *                      commonGetFile:import('../common.js')['commonGetFile']
-    *                      }
+    *        methods:      null
     *      }} props 
     * @returns {Promise.<string>}
     */
     const component = async props =>{
+        const common_app_id =                   server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??1;
+        const admin_app_id =                    server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default)??1;
         
-
-        const common_app_id =                   props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??1;
-        const admin_app_id =                    props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default)??1;
-        const start_app_id =                    props.data.app_id==admin_app_id?admin_app_id:props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_START_APP_ID.default)??1;
         const rest_resource_bff =               server.ORM.OpenApiComponentParameters.config.SERVER_REST_RESOURCE_BFF.default;
         const app_rest_api_version =            server.ORM.OpenApiComponentParameters.config.SERVER_REST_API_VERSION.default;
-
+        const basePathRESTAPI = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='REST_API')[0].variables.basePath.default;
+        const data_app_id = (await server.app_common.commonAppIam(props.data.host, 'APP')).admin?
+                            admin_app_id:
+                                common_app_id;
+        const start_app_id =                    data_app_id==admin_app_id?admin_app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_START_APP_ID.default)??1;
         /**
          * @description post data and return created values
          * @returns {Promise.<{  idToken:{id:number, token:string},
@@ -147,15 +136,15 @@
          *                      secret: string}>}
          */
         const postInit = async () =>{
-            const uuid  = props.methods.Security.securityUUIDCreate();
+            const uuid  = server.security.securityUUIDCreate();
             //save token in admin appid for admin or in commmon app id for users
-            const [idToken, secrets] = await Promise.all([props.methods.iamAuthorizeIdToken(props.data.app_id,props.data.ip, 'APP'), 
-                                                         props.methods.Security.securityTransportCreateSecrets()
+            const [idToken, secrets] = await Promise.all([server.iam.iamAuthorizeIdToken(data_app_id,props.data.ip, 'APP'), 
+                                                         server.security.securityTransportCreateSecrets()
             ])
             const secret= Buffer.from(JSON.stringify(secrets),'utf-8')
                                 .toString('base64');
 
-            return  props.methods.IamEncryption.post(props.data.app_id,
+            return  server.ORM.db.IamEncryption.post(data_app_id,
                     {AppId:common_app_id, Uuid:uuid, Secret:secret, IamAppIdTokenId:idToken.id??0, Type:'APP'})
                 .then(result=>{
                     return {
@@ -181,54 +170,54 @@
          */    
         const getData = async ()=>{
 
-            const count_user = props.methods.IamUser.get(props.data.app_id, null).result.length;
-            const admin_only = (await props.methods.commonAppStart(props.data.app_id)==true?false:true) && count_user==0;
+            const count_user = server.ORM.db.IamUser.get(data_app_id, null).result.length;
+            const admin_only = (await server.app_common.commonAppStart(data_app_id)==true?false:true) && count_user==0;
             
             //fetch parameters and convert records to one object with parameter keys
             /**@type{Object.<string,*>} */
-            const APP_PARAMETER = props.methods.AppData.getServer({app_id:props.data.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:common_app_id}}).result
+            const APP_PARAMETER = server.ORM.db.AppData.getServer({app_id:data_app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:common_app_id}}).result
                                          .reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['Object']['AppData']}*/row)=>{key[row.Value] = row.DisplayData; return key},{})
             //geodata for APP using start_app_id
-            const result_geodata = await props.methods.commonGeodata({ app_id:start_app_id, 
+            const result_geodata = await server.app_common.commonGeodata({ app_id:start_app_id, 
                                                                     endpoint:'APP', 
                                                                     ip:props.data.ip, 
                                                                     user_agent:props.data.user_agent, 
                                                                     accept_language:props.data.accept_language});
             const postData = await postInit();
-            const app_toolbar_button_start =  props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_START.default)??1;
-            const app_toolbar_button_framework = props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_FRAMEWORK.default)??1;
-            const app_framework = props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK.default)??1;
+            const app_toolbar_button_start =  server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_START.default)??1;
+            const app_toolbar_button_framework = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_FRAMEWORK.default)??1;
+            const app_framework = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK.default)??1;
             /**@type{server['app']['commonGlobals']} */
             const globals = {
                                 //update COMMON_GLOBAL keys:
                                 apps:                           (await server.ORM.db.App.getViewInfo({app_id:common_app_id, resource_id:null})).result,
                                 rest_resource_bff:              rest_resource_bff,
                                 app_rest_api_version:           app_rest_api_version,
-                                app_rest_api_basepath:          props.data.basePathRESTAPI,
+                                app_rest_api_basepath:          basePathRESTAPI,
                                 app_common_app_id:              common_app_id,
                                 app_admin_app_id:               admin_app_id,
                                 app_start_app_id:               start_app_id,
                                 app_toolbar_button_start:       app_toolbar_button_start,
                                 app_toolbar_button_framework:   app_toolbar_button_framework,
                                 app_framework:                  app_framework,
-                                app_framework_messages:         props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK_MESSAGES.default)??1,
+                                app_framework_messages:         server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK_MESSAGES.default)??1,
                                 admin_only:                     admin_only?1:0,
                                 admin_first_time:               count_user==0?1:0,
-                                app_request_tries:              props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUEST_TRIES.default)??5,
-                                app_requesttimeout_seconds:     props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_SECONDS.default)??5,
-                                app_requesttimeout_admin_minutes:props.methods.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
+                                app_request_tries:              server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUEST_TRIES.default)??5,
+                                app_requesttimeout_seconds:     server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_SECONDS.default)??5,
+                                app_requesttimeout_admin_minutes:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
                                 //font css split by '@font-face' in array, unicode fonts only, ui fonts applied at start
-                                app_fonts:                      (await props.methods.commonResourceFile({ 
-                                                                        app_id:props.data.app_id, 
+                                app_fonts:                      (await server.app_common.commonResourceFile({ 
+                                                                        app_id:data_app_id, 
                                                                         resource_id:'/common/css/font/fonts.css',
                                                                         content_type:'text/css', 
                                                                         data_app_id:common_app_id})).result.resource
                                                                 .split('url(')
                                                                 .map((/**@type{string}*/row)=>{
-                                                                    if (row.startsWith(props.data.basePathRESTAPI))
+                                                                    if (row.startsWith(basePathRESTAPI))
                                                                         //add app start uuid after font uuid separated with '~'
-                                                                        return row.replace( row.substring(0,props.data.basePathRESTAPI.length+36),
-                                                                                            row.substring(0,props.data.basePathRESTAPI.length+36) + '~' + postData.uuid);
+                                                                        return row.replace( row.substring(0,basePathRESTAPI.length+36),
+                                                                                            row.substring(0,basePathRESTAPI.length+36) + '~' + postData.uuid);
                                                                     else
                                                                         return row;
                                                                 }).join('url(')
@@ -257,18 +246,18 @@
                             };
             return {
                     globals:        Buffer.from(JSON.stringify(globals)).toString('base64'),
-                    cssCommon:      Buffer.from((await props.methods.commonResourceFile({ 
-                                                        app_id:props.data.app_id, 
+                    cssCommon:      Buffer.from((await server.app_common.commonResourceFile({ 
+                                                        app_id:data_app_id, 
                                                         resource_id:'/common/css/common.css',
                                                         content_type:'text/css', 
                                                         data_app_id:common_app_id})).result.resource).toString('base64'),
-                    jsCommon:       Buffer.from((await props.methods.commonResourceFile({ 
-                                                        app_id:props.data.app_id, 
+                    jsCommon:       Buffer.from((await server.app_common.commonResourceFile({ 
+                                                        app_id:data_app_id, 
                                                         resource_id:'/common/js/common.js',
                                                         content_type:'text/javascript', 
                                                         data_app_id:common_app_id})).result.resource).toString('base64'),
-                    jsCrypto:       Buffer.from(await props.methods.commonGetFile({ 
-                                                        app_id:props.data.app_id, 
+                    jsCrypto:       Buffer.from(await server.app_common.commonGetFile({ 
+                                                        app_id:data_app_id, 
                                                         path:'/sdk/crypto.js',
                                                         content_type:'text/javascript'})).toString('base64'),
                     idToken:        postData.idToken,
@@ -282,7 +271,7 @@
         const data = await getData().catch(error=>{
             throw error;
         });
-        return template({   app_id:                             props.data.app_id,
+        return template({   app_id:                             data_app_id,
                             cssCommon:                          data.cssCommon,
                             jsCommon:                           data.jsCommon,
                             jsCrypto:                           data.jsCrypto,

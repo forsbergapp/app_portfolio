@@ -1179,34 +1179,14 @@ const commonApp = async parameters =>{
                                                     }), type:'HTML'};
             }
             else{
-                const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default)??1;
-                const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??0;
-                const basePathRESTAPI = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='REST_API')[0].variables.basePath.default
-                const app_id = (await commonAppIam(parameters.host, 'APP')).admin?
-                                    admin_app_id:
-                                        common_app_id;
-                
                 return {result:await ComponentApp({data:     {
-                                                                app_id:             app_id,
-                                                                app_admin_app_id:   admin_app_id,
+                                                                app_id:             parameters.app_id,
                                                                 ip:                 parameters.ip, 
                                                                 user_agent:         parameters.user_agent ??'', 
                                                                 accept_language:    parameters.accept_language??'',
-                                                                basePathRESTAPI:    basePathRESTAPI
+                                                                host:               parameters.host
                                                                 },
-                                                    methods:    {
-                                                                commonAppStart:commonAppStart,
-                                                                commonGeodata:commonGeodata,
-                                                                AppData:server.ORM.db.AppData,
-                                                                IamEncryption:server.ORM.db.IamEncryption,
-                                                                IamUser:server.ORM.db.IamUser,
-                                                                iamAuthorizeIdToken:server.iam.iamAuthorizeIdToken,
-                                                                serverProcess:server.ORM.serverProcess,
-                                                                UtilNumberValue:server.ORM.UtilNumberValue,
-                                                                Security:server.security,
-                                                                commonResourceFile:commonResourceFile,
-                                                                commonGetFile:commonGetFile
-                                                                }})
+                                                    methods:    null})
                                     .catch(error=>{
                                         return server.ORM.db.Log.post({ app_id:parameters.app_id, 
                                                                         data:{  object:'LogAppError', 
