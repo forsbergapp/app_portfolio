@@ -3119,12 +3119,6 @@ const commonAppMount = async (app_id) =>{
     CommonAppInit.App.CssReport==''?
         null:
             COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(CommonAppInit.App.CssReport, null, 'text/css', CommonAppInit.App.CssReportContent);
-    CommonAppInit.App.Favicon32x32==''?
-        null:
-            COMMON_DOCUMENT.querySelector('#app_link_favicon_32x32').href = await commonMiscResourceFetch(CommonAppInit.App.Favicon32x32, null, 'image/png', CommonAppInit.App.Favicon32x32Content);
-    CommonAppInit.App.Favicon192x192==''?
-        null:
-            COMMON_DOCUMENT.querySelector('#app_link_favicon_192x192').href = await commonMiscResourceFetch(CommonAppInit.App.Favicon192x192, null, 'image/png',CommonAppInit.App.Favicon192x192Content);
 };
 /**
  * @name commonGet

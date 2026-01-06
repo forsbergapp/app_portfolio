@@ -27,8 +27,6 @@
                             <head>
                                 <meta charset='UTF-8'>
                                 <title></title>
-                                <meta name='HandheldFriendly' content='true'/>
-                                <meta name='mobile-web-app-capable' content='yes'>
                                 <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>
                             </head>	
                             <body class='start'>
@@ -53,8 +51,6 @@
                                 </script>
                                 <link id='app_link_app_css'         rel='stylesheet'  type='text/css'     href=''/>
                                 <link id='app_link_app_report_css'  rel='stylesheet'  type='text/css'     href=''/>
-                                <link id='app_link_favicon_32x32'   rel='icon'        type='image/png'    href='' sizes='32x32'/>
-                                <link id='app_link_favicon_192x192' rel='icon'        type='image/png'    href='' sizes='192x192'/>
                                 <div id='app_root'>
                                     <div id='app'></div>
                                     <div id='common_app'>
