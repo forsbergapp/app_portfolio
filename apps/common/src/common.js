@@ -1097,20 +1097,6 @@ const commonAppMount = async parameters =>{
                                                                                             content_type:'text/css', 
                                                                                             data_app_id:parameters.app_id})).result.resource:
                                                                     null,
-                                    Favicon32x32:           app.Favicon32x32,
-                                    Favicon32x32Content:    app.Favicon32x32?
-                                                                (await commonResourceFile({ app_id:parameters.app_id, 
-                                                                                            resource_id:app.Favicon32x32,
-                                                                                            content_type:'image/png', 
-                                                                                            data_app_id:parameters.app_id})).result.resource:
-                                                                    null,
-                                    Favicon192x192:         app.Favicon192x192,
-                                    Favicon192x192Content:  app.Favicon192x192?
-                                                                (await commonResourceFile({ app_id:parameters.app_id, 
-                                                                                            resource_id:app.Favicon192x192,
-                                                                                            content_type:'image/png', 
-                                                                                            data_app_id:parameters.app_id})).result.resource:
-                                                                    null,
                                     Logo:                   app.Logo,
                                     LogoContent:            app.Logo?
                                                                 (await commonResourceFile({ app_id:parameters.app_id, 

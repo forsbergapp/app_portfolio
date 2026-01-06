@@ -30,8 +30,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                         <div data-column='Js' class='menu_apps_col'>JS</div>
                                         <div data-column='Css' class='menu_apps_col'>CSS</div>
                                         <div data-column='CssReport' class='menu_apps_col'>CSS_REPORT</div>
-                                        <div data-column='Favicon32x32' class='menu_apps_col'>FAVICON_32x32</div>
-                                        <div data-column='Favicon192x192' class='menu_apps_col'>FAVICON_192x192</div>
                                         <div data-column='TextEdit' class='menu_apps_col'>TEXT_EDIT</div>
                                         <div data-column='Copyright' class='menu_apps_col'>COPYRIGHT</div>
                                         <div data-column='LinkTitle' class='menu_apps_col'>LINK_TITLE</div>
@@ -47,8 +45,6 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
                                             <div class='menu_apps_col common_input list_edit' data-column='Js' contentEditable='true' >${app.Js}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='Css' contentEditable='true' >${app.Css}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='CssReport' contentEditable='true' >${app.CssReport}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='Favicon32x32' contentEditable='true' >${app.Favicon32x32}</div>
-                                            <div class='menu_apps_col common_input list_edit' data-column='Favicon192x192' contentEditable='true' >${app.Favicon192x192}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='TextEdit' contentEditable='true' >${app.TextEdit}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='Copyright' contentEditable='true' >${app.Copyright}</div>
                                             <div class='menu_apps_col common_input list_edit' data-column='LinkTitle' contentEditable='true' >${app.LinkTitle}</div>

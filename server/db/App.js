@@ -71,8 +71,6 @@ const post = async (app_id, data) => {
             Js: data.js,
             Css: data.css,
             CssReport: data.css_report,
-            Favicon32x32: data.favicon_32x32,
-            Favicon192x192: data.favicon_192x192,
             TextEdit:data.app_text_edit,
             Copyright:data.app_copyright,
             LinkTitle:data.app_link_title,
@@ -104,8 +102,6 @@ const post = async (app_id, data) => {
  *                  js:string,
  *                  css:string,
  *                  css_report:string,
- *                  favicon_32x32:string,
- *                  favicon_192x192:string,
  *                  text_edit:string,
  *                  copyright:string,
  *                  link_title:string,
@@ -130,11 +126,6 @@ const update = async parameters => {
             data_update.Css = parameters.data.css;
         if (parameters.data.css_report!=null)
             data_update.CssReport = parameters.data.css_report;
-        if (parameters.data.favicon_32x32!=null)
-            data_update.Favicon32x32 = parameters.data.favicon_32x32;
-        if (parameters.data.favicon_192x192!=null)
-            data_update.Favicon192x192 = parameters.data.favicon_192x192;
-
         if (parameters.data.text_edit!=null)
             data_update.TextEdit = parameters.data.text_edit;
         if (parameters.data.copyright!=null)

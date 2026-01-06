@@ -2785,12 +2785,6 @@
                                             "css_report":{
                                                 "type":"string"
                                             },
-                                            "favicon_32x32":{
-                                                "type":"string"
-                                            },
-                                            "favicon_192x192":{
-                                                "type":"string"
-                                            },
                                             "text_edit":{
                                                 "type":"string"
                                             },

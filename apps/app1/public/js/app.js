@@ -377,8 +377,6 @@ const appSecureCommonButtonSave = async (item) => {
                                                         js:             record.querySelector('[data-column=\'Js\']').textContent,
                                                         css:            record.querySelector('[data-column=\'Css\']').textContent,
                                                         css_report:     record.querySelector('[data-column=\'CssReport\']').textContent,
-                                                        favicon_32x32:  record.querySelector('[data-column=\'Favicon32x32\']').textContent,
-                                                        favicon_192x192:record.querySelector('[data-column=\'Favicon192x192\']').textContent,
                                                         text_edit:      record.querySelector('[data-column=\'TextEdit\']').textContent,
                                                         copyright:      record.querySelector('[data-column=\'Copyright\']').textContent,
                                                         link_title:     record.querySelector('[data-column=\'LinkTitle\']').textContent,
