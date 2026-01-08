@@ -41,7 +41,10 @@ const template = props =>`
                                     <div id='common_map_control_query' class='common_map_control_button common_link common_icon_button'>${props.icons.arrow_pointer}</div>
                                 </div>
                                 <div id='common_map_cursor' ></div>
-                                <div id='common_map_measure'></div>
+                                <div id='common_map_layer_data'>
+                                    <div id='common_map_measure'></div>
+                                    <div id='common_map_attribution'></div>
+                                </div>
                                 <div id='common_map_tiles'></div>
                                 <svg id='common_map_lines'></svg>
                                 <div id='common_map_popups'></div>
@@ -74,6 +77,7 @@ const component = async props => {
         title: 'OpenStreetMap_Mapnik',
         value: 'OpenStreetMap_Mapnik',
         url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        subdomains: '',
         max_zoom: 19,
         attribution: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     },
@@ -81,9 +85,19 @@ const component = async props => {
         title: 'Esri.WorldImagery',
         value: 'Esri.WorldImagery',
         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}.png',
-        max_zoom: null,
+        subdomains: '',
+        max_zoom: 19,
         attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    }];
+    },
+    {
+        title: 'Esri.WorldStreetMap',
+        value: 'Esri.WorldStreetMap',
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}.png',
+        subdomains: '',
+        max_zoom: 19,
+        attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }
+    ];
 
     //import components without returned lifecycle, data or methods once for high speed performance
     const {default:common_map_tile} = await props.methods.COMMON.commonMiscImport('/common/component/common_map_tile.js');
@@ -97,6 +111,8 @@ const component = async props => {
      * @constant
      * @typedef {{  layer:number, 
      *              zoom_level:number, 
+     *              min_level:number,
+     *              max_level:number,
      *              offsetX:number,
      *              offsetY:number,
      *              dragging:boolean,
@@ -110,6 +126,8 @@ const component = async props => {
      */
     const DATA = {  layer:0,
                     zoom_level:3,
+                    min_level:1,
+                    max_level:20,
                     offsetX:0,
                     offsetY:0,
                     dragging:false,
@@ -165,6 +183,14 @@ const component = async props => {
                                                             top:        y * dataGet('TILE_SIZE') + dataGet('offsetY'),
                                                             tileSize:   dataGet('TILE_SIZE'),
                                                             url:        MAP_LAYERS[dataGet('layer')].url
+                                                                            .replace('{s}', 
+                                                                                        //load balancing support if specififed
+                                                                                        MAP_LAYERS[dataGet('layer')].url.indexOf('{s}')>-1?
+                                                                                            (MAP_LAYERS[dataGet('layer')].subdomains.split('')[Math.abs(x + y) % 
+                                                                                                MAP_LAYERS[dataGet('layer')].subdomains.split('').length]):
+                                                                                            '')
+                                                                            //No support for retina display with added value '@2x'
+                                                                            .replace('{r}','')
                                                                             .replace('{x}', x.toString())
                                                                             .replace('{y}', y.toString())
                                                                             .replace('{z}', dataGet('zoom_level').toString())},
@@ -462,7 +488,7 @@ const component = async props => {
      */
     const getZoom = parameters => {
         const zoomDelta = parameters.deltaY < 0 ? 1 : -1;
-        const newZ = Math.min(Math.max(dataGet('zoom_level') + zoomDelta, 1), 19);
+        const newZ = Math.min(Math.max(dataGet('zoom_level') + zoomDelta, dataGet('min_level')), MAP_LAYERS[dataGet('layer')].max_zoom ?? dataGet('max_level'));
     
         if (newZ === dataGet('zoom_level')) return;
     
@@ -491,7 +517,12 @@ const component = async props => {
         
         draw();
     };
-    
+    /**
+     * @name setAttribution
+     * @description Updates layer attribution
+     * @returns 
+     */
+    const setAttribution = () => props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_map_attribution').innerHTML = MAP_LAYERS[dataGet('layer')].attribution;
     /**
      * @name setLayer
      * @descripton Set map layer
@@ -500,7 +531,10 @@ const component = async props => {
      * @returns {void}
      */
     const setLayer = value =>{
-        dataSet('layer', MAP_LAYERS.findIndex((layer,index)=>layer.value==value))
+        dataSet('layer', MAP_LAYERS.findIndex(layer=>layer.value==value))
+        //sets to max level if chosen level has less max level than layer before
+        setZoom(dataGet('zoom_level'));
+        setAttribution();
         draw();
     };
     /**
@@ -661,14 +695,7 @@ const component = async props => {
             case 'touchcancel':
             case 'mouseup':
             case 'mouseleave':{
-                switch (true){
-                    case event_target_id=='common_map_measure':
-                    case event.target.classList.contains('common_map_tile'):
-                    case event.target.classList.contains('common_map_line'):{
-                        dataSet('dragging',false);
-                        break;
-                    }
-                }
+                 dataSet('dragging',false);
                 break;
             }
             case 'touchmove':
@@ -712,6 +739,7 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const onMounted = async ()=>{
+        setAttribution();
         if (props.data.longitude && props.data.latitude)
             await goTo({  ip:null,
                     longitude:+props.data.longitude, 
