@@ -483,6 +483,7 @@
  * @typedef {{  title:string,
  *              value:string,
  *              url:string,
+ *              subdomains:string,
  *              max_zoom:number|null
  *              attribution:string}} commonMapLayers
  */

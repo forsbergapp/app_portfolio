@@ -217,7 +217,8 @@ const component = async props => {
                                 .textContent);
                         break;
                     }
-                    case event_target_id=='common_map_control_expand_select_mapstyle':{
+                    case event_target_id=='common_map_control_expand_select_mapstyle' &&
+                        event.target.classList.contains('common_select_option') :{
                         props.methods.setLayer(event.target?.getAttribute('data-value'));
                         break;
                     }

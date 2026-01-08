@@ -267,7 +267,7 @@ body,
 	position: absolute;
 	border: 1px solid;
 	min-width: 20px;
-	max-height: 30em;
+	max-height: 20em;
 	border-radius: 2px;
 	cursor: pointer;
 	overflow-y:auto;
@@ -1699,18 +1699,30 @@ body,
 .common_map_control_expand_search_list_col:nth-child(5){
 	display: none !important;
 }
-
-#common_map_measure{
-    width:100px;
-    height:1.5em;
-    display:inline-block;
+#common_map_layer_data{
+    display:block;
     position:absolute;
-    bottom:1em;
+    bottom: 1em;
+    font-size: 0.9em;
+    padding: 1em;
+    width: 100%;
+    opacity: 0.75;
+}
+#common_map_measure{
+    display: inline-block;
+    width: 12em;
     background-color:white;
-    font-size:9px;
-    inset-inline-start: calc(50% - 50px);
     text-align: center;
+    max-height: 1.5em;
 } 
+#common_map_attribution{
+    display: inline-block;
+    background-color:white;
+    text-align: start;
+    padding-left: 1em;
+    padding-right: 1em;
+    max-width: calc(100% - 16em);
+}
 #common_map_tiles,#common_map_lines, #common_map_popups{
     pointer-events: none;
     width:0;
@@ -1732,7 +1744,7 @@ body,
 #common_map_cursor{
     font-size:1.75em;
 }
-#common_map_measure, .common_map_line, .common_map_popup{
+#common_map_layer_data, .common_map_line, .common_map_popup{
     z-index: 2;
     pointer-events:auto;
 }
