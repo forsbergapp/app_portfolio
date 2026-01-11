@@ -71,7 +71,6 @@
                                             <div id='common_app_dialogues_app_data_display' class='common_app_dialogues_content'></div>
                                             <div id='common_app_dialogues_app_custom' class='common_app_dialogues_content'></div>
                                         </div>
-                                        <div id='common_apps' class='common_app_dialogues_content'></div>
                                         <div id='common_app_print'></div>
                                         <div id='common_app_window_info'></div>
                                         <div id='common_app_broadcast'></div>
@@ -206,10 +205,9 @@
                                 app_request_tries:              server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUEST_TRIES.default)??5,
                                 app_requesttimeout_seconds:     server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_SECONDS.default)??5,
                                 app_requesttimeout_admin_minutes:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
-                                //font css split by '@font-face' in array, unicode fonts only, ui fonts applied at start
                                 app_fonts:                      (await server.app_common.commonResourceFile({ 
                                                                         app_id:data_app_id, 
-                                                                        resource_id:'/common/css/font/fonts.css',
+                                                                        resource_id:'/common/css/common_fonts.css',
                                                                         content_type:'text/css', 
                                                                         data_app_id:common_app_id})).result.resource
                                                                 .split('url(')

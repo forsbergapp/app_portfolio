@@ -28,9 +28,6 @@
 #send_broadcast, #dialogue_send_broadcast_close{
 	width:100%;
 }
-#dialogue_send_broadcast_send{
-	margin: 20px;
-}
 /*SECURE*/
 #secure{
 	width:100%;
@@ -185,7 +182,7 @@
 }
 
 #menu_start_graphBox{
-	height:calc(100% - 4em);
+	height:calc(100% - 5em);
 }
 #menu_start_graphBox.common_loading_spinner{
 	height:30px;
@@ -440,8 +437,8 @@
 	height: 40px !important;
 }
 #menu_monitor_detail {
-	height: calc(100% - 100px);
-	min-height: calc(100% - 100px);	
+	height: calc(100% - 130px);
+	min-height: calc(100% - 130px);	
 }
 #menu_monitor_detail_connected_form{
 	display: flex;
@@ -730,7 +727,7 @@
 }
 /*MENU SERVER*/
 #menu_server_content_widget1{
-	height:300px;
+	height:370px;
 }
 #menu_server_os_info, #menu_server_process_info{
 	inset-inline-start: calc(50% - 40px);
@@ -753,9 +750,16 @@
 	overflow-wrap: anywhere;
 }
 #menu_server_content_widget2{
-	height:calc(100% - 320px);
+	height:calc(100% - 390px);
 }
 /* COMMON */
+.common_select_dropdown{
+    line-height: 1em;
+}
+.common_select{ 
+    height: 2em;
+}
+
 #common_app_iam_user_menu_avatar_img, 
 #common_app_iam_user_menu_default_avatar{
     background-color: var(--common_app_color_light);

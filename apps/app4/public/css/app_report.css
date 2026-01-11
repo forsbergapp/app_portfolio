@@ -1,10 +1,8 @@
 /*Variables*/
 :root{
-	--font_1: 'Noto Sans';
-
 	--app_day_columns:6;
-	--report_theme_display_font_family:var(--font_1);
-	--report_theme_default_font_family:var(--font_1);
+	--report_theme_display_font_family:'sans-serif';
+	--report_theme_default_font_family:'sans-serif';
 	--report_theme_text_color: var(--common_report_color_black);
 	--report_theme_notes_background_color:inherit !important;
 }
@@ -924,29 +922,29 @@
 /*Themes*/
 /*DISPLAY FONT*/
 .timetable_class.font_arabic_sans .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_sans);
+	font-family: var(--common_app_font_arabic_sans), var(--report_theme_display_font_family);
 }
 .timetable_class.font_arabic_kufi .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_kufi);
+	font-family: var(--common_app_font_arabic_kufi), var(--report_theme_display_font_family);
 }
 .timetable_class.font_arabic_nashk .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nashk);
+	font-family: var(--common_app_font_arabic_nashk), var(--report_theme_display_font_family);
 }
 .timetable_class.font_arabic_nastaliq .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nastaliq);
+	font-family: var(--common_app_font_arabic_nastaliq), var(--report_theme_display_font_family);
 }
 /*DEFAULT FONT*/
 .timetable_class.font_arabic_sans .default_font{
-	font-family: var(--report_theme_default_font_family), var(--common_app_font_arabic_sans);
+	font-family: var(--common_app_font_arabic_sans), var(--report_theme_default_font_family);
 }
 .timetable_class.font_arabic_kufi .default_font{
-	font-family: var(--report_theme_default_font_family), var(--common_app_font_arabic_kufi);
+	font-family: var(--common_app_font_arabic_kufi), var(--report_theme_default_font_family);
 }
 .timetable_class.font_arabic_nashk .default_font{
-	font-family: var(--report_theme_default_font_family), var(--common_app_font_arabic_nashk);
+	font-family: var(--common_app_font_arabic_nashk), var(--report_theme_default_font_family);
 }
 .timetable_class.font_arabic_nastaliq .default_font{
-	font-family: var(--report_theme_default_font_family), var(--common_app_font_arabic_nastaliq);
+	font-family: var(--common_app_font_arabic_nastaliq), var(--report_theme_default_font_family);
 }
 /*set default text color for all timetables*/
 .timetable_class{

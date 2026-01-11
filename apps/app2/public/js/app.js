@@ -78,36 +78,6 @@ const appEventKeyUp = event => {
 };
 
 /**
- * @name appAppsGet
- * @description Get apps
- * @function
- * @returns {void}
- */
-const appAppsGet = () => {
-    common.commonComponentRender({
-        mountDiv:   'common_apps',
-        data:       {
-                    app_id:common.commonGlobalGet('app_id')
-                    },
-        methods:    null,
-        path:       '/common/component/common_apps.js'});
-};
-/**
- * @name appInit
- * @description Init app
- * @function
- * @returns {Promise.<void>}
- */
-const appInit = async () => {
-    await common.commonComponentRender({
-        mountDiv:   common.commonGlobalGet('app_div'),
-        data:       null,
-        methods:    null,
-        path:       '/component/app.js'})
-        .then(()=>appAppsGet());
-        
-};
-/**
  * @name appCommonInit
  * @description Init common
  * @function
@@ -120,7 +90,11 @@ const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.commonGlobalSet('app_function_session_expired', null);
-    appInit();
+    await common.commonComponentRender({
+        mountDiv:   common.commonGlobalGet('app_div'),
+        data:       null,
+        methods:    null,
+        path:       '/component/app.js'});
 };
 /**
  * @name appMetadata

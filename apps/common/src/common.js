@@ -427,7 +427,7 @@ const commonGetFile = async parameters =>{
 };
 /**
  * @name commonCssFonts
- * @description Returns resource /common/css/font/fonts.css used with updated url and db records to create at start
+ * @description Returns resource /common/css/common_fonts.css used with updated url and db records to create at start
  *              and saved on serverClass in server.js
  *              can return base64 url or secure url:
  *              secure url logic:
@@ -447,7 +447,7 @@ const commonCssFonts = async (base64=false)=>{
     const db_records = [];
     const resource_directory = server.ORM.db.App.get({app_id:0, resource_id:0}).result[0].Path;
     for (const fontFace of (await fs.promises
-                            .readFile(`${server.ORM.serverProcess.cwd()}${server.ORM.db.App.get({app_id:0, resource_id:0}).result[0].Path}/css/font/fonts.css`))
+                            .readFile(`${server.ORM.serverProcess.cwd()}${server.ORM.db.App.get({app_id:0, resource_id:0}).result[0].Path}/css/common_fonts.css`))
                             .toString('utf8')
                             .replaceAll('\r','\n')
                             .split('@')){
@@ -473,14 +473,13 @@ const commonCssFonts = async (base64=false)=>{
                             if (url_record.filter(row=>row.url == url).length==0){
                                 const uuid  = server.security.securityUUIDCreate(); 
                                 url_record.push({uuid:uuid, url:url});
-                                const secret= Buffer.from(JSON.stringify(await server.security.securityTransportCreateSecrets()),'utf-8')
-                                                .toString('base64');
                                 /**@type{server['ORM']['Object']['IamEncryption']} */
                                 const data = {  Id:                Date.now(),
                                                 AppId:             0, 
                                                 IamAppIdTokenId:    null, 
                                                 Uuid:               uuid, 
-                                                Secret:             secret, 
+                                                //secret not used for fonts, record used to get token, uuid and url in REST API
+                                                Secret:             '', 
                                                 Url:                url,
                                                 Type:               'FONT',
                                                 Created:            new Date().toISOString()}
@@ -549,7 +548,7 @@ const commonResourceFile = async parameters =>{
                             parameters.resource_id.replace('/common', ''):
                                 parameters.resource_id;
     switch (true){
-        case parameters.content_type == 'text/css' && parameters.resource_id=='/common/css/font/fonts.css':{
+        case parameters.content_type == 'text/css' && parameters.resource_id=='/common/css/common_fonts.css':{
             //loaded at server start with font url replaced with secure url and about 1700 IamEncryption records
             return {result:{resource:server.commonCssFonts.css}, type:'JSON'};
         }
@@ -1231,9 +1230,6 @@ const commonAppError = async (message=null) =>serverError({data:{message:message
  * @function
  * @param {{app_id:number|null,
  *          resource_id:string,
- *          ip:string,
- *          host:string,
- *          user_agent:string,
  *          data:{data_app_id:number,
  *                type: 'INFO'|'RESOURCE',
  *                content_type: string}
@@ -1263,7 +1259,7 @@ const commonAppResource = async parameters =>{
                                 }, 
                         type:'JSON'};
             }
-            case parameters.data.content_type == 'text/css':
+            case parameters.data.content_type == 'text/css' && parameters.resource_id.replaceAll('~','/')!='/common/css/common_fonts.css':
             case parameters.data.content_type == 'font/woff2':
             case parameters.data.content_type == 'text/javascript':
             case parameters.data.content_type == 'image/webp':

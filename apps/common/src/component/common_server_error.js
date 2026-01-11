@@ -21,7 +21,7 @@ const template = props =>`  <!DOCTYPE html>
                                         --common_app_color_light :#f5f5f5;
                                         --common_app_color_shadow1: rgba(0,0,0,.2);
                                         --common_app_color_shadow2: rgba(0,0,0,0.19);
-                                        font-family: 'Noto Sans';
+                                        font-family: 'sans-serif';
                                         font-size: 16px;
                                         margin: 0;
                                         height: 100%;
