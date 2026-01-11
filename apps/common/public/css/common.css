@@ -221,6 +221,7 @@ body,
 .common_select_option{
 	display: block;
 	width: 100%;
+    white-space: preserve;
 }
 .common_select_option:hover,
 .common_select_option:active{

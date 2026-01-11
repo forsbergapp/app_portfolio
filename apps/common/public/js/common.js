@@ -2490,20 +2490,6 @@ const commonEvent = async (event_type,event=null) =>{
         await (async ()=>{
             switch (event_type){
                 case 'click':{
-                    const elementDiv = commonMiscElementDiv(event.target);
-                    //close all open div selects except current target
-                    if (typeof commonMiscElementDiv(event.target).className=='string' && 
-                            ['common_select_dropdown', 
-                            'common_select_dropdown_value',
-                            'common_icon_select_dropdown',
-                            'common_select_options',
-                            'common_select_option']
-                            .filter(row=>elementDiv.className.indexOf(row)>-1).length>0){
-                        Array.from(COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.app_root} .common_select_options`))
-                            .filter((/**@type{HTMLElement}*/element)=>commonMiscElementId(element) != commonMiscElementId(event.target))
-                            .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
-                    }
-
                     if (event.target.classList.contains('common_switch')){
                         if (event.target.classList.contains('checked'))
                             event.target.classList.remove('checked');
@@ -2513,28 +2499,6 @@ const commonEvent = async (event_type,event=null) =>{
                     else{
                         const event_target_id = commonMiscElementId(event.target);
                         switch(event_target_id){
-                            case event.target.parentNode.classList.contains('common_select_dropdown_value')?event_target_id:'':
-                            case event.target.parentNode.classList.contains('common_icon_select_dropdown')?event_target_id:'':
-                            case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
-                            case event.target.classList.contains('common_icon_select_dropdown')?event_target_id:'':{
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display = 
-                                    COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
-                                break;
-                            }
-                            case event.target.parentNode.classList.contains('common_select_option')?event_target_id:'':{
-                                //select can show HTML, use innerHTML
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
-                                event.target.parentNode.parentNode.style.display = 'none';
-                                break;
-                            }
-                            case event.target.classList.contains('common_select_option')?event_target_id:'':{
-                                //select can show HTML, use innerHTML
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
-                                event.target.parentNode.style.display = 'none';
-                                break;
-                            }                            
                             case 'common_app_profile_search_icon':{
                                 COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').focus();
                                 COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));

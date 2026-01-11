@@ -50,10 +50,60 @@ const template = props => ` <div class='common_select_dropdown'>
  * @returns {{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
  *                      methods:null,
+ *                      events:  common['commonComponentEvents'],
  *                      template:string}}
  */
 const component = props => {
 
+    /**
+     * @name events
+     * @descption Events for map
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        const elementDiv = props.methods.COMMON.commonMiscElementDiv(event.target);
+        
+        //close all open div selects except current target
+        if (event_type== 'click' && typeof props.methods.COMMON.commonMiscElementDiv(event.target).className=='string' && 
+                ['common_select_dropdown', 
+                'common_select_dropdown_value',
+                'common_icon_select_dropdown',
+                'common_select_options',
+                'common_select_option']
+                .filter(row=>elementDiv.className.indexOf(row)>-1).length>0){
+            Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#${props.methods.COMMON.commonGlobalGet('app_root')} .common_select_options`))
+                .filter((/**@type{HTMLElement}*/element)=>props.methods.COMMON.commonMiscElementId(element) != props.methods.COMMON.commonMiscElementId(event.target))
+                .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
+        }
+        switch (true){
+            case event_type== 'click' && event.target.parentNode.classList.contains('common_select_dropdown_value'):
+            case event_type== 'click' && event.target.parentNode.classList.contains('common_icon_select_dropdown'):
+            case event_type== 'click' && event.target.classList.contains('common_select_dropdown_value'):
+            case event_type== 'click' && event.target.classList.contains('common_icon_select_dropdown'):{
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display = 
+                    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
+                break;
+            }
+            case event_type== 'click' && event.target.parentNode.classList.contains('common_select_option'):{
+                //select can show HTML, use innerHTML
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
+                event.target.parentNode.parentNode.style.display = 'none';
+                break;
+            }
+            case event_type== 'click' && event.target.classList.contains('common_select_option'):{
+                //select can show HTML, use innerHTML
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
+                event.target.parentNode.style.display = 'none';
+                break;
+            }                            
+        }
+    }
     const onMounted = async () =>{
         if (props.data.commonMountdiv !=null)
             props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_select');
@@ -63,6 +113,7 @@ const component = props => {
        lifecycle:  {onMounted:onMounted},
        data:   null,
        methods:null,
+       events:     events,
        template: template({ 
                             default_data_value:props.data.default_data_value ?? '',
                             default_value:props.data.default_value ?? '',
