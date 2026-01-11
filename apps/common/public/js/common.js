@@ -2536,18 +2536,9 @@ const commonEvent = async (event_type,event=null) =>{
                                     path:       '/common/component/common_app_dialogues_user_menu.js'});
                                 break;
                             }
-
                             //dialogue button stat
                             case 'common_app_profile_toolbar_stat':{
                                 await commonProfileStat(1, null);
-                                break;
-                            }
-                            //markdown show/hide details
-                            case ((typeof event.target.className=='string'?event.target.className.indexOf('common_md_tab_col')>-1:false) && commonMiscElementRow(event.target, 'common_md_tab_row').classList?.contains('common_md_tab_row_title')?event_target_id:null):{
-                                if (commonMiscElementRow(event.target, 'common_md_tab').classList?.contains('hide'))
-                                    commonMiscElementRow(event.target, 'common_md_tab').classList?.remove('hide');
-                                else
-                                    commonMiscElementRow(event.target, 'common_md_tab').classList?.add('hide');
                                 break;
                             }
                             // common app toolbar
@@ -2566,32 +2557,6 @@ const commonEvent = async (event_type,event=null) =>{
                                     await commonFrameworkSet(2);
                                 if (event_target_id=='common_app_toolbar_framework_react')
                                     await commonFrameworkSet(3);
-                                break;
-                            }
-                            //markdown document tags
-                            case event.target.classList.contains('common_md_image')?event_target_id:'':{
-                                if (event.target.getAttribute('data-url_link'))
-                                    commonComponentRender({
-                                        mountDiv:   'common_app_window_info',
-                                        data:       {
-                                                    info:'IMAGE',
-                                                    url:event.target.getAttribute('data-url_link'),
-                                                    },
-                                        methods:    null,
-                                        path:       '/common/component/common_app_window_info.js'});
-                                break;
-                            }
-                            case COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.contains('common_document')?event_target_id:'':{
-                                //display document except common_link that uses its own event
-                                if (!event.target.classList.contains('common_link'))
-                                    commonComponentRender({
-                                        mountDiv:   'common_app_window_info',
-                                        data:       {
-                                                    info:'HTML',
-                                                    content:COMMON_DOCUMENT.querySelector(`#${event_target_id}`).outerHTML,
-                                                    },
-                                        methods:    null,
-                                        path:       '/common/component/common_app_window_info.js'});
                                 break;
                             }
                         }

@@ -57,6 +57,7 @@ const template = props =>`  <div id='${'common_document_' + Date.now()}' class='
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
  *                      methods:null,
+ *                      events:  common['commonComponentEvents'],
  *                      template:string}>}
  */
 const component = async props => {
@@ -239,6 +240,58 @@ const component = async props => {
                 .replaceAll('{#2kv}','');
     };
     
+    /**
+     * @name events
+     * @descption Events for map
+     * @function
+     * @param {common['commonEventType']} event_type
+     * @param {common['CommonAppEvent']} event
+     * @returns {Promise.<void>}
+     */
+    const events = async (event_type, event) =>{
+        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        const elementDiv = props.methods.COMMON.commonMiscElementDiv(event.target);
+        
+        switch (true){
+            case event_type== 'click' && 
+                ((typeof event.target.className=='string'?event.target.className.indexOf('common_md_tab_col')>-1:false) && 
+                    props.methods.COMMON.commonMiscElementRow(event.target, 'common_md_tab_row').classList?.contains('common_md_tab_row_title')):{
+                //hide and show feature in document
+                if (props.methods.COMMON.commonMiscElementRow(event.target, 'common_md_tab').classList?.contains('hide'))
+                    props.methods.COMMON.commonMiscElementRow(event.target, 'common_md_tab').classList?.remove('hide');
+                else
+                    props.methods.COMMON.commonMiscElementRow(event.target, 'common_md_tab').classList?.add('hide');
+                break;
+            }
+            case event_type== 'click' && event.target.classList.contains('common_md_image'):{
+                //markdown document tags
+                if (event.target.getAttribute('data-url_link'))
+                    props.methods.COMMON.commonComponentRender({
+                        mountDiv:   'common_app_window_info',
+                        data:       {
+                                    info:'IMAGE',
+                                    url:event.target.getAttribute('data-url_link'),
+                                    },
+                        methods:    null,
+                        path:       '/common/component/common_app_window_info.js'});
+                break;
+            }
+            case event_type== 'click' && props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.contains('common_document'):{
+                //display document except common_link that uses its own event
+                if (!event.target.classList.contains('common_link'))
+                    props.methods.COMMON.commonComponentRender({
+                        mountDiv:   'common_app_window_info',
+                        data:       {
+                                    info:'HTML',
+                                    content:props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).outerHTML,
+                                    },
+                        methods:    null,
+                        path:       '/common/component/common_app_window_info.js'});
+                break;
+            }
+        }
+    }
+
     const onMounted = async () =>{
         if (props.data.href.split('#')[1]){
             //set focus on highlighted row
@@ -261,6 +314,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
+        events:     events,
         template:   template({  app_logo:props.data.app_logo,
                                 app_copyright:props.data.app_copyright,
                                 app_name:props.data.app_name,
