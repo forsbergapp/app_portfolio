@@ -1,7 +1,7 @@
 [
     {"Id":0,"AppId":0,"Name":"ARABIC_SCRIPT","Value":"font_arabic_sans","DisplayData":"Arabic Sans","Data2":null,"Data3":null,"Data4":null,"Data5":null},
     {"Id":1,"AppId":0,"Name":"ARABIC_SCRIPT","Value":"font_arabic_kufi","DisplayData":"Arabic Kufi","Data2":null,"Data3":null,"Data4":null,"Data5":null},
-    {"Id":2,"AppId":0,"Name":"ARABIC_SCRIPT","Value":"font_arabic_nashk","DisplayData":"Arabic Nashk","Data2":null,"Data3":null,"Data4":null,"Data5":null},
+    {"Id":2,"AppId":0,"Name":"ARABIC_SCRIPT","Value":"font_arabic_naskh","DisplayData":"Arabic Naskh","Data2":null,"Data3":null,"Data4":null,"Data5":null},
     {"Id":3,"AppId":0,"Name":"ARABIC_SCRIPT","Value":"font_arabic_nastaliq","DisplayData":"Arabic Nastaliq","Data2":null,"Data3":null,"Data4":null,"Data5":null},
     {"Id":4,"AppId":0,"Name":"CALENDAR_HIJRI_TYPE","Value":"islamic","DisplayData":"islamic","Data2":null,"Data3":null,"Data4":null,"Data5":null},
     {"Id":5,"AppId":0,"Name":"CALENDAR_HIJRI_TYPE","Value":"islamic-umalqura","DisplayData":"islamic-umalqura","Data2":null,"Data3":null,"Data4":null,"Data5":null},

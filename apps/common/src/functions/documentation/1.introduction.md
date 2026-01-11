@@ -68,10 +68,8 @@ Runs in Node.js.
 pgModeler designed ORM data model.
 Databases used as reference to implement database patterns are MongoDB, MariaDB, MySQL, Oracle, PostgreSQL and SQLite.
 
-A global support implemented in client with ALL Unicode characters supported by Noto Sans font
-included different Arabic scripts and different font heights (Nastaliq).
 Any regional setting supported including direction right to left. More than 500 locales with language and
-country translations. Logographic UI chosen is implemented to minimize text usage and to provide simpler and better explanation to a global audience.
+country translations. Support for different Arabic scripts and different font heights (Nastaliq). Logographic UI chosen is implemented to minimize text usage and to provide simpler and better explanation to a global audience.
 
 Developed in VSCodium with integration with Github following 
 Scrum agile project management framework and deployed on Oracle Cloud and Linux server.
