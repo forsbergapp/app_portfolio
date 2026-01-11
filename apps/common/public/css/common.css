@@ -49,7 +49,7 @@
 	/*fonts*/
 	--common_app_font_arabic_sans: 		'Noto Sans Arabic',   'sans-serif';
 	--common_app_font_arabic_kufi: 		'Noto Kufi Arabic',   'sans-serif';
-	--common_app_font_arabic_nashk: 	'Noto Nashk Arabic',  'sans-serif';
+	--common_app_font_arabic_naskh: 	'Noto Naskh Arabic',  'sans-serif';
 	--common_app_font_arabic_nastaliq: 	'Noto Nastaliq Urdu', 'sans-serif';
 }
 /*default font*/
@@ -66,9 +66,9 @@ body.font_arabic_sans_kufi
 body.font_arabic_kufi{
 	font-family: var(--common_app_font_arabic_kufi);
 }
-/*Arabic NotoNashk*/
-body.font_arabic_nashk{
-	font-family: var(--common_app_font_arabic_nashk);
+/*Arabic NotoNaskh*/
+body.font_arabic_naskh{
+	font-family: var(--common_app_font_arabic_naskh);
 }
 /*Arabic NotoNastaliq*/
 body.font_arabic_nastaliq{

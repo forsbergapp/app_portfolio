@@ -307,8 +307,8 @@
 	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_kufi) !important;
 	line-height: initial;
 }
-#settings .settings_tab4 #setting_paper_preview_text.font_arabic_nashk .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nashk) !important;
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_naskh .display_font{
+	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_naskh) !important;
 	line-height: initial;
 }
 #settings .settings_tab4 #setting_paper_preview_text.font_arabic_nastaliq .display_font{

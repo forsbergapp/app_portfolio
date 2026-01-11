@@ -927,8 +927,8 @@
 .timetable_class.font_arabic_kufi .display_font{
 	font-family: var(--common_app_font_arabic_kufi), var(--report_theme_display_font_family);
 }
-.timetable_class.font_arabic_nashk .display_font{
-	font-family: var(--common_app_font_arabic_nashk), var(--report_theme_display_font_family);
+.timetable_class.font_arabic_naskh .display_font{
+	font-family: var(--common_app_font_arabic_naskh), var(--report_theme_display_font_family);
 }
 .timetable_class.font_arabic_nastaliq .display_font{
 	font-family: var(--common_app_font_arabic_nastaliq), var(--report_theme_display_font_family);
@@ -940,8 +940,8 @@
 .timetable_class.font_arabic_kufi .default_font{
 	font-family: var(--common_app_font_arabic_kufi), var(--report_theme_default_font_family);
 }
-.timetable_class.font_arabic_nashk .default_font{
-	font-family: var(--common_app_font_arabic_nashk), var(--report_theme_default_font_family);
+.timetable_class.font_arabic_naskh .default_font{
+	font-family: var(--common_app_font_arabic_naskh), var(--report_theme_default_font_family);
 }
 .timetable_class.font_arabic_nastaliq .default_font{
 	font-family: var(--common_app_font_arabic_nastaliq), var(--report_theme_default_font_family);
