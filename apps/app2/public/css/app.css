@@ -234,11 +234,49 @@ transform-origin: -39px 8px;
     bottom: 5px;
     left: 35px;
 }
-
-/*COMMON*/
-#common_apps{
+#apps{
     width: 350px;
+    z-index: 1;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    height: calc(100% - 200px);
+    inset-inline-start: 50%;
+    top: 50%;
+	overflow: hidden;
+	padding: unset;
 }
+#apps_list{
+	font-size: 0.7em;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    justify-content: space-around;
+    margin: 2em;
+    height: calc(100% - 6em);
+}
+#apps_list_title{
+	height: 2em;
+  	display: flex;
+  	align-items: center;
+  	justify-content: space-around;
+}
+#apps_list .apps_app_link_row{
+	width: 100%;
+    display: grid;
+    align-content: center;
+}
+.apps_app_name{
+	font-weight: bold;
+	cursor: default;
+}
+.apps_app_logo:hover, .apps_app_logo:active {
+	transform: scale(1.2);
+	cursor: pointer;
+}
+.apps_app_logo{
+	margin: 0 auto;
+}	
+/*COMMON*/
 #common_app_toolbar{
 	margin-inline-start: 0px !important;
 	bottom:0px !important;
@@ -255,9 +293,6 @@ transform-origin: -39px 8px;
 }
 #common_app_profile_toolbar_stat{
 	bottom: 0px !important;
-}
-#common_apps{
-	z-index: 1;
 }
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
@@ -446,17 +481,6 @@ body{
 	background: var(--app_theme_background_color) !important;
 	caret-color: var(--app_theme_text_color);
 }
-#common_apps_list_title{
-	background: var(--app_theme_background_color);
-	color: var(--common_app_color_white1);
-}
-#common_apps_list_title_col_info{
-	background: var(--app_theme_background_color);
-	color: var(--app_theme_dialogue_background_color);
-}
-#common_apps_list, #common_app_dialogues_info_app_menu_content_apps_list{
-	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
-}
 /*background*/
 .cloud {
 	background: var(--app_theme_clouds_background_color);
@@ -503,6 +527,17 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_app_profile_toolbar >.common_loading_spinner::before,
 #app >.common_loading_spinner::before{
 	background-color:var(--app_theme_spinner_background_color);
+}
+#apps_list_title{
+	background: var(--app_theme_background_color);
+	color: var(--common_app_color_white1);
+}
+#apps_list_title_col_info{
+	background: var(--app_theme_background_color);
+	color: var(--app_theme_dialogue_background_color);
+}
+#apps_list{
+	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
 }
 /*THEME COMMON*/
 #common_app_dialogues_user_menu_messages{

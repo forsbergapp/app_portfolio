@@ -2138,208 +2138,225 @@ const commonFFB = async parameter =>{
      *          }}} parameters
      */
     const FFB = async parameters =>{
-        /**@type{number} */
-        let status;
-        let authorization = null;
-        
-        parameters.data.query = parameters.data.query==null?'':parameters.data.query;
-        parameters.data.body = parameters.data.body?parameters.data.body:null;
-        //admin uses ADMIN instead of APP_ACCESS so all ADMIN requests use separate admin token
-        const ROLE = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id && parameters.data.authorization_type =='APP_ACCESS')?
-                        'ADMIN':parameters.data.authorization_type;
-        switch (ROLE){
-            case 'APP_ACCESS_EXTERNAL':{
-                authorization = 'Bearer ' + parameters.data.externalToken;
-                break;
+        return new Promise((resolve, reject)=>{
+            /**@type{number} */
+            let status;
+            let authorization = null;
+            
+            parameters.data.query = parameters.data.query==null?'':parameters.data.query;
+            parameters.data.body = parameters.data.body?parameters.data.body:null;
+            //admin uses ADMIN instead of APP_ACCESS so all ADMIN requests use separate admin token
+            const ROLE = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id && parameters.data.authorization_type =='APP_ACCESS')?
+                            'ADMIN':parameters.data.authorization_type;
+            switch (ROLE){
+                case 'APP_ACCESS_EXTERNAL':{
+                    authorization = 'Bearer ' + parameters.data.externalToken;
+                    break;
+                }
+                case 'APP_ACCESS':
+                case 'APP_ACCESS_VERIFICATION':
+                case 'ADMIN':{
+                    authorization = 'Bearer ' + parameters.data.accessToken;
+                    break;
+                }
+                case 'IAM':{
+                    authorization = 'Basic ' + commonWindowToBase64(parameters.data.username + ':' + parameters.data.password);
+                    break;
+                }
             }
-            case 'APP_ACCESS':
-            case 'APP_ACCESS_VERIFICATION':
-            case 'ADMIN':{
-                authorization = 'Bearer ' + parameters.data.accessToken;
-                break;
-            }
-            case 'IAM':{
-                authorization = 'Basic ' + commonWindowToBase64(parameters.data.username + ':' + parameters.data.password);
-                break;
-            }
-        }
-        //encode query parameters
-        const encodedparameters = parameters.data.query?commonWindowToBase64(parameters.data.query):'';
-        const bff_path = parameters.rest_bff_path + '/' + 
-                            ROLE.toLowerCase() + 
-                            '/v' + (parameters.rest_api_version ??1);
-        //public url
-        const url = (COMMON_GLOBAL.app_rest_api_basepath + parameters.uuid);
+            //encode query parameters
+            const encodedparameters = parameters.data.query?commonWindowToBase64(parameters.data.query):'';
+            const bff_path = parameters.rest_bff_path + '/' + 
+                                ROLE.toLowerCase() + 
+                                '/v' + (parameters.rest_api_version ??1);
+            //public url
+            const url = (COMMON_GLOBAL.app_rest_api_basepath + parameters.uuid);
 
-        if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
-            COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('common_loading_spinner');
-        const resultFetch = {finished:false};
-        const options =     {
-                            cache:  'no-store',
-                            method: 'POST',
-                            headers:{
-                                        ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
-                                        'Content-Type': COMMON_GLOBAL.app_content_type_json,
-                                        'Connection':   parameters.response_type =='SSE'?
-                                                            'keep-alive':
-                                                                'close',
-                                    },
-                            body: JSON.stringify({
-                                    x: COMMON_GLOBAL.x.encrypt({
-                                        iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
-                                        key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
-                                        data:JSON.stringify({  
-                                                headers:{
-                                                        'app-id':       COMMON_GLOBAL.app_id,
-                                                        'app-signature':COMMON_GLOBAL.x.encrypt({ 
-                                                                            iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
-                                                                            key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
-                                                                            data:   JSON.stringify({app_id: COMMON_GLOBAL.app_id })}),
-                                                        'app-id-token': 'Bearer ' + parameters.data.idToken,
-                                                        ...(authorization && {Authorization: authorization}),
-                                                        'Content-Type': parameters.response_type =='SSE'?
-                                                                            COMMON_GLOBAL.app_content_type_sse:
-                                                                                COMMON_GLOBAL.app_content_type_json,
-                                                        },
-                                                method: parameters.data.method,
-                                                url:    bff_path + parameters.data.path + '?parameters=' + encodedparameters,
-                                                body:   parameters.data.body?
-                                                            JSON.stringify({data:commonWindowToBase64(JSON.stringify(parameters.data.body))}):
-                                                                null
+            if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
+                COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('common_loading_spinner');
+            const resultFetch = {finished:false};
+            const options =     {
+                                cache:  'no-store',
+                                method: 'POST',
+                                headers:{
+                                            ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
+                                            'Content-Type': COMMON_GLOBAL.app_content_type_json,
+                                            'Connection':   parameters.response_type =='SSE'?
+                                                                'keep-alive':
+                                                                    'close',
+                                        },
+                                body: JSON.stringify({
+                                        x: COMMON_GLOBAL.x.encrypt({
+                                            iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
+                                            key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
+                                            data:JSON.stringify({  
+                                                    headers:{
+                                                            'app-id':       COMMON_GLOBAL.app_id,
+                                                            'app-signature':COMMON_GLOBAL.x.encrypt({ 
+                                                                                iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
+                                                                                key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
+                                                                                data:   JSON.stringify({app_id: COMMON_GLOBAL.app_id })}),
+                                                            'app-id-token': 'Bearer ' + parameters.data.idToken,
+                                                            ...(authorization && {Authorization: authorization}),
+                                                            'Content-Type': parameters.response_type =='SSE'?
+                                                                                COMMON_GLOBAL.app_content_type_sse:
+                                                                                    COMMON_GLOBAL.app_content_type_json,
+                                                            },
+                                                    method: parameters.data.method,
+                                                    url:    bff_path + parameters.data.path + '?parameters=' + encodedparameters,
+                                                    body:   parameters.data.body?
+                                                                JSON.stringify({data:commonWindowToBase64(JSON.stringify(parameters.data.body))}):
+                                                                    null
+                                                })
                                             })
-                                        })
-                                })
-                            };
-        /**
-         * 
-         * @param {*} data 
-         * @returns {string}
-         */
-        const getDecrypted   = data =>
-                COMMON_GLOBAL.x.decrypt({
-                            iv:         JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
-                            key:        JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k,
-                            ciphertext: parameters.response_type=='SSE'?
-                                            new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]:
-                                            data});
-        let retries = 0;
-        //loop max retries according to parameter until result is fetched in case of too many request or timeout errors
-        do{
-            //add backoff algorithm to requests
-            //add increasing milliseconds to user or admin request timeout values
-            const waitBackoffInMilliseconds = Math.pow(2, retries) * 1000;
-            //0:0 sec, 1:2 sec, 2:4 sec, 3:8 sec, 4:16 sec, 5:32...
-            const result = await Promise.race(
-                [   new Promise((resolve)=>
-                        setTimeout(()=>{
-                            if (resultFetch.finished==false){
-                                commonMessageShow('ERROR_BFF', null, null, '🗺⛔?');
-                                resolve('🗺⛔?');
-                                throw ('TIMEOUT');
-                            }
-                            }, (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id?
-                                    (1000 * 60 * COMMON_GLOBAL.app_requesttimeout_admin_minutes):
-                                    parameters.timeout || (1000 * COMMON_GLOBAL.app_requesttimeout_seconds)) + waitBackoffInMilliseconds
-                        )),
-                    /**@ts-ignore */
-                    fetch(url, options)
-                        .then((/**@type{*}*/response) =>{
-                            status = response.status;
-                            if (parameters.response_type=='SSE')
-                                return response;
-                            else
-                                return response.text();
-                        })
-                        .then(result => {                                    
-                            switch (status){
-                                case 200:
-                                case 201:{
-                                    if (parameters.response_type=='SSE'){
-                                        /**
-                                         * @param {string} BFFmessage
-                                         * @returns {{sse_type:common['server']['socket']['broadcast_type'],
-                                         *           sse_message:string}}
-                                         */
-                                        const getSSEMessage = BFFmessage =>{
-                                            const messageDecoded = commonWindowFromBase64(BFFmessage);
-                                            return {sse_type:JSON.parse(messageDecoded).sse_type,
-                                                    sse_message:JSON.parse(messageDecoded).sse_message};
-                                        };
-                                        const BFFStream = new WritableStream({
-                                            async write(BFFmessage){
-                                                try {
-                                                    const SSEmessage = getSSEMessage(getDecrypted(BFFmessage));
-                                                    switch (SSEmessage.sse_type){
-                                                        case 'FONT_URL':{
-                                                            commonMiscLoadFont({uuid:               parameters.uuid??'',
-                                                                                secret:             parameters.secret??'',
-                                                                                message:            SSEmessage.sse_message});
-                                                            break;
-                                                        }
-                                                        default:{
-                                                            commonSocketSSEShow(SSEmessage);
-                                                            break;
-                                                        }
-                                                    }    
-                                                } catch (error) {
-                                                    null;
-                                                }
-                                            }
-                                        //The total number of chunks that can be contained in the internal queue before backpressure is applied
-                                        }, new CountQueuingStrategy({ highWaterMark: 1 }));
-                                        //pipe to Writeable Stream and restart if connection is lost
-                                        result.body.pipeTo(BFFStream).catch(()=>window.location.href='/');
-                                        return {status:status, result:null};
+                                    })
+                                };
+            /**
+             * 
+             * @param {*} data 
+             * @returns {string}
+             */
+            const getDecrypted   = data =>
+                    COMMON_GLOBAL.x.decrypt({
+                                iv:         JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
+                                key:        JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k,
+                                ciphertext: parameters.response_type=='SSE'?
+                                                new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]:
+                                                data});
+            let retries = 0;
+            /**
+             * @description fetch using backoff algorithm asynchronously, 
+             *              loop max retries according to parameter until result is fetched in case of too many request or timeout errors
+             * @returns {Promise.<*>}
+             */
+            const fetchBackOff = async () => {
+                return new Promise((resolve, reject)=>{
+                    //add increasing milliseconds to user or admin request timeout values
+                    const waitBackoffInMilliseconds = Math.pow(2, retries) * 1000;
+                    //0:0 sec, 1:2 sec, 2:4 sec, 3:8 sec, 4:16 sec, 5:32...
+                    Promise.race(
+                        [   new Promise((resolve)=>
+                                setTimeout(()=>{
+                                    if (resultFetch.finished==false){
+                                        return resolve({status:503});
                                     }
+                                    }, (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id?
+                                            (1000 * 60 * COMMON_GLOBAL.app_requesttimeout_admin_minutes):
+                                            parameters.timeout || (1000 * COMMON_GLOBAL.app_requesttimeout_seconds)) + waitBackoffInMilliseconds
+                                )),
+                            /**@ts-ignore */
+                            fetch(url, options)
+                                .then((/**@type{*}*/response) =>{
+                                    status = response.status;
+                                    if (parameters.response_type=='SSE')
+                                        return response;
                                     else
-                                        /**@ts-ignore */
-                                        return {status:status, result:getDecrypted(result)};
-                                }
-                                case 400:{
-                                    //Bad request
-                                    commonMessageShow('ERROR_BFF', null, 'message_text', '!');
-                                    throw getDecrypted(result);
-                                }
-                                case 429:{
-                                    //Too many requests
-                                    return {status:status, result:null};
-                                }
-                                case 404:   //Not found
-                                case 401:   //Unauthorized, token expired
-                                case 403:   //Forbidden, not allowed to login or register new user
-                                case 503:   //Service unavailable or other error in microservice
-                                {   
-                                    const error = getDecrypted(result);
-                                    commonMessageShow('ERROR_BFF', null, null, error);
-                                    throw error;
-                                }
-                                case 500:{
-                                    //Unknown error
-                                    const error = getDecrypted(result);
-                                    commonMessageShow('EXCEPTION', null, null, error);
-                                    throw error;
-                                }
-                            }
-                        })
-                        .catch(error=>{
-                            throw error;
-                        })
-                        .finally(()=>{
-                            resultFetch.finished=true;
-                            if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
-                                COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.remove('common_loading_spinner');
-                        })
-                ]);
-            if ([200,201].includes(result.status))
-                return result.result;
-            else
-                retries++;
+                                        return response.text();
+                                })
+                                .then(result => {                                    
+                                    switch (status){
+                                        case 200:
+                                        case 201:{
+                                            if (parameters.response_type=='SSE'){
+                                                /**
+                                                 * @param {string} BFFmessage
+                                                 * @returns {{sse_type:common['server']['socket']['broadcast_type'],
+                                                 *           sse_message:string}}
+                                                 */
+                                                const getSSEMessage = BFFmessage =>{
+                                                    const messageDecoded = commonWindowFromBase64(BFFmessage);
+                                                    return {sse_type:JSON.parse(messageDecoded).sse_type,
+                                                            sse_message:JSON.parse(messageDecoded).sse_message};
+                                                };
+                                                const BFFStream = new WritableStream({
+                                                    async write(BFFmessage){
+                                                        try {
+                                                            const SSEmessage = getSSEMessage(getDecrypted(BFFmessage));
+                                                            switch (SSEmessage.sse_type){
+                                                                case 'FONT_URL':{
+                                                                    commonMiscLoadFont({uuid:               parameters.uuid??'',
+                                                                                        secret:             parameters.secret??'',
+                                                                                        message:            SSEmessage.sse_message});
+                                                                    break;
+                                                                }
+                                                                default:{
+                                                                    commonSocketSSEShow(SSEmessage);
+                                                                    break;
+                                                                }
+                                                            }    
+                                                        } catch (error) {
+                                                            null;
+                                                        }
+                                                    }
+                                                //The total number of chunks that can be contained in the internal queue before backpressure is applied
+                                                }, new CountQueuingStrategy({ highWaterMark: 1 }));
+                                                //pipe to Writeable Stream and restart if connection is lost
+                                                result.body.pipeTo(BFFStream).catch(()=>window.location.href='/');
+                                                resolve({status:status, result:null});
+                                            }
+                                            else
+                                                resolve({status:status, result:getDecrypted(result)});
+                                            break;
+                                        }
+                                        case 400:{
+                                            //Bad request
+                                            commonMessageShow('ERROR_BFF', null, 'message_text', '!');
+                                            reject(getDecrypted(result));
+                                            break;
+                                        }
+                                        case 429:{
+                                            //Too many requests
+                                            reject({status:status, result:null});
+                                            break;
+                                        }
+                                        case 404:   //Not found
+                                        case 401:   //Unauthorized, token expired
+                                        case 403:   //Forbidden, not allowed to login or register new user
+                                        case 503:   //Service unavailable or other error in microservice
+                                        {   
+                                            const error = getDecrypted(result);
+                                            commonMessageShow('ERROR_BFF', null, null, error);
+                                            reject(error);
+                                            break;
+                                        }
+                                        case 500:{
+                                            //Unknown error
+                                            const error = getDecrypted(result);
+                                            commonMessageShow('EXCEPTION', null, null, error);
+                                            reject(error);
+                                            break;
+                                        }
+                                    }
+                                })
+                                .catch(error=>{
+                                    reject(error);
+                                })
+                                .finally(()=>{
+                                    resultFetch.finished=true;
+                                    if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
+                                        COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.remove('common_loading_spinner');
+                                })
+                        ]);
+                })
             }
-        while (retries < COMMON_GLOBAL.app_request_tries);
-        commonMessageShow('ERROR_BFF', null, null, '🗺⛔?');
-        throw ('TIMEOUT');
+            fetchBackOff()
+            .then(result=>{
+                if ([200,201].includes(result.status))
+                    resolve(result.result);
+                else{
+                    retries++;
+                    if (retries <= COMMON_GLOBAL.app_request_tries)
+                        fetchBackOff();
+                    else{
+                        commonMessageShow('ERROR_BFF', null, null, '🗺⛔?');
+                        reject('TIMEOUT');	
+                    }
+                }
+            })
+        })
+        
     };
-    return await FFB({
+    return FFB({
             uuid: COMMON_GLOBAL.x.uuid??'',
             secret: COMMON_GLOBAL.x.secret??'',
             response_type: parameter.response_type??'TEXT',
@@ -3255,7 +3272,7 @@ const commonInit = async parameters => {
         authorization_type: 'APP_ID'});
 
     //mount start app
-    commonAppMount(COMMON_GLOBAL.app_start_app_id);
+    await commonAppMount(COMMON_GLOBAL.app_start_app_id);
 
     COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_default_avatar').innerHTML = commonGlobalGet('ICONS')['user']
     const elements = [
@@ -3271,10 +3288,8 @@ const commonInit = async parameters => {
                     ];
     for (const element of elements)
         COMMON_DOCUMENT.querySelector(`#${element[0]}`).innerHTML = commonGlobalGet('ICONS')[element[1]];
-
     //apply font css
     COMMON_GLOBAL.app_fonts?commonMiscCssApply(COMMON_GLOBAL.app_fonts.join('@')):null;
-    
 };
 export{/* GLOBALS*/
        COMMON_DOCUMENT,

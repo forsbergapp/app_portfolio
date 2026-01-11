@@ -7,9 +7,7 @@ const {server} = await import('../../../../server/server.js');
  * @name template
  * @description Template
  * @function
- * @param {{font_noto_sans_latin_ext:string,
- *          font_noto_sans_latin:string,
- *          message:string,
+ * @param {{message:string,
  *          footer:string}} props
  * @returns {string}
  */
@@ -27,49 +25,8 @@ const template = props =>`  <!DOCTYPE html>
 	                                    --common_app_color_shadow2: rgba(0,0,0,0.19);
                                         --common_app_css_border_radius: 4px;
                                     }
-                                    /* latin-ext */
-                                    @font-face {
-                                    font-family: 'Noto Sans';
-                                    font-style: normal;
-                                    font-weight: 400;
-                                    font-stretch: 100%;
-                                    font-display: swap;
-                                    src: url(${props.font_noto_sans_latin_ext}) format('woff2');
-                                    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-                                    }
-                                    /* latin */
-                                    @font-face {
-                                    font-family: 'Noto Sans';
-                                    font-style: normal;
-                                    font-weight: 400;
-                                    font-stretch: 100%;
-                                    font-display: swap;
-                                    src: url(${props.font_noto_sans_latin}) format('woff2');
-                                    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-                                    }
-                                    /* latin-ext */
-                                    @font-face {
-                                    font-family: 'Noto Sans';
-                                    font-style: normal;
-                                    font-weight: 700;
-                                    font-stretch: 100%;
-                                    font-display: swap;
-                                    src: url(${props.font_noto_sans_latin_ext}) format('woff2');
-                                    unicode-range: U+0100-02AF, U+0304, U+0308, U+0329, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
-                                    }
-                                    /* latin */
-                                    @font-face {
-                                    font-family: 'Noto Sans';
-                                    font-style: normal;
-                                    font-weight: 700;
-                                    font-stretch: 100%;
-                                    font-display: swap;
-                                    src: url(${props.font_noto_sans_latin}) format('woff2');
-                                    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-                                    }
-
                                     body{
-                                        font-family: 'Noto Sans';
+                                        font-family: 'sans-serif';
                                         font-size: 18px;
                                         background-color: var(--common_app_color_blue1);
                                         color:var(--common_app_color_black);
@@ -141,21 +98,8 @@ const template = props =>`  <!DOCTYPE html>
  * @returns {Promise.<string>}
  */
 const component = async props =>{
-
-    return template({   font_noto_sans_latin_ext:   (await props.methods.commonResourceFile({
-                                                        app_id:0,
-                                                        resource_id:'/common/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5aDdu2ui.woff2',
-                                                        content_type:'font/woff2',
-                                                        data_app_id:0
-                                                    })).result.resource,
-                                                    
-                        font_noto_sans_latin:       (await props.methods.commonResourceFile({
-                                                        app_id:0,
-                                                        resource_id:'/common/css/font/notosans/v35/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5a7duw.woff2',
-                                                        content_type:'font/woff2',
-                                                        data_app_id:0
-                                                    })).result.resource,
-                        message:server.ORM.OpenApiComponentParameters.config.SERVER_MAINTENANCE_MESSAGE.default,
+    props;
+    return template({   message:server.ORM.OpenApiComponentParameters.config.SERVER_MAINTENANCE_MESSAGE.default,
                         footer:''
     });
 };

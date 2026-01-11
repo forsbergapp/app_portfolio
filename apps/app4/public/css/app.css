@@ -76,6 +76,7 @@
 	display: inline-block;
 	width: 95%;
 	white-space: nowrap;
+    line-height: 1.25em;
 }
 
 #settings label {

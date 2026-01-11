@@ -48,7 +48,7 @@
  * @property {number}       app_request_tries
  * @property {number}       app_requesttimeout_seconds
  * @property {number}       app_requesttimeout_admin_minutes
- * @property {string}       app_fonts
+ * @property {string[]}     app_fonts
  * @property {string}       app_content_type_json,
  * @property {string}       app_content_type_html,
  * @property {string}       app_content_type_sse,

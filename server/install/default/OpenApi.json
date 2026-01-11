@@ -1148,15 +1148,6 @@
                             "$ref": "#/components/parameters/paths/server_app_id"
                         },
                         {
-                            "$ref": "#/components/parameters/paths/server_ip"
-                        },
-                        {
-                            "$ref": "#/components/parameters/paths/server_host"
-                        },
-			            {
-                            "$ref": "#/components/parameters/paths/server_user_agent"
-                        },
-                        {
                             "$ref": "#/components/parameters/paths/resource_id_string",
                             "in":"path"
                         },

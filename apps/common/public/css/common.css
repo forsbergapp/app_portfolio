@@ -1,3 +1,4 @@
+
 :root {
 	--common_app_css_border_radius: 4px;
 	/*app colors*/	
@@ -46,67 +47,10 @@
 	--common_report_color_white: white;
 
 	/*fonts*/
-	--common_app_font_languages_1:  	"Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 
-										"Noto Sans Bengali", "Noto Sans Telugu","Noto Sans Tamil",
-										"Noto Sans Javanese", "Noto Sans Gujarati", "Noto Sans Kannada", 
-										"Noto Sans Malayalam", "Noto Sans Sundanese", "Noto Sans Tagalog",
-										"Noto Sans Sinhala";
-
-	--common_app_font_symbols:  	"Noto Music", "Noto Sans Math", "Noto Emoji", "Noto Sans Indic Siyaq Numbers", 
-									"Noto Sans Symbols", "Noto Sans Symbols 2", 
-									"Noto Sans Anatolian Hieroglyphs","Noto Sans Egyptian Hieroglyphs";
-	--common_app_font_languages_2:  "Noto Sans Samaritan", "Noto Sans N'Ko", "Noto Sans Indic Devanagari", 
-								"Noto Sans Gurmukhi", "Noto Sans Tamil Supplement", "Noto Sans Oriya", 
-								"Noto Sans Myanmar", "Noto Sans Georgian", "Noto Sans Armenian", 
-								"Noto Sans Gothic", "Noto Sans Tai Viet", 
-								"Noto Sans Lao", "Noto Sans Carian", "Noto Sans Deseret", 
-								"Noto Sans Saurashtra", "Noto Sans Thaana", "Noto Sans Traditional Nushu", 
-								"Noto Sans Cherokee", "Noto Sans Adlam", "Noto Sans Brahmi", 
-								"Noto Sans Meetei Mayek", "Noto Sans Imperial Aramaic", "Noto Sans Old Turkic", 
-								"Noto Sans Coptic", "Noto Sans Mongolia", "Noto Sans Multani", 
-								"Noto Sans Balinese", "Noto Sans Hanunoo", "Noto Sans Buginese", 
-								"Noto Sans Bamum", "Noto Sans Yi", "Noto Sans Old Italic", 
-								"Noto Sans Ol Chiki", "Noto Sans Old South Arabian", "Noto Sans Canadian Aboriginal", 
-								"Noto Sans Adlam Unjoined", "Noto Sans Kaithi", "Noto Sans Old Hungarian", 
-								"Noto Sans Sora Sompeng", "Noto Sans Inscriptional Pahlavi", "Noto Sans Medefaidrin", 
-								"Noto Sans Syriac", "Noto Sans Psalter Pahlavi", "Noto Sans Linear A", 
-								"Noto Sans Inscriptional Inscriptional Parthian", "Noto Sans Cypriot", "Noto Sans Old Persian", 
-								"Noto Sans Inscriptional Grantha", "Noto Sans Tifinagh", "Noto Sans Avestan", 
-								"Noto Sans Osage", "Noto Sans Lisu", "Noto Sans Bassa Vah", 
-								"Noto Sans Old North Arabian", "Noto Sans Mro", "Noto Sans Tai Tham", 
-								"Noto Sans Zanabazar Square", "Noto Sans Hanifi Rohingya", "Noto Sans Kayah Li", 
-								"Noto Sans Mayan Numerals", "Noto Sans Pahawh Hmong", "Noto Sans Phags Pa", 
-								"Noto Sans Cuneiform", "Noto Sans Ogham", "Noto Sans Glagolitic", 
-								"Noto Sans Runic", "Noto Sans Old Permic", "Noto Sans Bhaiksuki", 
-								"Noto Sans Caucasian Albanian", "Noto Sans Linear B", "Noto Sans Wancho", 
-								"Noto Sans Sharada", "Noto Sans Palmyrene", "Noto Sans Batak", 
-								"Noto Sans Phoenician", "Noto Sans Elymaic", "Noto Sans Marchen", 
-								"Noto Sans Limbu", "Noto Sans Syloti Nagri", "Noto Sans Elbasan", 
-								"Noto Sans Siddham", "Noto Sans Kharoshthi", "Noto Sans Khojki", 
-								"Noto Sans Miao", "Noto Sans Pau Cin Hau", "Noto Sans Lepcha", 
-								"Noto Sans Duployan", "Noto Sans Lycian", "Noto Sans Mandaic", 
-								"Noto Sans New Tai Lue", "Noto Sans Chakma", "Noto Sans Warang Citi", 
-								"Noto Sans Ugaritic", "Noto Sans Sogdian", "Noto Sans Buhid", 
-								"Noto Sans Osmanya", "Noto Sans Masaram Gondi", "Noto Sans Tagbanwa", 
-								"Noto Sans Takri", "Noto Sans Khudawadi", "Noto Sans Vai", 
-								"Noto Sans Tirhuta", "Noto Sans Old Sogdian", "Noto Sans Hatran", 
-								"Noto Sans Newa", "Noto Sans Shavian", "Noto Sans Gunjala Gondi", 
-								"Noto Sans Mahajani", "Noto Sans Soyombo", "Noto Sans Nushu", 
-								"Noto Sans Tai Le", "Noto Sans Nabataean", "Noto Sans Rejang", 
-								"Noto Sans Manichaean", "Noto Sans Meroitic", "Noto Sans Lydian", 
-								"Noto Sans Modi";
-	--common_app_font_arabic_sans: 		'Noto Sans', 'Noto Sans Arabic', 'Noto Sans JP', 
-								    'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK', 
-								    var(--common_app_font_languages_1), var(--common_app_font_symbols), var(--common_app_font_languages_2);
-	--common_app_font_arabic_kufi: 		'Noto Sans', 'Noto Kufi Arabic', 'Noto Sans JP', 
-									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
-									var(--common_app_font_languages_1), var(--common_app_font_symbols), var(--common_app_font_languages_2);
-	--common_app_font_arabic_nashk: 	'Noto Sans', 'Noto Nashk Arabic', 'Noto Sans JP', 
-									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
-									var(--common_app_font_languages_1), var(--common_app_font_symbols), var(--common_app_font_languages_2);
-	--common_app_font_arabic_nastaliq: 	'Noto Sans', 'Noto Nastaliq Urdu', 'Noto Sans JP', 
-									'Noto Sans KR', 'Noto Sans SC', 'Noto Sans TC', 'Noto Sans HK',
-									var(--common_app_font_languages_1), var(--common_app_font_symbols), var(--common_app_font_languages_2);
+	--common_app_font_arabic_sans: 		'Noto Sans Arabic',   'sans-serif';
+	--common_app_font_arabic_kufi: 		'Noto Kufi Arabic',   'sans-serif';
+	--common_app_font_arabic_nashk: 	'Noto Nashk Arabic',  'sans-serif';
+	--common_app_font_arabic_nastaliq: 	'Noto Nastaliq Urdu', 'sans-serif';
 }
 /*default font*/
 body
@@ -135,7 +79,7 @@ body.font_arabic_nastaliq .common_input{
 	font-size:0.7em;
 }
 .common_password_container{
-	font-family: 'Noto Sans Mono';
+	font-family: 'monospace';
 }
 #common_confirm_question{
 	font-family: inherit;
@@ -144,10 +88,10 @@ body.font_arabic_nastaliq .common_input{
 .common_code
 .common_code_line,
 .common_code_text{
-    font-family: 'Noto Sans Mono';
+    font-family: 'monospace';
 }
 .common_md_tab{
-	font-family: "Noto Sans Mono";
+	font-family: "monospace";
 }
 
 body{
@@ -257,7 +201,6 @@ body,
 	width: calc(100% - 2em);
 	min-height: 1em;
 	overflow: hidden;
-	line-height: 1.25em;
 }
 .common_select_options{
 	display: none;
@@ -278,7 +221,6 @@ body,
 .common_select_option{
 	display: block;
 	width: 100%;
-	height: 1.5em;
 }
 .common_select_option:hover,
 .common_select_option:active{
@@ -346,6 +288,7 @@ body,
     font-size: 2.5em;
     height: 1.5em;
     vertical-align: middle;
+    display: inherit;
 }
 .common_icon_toolbar_l{
     width: 1.25em;
@@ -591,65 +534,7 @@ body,
     }
 }
 
-/*DIALOGUE APPS*/
-#common_apps{
-    position: absolute;
-    transform: translate(-50%, -50%);
-    height: calc(100% - 200px);
-    inset-inline-start: 50%;
-    top: 50%;
-	overflow: hidden;
-	padding: unset;
-}
-#common_apps_list{
-	font-size: 0.7em;
-    overflow-y: auto;
-    display: grid;
-    grid-template-columns: 50% 50%;
-    justify-content: space-around;
-    margin: 2em;
-    height: calc(100% - 6em);
-}
-#common_apps_list_title{
-	height: 2em;
-  	display: flex;
-  	align-items: center;
-  	justify-content: space-around;
-}
-#common_apps_list .common_apps_app_link_col{
-	width: 100%;
-    display: block;
-}
-.common_apps_app_link_col:nth-child(1),.common_apps_app_link_col:nth-child(2){
-	display: none;
-}
-.common_apps_app_link_col:nth-child(3){
-	width: 20%;
-    display: inline-block;
-	margin-left: 5px;
-    margin-top: 3px;
-}
-.common_apps_app_link_col:nth-child(4){
-	width: 70%;
-    text-align: start;
-    display: inline-block;
-    vertical-align: top;
-}
-.common_apps_app_name{
-	font-weight: bold;
-	cursor: default;
-}
-.common_apps_app_description{
-	cursor: default;
-	font-size: 0.7em;
-}
-.common_apps_app_logo:hover, .common_apps_app_logo:active {
-	transform: scale(1.2);
-	cursor: pointer;
-}
-.common_apps_app_logo{
-	margin: 0 auto;
-}	
+
 /* DIALOGUE INFO */
 #common_app_dialogues_info.common_app_dialogues_show0{
 	max-height: 90%;
@@ -789,7 +674,7 @@ body,
 #common_app_dialogues_iam_start.common_app_dialogues_show1{
 	max-height: 90%;
 	width: 300px;
-	height: 20em;
+	height: 23em;
 }
 .common_app_dialogues_iam_start_form{
 	width: 100%;
@@ -797,6 +682,7 @@ body,
 #common_app_dialogues_iam_start_nav > div{
 	margin:10px;
 	width: 20%;
+    height: 1.5em;
 }
 #common_app_dialogues_iam_start .common_input, .common_login_input{
 	height: 2em;
@@ -1173,7 +1059,7 @@ body,
 	text-align: center;
 }
 #common_app_dialogues_user_menu_content.common_app_dialogues_user_menu_connected{
-    height:34em;
+    height:42em;
 }
 #common_app_dialogues_user_menu .common_select .common_select_options{
 	display: none;
@@ -1281,6 +1167,7 @@ body,
 }
 #common_app_dialogues_user_menu_iam_user_app div{
 	display: inline-block;
+    vertical-align: middle;
 }
 #common_app_dialogues_user_menu_iam_user_app .common_app_dialogues_user_menu_iam_user_app_col1{
 	width: 10%;
@@ -1307,11 +1194,13 @@ body,
 #common_app_dialogues_user_menu_iam_user .common_app_dialogues_user_menu_iam_user_row_title>div{
     margin:0.5em;
     display: inline-block;
+    vertical-align: middle;
 }
 #common_app_dialogues_user_menu_iam_user .common_app_dialogues_user_menu_iam_user_row{
 	display: grid;
     text-align: start;
     grid-template-columns: 10% 90%;
+    height: 2em;
 }
 #common_app_dialogues_user_menu_iam_user_label_data_last_logintime,
 #common_app_dialogues_user_menu_iam_user_label_data_account_created,
@@ -1713,7 +1602,6 @@ body,
     width: 12em;
     background-color:white;
     text-align: center;
-    max-height: 1.5em;
 } 
 #common_map_attribution{
     display: inline-block;
@@ -1766,7 +1654,7 @@ body,
 .common_map_popup {
     position:absolute;
     width:max-content;
-    height: calc(7em - 10px);
+    height: calc(10.5em - 10px);
     background-color:white;
     box-shadow: 0 3px 14px rgba(0,0,0,0.4);
     font-size:11px;
@@ -1926,7 +1814,7 @@ body,
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
 	body{
-		font-size: 18px;
+		font-size: 16px;
 	}
 	#common_app_dialogues_profile.common_app_dialogues_show0{
 		width:500px;

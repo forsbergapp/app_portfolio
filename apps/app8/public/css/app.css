@@ -3,7 +3,6 @@ html, body, #app {
 	height:100%;
 }
 body {
-	font-size: 18px !important;
 	text-align: center;
 }
 #app_main{
