@@ -35,6 +35,9 @@ body {
 #app_page_secure{
 	height: 85%;
 }
+#app_page_secure_nav{
+    line-height: 1em;
+}
 #app_page_start_divs{
 	height: 90%;
 	display: grid;

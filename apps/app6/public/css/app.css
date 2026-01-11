@@ -24,12 +24,6 @@ body {
 	display: inline-block;
 	margin-inline-start: 5px;
 }
-.app_page_start_shop{
-	height: 1em;
-	width: 9em;
-	cursor:default;
-	font-size:16px;
-}
 .app_shop_div {
 	padding: 1em;
 	display:inline-block;
@@ -39,13 +33,13 @@ body {
 	vertical-align: middle;
 }
 #app_page_start_shop{
-	height: 80%;
 	width: 90%;
     margin: auto;
 	display: block;
 	align-content: center;
 	max-width: 700px;
     overflow-x: auto;
+    min-height:95%;
 }
 #app_top_end{
 	width: 60px;
@@ -107,9 +101,6 @@ body {
 .common_app_data_display_master_col2[data-key=Image] svg:active{
 	
 	cursor: pointer;
-}
-#common_app_dialogues_app_data_display .common_app_data_display_master_row{
-	margin-bottom: 1em !important;
 }
 .common_app_data_display_master_row{
 	display: block;
@@ -179,8 +170,8 @@ body {
 	background: var(--common_app_color_white);
 	caret-color: var(--common_app_color_blue1);
 }
-.app_page_start_shop:hover,
-.app_page_start_shop:active{
+#app_page_start_shop:hover,
+#app_page_start_shop:active{
 	box-shadow: 0 10px 10px -10px var(--common_app_color_dark);
 }
 .app_shop_div{

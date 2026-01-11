@@ -423,9 +423,6 @@ body,
 .common_app_data_display_detail_horizontal_row{
 	text-align: start;
 }
-.common_app_data_display_master_row{
-	margin-bottom: 1em;
-}
 .common_select.common_app_data_display_master_row{
     display: contents;
 }

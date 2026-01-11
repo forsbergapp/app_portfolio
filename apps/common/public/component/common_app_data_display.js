@@ -76,8 +76,15 @@
  *              button_update:boolean,
  *              button_post:boolean,
  *              button_delete:boolean,
- *              function_commonSelect:function,
- *              COMMON:common['CommonModuleCommon'],
+ *              LOV_RECORDS:{ mountDiv:   string,
+ *               data:  {default_data_value:string,
+ *                       default_value:string,
+ *                       options:string[],
+ *                       column_value:string,
+ *                       column_text:string,
+ *                       class_dropdown_value:string,
+ *                       class_option: string 
+ *                      }}[]|[],
  *              icons:{ lov:string,
  *                      print:string,
  *                      update:string,
@@ -117,8 +124,10 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                     `<div class='common_app_data_display_master'>
                                         ${Object.entries(props.master_object).filter(key=>key[0]!='Title' && key[0]!='TitleSub').map((/**@type{*}*/master_row)=>
                                             master_row[1].Value.constructor===Array?
-                                                    `<div id='LIST_${props.function_div_id()}' class='common_select common_app_data_display_master_row'>
-                                                        ${props.function_commonSelect({ mountDiv:   null,
+                                                    (id=>
+                                                    `<div id='${id}' class='common_select common_app_data_display_master_row'>
+                                                        ${/**@ts-ignore*/props.LOV_RECORDS.push(
+                                                                {   mountDiv:   id,
                                                                     data:  {default_data_value:'',
                                                                             default_value:(master_row[1].Value[0]??[]).map((/**@type{*}*/key)=>
                                                                                                     `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
@@ -127,17 +136,16 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
                                                                                         return {VALUE:'',
                                                                                                 TEXT:list.map((/**@type{*}*/key)=>
                                                                                                     `<div class='common_app_data_display_master_col_list common_app_data_display_master_col_list_${key.KeyType.toLowerCase()}' data-${key.KeyName}='${key.KeyValue}' ${key.KeyType=='COLOR'?`style='background-color:${key.KeyValue};'`:''}>${key.KeyType=='COLOR'?' ':key.KeyValue}</div>`
-                                                                                                    )
+                                                                                                    ).join('')
                                                                                                 }
                                                                                     }),
                                                                             column_value:'VALUE',
                                                                             column_text:'TEXT',
                                                                             class_dropdown_value:'common_app_data_display_master_row_list',
                                                                             class_option: 'common_app_data_display_master_row_list' 
-                                                                            },
-                                                                    methods:{COMMON:props.COMMON},
-                                                                    path: '/common/component/common_select.js'}).template}
-                                                    </div>`:
+                                                                            }
+                                                                })}
+                                                    </div>`)(`LIST_${props.function_div_id()}`):
                                             `<div class='common_app_data_display_master_row'>
                                                     <div    data-key='${master_row[0]}' 
                                                             class='common_app_data_display_master_col1'>${
@@ -256,6 +264,17 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      template:string}>}
  */
 const component = async props => {
+    /**@type{{ mountDiv:   string,
+      *          data:  {default_data_value:string,
+      *                  default_value:string,
+      *                  options:string[],
+      *                  column_value:string,
+      *                  column_text:string,
+      *                  class_dropdown_value:string,
+      *                  class_option: string 
+      *      }}[]|[]} 
+      */
+    const LOV_RECORDS = [];
     if (props.data.dialogue){
         props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv}`).classList.add('common_app_dialogues_show1');
     }
@@ -356,6 +375,29 @@ const component = async props => {
         }
     };
     const onMounted = async () => {
+        
+        for (const record of LOV_RECORDS)
+            await props.methods.COMMON.commonComponentRender({
+                                            /**@ts-ignore */
+                            mountDiv:       record.mountDiv,
+                            data:           {
+                                            /**@ts-ignore */
+                                            default_data_value:record.data.default_data_value,
+                                            /**@ts-ignore */
+                                            default_value:record.data.default_value,
+                                            /**@ts-ignore */
+                                            options:record.data.options,
+                                            /**@ts-ignore */
+                                            column_value:record.data.column_value,
+                                            /**@ts-ignore */
+                                            column_text:record.data.column_text,
+                                            /**@ts-ignore */
+                                            class_dropdown_value:record.data.class_dropdown_value,
+                                            /**@ts-ignore */
+                                            class_option: record.data.class_option 
+                                            },
+                            methods:        null,
+                            path:           '/common/component/common_select.js'});
         if (props.methods.button_print)
             props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.data.commonMountdiv} .common_app_data_display_button_print`)['data-function'] = props.methods.button_print;
         if (props.methods.button_update)
@@ -385,9 +427,7 @@ const component = async props => {
                             button_update:props.data.button_update,
                             button_post:props.data.button_post,
                             button_delete:props.data.button_delete,
-                            //use component direct in template without commonComponentRender()
-                            function_commonSelect:(await props.methods.COMMON.commonMiscImport('/common/component/common_select.js')).default,
-                            COMMON:props.methods.COMMON,
+                            LOV_RECORDS:LOV_RECORDS,
                             icons:{ lov:props.methods.COMMON.commonGlobalGet('ICONS')['lov'],
                                     print:props.data.button_print_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['print'],
                                     update:props.data.button_update_icon ?? props.methods.COMMON.commonGlobalGet('ICONS')['save'],

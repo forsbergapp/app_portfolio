@@ -17,7 +17,7 @@ const template = () =>` <div id='app_top'>
                         </div>
                         <div id='app_main'>
                             <div id='app_main_page'>
-                                <div id='app_page_start_shop' class='app_page_start_shop app_shop_div'></div>
+                                <div id='app_page_start_shop' class='app_shop_div'></div>
                             </div>
                         </div>
                         <div id='app_bottom'>
