@@ -73,16 +73,40 @@ body {
 #button_solve_speed{
 	margin-top: 1em;
 }
+#app_select_model,
+#app_select_temperature {
+    height: 2.5em;
+}
+#app_select_model svg,
+#app_select_temperature svg {
+    font-size: 2.5em;
+}
+#app_select_model .common_select_dropdown,
+#app_select_temperature .common_select_dropdown{
+    height: 2.5em;
+    font-size: 0.75em;
+    vertical-align: super;
+}
+#app_select_model .common_select_dropdown_value,
+#app_select_temperature .common_select_dropdown_value{
+    width: 2.5em;
+    height: 2.5em;
+}
+#app_select_model .common_select_option,
+#app_select_temperature .common_select_option{
+    line-height: 1em;
+}
+#app_select_model .common_select_option svg,
+#app_select_temperature .common_select_option svg {
+    font-size: 2em;
+}
 
 #button_controls .buttons_row{
-	width: 100%;
-	display: block;
+    display: grid;
+    grid-template-columns: 17% 15% 34% 15% 17%;
+    align-items: center;
 }
-#button_controls .buttons_row .buttons_col{
-	display: inline-block;
-	width:calc(15% - 4px);
-	vertical-align: middle;
-}
+
 #button_controls .buttons_row .buttons_col .common_app_dialogues_button{
 	width: 100%;
 	font-weight: bold;

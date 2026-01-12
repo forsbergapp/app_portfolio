@@ -66,6 +66,7 @@
  *              parentNode:         {
  *                                      id: string,
  *                                      classList:DOMTokenList,
+ *                                      className:string,
  *                                      nextElementSibling:{querySelector:function},
  *                                      innerHTML:string,
  *                                      getAttribute:function,

@@ -125,6 +125,7 @@ const component = async props => {
      */
     const events = async (event_type, event) =>{
         const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        const eventElementDiv = props.methods.COMMON.commonMiscElementDiv(event.target);
         switch (true){
             case event_type=='click' && event_target_id == 'button_reset':{
                 initCube();
@@ -136,7 +137,7 @@ const component = async props => {
                 CONSTANTS.cube_controls.cube.makeMove(event.target.getAttribute('name'));
                 break;
             }
-            case event_type =='click' && ['button_solve', 'button_solved_step'].includes(event_target_id):{
+            case event_type =='click' && ['button_solve', 'button_solved_step'].includes(eventElementDiv.id):{
                 //if not already solved then show lov
                 if (CONSTANTS.cube.getState() != CONSTANTS.cube.getSolved().join(' '))
                     props.methods.COMMON.commonComponentRender({
@@ -147,7 +148,7 @@ const component = async props => {
                                     },
                         methods:    {
                                     functionData:       appCubeSolveLovData,
-                                    functionRow:        event_target_id=='button_solved_step'?
+                                    functionRow:        eventElementDiv.id=='button_solved_step'?
                                                             appCubeSolveCubestateShowResult:
                                                                 appCubeSolveShowResult,
                                     event_target:       event.target
@@ -155,9 +156,9 @@ const component = async props => {
                         path:       '/common/component/common_app_dialogues_lov.js'});
                 break;                      
             }
-            case event_type=='click' && ['button_solve_cubestate', 'button_solved_step_cubestate'].includes(event_target_id):{
+            case event_type=='click' && ['button_solve_cubestate', 'button_solved_step_cubestate'].includes(eventElementDiv.id):{
                 CONSTANTS.cube_goalstate = props.methods.COMMON.commonWindowPrompt('?');
-                if (CONSTANTS.cube_goalstate && CONSTANTS.cube_goalstate.split(' ').length==20)
+                if (CONSTANTS.cube_goalstate && CONSTANTS.cube_goalstate.split(' ').length==20 && CONSTANTS.cube_goalstate != CONSTANTS.cube.getState())
                     props.methods.COMMON.commonComponentRender({
                     mountDiv:   'common_app_dialogues_lov',
                     data:       {
@@ -166,7 +167,9 @@ const component = async props => {
                                 },
                     methods:    {
                                 functionData:       appCubeSolveLovData,
-                                functionRow:        appCubeSolveCubestateShowResult,
+                                functionRow:        eventElementDiv.id=='button_solved_step_cubestate'?
+                                                            appCubeSolveCubestateShowResult:
+                                                                appCubeSolveShowResult,
                                 event_target:       event.target
                                 },
                     path:       '/common/component/common_app_dialogues_lov.js'});
@@ -262,7 +265,7 @@ const component = async props => {
                                         temperature:        Number(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
                                         cube_currentstate: 	CONSTANTS.cube.getState(),
                                         cube_goalstate: 	CONSTANTS.cube_goalstate}, 
-                                spinner_id:event_target.id,
+                                spinner_id:props.methods.COMMON.commonMiscElementDiv(event_target).id,
                                 //5 minutes timeout
                                 timeout:1000 * 60 * 5}) 
                     .then((/**@type{string}*/result)=>{

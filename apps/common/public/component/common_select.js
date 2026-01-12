@@ -74,34 +74,35 @@ const component = props => {
                 'common_icon_select_dropdown',
                 'common_select_options',
                 'common_select_option']
-                .filter(row=>elementDiv.className.indexOf(row)>-1).length>0){
+                                                                    /**@ts-ignore */
+                .filter(row=>elementDiv.className?.indexOf(row)>-1||elementDiv.parentNode.className?.indexOf(row)>-1).length>0){
             Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#${props.methods.COMMON.commonGlobalGet('app_root')} .common_select_options`))
                 .filter((/**@type{HTMLElement}*/element)=>props.methods.COMMON.commonMiscElementId(element) != props.methods.COMMON.commonMiscElementId(event.target))
                 .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
         }
         switch (true){
-            case event_type== 'click' && event.target.parentNode.classList.contains('common_select_dropdown_value'):
-            case event_type== 'click' && event.target.parentNode.classList.contains('common_icon_select_dropdown'):
-            case event_type== 'click' && event.target.classList.contains('common_select_dropdown_value'):
-            case event_type== 'click' && event.target.classList.contains('common_icon_select_dropdown'):{
+            case event_type== 'click' && props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.contains('common_select') &&
+                ['common_select_dropdown', 
+                 'common_select_dropdown_value']
+                                                                        /**@ts-ignore */
+                .filter(row=>elementDiv.className?.indexOf(row)>-1 || elementDiv.parentNode.className.indexOf(row)>-1 ).length>0:{
+                //div , parent div or div with svg selected in dropdown
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display = 
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
                 break;
             }
-            case event_type== 'click' && event.target.parentNode.classList.contains('common_select_option'):{
+            case event_type== 'click' && props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.contains('common_select') && 
+                                                                            /**@ts-ignore */
+                (elementDiv.classList.contains('common_select_option') || elementDiv.parentNode.classList.contains('common_select_option')):{
+                //div, parent div oor div with svg selected in option
                 //select can show HTML, use innerHTML
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.parentNode.innerHTML;
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.parentNode.getAttribute('data-value'));
-                event.target.parentNode.parentNode.style.display = 'none';
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = 
+                    props.methods.COMMON.commonMiscElementRow(event.target, 'common_select_option').innerHTML;
+                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`)
+                    .setAttribute('data-value', props.methods.COMMON.commonMiscElementRow(event.target, 'common_select_option').getAttribute('data-value'));
+                props.methods.COMMON.commonMiscElementRow(event.target, 'common_select_options').style.display = 'none';
                 break;
             }
-            case event_type== 'click' && event.target.classList.contains('common_select_option'):{
-                //select can show HTML, use innerHTML
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
-                event.target.parentNode.style.display = 'none';
-                break;
-            }                            
         }
     }
     const onMounted = async () =>{
