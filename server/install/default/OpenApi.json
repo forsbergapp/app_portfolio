@@ -184,6 +184,9 @@
                             "$ref": "#/components/parameters/paths/server_host"
                         },
                         {
+                            "$ref": "#/components/parameters/paths/server_uuid"
+                        },
+                        {
                             "$ref": "#/components/parameters/paths/resource_id_number",
                             "description":"app.id",
                             "in":"path"
@@ -5190,6 +5193,14 @@
                 "server_url":{
                     "description":"Use this parameter to send url requested",
                     "name":	"server_url",
+                    "required":true,
+                    "schema":{
+                        "type":"string"
+                    }
+                },
+                "server_uuid":{
+                    "description":"Use this parameter to identify app instance",
+                    "name":	"server_uuid",
                     "required":true,
                     "schema":{
                         "type":"string"

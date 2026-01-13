@@ -1147,6 +1147,7 @@ const commonAppMount = async parameters =>{
  *          ip:string,
  *          idToken:string,
  *          host:string,
+ *          uuid:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{ cssCommon:string, 
@@ -1176,7 +1177,6 @@ const getAppStart = async parameters =>{
                                                             ip:parameters.ip, 
                                                             user_agent:parameters.user_agent, 
                                                             accept_language:parameters.accept_language});
-    const UUID   =                  server.socket.socketConnectedGetAppIdTokenRecord(parameters.idToken)[0].Uuid;    
     return {
         result:{
             /**@type{string} */
@@ -1227,7 +1227,7 @@ const getAppStart = async parameters =>{
                                                                     if (row.startsWith(BASE_PATH_REST_API))
                                                                         //add app start uuid after font uuid separated with '~'
                                                                         return row.replace( row.substring(0,BASE_PATH_REST_API.length+36),
-                                                                                            row.substring(0,BASE_PATH_REST_API.length+36) + '~' + UUID);
+                                                                                            row.substring(0,BASE_PATH_REST_API.length+36) + '~' + parameters.uuid);
                                                                     else
                                                                         return row;
                                                                 }).join('url(')

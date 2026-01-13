@@ -261,11 +261,15 @@ const socketClientAdd = (newClient) => {
         return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>connected.IamUserid== null).length}, type:'JSON'};
 };
 /**
+ * @name socketPost
+ * @description Socket post
+ * @function
  * @param {{app_id:number,
  *          idToken:string,
  *          uuid:string|null,
  *          user_agent:string,
  *          ip:string
+ *          response:server['server']['res']
  *          }} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
@@ -273,6 +277,9 @@ const socketPost = async parameters =>{
     const client_id = Date.now();
         
     const connectUserData =  await commonGeodataUser(  parameters.app_id, parameters.ip);
+    parameters.response.setHeader('Content-Type', server.CONTENT_TYPE_SSE);
+    parameters.response.setHeader('Cache-control', 'no-cache');
+    parameters.response.setHeader('Connection', 'keep-alive');
     /**@type{server['socket']['SocketConnectedServer']} */
     const newClient = {
                         Id:                 client_id,
@@ -288,43 +295,19 @@ const socketPost = async parameters =>{
                         Timezone:           connectUserData.timezone,
                         Ip:                 parameters.ip,
                         UserAgent:          parameters.user_agent,
-                        Response:           null,
+                        Response:           parameters.response,
                         Created:            new Date().toISOString(),
                         AppId:              parameters.app_id,
                         IamUserid:          null
                     };
-
+    parameters.response.on('close', ()=>{
+            SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.Id !== client_id);
+            parameters.response.end();
+    });
     socketClientAdd(newClient);
     return {result:{AffectedRows:1,
                     InsertId:client_id}, type:'JSON'};
 }
-/**
- * @param {{app_id:number,
- *          idToken:string,
- *          response:server['server']['res']
- *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
- */
-const socketUpdate = async parameters =>{
-
-    //should be one record only    
-    if (SOCKET_CONNECTED_CLIENTS
-            .filter(row=>row.IdToken == parameters.idToken).length!=1){
-        throw await server.iam.iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
-    }
-    else{
-        parameters.response.setHeader('Content-Type', server.CONTENT_TYPE_SSE);
-        parameters.response.setHeader('Cache-control', 'no-cache');
-        parameters.response.setHeader('Connection', 'keep-alive');
-        const record = SOCKET_CONNECTED_CLIENTS.filter(client => client.IdToken == parameters.idToken)[0];
-        parameters.response.on('close', ()=>{
-            SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.Id !== record.Id);
-            parameters.response.end();
-        });
-        record.Response = parameters.response;
-        return {result:{AffectedRows:1}, type:'JSON'};
-    }
-};
 
 /**
  * @name socketIntervalCheck
@@ -493,7 +476,7 @@ const socketClientPostMessage = async parameters => {
             res:client.Response}):null;
     }
 };
-export {socketConnectedGetAppIdTokenRecord, socketConnectedUserGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketUpdate,  
+export {socketConnectedGetAppIdTokenRecord, socketConnectedUserGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost,  
         socketAdminSend, 
         socketIntervalCheck, socketExpiredTokenSendSSE, CheckOnline, 
         socketClientPostMessage};

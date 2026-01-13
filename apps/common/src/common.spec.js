@@ -65,7 +65,7 @@ const test = async t =>
     
         beforeAll();
         return await new Promise(resolve=>
-        t.it('should read IamAppIdToken at least 1 time when requesting app', async () =>{
+        t.it('should read App and IamAppIdToken at least 1 time each when requesting app', async () =>{
             //Solution to test if DB object is fetching the IamAppIdToken record is to create a custom filter function 
             //that is available in global scope in NodeJS since DB object uses Object.seal() so no getter can be added 
             //and module is using closure pattern.
@@ -92,8 +92,8 @@ const test = async t =>
                 t.expect(   'Count App',    
                             spyObject.filter(row=>row.id == spyId && row.object=='App').length).toBeGreaterThan(0),
                 /**@ts-ignore */
-                t.expect(   'Count IamUser',    
-                            spyObject.filter(row=>row.id == spyId && row.object=='IamUser').length).toBeGreaterThan(0)
+                t.expect(   'Count IamAppIdToken',    
+                            spyObject.filter(row=>row.id == spyId && row.object=='IamAppIdToken').length).toBeGreaterThan(0)
             ];
         })
         .then(result=>{

@@ -125,13 +125,6 @@ const component = async props =>{
             })
     };
     const postData = await postInit();
-    //add client to socket without response
-    server.socket.socketPost({  app_id:data_app_id,
-                                idToken:postData.idToken.token,
-                                uuid:postData.uuid,
-                                user_agent:props.data.user_agent,
-                                ip:props.data.ip
-                                });
     
     return template({   crypto: Buffer.from(await server.app_common.commonGetFile({ 
                                                         app_id:data_app_id, 

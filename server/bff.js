@@ -23,10 +23,13 @@ const {default:ComponentMaintenance} = await import('../apps/common/src/componen
  */
 const bffConnect = async parameters =>{
     const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??0;
-    await server.socket.socketUpdate({
+    await server.socket.socketPost({
         app_id:common_app_id,
-           idToken:parameters.idToken,
-           response:parameters.response
+        idToken:parameters.idToken,
+        uuid:parameters.resource_id,
+        user_agent:parameters.user_agent,
+        ip:parameters.ip,
+        response:parameters.response
     })
 };
 /**
@@ -443,6 +446,7 @@ const bffDecryptRequest = async parameters =>{
                     //request
                     host:           parameters.req.headers.host ?? '', 
                     url:            parameters.req.url,
+                    uuid:           parameters.req.url.substring(parameters.basePathRESTAPI.length).split('~')[0],
                     method:         parameters.req.method,
                     URI_path:       parameters.URI_path,
                     query:          parameters.req.query?.parameters ?? '',
@@ -559,6 +563,7 @@ const bffDecryptRequest = async parameters =>{
                                 res:parameters.res
                                 })
                                 .then(authenticate=>{
+                                    
                                     return  (authenticate.app_id !=null && decrypted)?
                                                 {
                                                 app_id:         authenticate.app_id,
@@ -566,6 +571,7 @@ const bffDecryptRequest = async parameters =>{
                                                 //request
                                                 host:           parameters.req.headers.host ?? '', 
                                                 url:            decrypted.url,
+                                                uuid:           parameters.req.url.substring(parameters.basePathRESTAPI.length).split('~')[0],
                                                 method:         decrypted.method,
                                                 URI_path:       decrypted.url.indexOf('?')>-1?
                                                                     decrypted.url.substring(0, decrypted.url.indexOf('?')):
@@ -834,6 +840,7 @@ const bffDecryptRequest = async parameters =>{
                                                     endpoint:bff_parameters.endpoint,
                                                     host:bff_parameters.host ?? '', 
                                                     url:bff_parameters.url ?? '',
+                                                    uuid:bff_parameters.uuid,
                                                     /**@ts-ignore */
                                                     method:bff_parameters.method.toUpperCase(),
                                                     URI_path:bff_parameters.URI_path,
@@ -1175,6 +1182,7 @@ const bffRestApi = async parameters =>{
                                 ...(getParameter('server_microservice_service') && {service:            getParameter('server_microservice_service').default}),
                                 ...(getParameter('server_message_queue_type')   && {message_queue_type: getParameter('server_message_queue_type').default}),
                                 ...(getParameter('server_url')                  && {url:                parameters.url}),
+                                ...(getParameter('server_uuid')                 && {uuid:               parameters.uuid}),
                                 ...(getParameter('server_method')               && {method:             parameters.method}),
                                 ...(Object.keys(parametersIn)?.length>0         && {data:               {...parametersIn}}),
                                 ...(getParameter('server_endpoint')             && {endpoint:           parameters.endpoint}),
