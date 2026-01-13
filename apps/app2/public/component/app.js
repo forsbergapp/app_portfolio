@@ -127,7 +127,7 @@ const component = async props => {
         }
     };    
     const onMounted =()=>{
-        props.methods.COMMON.commonMiscShowDateUpdate('common_apps_list_title_col_date');
+        props.methods.COMMON.commonMiscShowDateUpdate('apps_list_title_col_date');
     };
     return {
         lifecycle:  {onMounted:onMounted},

@@ -256,9 +256,8 @@ transform-origin: -39px 8px;
 }
 #apps_list_title{
 	height: 2em;
-  	display: flex;
-  	align-items: center;
-  	justify-content: space-around;
+    display: grid;
+    grid-template-columns: 80% 20%;
 }
 #apps_list .apps_app_link_row{
 	width: 100%;
