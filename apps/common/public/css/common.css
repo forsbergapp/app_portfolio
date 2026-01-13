@@ -1241,7 +1241,7 @@ body,
 .rtl .common_loading_spinner::before{
 	transform: translate(50%, -50%) !important;
 }
-.common_loading_spinner svg{
+.common_loading_spinner *{
     display: none;
 }
 /*WINDOW INFO*/

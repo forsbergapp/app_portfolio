@@ -63,7 +63,7 @@ const template = props =>` <div id="theme_background">
                             </div>
                             <div id='apps_list'>
                                 ${props.apps.map(row=>
-                                    `<div class='apps_app_link_row common_row'>
+                                    `<div id='app_id_${row.Id}_${Date.now()}' class='apps_app_link_row common_row'>
                                         <div data-app_id='${row.Id}' class='apps_app_link_col apps_app_logo common_icon_button'>${row.Logo}</div>
                                         <div class='apps_app_link_col apps_app_name'>${row.Name}</div>
                                     </div>`
@@ -94,6 +94,7 @@ const component = async props => {
      */
     const events = async (event_type, event) =>{
         const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+        const elementDiv = props.methods.COMMON.commonMiscElementDiv(event.target);
         switch (event_type){
             case 'click':{
                 switch (true){
@@ -116,12 +117,10 @@ const component = async props => {
                             path:       '/common/component/common_app_dialogues_info.js'});
                         break;
                     }            
-                    case event_target_id=='apps_list':{
-                        const elementDiv = props.methods.COMMON.commonMiscElementDiv(event.target);
-                        if (elementDiv.classList.contains('apps_app_logo')){
-                            /**@ts-ignore */
-                            props.methods.COMMON.commonAppMount(elementDiv.getAttribute('data-app_id'));
-                        }
+                    case elementDiv.classList.contains('apps_app_logo'):{
+                                                            /**@ts-ignore */
+                        props.methods.COMMON.commonAppMount(elementDiv.getAttribute('data-app_id'),
+                                                            event_target_id);
                         break;
                     }
                 }

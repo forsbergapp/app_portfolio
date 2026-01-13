@@ -2996,16 +2996,19 @@ const commonCustomFramework = () => {
  * @description Mount app
  * @function
  * @param {number} app_id
+ * @param {|null|string} spinner_id?
  * @returns {Promise.<void>}
  */
-const commonAppMount = async (app_id) =>{   
+const commonAppMount = async (app_id, spinner_id=null) =>{   
     
     COMMON_GLOBAL.app_id =          app_id;
     /**@type{common['server']['app']['commonAppMount']} */
     const CommonAppInit = await commonFFB({ path:`/app-mount/${app_id}`, 
                                             method:'GET', 
                                             query:COMMON_GLOBAL.iam_user_id!=null?`IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`:'',
-                                            authorization_type:COMMON_GLOBAL.iam_user_id!=null?'APP_ACCESS':'APP_ID'})
+                                            authorization_type:COMMON_GLOBAL.iam_user_id!=null?'APP_ACCESS':'APP_ID',
+                                            ...(spinner_id !=null  && {spinner_id: spinner_id}),
+                                        })
                             .then(app=>JSON.parse(app));
     //remove all dialogues when switching app
     Array.from(COMMON_DOCUMENT.querySelectorAll('#common_app_dialogues > div')).forEach(dialogue=>commonComponentRemove(dialogue.id));

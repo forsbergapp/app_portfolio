@@ -254,6 +254,10 @@ transform-origin: -39px 8px;
     margin: 2em;
     height: calc(100% - 6em);
 }
+#apps_list .common_loading_spinner{
+    justify-self: center;
+    align-self: center;
+}
 #apps_list_title{
 	height: 2em;
     display: grid;
