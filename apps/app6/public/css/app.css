@@ -17,13 +17,6 @@ body {
 	height: 60px;
 	width: 100%;
 }
-#app_top_logo{
-	background-size: contain;
-	width: 60px;
-	height: 60px;
-	display: inline-block;
-	margin-inline-start: 5px;
-}
 .app_shop_div {
 	padding: 1em;
 	display:inline-block;

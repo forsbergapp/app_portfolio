@@ -262,7 +262,7 @@ transform-origin: -39px 8px;
 #apps_list .apps_app_link_row{
 	width: 100%;
     display: grid;
-    align-content: center;
+    align-content: space-evenly;
 }
 .apps_app_name{
 	font-weight: bold;
@@ -274,7 +274,12 @@ transform-origin: -39px 8px;
 }
 .apps_app_logo{
 	margin: 0 auto;
+    
 }	
+.apps_app_logo svg{
+    height: 48px !important;
+    width: 48px !important;
+}
 /*COMMON*/
 #common_app_toolbar{
 	margin-inline-start: 0px !important;

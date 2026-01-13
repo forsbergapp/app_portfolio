@@ -10,7 +10,7 @@
  * @name template
  * @description Template
  * @function
-  * @param {{apps:(common['server']['ORM']['View']['AppGetInfo'])[],
+ * @param {{apps:(common['server']['ORM']['View']['AppGetInfo'])[],
  *          icons:{info:string}}} props 
  * @returns {string}
  */
@@ -64,7 +64,7 @@ const template = props =>` <div id="theme_background">
                             <div id='apps_list'>
                                 ${props.apps.map(row=>
                                     `<div class='apps_app_link_row common_row'>
-                                        <div data-app_id='${row.Id}' class='apps_app_link_col apps_app_logo common_image common_image_logo_start' style='${row.Logo==null?'':`background-image:url(${row.Logo});`}'></div>
+                                        <div data-app_id='${row.Id}' class='apps_app_link_col apps_app_logo common_icon_button'>${row.Logo}</div>
                                         <div class='apps_app_link_col apps_app_name'>${row.Name}</div>
                                     </div>`
                                 ).join('')
@@ -117,8 +117,10 @@ const component = async props => {
                         break;
                     }            
                     case event_target_id=='apps_list':{
-                        if (event.target.classList.contains('apps_app_logo')){
-                            props.methods.COMMON.commonAppMount(event.target.getAttribute('data-app_id'));
+                        const elementDiv = props.methods.COMMON.commonMiscElementDiv(event.target);
+                        if (elementDiv.classList.contains('apps_app_logo')){
+                            /**@ts-ignore */
+                            props.methods.COMMON.commonAppMount(elementDiv.getAttribute('data-app_id'));
                         }
                         break;
                     }
@@ -134,7 +136,13 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template({apps:props.methods.COMMON.commonGlobalGet('apps'),
+        template:   template({apps:props.methods.COMMON.commonGlobalGet('apps')
+                                    .filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>
+                                            [props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                                            props.methods.COMMON.commonGlobalGet('app_admin_app_id'),
+                                            props.methods.COMMON.commonGlobalGet('app_start_app_id')
+                                            ].includes(app.Id)==false
+                                    ),
                                 icons:{info:props.methods.COMMON.commonGlobalGet('ICONS')['info']}})
     };
 };

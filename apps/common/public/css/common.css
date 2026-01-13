@@ -163,18 +163,9 @@ body,
 	width: 64px;
 	height: 64px;
 }
-.common_image_logo_start{
-	border-radius:unset !important;
-	width: 48px;
-	height: 48px;
-}
 .common_image_alert{
 	width: 50px;
 	height: 50px;
-}
-.common_image_broadcast{
-	width: 34px;
-	height: 34px;
 }
 
 #common_construction{
@@ -295,6 +286,10 @@ body,
     width: 1.25em;
     height: 1.25em;
     font-size: 2.5em;
+}
+.common_icon_toolbar_logo{
+    font-size: 4em;
+    line-height: 1em;
 }
 
 .common_link:hover,
@@ -1735,6 +1730,12 @@ body,
 #common_app_broadcast_info_message_item{
 	font-size:30px;
 	display: inline-block;
+}
+#common_app_broadcast_info_logo{
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    font-size: 1.5em;
 }
 @keyframes common_ticker {
 	0% {

@@ -147,7 +147,6 @@
   *                 CssReport:server['ORM']['Object']['App']['CssReport'],
   *                 CssReportContent:string|null,
   *                 Logo:server['ORM']['Object']['App']['Logo'],
-  *                 LogoContent:string|null,
   *                 Copyright:server['ORM']['Object']['App']['Copyright'],
   *                 LinkUrl:server['ORM']['Object']['App']['LinkUrl'],
   *                 LinkTitle:server['ORM']['Object']['App']['LinkTitle'],

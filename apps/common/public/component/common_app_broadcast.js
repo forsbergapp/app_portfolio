@@ -67,9 +67,8 @@ const component = async props => {
         }
     };
     const onMounted =()=>{
-        props.methods.COMMON.commonMiscResourceFetch( '/common/images/logo_broadcast.png',
-                                            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_broadcast_info_logo'), 
-                                            'image/png');
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_broadcast_info_logo').innerHTML = 
+            props.methods.COMMON.commonGlobalGet('apps').filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('app_admin_app_id'))[0].Logo;
 
     };
     return {

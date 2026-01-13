@@ -10,7 +10,7 @@
 /**
  * @returns {string}
  */
-const template = () =>` <div id='app_logo'></div>
+const template = () =>` <div id='app_logo' class='common_icon_toolbar_logo'></div>
                         <div id='app_construction'></div>`;
 /**
  * 
@@ -26,7 +26,8 @@ const template = () =>` <div id='app_logo'></div>
  */
 const component = async props => {
     const onMounted = async () =>
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_logo').style.backgroundImage = `url(${props.data.logo})`;
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_top_logo').innerHTML = 
+            props.methods.COMMON.commonGlobalGet('apps').filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('app_id'))[0].Logo;
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,

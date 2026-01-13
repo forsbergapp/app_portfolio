@@ -1097,12 +1097,6 @@ const commonAppMount = async parameters =>{
                                                                                             data_app_id:parameters.app_id})).result.resource:
                                                                     null,
                                     Logo:                   app.Logo,
-                                    LogoContent:            app.Logo?
-                                                                (await commonResourceFile({ app_id:parameters.app_id, 
-                                                                                            resource_id:app.Logo,
-                                                                                            content_type:'image/png', 
-                                                                                            data_app_id:parameters.app_id})).result.resource:
-                                                                    null,
                                     Copyright:              app.Copyright,
                                     LinkUrl:                app.LinkUrl,
                                     LinkTitle:              app.LinkTitle,

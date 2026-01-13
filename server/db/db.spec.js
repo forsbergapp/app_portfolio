@@ -22,7 +22,7 @@ const test = async t =>
             /**@type{server['ORM']['Object']['App']} */
             const app_data = {  Name:'ORM',
                                 Path:'/apps/orm/public',
-                                Logo:'/images/logo.png',
+                                Logo:'<svg width=\"1em\" height=\"1em\" viewBox=\"0 0 24 24\"><path fill=\"rgb(81,171,255)\" d=\"M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z\"/></svg>',
                                 Js:'/js/app.js',
                                 Css:'/css/app.css',
                                 CssReport:'',
