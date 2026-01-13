@@ -23,12 +23,9 @@ const {default:ComponentMaintenance} = await import('../apps/common/src/componen
  */
 const bffConnect = async parameters =>{
     const common_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??0;
-    await server.socket.socketConnect({
+    await server.socket.socketUpdate({
         app_id:common_app_id,
            idToken:parameters.idToken,
-           resource_id:parameters.resource_id,
-           user_agent:parameters.user_agent,
-           ip:parameters.ip,
            response:parameters.response
     })
 };
@@ -195,9 +192,9 @@ const bffMicroservice = async parameters =>{
 const bffResponse = async parameters =>{
     /**
      * @param {string} data
-     * @returns {Promise.<string>}
+     * @returns {string}
      */
-    const encrypt = async data => (parameters.jwk && parameters.iv)?
+    const encrypt = data => (parameters.jwk && parameters.iv)?
                                     server.security.securityTransportEncrypt({app_id:parameters.app_id??0, data:data, jwk:parameters.jwk, iv:parameters.iv }):
                                         data;
 
@@ -220,7 +217,7 @@ const bffResponse = async parameters =>{
         //remove statusMessage or [ERR_INVALID_CHAR] might occur and is moved to inside message
         server.response({app_id:parameters.app_id,
                        type:'JSON',
-                       result:await encrypt(JSON.stringify(message)),
+                       result: encrypt(JSON.stringify(message)),
                        route:parameters.route,
                        statusMessage: '',
                        statusCode: parameters.result_request.http ?? 500,
@@ -532,97 +529,83 @@ const bffDecryptRequest = async parameters =>{
                     //REST API request
                     const jwk = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).jwk;
                     const iv  = JSON.parse(Buffer.from(encryptionData.Secret, 'base64').toString('utf-8')).iv;
-                    /**
-                     * @type {{headers:{
-                     *                 'app-id':       number,
-                     *                 'app-signature':string,
-                     *                 'app-id-token': string,
-                     *                 Authorization?: string,
-                     *                 'Content-Type': string,
-                     *                 },
-                     *         method: string,
-                     *         url:    string,
-                     *         body:   *}}}
-                     */
-                    return await server.security.securityTransportDecrypt({ 
-                                app_id:0,
-                                encrypted:  parameters.req.body.x,
-                                jwk:        jwk,
-                                iv:         iv})
-                                .then(result=>{
-                                    const decrypted = JSON.parse(result);
-                                    const endpoint = decrypted.url.startsWith(server.ORM.OpenApiComponentParameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
-                                            (decrypted.url.split('/')[2]?.toUpperCase()):
-                                                'APP';
-                                    const idToken = //All external roles and microservice do not use AppId Token
-                                                        (endpoint.indexOf('EXTERNAL')>-1 ||
-                                                        endpoint.indexOf('MICROSERVICE')>-1)?
-                                                                '':
-                                                                decrypted.headers['app-id-token']?.replace('Bearer ',''); 
-                            
-                                    return server.iam.iamAuthenticateCommon({
-                                            idToken: idToken, 
-                                            endpoint:endpoint,
-                                            authorization: decrypted.headers.Authorization??'', 
-                                            host: parameters.req.headers.host ?? '', 
-                                            security:{
-                                                        IamEncryption:encryptionData,
-                                                        idToken:idToken,
-                                                        AppId:decrypted.headers['app-id'], 
-                                                        AppSignature: decrypted.headers['app-signature'],
-                                            },
-                                            ip: parameters.req.headers['x-forwarded-for'] || parameters.req.socket.remoteAddress,
-                                            res:parameters.res
-                                            })
-                                            .then(authenticate=>{
-                                                return  (authenticate.app_id !=null && decrypted)?
-                                                            {
-                                                            app_id:         authenticate.app_id,
-                                                            endpoint:       endpoint,
-                                                            //request
-                                                            host:           parameters.req.headers.host ?? '', 
-                                                            url:            decrypted.url,
-                                                            method:         decrypted.method,
-                                                            URI_path:       decrypted.url.indexOf('?')>-1?
-                                                                                decrypted.url.substring(0, decrypted.url.indexOf('?')):
-                                                                                    decrypted.url,
-                                                            query:          (decrypted.url.indexOf('?')>-1?
-                                                                                Array.from(new URLSearchParams(decrypted.url
-                                                                                .substring(decrypted.url.indexOf('?')+1)))
-                                                                                .reduce((query, param)=>{
-                                                                                    const key = {[param[0]] : decodeURIComponent(param[1])};
-                                                                                    return {...query, ...key};
-                                                                                                /**@ts-ignore */
-                                                                                }, {}):null)?.parameters ?? '',
-                                                            body:           decrypted.body?JSON.parse(decrypted.body):null,
-                                                            security_app:   { 
-                                                                            AppId: decrypted.headers['Content-Type'] ==server.CONTENT_TYPE_SSE?
-                                                                                0:
-                                                                                    decrypted.headers['app-id']??null,
-                                                                            AppSignature: decrypted.headers['app-signature']??null,
-                                                                            AppIdToken: decrypted.headers['app-id-token']?.replace('Bearer ','')??null
-                                                                            },
-                                                            authorization:  decrypted.headers.Authorization??null, 
-                                                            //metadata
-                                                            ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.socket.remoteAddress, 
-                                                            user_agent:     parameters.req.headers['user-agent'], 
-                                                            accept_language:parameters.req.headers['accept-language'], 
-                                                            //response
-                                                            jwk:            jwk,
-                                                            iv:             iv,
-                                                            res:            parameters.res,
-                                                            //x
-                                                            XAppId:         decrypted?.headers['app-id'],
-                                                            XAppIdAuth:     authenticate.app_id !=null?1:0,
-                                                            XMethod:        decrypted?.method??null,
-                                                            XUrl:           decrypted?.url??null}:
-                                                                null;
-                                            });
+                    try {
+                        const decrypted = JSON.parse(server.security.securityTransportDecrypt({ 
+                                            app_id:0,
+                                            encrypted:  parameters.req.body.x,
+                                            jwk:        jwk,
+                                            iv:         iv}));
+                        const endpoint = decrypted.url.startsWith(server.ORM.OpenApiComponentParameters.config.SERVER_REST_RESOURCE_BFF.default + '/')?
+                                (decrypted.url.split('/')[2]?.toUpperCase()):
+                                    'APP';
+                        const idToken = //All external roles and microservice do not use AppId Token
+                                            (endpoint.indexOf('EXTERNAL')>-1 ||
+                                            endpoint.indexOf('MICROSERVICE')>-1)?
+                                                    '':
+                                                    decrypted.headers['app-id-token']?.replace('Bearer ',''); 
+                
+                        return server.iam.iamAuthenticateCommon({
+                                idToken: idToken, 
+                                endpoint:endpoint,
+                                authorization: decrypted.headers.Authorization??'', 
+                                host: parameters.req.headers.host ?? '', 
+                                security:{
+                                            IamEncryption:encryptionData,
+                                            idToken:idToken,
+                                            AppId:decrypted.headers['app-id'], 
+                                            AppSignature: decrypted.headers['app-signature'],
+                                },
+                                ip: parameters.req.headers['x-forwarded-for'] || parameters.req.socket.remoteAddress,
+                                res:parameters.res
                                 })
-                                .catch(()=>
-                                    //decrypt failed
-                                    null
-                                );
+                                .then(authenticate=>{
+                                    return  (authenticate.app_id !=null && decrypted)?
+                                                {
+                                                app_id:         authenticate.app_id,
+                                                endpoint:       endpoint,
+                                                //request
+                                                host:           parameters.req.headers.host ?? '', 
+                                                url:            decrypted.url,
+                                                method:         decrypted.method,
+                                                URI_path:       decrypted.url.indexOf('?')>-1?
+                                                                    decrypted.url.substring(0, decrypted.url.indexOf('?')):
+                                                                        decrypted.url,
+                                                query:          (decrypted.url.indexOf('?')>-1?
+                                                                    Array.from(new URLSearchParams(decrypted.url
+                                                                    .substring(decrypted.url.indexOf('?')+1)))
+                                                                    .reduce((query, param)=>{
+                                                                        const key = {[param[0]] : decodeURIComponent(param[1])};
+                                                                        return {...query, ...key};
+                                                                                    /**@ts-ignore */
+                                                                    }, {}):null)?.parameters ?? '',
+                                                body:           decrypted.body?JSON.parse(decrypted.body):null,
+                                                security_app:   { 
+                                                                AppId: decrypted.headers['Content-Type'] ==server.CONTENT_TYPE_SSE?
+                                                                    0:
+                                                                        decrypted.headers['app-id']??null,
+                                                                AppSignature: decrypted.headers['app-signature']??null,
+                                                                AppIdToken: decrypted.headers['app-id-token']?.replace('Bearer ','')??null
+                                                                },
+                                                authorization:  decrypted.headers.Authorization??null, 
+                                                //metadata
+                                                ip:             parameters.req.headers['x-forwarded-for'] || parameters.req.socket.remoteAddress, 
+                                                user_agent:     parameters.req.headers['user-agent'], 
+                                                accept_language:parameters.req.headers['accept-language'], 
+                                                //response
+                                                jwk:            jwk,
+                                                iv:             iv,
+                                                res:            parameters.res,
+                                                //x
+                                                XAppId:         decrypted?.headers['app-id'],
+                                                XAppIdAuth:     authenticate.app_id !=null?1:0,
+                                                XMethod:        decrypted?.method??null,
+                                                XUrl:           decrypted?.url??null}:
+                                                    null;
+                                });
+                    } catch (error) {
+                       //decrypt failed
+                        return null;
+                    }
                 }
                 else
                     //invalid request
@@ -720,11 +703,11 @@ const bffDecryptRequest = async parameters =>{
                                     req.url;
             //check if REST API or css font url request, that both are (should be) the only declared public paths in OpenApi
             const basePathRESTAPI = server.ORM.OpenApiServers.filter(server=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
-            const OpenApiPathsMatchPublic = bffOpenApiPathMatch({URI_path:URI_path.replace(basePathRESTAPI,'')}).paths;
+            
             //access control that stops request if not passing controls
             if (await server.iam.iamAuthenticateRequest({ip:req.socket.remoteAddress, 
                                                         common_app_id:common_app_id,
-                                                        OpenApiPathsMatchPublic:OpenApiPathsMatchPublic,
+                                                        OpenApiPathsMatchPublic:bffOpenApiPathMatch({URI_path:URI_path.replace(basePathRESTAPI,'')}).paths,
                                                         req:req,
                                                         res:res})
                     .catch((/**@type{server['server']['error']}*/error)=>{
@@ -779,8 +762,8 @@ const bffDecryptRequest = async parameters =>{
                     if (server.iam.iamAuthenticateRequestRateLimiter({  app_id:common_app_id, 
                                                                         ip:req.socket.remoteAddress, 
                                                                         path:bff_parameters.url})){
-                        if (bff_parameters.endpoint != 'APP' &&bffOpenApiPathMatch({ URI_path: bff_parameters.URI_path})
-                                .paths[1][bff_parameters.method.toLowerCase()]?.requestBody?.content['text/event-stream']){
+                        const match = bffOpenApiPathMatch({ URI_path: bff_parameters.URI_path});
+                        if (bff_parameters.endpoint != 'APP' && match.paths &&match.paths[1][bff_parameters.method.toLowerCase()]?.requestBody?.content['text/event-stream']){
                             //SSE, log since response is open and log again when closing
                             server.ORM.db.Log.post({  app_id:0, 
                                 data:{  object:'LogRequestInfo', 
@@ -820,7 +803,7 @@ const bffDecryptRequest = async parameters =>{
                             //use common app id for APP since no app id decided
                             //App route
                             return bffResponse({app_id:common_app_id,
-                                                result_request:await server.app_common.commonApp({  app_id:common_app_id,
+                                                result_request:await server.app_common.getAppInit({  app_id:common_app_id,
                                                                             ip:bff_parameters.ip, 
                                                                             host:bff_parameters.host ?? '', 
                                                                             user_agent:bff_parameters.user_agent, 

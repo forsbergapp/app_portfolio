@@ -63,7 +63,6 @@
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place
  * @property {string|null}  client_timezone
- * @property {{app_id?:number, uuid:string, secret:string}} x
  */
 
 /**
@@ -1235,7 +1234,7 @@
  *            TokenAccess:string|null,
  *            TokenAdmin:string|null,
  *            Uuid:string|null,
- *            Response:server_server_res,
+ *            Response:server_server_res|null,
  *            Created:string,
  *            AppId:number,
  *            IamUserid:number|null}} ViewSocketConnectedServer

@@ -84,7 +84,7 @@ const test = async t =>
                 host:'localhost',
                 user_agent:'BDD test',
                 accept_language:'*'};
-            await app_common.commonApp(parameters);
+            await app_common.getAppInit(parameters);
             
             test_running = false;
             return [

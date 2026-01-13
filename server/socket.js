@@ -260,101 +260,70 @@ const socketClientAdd = (newClient) => {
     else
         return {result:{count_connected:SOCKET_CONNECTED_CLIENTS.filter(connected =>connected.IamUserid== null).length}, type:'JSON'};
 };
-
 /**
  * @param {{app_id:number,
  *          idToken:string,
  *          uuid:string|null,
  *          user_agent:string,
- *          ip:string,
- *          response:server['server']['res']
+ *          ip:string
  *          }} parameters
- * @returns {Promise.<{ insertId:number,
- *                      latitude:string,
- *                      longitude: string,
- *                      place: string,
- *                      timezone: string}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const socketPost = async parameters =>{
+    const client_id = Date.now();
+        
+    const connectUserData =  await commonGeodataUser(  parameters.app_id, parameters.ip);
+    /**@type{server['socket']['SocketConnectedServer']} */
+    const newClient = {
+                        Id:                 client_id,
+                        IdToken:            parameters.idToken,
+                        Uuid:               parameters.uuid,
+                        TokenAccess:        null,
+                        IamUserUsername:    null,
+                        IamUserType:        null,
+                        TokenAdmin:         null,
+                        GpsLatitude:        connectUserData.latitude,
+                        GpsLongitude:       connectUserData.longitude,
+                        Place:              connectUserData.place,
+                        Timezone:           connectUserData.timezone,
+                        Ip:                 parameters.ip,
+                        UserAgent:          parameters.user_agent,
+                        Response:           null,
+                        Created:            new Date().toISOString(),
+                        AppId:              parameters.app_id,
+                        IamUserid:          null
+                    };
 
+    socketClientAdd(newClient);
+    return {result:{AffectedRows:1,
+                    InsertId:client_id}, type:'JSON'};
+}
+/**
+ * @param {{app_id:number,
+ *          idToken:string,
+ *          response:server['server']['res']
+ *          }} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ */
+const socketUpdate = async parameters =>{
+
+    //should be one record only    
     if (SOCKET_CONNECTED_CLIENTS
-            .filter(row=>row.IdToken == parameters.idToken).length>0){
+            .filter(row=>row.IdToken == parameters.idToken).length!=1){
         throw await server.iam.iamUtilResponseNotAuthorized(parameters.response, 401, 'socketConnect, authorization', true);
     }
     else{
-        const client_id = Date.now();
-        
         parameters.response.setHeader('Content-Type', server.CONTENT_TYPE_SSE);
         parameters.response.setHeader('Cache-control', 'no-cache');
         parameters.response.setHeader('Connection', 'keep-alive');
-
+        const record = SOCKET_CONNECTED_CLIENTS.filter(client => client.IdToken == parameters.idToken)[0];
         parameters.response.on('close', ()=>{
-            SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.Id !== client_id);
+            SOCKET_CONNECTED_CLIENTS = SOCKET_CONNECTED_CLIENTS.filter(client => client.Id !== record.Id);
             parameters.response.end();
         });
-        const connectUserData =  await commonGeodataUser(  parameters.app_id, parameters.ip);
-        /**@type{server['socket']['SocketConnectedServer']} */
-        const newClient = {
-                            Id:                 client_id,
-                            IdToken:            parameters.idToken,
-                            Uuid:               parameters.uuid,
-                            TokenAccess:        null,
-                            IamUserUsername:    null,
-                            IamUserType:        null,
-                            TokenAdmin:         null,
-                            GpsLatitude:        connectUserData.latitude,
-                            GpsLongitude:       connectUserData.longitude,
-                            Place:              connectUserData.place,
-                            Timezone:           connectUserData.timezone,
-                            Ip:                 parameters.ip,
-                            UserAgent:          parameters.user_agent,
-                            Response:           parameters.response,
-                            Created:            new Date().toISOString(),
-                            AppId:              parameters.app_id,
-                            IamUserid:          null
-                        };
-    
-        socketClientAdd(newClient);
-        return {    insertId:client_id,
-                    latitude:connectUserData.latitude,
-                    longitude: connectUserData.longitude,
-                    place: connectUserData.place,
-                    timezone:connectUserData.timezone};
+        record.Response = parameters.response;
+        return {result:{AffectedRows:1}, type:'JSON'};
     }
-};
-/**
- * @name socketConnect
- * @description Socket connect
- *              Adds client to socket and sends SSE CONNECTINFO with geodata
- * @function
- * @param {{app_id:number,
- *          idToken:string,
- *          resource_id:string|null,
- *          user_agent:string,
- *          ip:string,
- *          response:server['server']['res']
- *          }} parameters
- * @returns {Promise.<void>}
- */
- const socketConnect = async parameters =>{   
-    const connectUserData = await socketPost({  app_id:parameters.app_id,
-                                                idToken:parameters.idToken,
-                                                uuid:parameters.resource_id,
-                                                user_agent:parameters.user_agent,
-                                                ip:parameters.ip,
-                                                response:parameters.response
-                                                });
-    //send CONNECTINFO message
-    socketClientPostMessage({   app_id:parameters.app_id,
-                                resource_id:connectUserData.insertId,
-                                data:{  data_app_id:null,
-                                        iam_user_id:null,
-                                        idToken:null,
-                                        message:JSON.stringify({latitude: connectUserData.latitude,
-                                                                longitude: connectUserData.longitude,
-                                                                place: connectUserData.place,
-                                                                timezone: connectUserData.timezone}),
-                                        message_type:'CONNECTINFO'}});
 };
 
 /**
@@ -503,7 +472,7 @@ const socketClientPostMessage = async parameters => {
                                 };
                             })[0];
         //encrypt message using secrets for curent app id and token found in IamEncryption
-        const encrypted = 'data: ' + (await server.security.securityTransportEncrypt({   
+        const encrypted = 'data: ' + (server.security.securityTransportEncrypt({   
                                         app_id: parameters.app_id,
                                         data:   Buffer.from(JSON.stringify({   
                                                             sse_type :    parameters.data.message_type, 
@@ -513,7 +482,7 @@ const socketClientPostMessage = async parameters => {
                                         iv:     iv})) + '\n\n';
                                     
         
-        await server.response ({
+        client.Response?await server.response ({
             app_id:null,
             type:'JSON',
             result:'',
@@ -521,10 +490,10 @@ const socketClientPostMessage = async parameters => {
             statusMessage:'',
             statusCode:200,
             sse_message:encrypted,
-            res:client.Response});
+            res:client.Response}):null;
     }
 };
-export {socketConnectedGetAppIdTokenRecord, socketConnectedUserGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketConnect, 
+export {socketConnectedGetAppIdTokenRecord, socketConnectedUserGet, socketConnectedUpdate, socketConnectedList, socketConnectedCount, socketPost, socketUpdate,  
         socketAdminSend, 
         socketIntervalCheck, socketExpiredTokenSendSSE, CheckOnline, 
         socketClientPostMessage};

@@ -992,20 +992,20 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
         security?.idToken?.replace('Bearer ','') == server.ORM.db.IamAppIdToken.get({  app_id:0, 
                                                                         resource_id:security?.IamEncryption.IamAppIdTokenId??null, 
                                                                         data:{data_app_id:null}}).result[0].Token) &&
-        await server.security.securityTransportDecrypt({ 
-            app_id:0,
-            encrypted:  security.AppSignature??'',
-            jwk:        JSON.parse(Buffer.from(security.IamEncryption.Secret, 'base64').toString('utf-8')).jwk,
-            iv:         JSON.parse(Buffer.from(security.IamEncryption.Secret, 'base64').toString('utf-8')).iv})
-            .then(result=>
-                (JSON.parse(result).app_id == security?.AppId)?1:0)
-            .catch(()=>
-                0
-            )==1)==false){
-            return {admin:false, 
-                    app_id:null,
-                    app_id_token:null,
-                    apps:[]};
+        (()=> {
+            try {
+                return JSON.parse(server.security.securityTransportDecrypt({ 
+                    app_id:0,
+                    encrypted:  security.AppSignature??'',
+                    jwk:        security.IamEncryption?JSON.parse(Buffer.from(security.IamEncryption.Secret, 'base64').toString('utf-8')).jwk:'',
+                    iv:         security.IamEncryption?JSON.parse(Buffer.from(security.IamEncryption.Secret, 'base64').toString('utf-8')).iv:''})).app_id == security?.AppId
+            } catch (error) {
+                return false;
+            }})()==false)){
+                return {admin:false, 
+                        app_id:null,
+                        app_id_token:null,
+                        apps:[]};
     }
     else{
         /**@type{server['ORM']['Object']['App']['Id'][]} */
@@ -1066,7 +1066,7 @@ const commonAppMount = async parameters =>{
         return {http:400,
             code:null,
             text:null,
-            developerText:'commonAppInit',
+            developerText:'commonAppMount',
             moreInfo:null,
             type:'JSON'};
     else{
@@ -1133,14 +1133,131 @@ const commonAppMount = async parameters =>{
             return {http:404,
                 code:null,
                 text:null,
-                developerText:'commonAppInit',
+                developerText:'commonAppMount',
                 moreInfo:null,
                 type:'JSON'};
     }
 };
+/**
+ * @name getAppStart
+ * @memberof ROUTE_REST_API
+ * @description Get app start with common js, css, component and globals
+ * @function
+ * @param {{app_id:number,
+ *          ip:string,
+ *          idToken:string,
+ *          host:string,
+ *          user_agent:string,
+ *          accept_language:string}} parameters
+ * @returns {Promise.<server['server']['response'] & {result?:{ cssCommon:string, 
+ *                                                              jsCommon:string, 
+ *                                                              commonComponent:string, 
+ *                                                              globals:server['app']['commonGlobals']}}>}
+ */
+const getAppStart = async parameters =>{
+    const COMMON_APP_ID =           server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??1;
+    const ADMIN_APP_ID =            server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default)??1;        
+    const REST_RESOURCE_BFF =       server.ORM.OpenApiComponentParameters.config.SERVER_REST_RESOURCE_BFF.default;
+    const APP_REST_API_VERSION =    server.ORM.OpenApiComponentParameters.config.SERVER_REST_API_VERSION.default;
+    const BASE_PATH_REST_API =      server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='REST_API')[0].variables.basePath.default;
+    const DATA_APP_ID =             (await server.app_common.commonAppIam(parameters.host, 'APP')).admin?
+                                        ADMIN_APP_ID:
+                                            COMMON_APP_ID;
+    const START_APP_ID =            DATA_APP_ID==ADMIN_APP_ID?ADMIN_APP_ID:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_START_APP_ID.default)??1;
+    const CONT_USER =               server.ORM.db.IamUser.get(DATA_APP_ID, null).result.length;
+    const ADMIN_ONLY =              (await server.app_common.commonAppStart(DATA_APP_ID)==true?false:true) && CONT_USER==0;
+    //fetch parameters and convert records to one object with parameter keys
+    /**@type{Object.<string,*>} */
+    const APP_PARAMETER =           server.ORM.db.AppData.getServer({app_id:DATA_APP_ID, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:COMMON_APP_ID}}).result
+                                    .reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['Object']['AppData']}*/row)=>{key[row.Value] = row.DisplayData; return key},{})
+    //geodata for APP using start_app_id
+    const GEODATA =                 await server.app_common.commonGeodata({ app_id:START_APP_ID, 
+                                                            endpoint:'APP', 
+                                                            ip:parameters.ip, 
+                                                            user_agent:parameters.user_agent, 
+                                                            accept_language:parameters.accept_language});
+    const UUID   =                  server.socket.socketConnectedGetAppIdTokenRecord(parameters.idToken)[0].Uuid;    
+    return {
+        result:{
+            /**@type{string} */
+            cssCommon:      (await server.app_common.commonResourceFile({ 
+                                                            app_id:DATA_APP_ID, 
+                                                            resource_id:'/common/css/common.css',
+                                                            content_type:'text/css', 
+                                                            data_app_id:COMMON_APP_ID})).result.resource,
+            /**@type{string} */
+            jsCommon:       (await server.app_common.commonResourceFile({ 
+                                                            app_id:DATA_APP_ID, 
+                                                            resource_id:'/common/js/common.js',
+                                                            content_type:'text/javascript', 
+                                                            data_app_id:COMMON_APP_ID})).result.resource,
+            /**@type{string} */
+            commonComponent:(await server.app_common.commonResourceFile({ 
+                                                            app_id:DATA_APP_ID, 
+                                                            resource_id:'/common/component/common_app.js',
+                                                            content_type:'text/javascript', 
+                                                            data_app_id:COMMON_APP_ID})).result.resource,
+            /**@type{server['app']['commonGlobals']} */
+            globals:        {
+                                //update COMMON_GLOBAL keys:
+                                apps:                           (await server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null})).result,
+                                rest_resource_bff:              REST_RESOURCE_BFF,
+                                app_rest_api_version:           APP_REST_API_VERSION,
+                                app_rest_api_basepath:          BASE_PATH_REST_API,
+                                app_common_app_id:              COMMON_APP_ID,
+                                app_admin_app_id:               ADMIN_APP_ID,
+                                app_start_app_id:               START_APP_ID,
+                                app_toolbar_button_start:       server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_START.default)??1,
+                                app_toolbar_button_framework:   server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_FRAMEWORK.default)??1,
+                                app_framework:                  server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK.default)??1,
+
+                                app_framework_messages:         server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK_MESSAGES.default)??1,
+                                admin_only:                     ADMIN_ONLY?1:0,
+                                admin_first_time:               CONT_USER==0?1:0,
+                                app_request_tries:              server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUEST_TRIES.default)??5,
+                                app_requesttimeout_seconds:     server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_SECONDS.default)??5,
+                                app_requesttimeout_admin_minutes:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
+                                app_fonts:                      (await server.app_common.commonResourceFile({ 
+                                                                        app_id:DATA_APP_ID, 
+                                                                        resource_id:'/common/css/common_fonts.css',
+                                                                        content_type:'text/css', 
+                                                                        data_app_id:COMMON_APP_ID})).result.resource
+                                                                .split('url(')
+                                                                .map((/**@type{string}*/row)=>{
+                                                                    if (row.startsWith(BASE_PATH_REST_API))
+                                                                        //add app start uuid after font uuid separated with '~'
+                                                                        return row.replace( row.substring(0,BASE_PATH_REST_API.length+36),
+                                                                                            row.substring(0,BASE_PATH_REST_API.length+36) + '~' + UUID);
+                                                                    else
+                                                                        return row;
+                                                                }).join('url(')
+                                                                .split('@'),
+                                app_content_type_json:          'application/json; charset=utf-8',
+                                app_content_type_html:          'text/html; charset=utf-8',
+                                app_content_type_sse:           'text/event-stream; charset=utf-8',
+                                //AppData parameters common
+                                info_link_policy_name:          APP_PARAMETER.INFO_LINK_POLICY_NAME,
+                                info_link_policy_url:           APP_PARAMETER.INFO_LINK_POLICY_URL,
+                                info_link_disclaimer_name:      APP_PARAMETER.INFO_LINK_DISCLAIMER_NAME,
+                                info_link_disclaimer_url:       APP_PARAMETER.INFO_LINK_DISCLAIMER_URL,
+                                info_link_terms_name:           APP_PARAMETER.INFO_LINK_TERMS_NAME,
+                                info_link_terms_url:            APP_PARAMETER.INFO_LINK_TERMS_URL,
+                                
+                                //User
+                                token_dt:                       parameters.idToken,
+                                client_latitude:                GEODATA?.latitude,
+                                client_longitude:               GEODATA?.longitude,
+                                client_place:                   GEODATA?.place ?? '',
+                                client_timezone:                GEODATA?.timezone==''?null:GEODATA?.timezone
+                            }
+            }
+        ,
+        type:'JSON'
+        }
+}
 
 /**
- * @name commonApp
+ * @name getAppInit
  * @memberof ROUTE_APP
  * @description Get app 
  * @function
@@ -1151,7 +1268,7 @@ const commonAppMount = async parameters =>{
  *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response']>}
  */
-const commonApp = async parameters =>{
+const getAppInit = async parameters =>{
 
     if (parameters.app_id==null)
         return {http:404,
@@ -1190,7 +1307,7 @@ const commonApp = async parameters =>{
                                         return server.ORM.db.Log.post({ app_id:parameters.app_id, 
                                                                         data:{  object:'LogAppError', 
                                                                                 app:{   AppFilename:server.UtilAppFilename(import.meta.url),
-                                                                                        AppFunctionName:'commonApp()',
+                                                                                        AppFunctionName:'getAppInit()',
                                                                                         AppLine:server.UtilAppLine()
                                                                                 },
                                                                                 log:error
@@ -1362,7 +1479,8 @@ export {commonValidImagePixelSize,
         commonAppIam, commonResourceFile,
         commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
         commonAppMount,
-        commonApp,
+        getAppInit,
+        getAppStart,
         commonAppError,
         commonAppResource,
         commonRegistryAppModule,

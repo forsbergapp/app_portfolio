@@ -123,9 +123,9 @@ body,
     min-height:100vh;
     margin:0;
 }
-.start .common_input{   
-    border: none !important;
-} 
+.start *{
+    display:none
+}
 @keyframes start_spin{
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}

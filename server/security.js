@@ -470,15 +470,14 @@ const jwt = new Jwt();
  *          data:   string,
  *          jwk:    JsonWebKey,
  *          iv:     string}} parameters
- * @returns {Promise.<string>}
+ * @returns {string}
  */
-const securityTransportEncrypt = async parameters => {
-	return commonCrypto.subtle.encrypt({	
+const securityTransportEncrypt = parameters =>
+	commonCrypto.subtle.encrypt({	
                         iv:     parameters.iv,
 						key:    parameters.jwk.k, 
 						data:   parameters.data, 
 						});
-};
 
 /**
  * @name securityTransportDecrypt
@@ -489,14 +488,14 @@ const securityTransportEncrypt = async parameters => {
  *          encrypted:  string,
  *          jwk:        JsonWebKey,
  *          iv:         string}} parameters
- * @returns {Promise.<*>} 
+ * @returns {*} 
 */
-const securityTransportDecrypt = async parameters =>{
-	return commonCrypto.subtle.decrypt({	
+const securityTransportDecrypt = parameters =>
+	commonCrypto.subtle.decrypt({	
                         iv:         parameters.iv,
                         key:        parameters.jwk.k, 
                         ciphertext: parameters.encrypted});
-};
+
 /**
  * @name securityTransportCreateSecrets
  * @description Creates jwk and iv for BFF using Web Crypto API pattern

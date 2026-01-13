@@ -1168,13 +1168,13 @@ const commonWindowToBase64 = (str,btoa=false) => COMMON_WINDOW.btoa(btoa?str:COM
  * @param {string} useragent 
  */
 const commonWindowUserAgentPlatform = useragent =>{
-    if (useragent.toLowerCase().indexOf('windows'))
+    if (useragent.toLowerCase().indexOf('windows')>-1)
         return 'Windows';
     else
-        if (useragent.toLowerCase().indexOf('mobile'))
+        if (useragent.toLowerCase().indexOf('mobile')>-1)
             return 'Mobile';
         else
-            if (useragent.toLowerCase().indexOf('linux'))
+            if (useragent.toLowerCase().indexOf('linux')>-1)
                 return 'Linux';
             else
                 return 'Other';
@@ -2889,14 +2889,14 @@ const commonFrameworkSet = async (framework) => {
     
 };
 /**
- * @name custom_framework
+ * @name commonCustomFramework
  * @description Set custom framework functionality:
  *              show only console messages if app_framework_messages == 1
  *              save info about events created
  * @function
  * @returns {void}
  */
-const custom_framework = () => {
+const commonCustomFramework = () => {
 
     COMMON_GLOBAL.app_eventListeners.original = COMMON_DOCUMENT.addEventListener;
     /**
@@ -3113,6 +3113,7 @@ const commonGet = () =>{
         commonComponentRender:commonComponentRender,
         /* FRAMEWORK */
         commonFrameworkSet:commonFrameworkSet,
+        commonCustomFramework:commonCustomFramework,
         /* DIALOGUE */
         commonDialogueShow:commonDialogueShow, 
         /* MESSAGE*/
@@ -3131,6 +3132,7 @@ const commonGet = () =>{
         commonUserMessageShowStat:commonUserMessageShowStat,
         commonUserUpdateAvatar:commonUserUpdateAvatar,
         commonUserLocale:commonUserLocale,
+        commonUserPreferencesGlobalSetDefault:commonUserPreferencesGlobalSetDefault,
         /* FFB */
         commonFFB:commonFFB,
         /* SERVICE SOCKET */
@@ -3140,9 +3142,7 @@ const commonGet = () =>{
         commonEvent:commonEvent,
         /* INIT */
         commonAppMount:commonAppMount,
-        commonGlobals:commonGlobals,
-        commonInit:commonInit,
-        default:{commonInit}};
+        commonGlobals:commonGlobals};
 };
 
 /**
@@ -3150,76 +3150,16 @@ const commonGet = () =>{
  * @name commonGlobals
  * @description Sets start globals
  * @function
- * @param {string} globals
+ * @param {common['server']['app']['commonGlobals']} globals
  * @returns {void}
  */
 const commonGlobals = globals => {  
-    const globalsObj = JSON.parse(commonWindowFromBase64(globals));
-    Object.entries(globalsObj).forEach(key=>{
+    Object.entries(globals).forEach(key=>{
         /**@ts-ignore */
         COMMON_GLOBAL[key[0]] = key[1];
     });
 };
-/**
- * @name commonInit
- * @description Init common
- * @function
- * @param {{globals:string,
- *          cssCommon:string,
- *          jsCrypto:string}} parameters
- * @returns {Promise.<void>}
- */
-const commonInit = async parameters => {  
 
-    //apply common css
-    commonMiscCssApply(commonWindowFromBase64(parameters.cssCommon));
-
-    //set globals
-    commonGlobals(parameters.globals);
-    //import crypto functions
-    const {encrypt, decrypt} = await import(URL.createObjectURL(  new Blob ([commonWindowFromBase64(parameters.jsCrypto)],{type: 'text/javascript'})))
-                                    .then(crypto=>{
-                                        return {encrypt:crypto.subtle.encrypt, decrypt:crypto.subtle.decrypt};
-                                    });
-    COMMON_GLOBAL.x.encrypt = encrypt;
-    COMMON_GLOBAL.x.decrypt = decrypt;
-
-    commonUserPreferencesGlobalSetDefault('LOCALE');
-    commonUserPreferencesGlobalSetDefault('TIMEZONE');
-    commonUserPreferencesGlobalSetDefault('DIRECTION');
-    commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
-
-    custom_framework();
-    //set common app id
-    COMMON_GLOBAL.app_id =                          COMMON_GLOBAL.app_common_app_id;
-    
-    //connect to BFF
-    await commonFFB({path:               '/server-bff/' + COMMON_GLOBAL.x.uuid, 
-        method:             'POST',
-        body:               null,
-        response_type:      'SSE',
-        authorization_type: 'APP_ID'});
-
-    //mount start app
-    await commonAppMount(COMMON_GLOBAL.app_start_app_id);
-
-    COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_default_avatar').innerHTML = commonGlobalGet('ICONS')['user']
-    const elements = [
-                        ['common_app_toolbar_start',                    'home'],
-                        ['common_app_toolbar_framework_js',             'framework_js'],
-                        ['common_app_toolbar_framework_vue',            'framework_vue'],
-                        ['common_app_toolbar_framework_react',          'framework_react'],
-                        ['common_app_iam_user_menu_default_avatar',     'user'],
-                        ['common_app_profile_search_icon',              'search'],
-                        ['common_app_profile_toolbar_stat',             'user_profile_stat'],
-                        ['common_app_iam_user_menu_message_count_icon', 'email'],
-                        ['common_app_iam_user_menu_default_avatar',     'user']
-                    ];
-    for (const element of elements)
-        COMMON_DOCUMENT.querySelector(`#${element[0]}`).innerHTML = commonGlobalGet('ICONS')[element[1]];
-    //apply font css
-    COMMON_GLOBAL.app_fonts?commonMiscCssApply(COMMON_GLOBAL.app_fonts.join('@')):null;
-};
 export{/* GLOBALS*/
        COMMON_DOCUMENT,
        commonGlobalGet,
@@ -3261,6 +3201,7 @@ export{/* GLOBALS*/
        commonComponentRender,
        /* FRAMEWORK */
        commonFrameworkSet,
+       commonCustomFramework,
        /* DIALOGUE */
        commonDialogueShow,
        /* MESSAGE*/
@@ -3279,6 +3220,7 @@ export{/* GLOBALS*/
        commonUserMessageShowStat,
        commonUserUpdateAvatar,
        commonUserLocale,
+       commonUserPreferencesGlobalSetDefault,
        /* FFB */
        commonFFB,
        /* SERVICE SOCKET */
@@ -3288,6 +3230,4 @@ export{/* GLOBALS*/
        commonEvent,
        /* INIT */
        commonAppMount,
-       commonGlobals,
-       commonInit};
-export default {commonInit};
+       commonGlobals};

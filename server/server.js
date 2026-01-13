@@ -327,7 +327,7 @@ class serverClass {
             'x-forwarded-for':  parameters.client_ip,
             ...(parameters.authorization && {Authorization: parameters.authorization}),
             ...(parameters.encryption_type=='BFE' && {'app-id':         parameters['app-id']}),
-            ...(parameters.encryption_type=='BFE' && {'app-signature':  await this.security.securityTransportEncrypt({
+            ...(parameters.encryption_type=='BFE' && {'app-signature':  this.security.securityTransportEncrypt({
                                                                                                     app_id:parameters['app-id'],
                                                                                                     jwk:JSON.parse(atob(secret)).jwk,
                                                                                                     iv:JSON.parse(atob(secret)).iv,
@@ -335,7 +335,7 @@ class serverClass {
         };
         
         const body =    JSON.stringify({
-                                x: await this.security.securityTransportEncrypt({
+                                x: this.security.securityTransportEncrypt({
                                     app_id:parameters['app-id'],
                                     jwk:JSON.parse(atob(secret)).jwk,
                                     iv: JSON.parse(atob(secret)).iv,
@@ -374,12 +374,12 @@ class serverClass {
                 });
                 res.on('end', ()=>{
                     if ([200,201].includes(res.statusCode??0))
-                        this.security.securityTransportDecrypt({ 
+                        resolve(this.security.securityTransportDecrypt({ 
                                         app_id:parameters['app-id'],
                                         encrypted:  responseBody,
                                         jwk:        JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).jwk,
                                         iv:         JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).iv
-                                        }).then(result=>resolve(result));
+                                        }));
                     else
                         reject({   
                                 http:res.statusCode,
