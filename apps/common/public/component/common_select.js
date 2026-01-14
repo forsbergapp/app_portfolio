@@ -68,7 +68,7 @@ const component = props => {
         const elementDiv = props.methods.COMMON.commonMiscElementDiv(event.target);
         
         //close all open div selects except current target
-        if (event_type== 'click' && typeof props.methods.COMMON.commonMiscElementDiv(event.target).className=='string' && 
+        if (event_type== 'click' && typeof props.methods.COMMON.commonMiscElementDiv(event.target)?.className=='string' && 
                 ['common_select_dropdown', 
                 'common_select_dropdown_value',
                 'common_icon_select_dropdown',
@@ -81,7 +81,7 @@ const component = props => {
                 .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
         }
         switch (true){
-            case event_type== 'click' && props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.contains('common_select') &&
+            case event_type== 'click' && props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)?.classList?.contains('common_select') &&
                 ['common_select_dropdown', 
                  'common_select_dropdown_value']
                                                                         /**@ts-ignore */
@@ -91,7 +91,7 @@ const component = props => {
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
                 break;
             }
-            case event_type== 'click' && props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.contains('common_select') && 
+            case event_type== 'click' && props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)?.classList?.contains('common_select') && 
                                                                             /**@ts-ignore */
                 (elementDiv.classList.contains('common_select_option') || elementDiv.parentNode.classList.contains('common_select_option')):{
                 //div, parent div oor div with svg selected in option
