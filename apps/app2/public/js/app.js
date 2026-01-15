@@ -20,13 +20,13 @@ let common;
  * @returns {void}
  */
 const appDialogueAppsShowHide = () => {
-    if (COMMON_DOCUMENT.querySelector('#common_apps').style.visibility=='visible' ||
-        COMMON_DOCUMENT.querySelector('#common_apps').style.visibility==''){
-        COMMON_DOCUMENT.querySelector('#common_apps').style.visibility='hidden';
+    if (COMMON_DOCUMENT.querySelector('#apps').style.visibility=='visible' ||
+        COMMON_DOCUMENT.querySelector('#apps').style.visibility==''){
+        COMMON_DOCUMENT.querySelector('#apps').style.visibility='hidden';
         COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_stat').style.visibility='hidden';
     }
     else{
-        COMMON_DOCUMENT.querySelector('#common_apps').style.visibility='visible';
+        COMMON_DOCUMENT.querySelector('#apps').style.visibility='visible';
         COMMON_DOCUMENT.querySelector('#common_app_profile_toolbar_stat').style.visibility='visible';
     }
 };
