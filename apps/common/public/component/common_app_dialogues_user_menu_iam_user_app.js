@@ -46,10 +46,7 @@ const template = props =>`
 * @description Component
 * @function
 * @param {{data:       {
-*                      commonMountdiv:string,
-*                      app_id:number,
-*                      admin_app_id:number,
-*                      admin_only:number},
+*                      commonMountdiv:string},
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']
 *                      }}} props
@@ -73,7 +70,7 @@ const component = async props => {
 
     //fetch all settings for common app id
     /**@type{common['server']['ORM']['Object']['AppData'][]} */
-    const settings = props.data.admin_only == 1?[]:await props.methods.COMMON.commonFFB({  path:'/server-db/appdata/', 
+    const settings = props.methods.COMMON.commonGlobalGet('admin_only') == 1?[]:await props.methods.COMMON.commonFFB({  path:'/server-db/appdata/', 
                                                                                    query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`, 
                                                                                    method:'GET', 
                                                                                    authorization_type:'APP_ID'})
@@ -251,7 +248,7 @@ const component = async props => {
                        },
            methods:    null,
            path:       '/common/component/common_select.js'});
-       if (props.data.admin_only!=1){
+       if (props.methods.COMMON.commonGlobalGet('admin_only')!=1){
            //Timezone
            await props.methods.COMMON.commonComponentRender({
                mountDiv:  'common_app_dialogues_user_menu_iam_user_app_timezone_select', 
@@ -291,7 +288,7 @@ const component = async props => {
        }
        //set current value on all the selects
        props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_locale_select', props.methods.COMMON.commonGlobalGet('user_locale'));
-       if ((props.data.admin_only == 1)==false){
+       if ((props.methods.COMMON.commonGlobalGet('admin_only') == 1)==false){
            props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_timezone_select', props.methods.COMMON.commonGlobalGet('user_timezone'));
            props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_direction_select', props.methods.COMMON.commonGlobalGet('user_direction') ?? '');
            props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_arabic_script_select', props.methods.COMMON.commonGlobalGet('user_arabic_script') ?? '');

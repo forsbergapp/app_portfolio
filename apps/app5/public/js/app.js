@@ -35,8 +35,6 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'app_page_secure_tab_content', 
                         data:       {
-                                    app_id:common.commonGlobalGet('app_id'),
-                                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'MASTER_DETAIL_HORIZONTAL',
                                     master_path:'/app-common-module/ACCOUNT_STATEMENT',
                                     master_query:'fields=Title,BankAccountBalance,BankAccountNumber,BankAccountIban,Currency,CurrencyName',
@@ -76,8 +74,6 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'app_page_secure_tab_content', 
                         data:       {
-                                    app_id:common.commonGlobalGet('app_id'),
-                                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'VERTICAL_KEY_VALUE',
                                     master_path:'/app-common-module/CUSTOMER_GET',
                                     master_query: 'fields=Name,CustomerType,Address,City,Country',
@@ -113,8 +109,6 @@ const appEventClick = event => {
                     common.commonComponentRender({
                         mountDiv:   'app_page_secure_tab_content', 
                         data:       {
-                                    app_id:common.commonGlobalGet('app_id'),
-                                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                                     display_type:'VERTICAL_KEY_VALUE',
                                     master_path:'/app-common-module/ACCOUNT_GET',
                                     master_query: 'fields=Title,TitleSub,BankAccountNumber,BankAccountSecret,BankAccountVpa',
@@ -312,8 +306,6 @@ const appPaymentRequestShow = async message =>{
         await common.commonComponentRender({
                 mountDiv:   'common_app_dialogues_app_data_display', 
                 data:       {
-                            app_id:common.commonGlobalGet('app_id'),
-                            common_app_id:common.commonGlobalGet('app_common_app_id'),
                             display_type:'VERTICAL_KEY_VALUE',
                             dialogue:true,
                             master_path:'/app-common-module/PAYMENT_REQUEST_GET',
@@ -367,11 +359,7 @@ const appPaymentRequestShow = async message =>{
 const appSecureInit = () => {
     common.commonComponentRender({
         mountDiv:   'app_main_page', 
-        data:       {
-                    app_id:common.commonGlobalGet('app_id'),
-                    common_app_id:common.commonGlobalGet('app_common_app_id'),
-                    iam_user_id:common.commonGlobalGet('iam_user_id')
-                    },
+        data:       null,
         methods:    {
                     button_post:appCustomerCreate},
         path:       '/component/page_secure.js'});
@@ -386,7 +374,7 @@ const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
         mountDiv:   common.commonGlobalGet('app_div'), 
-        data:       {logo:common.commonGlobalGet('app_logo')},
+        data:       null,
         methods:    null,
         path:       '/component/app.js'})
     .then(()=> 

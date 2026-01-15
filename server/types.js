@@ -772,7 +772,11 @@
  * @typedef {{
  *              Id: server_db_table_App['Id'],
  *              Name: server_db_table_App['Name'],
- *              Logo:string}} ViewAppGetInfo
+ *              Logo:server_db_table_App['Logo'],
+ *              TextEdit:server_db_table_App['TextEdit'],
+ *              Copyright:server_db_table_App['Copyright'],
+ *              LinkTitle:server_db_table_App['LinkTitle'],
+ *              LinkUrl:server_db_table_App['LinkUrl']}} ViewAppGetInfo
  */
 /**
  * @descriptin DB VIEW ViewIamUsetGetProfile

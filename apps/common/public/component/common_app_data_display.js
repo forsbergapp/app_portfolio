@@ -13,8 +13,6 @@
  *  await common.commonComponentRender({
  *       mountDiv:   'common_app_dialogues_app_data_display', 
  *       data:       {
- *                   app_id:common.commonGlobalGet('app_id'),
- *                   common_app_id:common.commonGlobalGet('app_common_app_id'),
  *                   display_type:'VERTICAL_KEY_VALUE',
  *                   dialogue:true,
  *                   lov:[	{   lov:'PAYMENT_METHOD', 	
@@ -220,8 +218,6 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      app_id:number,
- *                      common_app_id:number,
  *                      display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
  *                      dialogue:boolean,
  *                      lov: {  lov:string, 
@@ -299,8 +295,8 @@ const component = async props => {
                                                             query:'fields=Document', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{  type:'FUNCTION',
-                                                                    IAM_module_app_id:props.data.common_app_id,
-                                                                    IAM_data_app_id:props.data.app_id, 
+                                                                    IAM_module_app_id: props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                                                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id'), 
                                                                     resource_name:props.data.master_resource}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows);
         for (const key of Object.entries(master_object)){
@@ -316,8 +312,8 @@ const component = async props => {
                                                             query:'fields=Document', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{  type:'FUNCTION',
-                                                                    IAM_module_app_id:props.data.common_app_id,
-                                                                    IAM_data_app_id:props.data.app_id, 
+                                                                    IAM_module_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                                                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id'), 
                                                                     resource_name:props.data.detail_resource}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows);
         for (const row of detail_rows){

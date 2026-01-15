@@ -55,7 +55,6 @@ const template = props =>`
 * @function
 * @param {{data:       {
 *                      commonMountdiv:string,
-*                      data_app_id:number,
 *                      longitude:number|null,
 *                      latitude:number|null},
 *          methods:    {
@@ -618,7 +617,6 @@ const component = async props => {
                             props.methods.COMMON.commonComponentRender({
                                 mountDiv:   `common_map_control_expand_${expand_type}`,
                                 data:       {  
-                                            data_app_id:props.data.data_app_id,
                                             expand_type:expand_type,
                                             },
                                 methods:    {

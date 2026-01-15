@@ -28,7 +28,6 @@ const template = () =>` <div id='app_top'>
  * @description Component
  * @function
  * @param {{data:       {
- *                      logo:string,
  *                      commonMountdiv:string
  *                      },
  *          methods:    {
@@ -48,8 +47,6 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
                 mountDiv:   'app_page_start_shop', 
                 data:       {
-                            app_id:props.methods.COMMON.commonGlobalGet('app_id'),
-                            common_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
                             display_type:'MASTER_DETAIL_VERTICAL',
                             master_path:'/app-common-module/PRODUCT_GET',
                             master_query:'fields=Name,Image,Description,Sku,Stock',

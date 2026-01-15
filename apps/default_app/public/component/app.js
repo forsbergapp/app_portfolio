@@ -15,7 +15,6 @@ const template = () =>` <div id='app_logo' class='common_icon_toolbar_logo'></di
 /**
  * 
  * @param {{data:       {
- *                      logo:string,
  *                      commonMountdiv:string
  *                      },
  *          methods:    {COMMON:common['CommonModuleCommon']}}} props 

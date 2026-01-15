@@ -1466,15 +1466,15 @@ body,
     padding: 1em;
 }
 .common_document_header{
-	background-size: contain;
-	background-repeat: no-repeat;
-  	height: 1em;
-    margin-bottom: 1em;
     border-bottom: 0.5px solid;
-	padding-inline-start: 3em;
-  	display: inline-block;
-  	width: calc(100% - 3em);
-  	padding-top: 0.5em;
+	padding-inline-start: 1em;
+  	display: grid;
+  	grid-template-columns: 2em calc(100% - 2em);
+  	align-content: center;
+}
+.common_document_header div{
+    align-items: center;
+    display: grid;
 }
 .common_document_body{
     margin: 1em;

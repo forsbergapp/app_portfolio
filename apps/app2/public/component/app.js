@@ -101,19 +101,8 @@ const component = async props => {
                     case event_target_id=='apps_list_title_col_info':{
                         props.methods.COMMON.commonComponentRender({
                             mountDiv:   'common_app_dialogues_info',
-                            data:       {
-                                        common_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
-                                        app_copyright:props.methods.COMMON.commonGlobalGet('app_copyright'),
-                                        app_link_url:props.methods.COMMON.commonGlobalGet('app_link_url'),
-                                        app_link_title:props.methods.COMMON.commonGlobalGet('app_link_title'),
-                                        info_link_policy_name:props.methods.COMMON.commonGlobalGet('info_link_policy_name'),
-                                        info_link_disclaimer_name:props.methods.COMMON.commonGlobalGet('info_link_disclaimer_name'),
-                                        info_link_terms_name:props.methods.COMMON.commonGlobalGet('info_link_terms_name')
-                                        },
-                            methods:    {
-                                        commonFFB:props.methods.COMMON.commonFFB,
-                                        commonMessageShow:props.methods.COMMON.commonMessageShow
-                                        },
+                            data:       null,
+                            methods:    null,
                             path:       '/common/component/common_app_dialogues_info.js'});
                         break;
                     }            

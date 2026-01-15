@@ -21,7 +21,7 @@ let common;
  */
 const appInit = async () => {
     await common.commonComponentRender({mountDiv:common.commonGlobalGet('app_div'),
-        data:       {logo:common.commonGlobalGet('app_logo')},
+        data:       null,
         methods:    null,
         path:'/component/app.js'});
     await common.commonComponentRender({  mountDiv:'app_construction',

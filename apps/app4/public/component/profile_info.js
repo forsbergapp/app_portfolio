@@ -56,7 +56,6 @@ const template = props => ` ${props.setting?
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      iam_user_id:number|null,
  *                      profile_id:number
  *                      },
  *          methods:    {
@@ -77,7 +76,7 @@ const component = async props => {
      * @returns {Promise<{value:string, text:string}[]>}
      */
     const user_settings_get = async profile_id => {
-        return props.methods.COMMON.commonFFB({path:`/server-db/iamuserappdatapost-profile/${profile_id}`, query:`id_current_user=${props.data.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
+        return props.methods.COMMON.commonFFB({path:`/server-db/iamuserappdatapost-profile/${profile_id}`, query:`id_current_user=${props.methods.COMMON.commonGlobalGet('iam_user_id')??''}`, method:'GET', authorization_type:'APP_ID'})
                     .then((/**@type{string}*/result)=>
                             JSON.parse(result)
                             .map((/**@type{common['server']['ORM']['View']['IamUserAppDataPostgetProfileUserPosts']}*/setting)=>{return {  value:JSON.stringify({   

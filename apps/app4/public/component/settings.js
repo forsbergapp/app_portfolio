@@ -46,7 +46,6 @@ const template = props =>`
  * @function
  * @param {{data:       {
  *                          commonMountdiv:string,
- *                          iam_user_id:number|null,
  *                          avatar:string|null
  *                      },
  *          methods:    {
@@ -66,7 +65,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({  iam_user_id:props.data.iam_user_id,
+        template:   template({  iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
                                 avatar:props.data.avatar,
                                 icons:{
                                     regional:props.methods.COMMON.commonGlobalGet('ICONS').regional,

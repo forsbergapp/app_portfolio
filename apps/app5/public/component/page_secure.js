@@ -40,10 +40,7 @@ const template = props => ` <div id='app_page_secure'>
  * @description Component
  * @function
  * @param {{data:       {
- *                      commonMountdiv:string,
- *                      app_id:number,
- *                      common_app_id:number,
- *                      iam_user_id:number},
+ *                      commonMountdiv:string},
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon'],
  *                      button_post:function
@@ -58,8 +55,8 @@ const component = async props => {
                                                     method:'POST', 
                                                     authorization_type:'APP_ACCESS', 
                                                     body:{  type:'FUNCTION',
-                                                            IAM_iam_user_id:props.data.iam_user_id,
-                                                            IAM_data_app_id:props.data.app_id}})
+                                                            IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
+                                                            IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id')}})
                         .then((/**@type{string}*/result)=>JSON.parse(result));
 
     /**
@@ -83,16 +80,14 @@ const component = async props => {
             await props.methods.COMMON.commonComponentRender({
                 mountDiv:   'app_page_secure_tab_content',
                 data:       {
-                            app_id:props.data.app_id,
-                            common_app_id:props.data.common_app_id,
                             display_type:'VERTICAL_KEY_VALUE',
                             lov:[	{lov:'CUSTOMER_TYPE', 	lov_functionData:null, lov_functionRow:getLovData}, 
                                     {lov:'COUNTRY', 		lov_functionData:null, lov_functionRow:getLovData}],
                             master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
                             master_query:'fields=Document',
                             master_body:{   type:'FUNCTION',
-                                            IAM_module_app_id:props.data.common_app_id,
-                                            IAM_data_app_id:props.data.app_id, 
+                                            IAM_module_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                                            IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id'), 
                                             resource_name:'CUSTOMER'},
                             master_method:'POST',
                             master_token_type:'APP_ID',

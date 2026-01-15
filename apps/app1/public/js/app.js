@@ -343,7 +343,6 @@ const appSecureMenuUsers = (sort='username', order_by='asc') => {
     common.commonComponentRender({
         mountDiv:   'menu_users_list',
         data:       {
-                    iam_user_id:common.commonGlobalGet('iam_user_id'),
                     sort:sort,
                     order_by:order_by
                     },

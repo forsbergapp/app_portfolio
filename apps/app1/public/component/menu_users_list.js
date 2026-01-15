@@ -71,7 +71,6 @@ const template = props => ` <div class='menu_users_list_row row_title'>
  * @description Component
  * @function
  * @param {{ data:{      commonMountdiv:string,
- *                       iam_user_id:number,
  *                       sort:string,
  *                       order_by:string},
  *           methods:{   COMMON:common['CommonModuleCommon']},
@@ -107,7 +106,7 @@ const component = async props => {
       lifecycle:    {onMounted:onMounted},
       data:         null,
       methods:      null,
-      template:     template({  iam_user_id:props.data.iam_user_id,
+      template:     template({  iam_user_id: props.methods.COMMON.commonGlobalGet('iam_user_id'),
                                 users:users,
                                 function_get_order_by:get_order_by,
                                 icons:{ avatar:props.methods.COMMON.commonGlobalGet('ICONS')['user_avatar'],

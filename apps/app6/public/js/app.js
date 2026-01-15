@@ -88,8 +88,6 @@ const appProductUpdate = async () =>{
     await common.commonComponentRender({
         mountDiv:   COMMON_DOCUMENT.querySelectorAll('#app_page_start_shop .common_app_data_display_master_row[id]')[1].id, 
         data:       {
-                    app_id:common.commonGlobalGet('app_id'),
-                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                     display_type:'VERTICAL_KEY_VALUE',
                     master_path:'/app-common-module/PRODUCT_LOCATION_GET',
                     master_query:'fields=Stock',
@@ -170,8 +168,6 @@ const appPaymentRequest = async () =>{
         await common.commonComponentRender({
             mountDiv:   'common_app_dialogues_app_data_display', 
             data:       {
-                        app_id:common.commonGlobalGet('app_id'),
-                        common_app_id:common.commonGlobalGet('app_common_app_id'),
                         display_type:'VERTICAL_KEY_VALUE',
                         dialogue:true,
                         master_path:'/app-common-module/PAYMENT_REQUEST_CREATE',
@@ -255,8 +251,6 @@ const appPay = async () =>{
     await common.commonComponentRender({
         mountDiv:   'common_app_dialogues_app_data_display', 
         data:       {
-                    app_id:common.commonGlobalGet('app_id'),
-                    common_app_id:common.commonGlobalGet('app_common_app_id'),
                     display_type:'VERTICAL_KEY_VALUE',
                     dialogue:true,
                     lov:[	{   lov:'PAYMENT_METHOD', 	
@@ -306,7 +300,7 @@ const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
         mountDiv:   common.commonGlobalGet('app_div'), 
-        data:       {logo:common.commonGlobalGet('app_logo')},
+        data:       null,
         methods:    {pay:appPay},
         path:'/component/app.js'});
     appProductUpdate();

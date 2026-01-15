@@ -45,14 +45,7 @@ const template = props => `
 * @description Component
 * @function
 * @param {{data:       {
-*                      commonMountdiv:string,
-*                      common_app_id:number,
-*                      app_copyright:string,
-*                      app_link_url:string,
-*                      app_link_title:string,
-*                      info_link_policy_name:string,
-*                      info_link_disclaimer_name:string,
-*                      info_link_terms_name:string
+*                      commonMountdiv:string
 *                      },
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']
@@ -85,8 +78,8 @@ const component = async props => {
                         break;
                     }
                     case event_target_id=='common_app_dialogues_info_app_link':{
-                        if (props.methods.COMMON.commonGlobalGet('app_link_url'))
-                            props.methods.COMMON.commonWindowGet().open(props.methods.COMMON.commonGlobalGet('app_link_url'),'_blank','');
+                        if (props.methods.COMMON.commonGetApp().LinkUrl)
+                            props.methods.COMMON.commonWindowGet().open(props.methods.COMMON.commonGetApp().LinkUrl,'_blank','');
                         break;
                     }
                     case event_target_id=='common_app_dialogues_info_info_link1':{
@@ -146,7 +139,7 @@ const component = async props => {
                         method: 'POST', 
                         body:   {   type:'FUNCTION',
                                     message:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_info_contact_message').textContent,
-                                    IAM_data_app_id:props.data.common_app_id},
+                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id')},
                         authorization_type:'APP_ID'
                     })
         .then((/**@type{string}*/result)=>{
@@ -163,12 +156,12 @@ const component = async props => {
        methods:    null,
        events:     events,
        template:   template({    
-                           app_copyright:props.data.app_copyright,
-                           app_link_url:props.data.app_link_url,
-                           app_link_title:props.data.app_link_title,
-                           info_link_policy_name:props.data.info_link_policy_name,
-                           info_link_disclaimer_name:props.data.info_link_disclaimer_name,
-                           info_link_terms_name:props.data.info_link_terms_name,
+                           app_copyright:props.methods.COMMON.commonGetApp().Copyright,
+                           app_link_url:props.methods.COMMON.commonGetApp().LinkUrl,
+                           app_link_title:props.methods.COMMON.commonGetApp().LinkTitle,
+                           info_link_policy_name:props.methods.COMMON.commonGlobalGet('info_link_policy_name'),
+                           info_link_disclaimer_name:props.methods.COMMON.commonGlobalGet('info_link_disclaimer_name'),
+                           info_link_terms_name:props.methods.COMMON.commonGlobalGet('info_link_terms_name'),
                            icons:{  email:props.methods.COMMON.commonGlobalGet('ICONS')['email'],
                                     close:props.methods.COMMON.commonGlobalGet('ICONS')['close'],
                                     send:props.methods.COMMON.commonGlobalGet('ICONS')['send']}

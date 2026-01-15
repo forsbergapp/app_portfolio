@@ -22,7 +22,6 @@ const template = () => `<div id='mapid'>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      common_app_id:number,
  *                      user_settings:APP_user_setting_record
  *                      },
  *          methods:    {COMMON:common['CommonModuleCommon'],
@@ -40,7 +39,6 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'mapid',
             data:       { 
-                        data_app_id :props.data.common_app_id,
                         longitude:props.data.user_settings.GpsLongText?.toString()??'',
                         latitude:props.data.user_settings.GpsLatText?.toString()??''
                         },

@@ -22,7 +22,9 @@
  * @returns {string}
  */
 const template = props =>`  <div id='${'common_document_' + Date.now()}' class='common_document'>
-                                <div class='common_document_header' style='${props.app_logo==null?'':`background-image:url(${props.app_logo});`}'>${props.app_name}</div>
+                                <div class='common_document_header'>
+                                    <div>${props.app_logo}</div><div>${props.app_name}</div>
+                                </div>
                                 <div class='common_document_body ${props.documentType=='MODULE_CODE'?'common_md common_code':'common_md'}'>
                                     ${props.documentType=='MODULE_CODE'?
                                         props.document
@@ -315,15 +317,15 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template({  app_logo:props.data.app_logo,
-                                app_copyright:props.data.app_copyright,
-                                app_name:props.data.app_name,
+        template:   template({  app_logo:props.methods.COMMON.commonGetApp().Logo,
+                                app_copyright:props.methods.COMMON.commonGetApp().Copyright,
+                                app_name:props.methods.COMMON.commonGetApp().Name,
                                 document:await props.methods.COMMON.commonFFB({  path:'/app-common-module/COMMON_DOC', 
                                                                         method:'POST', 
                                                                         authorization_type:'APP_ID',
                                                                         body:{  type:'FUNCTION',
                                                                                 documentType:props.data.documentType,
-                                                                                IAM_data_app_id:props.data.common_app_id,
+                                                                                IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
                                                                                 doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
                                                         .catch(()=>null),
                                 documentType:props.data.documentType,

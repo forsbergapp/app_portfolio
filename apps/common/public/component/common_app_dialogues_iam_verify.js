@@ -36,7 +36,6 @@ const template = props => `
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      common_app_id:number,
  *                      user_verification_type:string},
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon'],

@@ -50,7 +50,6 @@ const appInit = async () =>{
         common.commonComponentRender({
             mountDiv:   'mapid',
             data:       { 
-                        data_app_id :common.commonGlobalGet('app_common_app_id'),
                         longitude:common.commonGlobalGet('client_longitude'),
                         latitude:common.commonGlobalGet('client_latitude')
                         },

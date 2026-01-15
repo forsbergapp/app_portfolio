@@ -101,7 +101,6 @@ const template = props =>`  <div id='common_app_dialogues_profile_info'>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      iam_user_id:number,
  *                      iam_user_id_other:number,
  *                      username:string
  *                      },
@@ -122,13 +121,13 @@ const component = async props => {
             if (props.data.username !== null)
                 return '/server-db/iamuser-profile/';
             else
-                return `/server-db/iamuser-profile/${props.data.iam_user_id ?? ''}`;
+                return `/server-db/iamuser-profile/${props.methods.COMMON.commonGlobalGet('iam_user_id') ?? ''}`;
     };
     /**@type{common['server']['ORM']['View']['IamUsetGetProfile'] & {Id:number}}*/
     const profile = await props.methods.COMMON.commonFFB(
                             {
                                 path:pathInfoGet(), 
-                                query:`id=${props.data.iam_user_id ?? ''}` + (props.data.username!=null?`&name=${props.data.username}`:''), 
+                                query:`id=${props.methods.COMMON.commonGlobalGet('iam_user_id') ?? ''}` + (props.data.username!=null?`&name=${props.data.username}`:''), 
                                 method:'GET', 
                                 authorization_type:'APP_ID'
                             })
@@ -137,7 +136,7 @@ const component = async props => {
     const onMounted = async () => {
         setButtonUI('common_app_dialogues_profile_info_follow',profile.FollowedId!=null);
         setButtonUI('common_app_dialogues_profile_info_like',profile.LikedId!=null);
-        if (props.data.iam_user_id !=null)
+        if (props.methods.COMMON.commonGlobalGet('iam_user_id') !=null)
             props.methods.COMMON.commonSocketConnectOnlineCheck('common_app_dialogues_profile_info_avatar_online_status', profile.Id);
     };
     /**

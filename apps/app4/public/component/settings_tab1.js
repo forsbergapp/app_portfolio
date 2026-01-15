@@ -120,11 +120,7 @@ const template = props => ` <div class='setting_horizontal_row'>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      common_app_id:number,
- *                      app_id:number,
- *                      user_settings:import('../js//types.js').APP_user_setting_record,
- *                      user_locale:string,
- *                      user_timezone:string
+ *                      user_settings:import('../js//types.js').APP_user_setting_record
  *                      },
  *          methods:    {COMMON:common['CommonModuleCommon'],
  *                      appComponentSettingUpdate:appComponentSettingUpdate}}} props
@@ -137,7 +133,7 @@ const component = async props => {
     //fetch all settings for common app id
     /**@type{common['server']['ORM']['Object']['AppData'][]} */
     const settings = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
-                                                    query:`IAM_data_app_id=${props.data.common_app_id}`,
+                                                    query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`,
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
                                                         JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
@@ -147,8 +143,8 @@ const component = async props => {
                                                     path:'/app-common-module/COMMON_LOCALE', 
                                                     method:'POST', authorization_type:'APP_ID',
                                                     body:{  type:'FUNCTION',
-                                                            IAM_data_app_id : props.data.common_app_id,
-                                                            locale: props.data.user_locale}
+                                                            IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                                                            locale: props.methods.COMMON.commonGlobalGet('user_locale')}
                                                 })
                             .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{
@@ -269,7 +265,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({user_timezone:props.data.user_timezone,
+        template: template({user_timezone:props.methods.COMMON.commonGlobalGet('user_timezone'),
                             icons:{
                                 regional_locale:props.methods.COMMON.commonGlobalGet('ICONS').regional_locale,
                                 regional_timezone_current:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone + props.methods.COMMON.commonGlobalGet('ICONS').gps_position,
@@ -281,7 +277,7 @@ const component = async props => {
                                 regional_calendartype:props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar,
                                 regional_calendar_hijri_type:props.methods.COMMON.commonGlobalGet('ICONS').regional_calendar_hijri_type
                             }
-        })
+        })                            
     };
 };
 export default component;

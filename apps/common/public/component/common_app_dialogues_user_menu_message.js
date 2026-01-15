@@ -58,7 +58,6 @@ const template = props => `
 * @function
 * @param {{data:       {
 *                      commonMountdiv:string,
-*                      app_id:number,
 *                      message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']},
 *                      },
 *          methods:    {

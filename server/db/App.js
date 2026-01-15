@@ -31,7 +31,11 @@ const getViewInfo = async parameters =>{
                         return {
                                     Id:app.Id,
                                     Name:app.Name,
-                                    Logo:app.Logo
+                                    Logo:app.Logo,
+                                    TextEdit: app.TextEdit,
+                                    Copyright:app.Copyright,
+                                    LinkTitle:app.LinkTitle,
+                                    LinkUrl: app.LinkUrl
                                 };
                     }), 
             type:'JSON'};

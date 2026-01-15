@@ -241,7 +241,6 @@ const component = async props => {
         props.methods.COMMON.commonComponentRender({
             mountDiv:   'menu_monitor_mapid',
             data:       { 
-                        data_app_id :props.methods.COMMON.commonGlobalGet('app_common_app_id'),
                         longitude:props.methods.COMMON.commonGlobalGet('client_longitude'),
                         latitude:props.methods.COMMON.commonGlobalGet('client_latitude')
                         },

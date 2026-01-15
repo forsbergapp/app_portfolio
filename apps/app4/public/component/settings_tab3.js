@@ -112,8 +112,6 @@ const template = props =>`  <div class='setting_horizontal_row'>
  * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      common_app_id:number,
- *                      app_id:number,
  *                      user_settings:APP_user_setting_record,
  *                      themes:APP_GLOBAL['themes']
  *                      },
@@ -129,21 +127,21 @@ const component = async props => {
     //fetch PAPER_SIZE for common app id
     /**@type{common['server']['ORM']['Object']['AppData'][]} */
     const settings_common = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
-                                                    query:`IAM_data_app_id=${props.data.common_app_id}&name=PAPER_SIZE`,
+                                                    query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}&name=PAPER_SIZE`,
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
                                                         JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //fetch HIGHLIGHT_ROW and REPORT_THEME for current app id
     /**@type{common['server']['ORM']['Object']['AppData'][]} */
     const settings_app = await props.methods.COMMON.commonFFB({ path:'/server-db/appdata/',
-                                                            query:`IAM_data_app_id=${props.data.app_id}`,
+                                                            query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_id')}`,
                                                             method:'GET', 
                                                             authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
                                                                 JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //update APP_GLOBAL with themes
     /**@type{import('../js/types.js').APP_GLOBAL['themes']} */
     props.data.themes.data = settings_app.filter(setting=>
-            setting.AppId == props.data.app_id && 
+            setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && 
             setting.Name.startsWith('REPORT_THEME'))
             .map(theme=>{
                 return {type:theme.Name, value:theme.Value, text:theme.DisplayData};
@@ -170,13 +168,13 @@ const component = async props => {
             mountDiv:   'setting_select_report_highlight_row',
             data:       {
                         default_data_value:settings_app.filter(setting=>
-                                                setting.AppId == props.data.app_id && 
+                                                setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && 
                                                 setting.Name.startsWith('HIGHLIGHT_ROW'))[0].Value,
                         default_value:settings_app.filter(setting=>
-                                        setting.AppId == props.data.app_id && 
+                                        setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && 
                                         setting.Name.startsWith('HIGHLIGHT_ROW'))[0].DisplayData,
                         options: settings_app.filter(setting=>
-                                    setting.AppId == props.data.app_id && 
+                                    setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && 
                                     setting.Name.startsWith('HIGHLIGHT_ROW')),
                         column_value:'Value',
                         column_text:'DisplayData'

@@ -109,10 +109,7 @@ const template = props =>`  ${props.admin_app?'':
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      type:'LOGIN'|'SIGNUP',
- *                      app_id:number,
- *                      admin_app_id:number,
- *                      admin_first_time:number},
+ *                      type:'LOGIN'|'SIGNUP'},
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon']
  *                      }}} props
@@ -196,9 +193,9 @@ const component = async props => {
         methods:    null,
         events:     events,
         template:   template({
-                            admin_app:props.data.app_id == props.data.admin_app_id,
+                            admin_app:props.methods.COMMON.commonGlobalGet('app_id') == props.methods.COMMON.commonGlobalGet('app_admin_app_id'),
                             type:props.data.type,
-                            first_time: props.data.admin_first_time == 1,
+                            first_time: props.methods.COMMON.commonGlobalGet('admin_first_time') == 1,
                             icons:{ user: props.methods.COMMON.commonGlobalGet('ICONS')['user'],
                                     login:props.methods.COMMON.commonGlobalGet('ICONS')['login'],
                                     user_password:props.methods.COMMON.commonGlobalGet('ICONS')['user_password'],

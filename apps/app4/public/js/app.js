@@ -464,7 +464,6 @@ const appToolbarButton = async (choice) => {
                 common.commonComponentRender({  
                     mountDiv:   'common_app_dialogues_app_custom',
                     data:       {
-                                iam_user_id:common.commonGlobalGet('iam_user_id'),
                                 avatar:COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img')?.getAttribute('data-image')
                                 },
                     methods:    {
@@ -515,11 +514,7 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
-                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
-                            common_app_id:common.commonGlobalGet('app_common_app_id'),
-                            app_id:common.commonGlobalGet('app_id'),
-                            user_locale:common.commonGlobalGet('user_locale'),
-                            user_timezone:common.commonGlobalGet('user_timezone')},
+                            user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document},
                 methods:    {
                             appComponentSettingUpdate:appComponentSettingUpdate                            
                             },
@@ -530,7 +525,6 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
-                            common_app_id:common.commonGlobalGet('app_common_app_id'),
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document
                             },
                 methods:    {
@@ -543,8 +537,6 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
-                            common_app_id:common.commonGlobalGet('app_common_app_id'),
-                            app_id:common.commonGlobalGet('app_id'),
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
                             themes:APP_GLOBAL.themes},
                 methods:    {
@@ -557,7 +549,6 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
-                            app_id:common.commonGlobalGet('app_id'),
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document
                             },
                 methods:    {appComponentSettingUpdate:appComponentSettingUpdate},
@@ -568,7 +559,6 @@ const SettingShow = async (tab_selected) => {
             common.commonComponentRender({  
                 mountDiv:   'settings_content',
                 data:       {
-                            app_id:common.commonGlobalGet('app_id'),
                             user_settings:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
                             methods:APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.CommonModulePrayTimes_methods
                             },
@@ -1635,7 +1625,6 @@ const appEventClick = event => {
                 common.commonComponentRender({
                     mountDiv:   'common_app_dialogues_profile_info_stat_row2',
                     data:       {   
-                                iam_user_id:common.commonGlobalGet('iam_user_id'),
                                 profile_id:common.commonMiscElementRow(event.target).getAttribute('data-iam_user_id')},
                     methods:    null,
                     path:       '/component/profile_info.js'})
@@ -1781,7 +1770,7 @@ const appInit = async parameters => {
     //set papersize
     appPaperZoom();
     //set app and report globals
-    APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.app_copyright = common.commonGlobalGet('app_copyright') ?? '';
+    APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.app_copyright = common.commonGetApp().Copyright ?? '';
     APP_GLOBAL.app_default_startup_page = parseInt(parameters.app_default_startup_page);
     APP_GLOBAL.app_report_timetable = parameters.app_report_timetable;
 

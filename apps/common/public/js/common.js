@@ -199,11 +199,6 @@ const COMMON_GLOBAL = {
     },
     apps:[],
     app_id:0,
-    app_logo:null,
-    app_copyright:null,
-    app_link_url:null,
-    app_link_title:null,
-    app_text_edit:null,
     app_common_app_id:0,
     app_admin_app_id:1,
     app_start_app_id:0,
@@ -307,6 +302,12 @@ const commonGlobalGet = key =>key=='ICONS'?
  * @returns {*}
  */
 const commonGlobalSet = (key, value) =>((key in COMMON_GLOBAL) && key !='ICONS')?Object.assign(COMMON_GLOBAL, {[key]:value}):null;
+
+/**
+ * @description Get current App record
+ * @returns {common['server']['ORM']['Object']['App']}
+ */
+const commonGetApp = () =>commonGlobalGet('apps').filter((/**@type{common['server']['ORM']['Object']['App']}*/app)=>app.Id == COMMON_GLOBAL.app_id)[0]
 
 /**
  * @name commonMiscElementId
@@ -1562,8 +1563,6 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
                 commonComponentRender({
                     mountDiv:   'common_app_dialogues_iam_verify',
                     data:       {
-                                    common_app_id:              COMMON_GLOBAL.app_common_app_id,
-                                    iam_user_id:                COMMON_GLOBAL.iam_user_id,
                                     user_verification_type:     user_verification_type
                                 },
                     methods:    null,
@@ -1577,11 +1576,7 @@ const commonDialogueShow = async (dialogue, user_verification_type=null) => {
             await commonComponentRender({
                 mountDiv:       'common_app_dialogues_iam_start',
                 data:           {
-                                type:               dialogue=='LOGIN_ADMIN'?null:dialogue,
-                                app_id:             COMMON_GLOBAL.app_id,
-                                admin_app_id:       COMMON_GLOBAL.app_admin_app_id,
-                                admin_only: 		COMMON_GLOBAL.admin_only,
-                                admin_first_time:   COMMON_GLOBAL.admin_first_time
+                                type:               dialogue=='LOGIN_ADMIN'?null:dialogue
                                 },
                 methods:        null,
                 path:           '/common/component/common_app_dialogues_iam_start.js'});
@@ -1725,7 +1720,6 @@ const commonProfileDetail = (detailchoice) => {
         commonComponentRender({
             mountDiv:   'common_app_dialogues_profile_info_list',
             data:       {
-                        iam_user_id:COMMON_GLOBAL.iam_user_id,
                         iam_user_id_profile:COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent,
                         detailchoice:detailchoice
                         },
@@ -1742,9 +1736,7 @@ const commonProfileDetail = (detailchoice) => {
 const commonProfileSearch = () => {
     commonComponentRender({
         mountDiv:   'common_app_profile_search_list_wrap',
-        data:       {
-                    iam_user_id:COMMON_GLOBAL.iam_user_id
-                    },
+        data:       null,
         methods:    null,
         path:       '/common/component/common_app_profile_search_list.js'})
     .catch(()=>{
@@ -1776,7 +1768,6 @@ const commonProfileShow = async (iam_user_id_other = null, username = null) => {
     await commonComponentRender({
         mountDiv:   'common_app_dialogues_profile_content',
         data:       {   
-                    iam_user_id:COMMON_GLOBAL.iam_user_id,
                     iam_user_id_other:iam_user_id_other,
                     username:username
                     },
@@ -2467,7 +2458,7 @@ const commonSocketConnectOnlineCheck = (div_icon_online, iam_user_id) => {
  * @function
  * @returns {boolean}
  */
-const commonTextEditingDisabled = () =>COMMON_GLOBAL.app_text_edit=='0';
+const commonTextEditingDisabled = () =>commonGetApp().TextEdit=='0';
 
 /**
  * @name commonEvent
@@ -2523,15 +2514,7 @@ const commonEvent = async (event_type,event=null) =>{
                             case 'common_app_iam_user_menu_default_avatar':{
                                 await commonComponentRender({
                                     mountDiv:   'common_app_dialogues_user_menu',
-                                    data:       {
-                                                app_id:COMMON_GLOBAL.app_id,
-                                                iam_user_id:COMMON_GLOBAL.iam_user_id,
-                                                iam_user_username:COMMON_GLOBAL.iam_user_username,
-                                                common_app_id:COMMON_GLOBAL.app_common_app_id,
-                                                admin_app_id:COMMON_GLOBAL.app_admin_app_id,
-                                                token_exp:COMMON_GLOBAL.token_exp,
-                                                token_iat:COMMON_GLOBAL.token_iat
-                                                },
+                                    data:       null,
                                     methods:    null,
                                     path:       '/common/component/common_app_dialogues_user_menu.js'});
                                 break;
@@ -3017,11 +3000,6 @@ const commonAppMount = async (app_id, spinner_id=null) =>{
         commonComponentRemove('common_apps');
 
     COMMON_GLOBAL.app_id =          CommonAppInit.App.Id;
-    COMMON_GLOBAL.app_logo =        CommonAppInit.App.Logo;
-    COMMON_GLOBAL.app_copyright =   CommonAppInit.App.Copyright;
-    COMMON_GLOBAL.app_link_url =    CommonAppInit.App.LinkUrl;
-    COMMON_GLOBAL.app_link_title =  CommonAppInit.App.LinkTitle;
-    COMMON_GLOBAL.app_text_edit =   CommonAppInit.App.TextEdit;
     
     if (COMMON_GLOBAL.iam_user_id != null)
         commonUserLoginApp(CommonAppInit.IamUserApp);
@@ -3079,6 +3057,7 @@ const commonGet = () =>{
         COMMON_DOCUMENT:COMMON_DOCUMENT,
         commonGlobalGet,
         commonGlobalSet,
+        commonGetApp,
         /* MISC */
         commonMiscElementId:commonMiscElementId, 
         commonMiscElementDiv:commonMiscElementDiv,
@@ -3167,6 +3146,7 @@ export{/* GLOBALS*/
        COMMON_DOCUMENT,
        commonGlobalGet,
        commonGlobalSet,
+       commonGetApp,
        /* MISC */
        commonMiscElementId, 
        commonMiscElementDiv,

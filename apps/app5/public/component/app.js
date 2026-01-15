@@ -25,7 +25,6 @@ const template = () =>` <div id='app_top'>
  * @description Component
  * @function
  * @param {{data:       {
- *                      logo:string,
  *                      commonMountdiv:string
  *                      },
  *          methods:    {

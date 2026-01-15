@@ -100,10 +100,7 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
 * @description Component
 * @function
 * @param {{data:       {
-*                      commonMountdiv:string,
-*                      app_id:number,
-*                      iam_user_id:number,
-*                      admin_app_id:number,
+*                      commonMountdiv:string
 *                      },
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']
@@ -116,8 +113,8 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
 */
 const component = async props => {
     /**@type{common['server']['iam']['iam_user']} */    
-    const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.data.iam_user_id}`, 
-                                                method:'GET', authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
+    const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.methods.COMMON.commonGlobalGet('iam_user_id')}`, 
+                                                method:'GET', authorization_type:props.methods.COMMON.commonGlobalGet('app_id') == props.methods.COMMON.commonGlobalGet('app_admin_app_id')?'ADMIN':'APP_ACCESS'})
                         .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
 
     /**
@@ -259,7 +256,7 @@ const component = async props => {
         * @returns {Promise.<void>}
         */
     const onMounted = async () => {
-        if (props.data.iam_user_id == user.Id) {
+        if (props.methods.COMMON.commonGlobalGet('iam_user_id') == user.Id) {
 
             if (Number(user.Private))
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.add('checked');

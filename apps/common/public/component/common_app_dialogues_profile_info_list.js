@@ -38,7 +38,6 @@ const template = props => `     ${props.list.map(row=>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      iam_user_id:number,
  *                      iam_user_id_profile:number,
  *                      detailchoice:number
  *                      },
@@ -69,7 +68,7 @@ const component = async props => {
             break;
         }    
     }
-    if (!props.data.iam_user_id)
+    if (!props.methods.COMMON.commonGlobalGet('iam_user_id'))
         props.methods.COMMON.commonDialogueShow('LOGIN');
 
     /**
@@ -93,10 +92,10 @@ const component = async props => {
       data:         null,
       methods:      null,
       events:       events,
-      template:     template({  iam_user_id:props.data.iam_user_id,
+      template:     template({  iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
                                 iam_user_id_profile:props.data.iam_user_id_profile,
                                 detailchoice:props.data.detailchoice,
-                                list:props.data.iam_user_id?
+                                list:props.methods.COMMON.commonGlobalGet('iam_user_id')?
                                         await props.methods.COMMON.commonFFB({path:`${path}/${props.data.iam_user_id_profile}`, query:`detailchoice=${props.data.detailchoice}`, method:'GET', authorization_type:'APP_ACCESS'})
                                                 .then((/**@type{string}*/result)=>JSON.parse(result)):
                                         []

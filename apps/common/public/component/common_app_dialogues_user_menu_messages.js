@@ -37,11 +37,7 @@ const template = props => ` <div id='common_app_dialogues_user_menu_messages'>
 * @description Component
 * @function
 * @param {{data:       {
-*                      commonMountdiv:string,
-*                      app_id:number,
-*                      iam_user_id:number,
-*                      common_app_id:number,
-*                      admin_app_id:number,
+*                      commonMountdiv:string
 *                      },
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']
@@ -125,9 +121,9 @@ const component = async props => {
             method:'POST', 
             query:`offset=${offset}`,
             body:{  type:'FUNCTION', 
-                    IAM_iam_user_id:props.data.iam_user_id,
-                    IAM_data_app_id:props.data.common_app_id},
-            authorization_type:props.data.app_id == props.data.admin_app_id?'ADMIN':'APP_ACCESS'})
+                    IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
+                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id')},
+            authorization_type:props.methods.COMMON.commonGlobalGet('app_id') == props.methods.COMMON.commonGlobalGet('app_admin_app_id')?'ADMIN':'APP_ACCESS'})
         .then((/**@type{*}*/result)=>JSON.parse(result))
         .catch(()=>[]);
         return messages;
