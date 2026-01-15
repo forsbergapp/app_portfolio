@@ -53,28 +53,26 @@
 }
 
 /*SETTINGS TAB NAVIGATION */
-#settings_tab_navigation{
-	display: block;
-	height:50px;
-	margin: 0px;
-    padding: 0px;
-	text-align: center;
-}
-#settings_tab_navigation .settings_tab_nav{
-	padding:3px;
-	border:0px;
-	vertical-align: bottom;
+#settings_tab_navigation .common_icon_button svg{
+    vertical-align: top;
+    display: inline-block;
 }
 #user_setting_avatar_img{
-    height: 30px;
-	width: 30px;
-	margin: 0 auto;
+    height: 1em;
+    width: 1em;
+    margin: 0 auto;
+    font-size: 1em;
+    vertical-align: top;
+    display: inline-block;
 }
 
 /*SETTINGS, common*/
+#settings_content{
+    margin-top: 1em;
+}
 #settings .common_select{
 	display: inline-block;
-	width: 95%;
+	width: 100%;
 	white-space: nowrap;
     line-height: 1.25em;
 }
@@ -108,33 +106,22 @@
 	width: 360px;
 	max-width:52%;
 }
-#settings .setting_horizontal_row{
-	width:100%;
-	max-height: 1.6em;
-	display: block;
-    margin-top: 0.2em;
+.settings_row{
+    margin-top: 0.25em;
+    max-height: 1.5em;
+    display:grid;
+    grid-template-columns: 25% 75%;
+    justify-items: flex-start;
+    align-items: center;
 }
-#settings .setting_horizontal_col{
-	display: inline-block;
+.settings_row3{
+    display:grid;
+    grid-template-columns: 30% 30% 30%;
+    height: 14em;
+    align-content: center;
+    justify-content: center;
 }
-#settings .setting_horizontal_col:nth-child(1){
-	width:5%;
-}
-#settings .setting_horizontal_col:nth-child(2){
-	width:25%;
-	text-align: start;
-}
-#settings .setting_horizontal_col:nth-child(3){
-	width:65%;
-	text-align:start;
-}
-#settings .setting_horizontal_col:nth-child(4){
-	width:5%;
-}
-#settings .setting_horizontal_col:nth-child(3) select,
-#settings .setting_horizontal_col:nth-child(3) .common_input{
-	min-width: 100%;
-}
+
 /* SETTINGS GPS*/
 #mapid >div{
 	height: 25em;
@@ -145,31 +132,6 @@
 #mapid #common_map{
 	width:unset !important;
 }
-/* SETTINGS DESIGN*/
-#settings .settings_tab3 .setting_horizontal_row:nth-child(1){
-	direction:ltr;
-	min-height:	230px;
-}
-#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(1),
-#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(2),
-#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(3){
-	width: 125px;
-}
-#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col:nth-child(4){
-	width:0%;
-}
-#settings .settings_tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
-	text-align: center !important;
-}
-#setting_icon_design_theme_day, #setting_icon_design_theme_month, #setting_icon_design_theme_year{
-	display: block;
-	padding-top: unset;
-}
-#setting_icon_design_theme_day.common_loading_spinner, 
-#setting_icon_design_theme_month.common_loading_spinner, 
-#setting_icon_design_theme_year.common_loading_spinner{
-	display: inline-block;
-}
 
 /* THEME THUMBNAILS*/
 .setting_design_thumbnail{
@@ -179,6 +141,11 @@
 	text-align: center !important;
 	margin-inline-start: 14.5px;
 }
+.setting_design_thumbnail .common_loading_spinner{
+    align-self: center;
+    inset-inline-start: calc(50% - 25px);
+}
+
 .setting_design_prev{
 	text-align: start;
 }
@@ -190,6 +157,12 @@
     margin-top: 0.25em;
     margin-right: 0.5em !important;
     margin-left: 0.5em !important;
+    height: 1em;
+}
+#setting_design_theme_day_id,
+#setting_design_theme_month_id,
+#setting_design_theme_year_id{
+    line-height: 1em;
 }
 /*theme live thumbnail fixes*/
 .setting_design_thumbnail .paper{
@@ -263,120 +236,56 @@
 	}
 }
 /*SETTINGS Text*/
-.setting_paper_preview{
+#settings .settings_tab4 .setting_paper_preview{
 	width: 84mm;
 	height: 114mm;
 	margin: 0 auto;
-	display:flex;
-	flex-direction:column;
-	justify-content:space-between;
 	border: 1px solid;
+    transform: scale(0.95) translate(0%, -7%);
+	display: grid;
+    align-content: space-between;
+    justify-content: center;
 }
-.setting_paper_preview_header,
-.setting_paper_preview_footer{
+#settings .settings_tab4 .setting_paper_preview_header,
+#settings .settings_tab4 .setting_paper_preview_footer{
+	line-height: 1em;
+}
+#settings .settings_tab4 #setting_input_header div,
+#settings .settings_tab4 #setting_input_footer div{
+    min-width: 84mm;
 	text-align: center;
-    display: inline-block;
-  width: 100%;
+	line-height: 1em;  
 }
-#setting_paper_preview_footer_text{
-    margin-top: calc(100% - 7em);
-}
-#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
-#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(3){
-	width:5%;
-}
-#settings .settings_tab4 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
-	width:90%;
-	text-align: center;
-	display: block;
-}
-#settings .settings_tab4 #setting_icon_text_theme_col{
-	display: inline-block;
-	width: 60px;
-	vertical-align: top;
-}
-#settings .settings_tab4 #setting_paper_preview_text{
-	transform: scale(0.95) translate(0%, -7%);
-	display: inline-block;
-}
-#settings .settings_tab4 #setting_paper_preview_text.font_arabic_sans .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_sans) !important;
-	line-height: initial;
-}
-#settings .settings_tab4 #setting_paper_preview_text.font_arabic_kufi .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_kufi) !important;
-	line-height: initial;
-}
-#settings .settings_tab4 #setting_paper_preview_text.font_arabic_naskh .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_naskh) !important;
-	line-height: initial;
-}
-#settings .settings_tab4 #setting_paper_preview_text.font_arabic_nastaliq .display_font{
-	font-family: var(--report_theme_display_font_family), var(--common_app_font_arabic_nastaliq) !important;
-	line-height: initial;
-}
-#settings .settings_tab4 #setting_input_header .common_input,
-#settings .settings_tab4 #setting_input_footer .common_input{
-	font-size: 0.4em;
-}
-#settings .settings_tab4 .setting_report_title{
-	min-width: 99%;
-	margin: -2px;
-	text-align: center;
-	font-size: 0.7em;
-}
+
 #settings .settings_tab4 #setting_input_reportheader3{
-	margin-bottom: 4px;
+	margin-bottom: 0.5em;
 }
 #settings .settings_tab4 #setting_input_reportfooter1{
-	margin-top: 4px;
+	margin-top: 0.5em;
+}
+
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_sans .display_font{
+	font-family: var(--common_app_font_arabic_sans), var(--report_theme_display_font_family);
+}
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_kufi .display_font{
+	font-family: var(--common_app_font_arabic_kufi), var(--report_theme_display_font_family);
+}
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_naskh .display_font{
+	font-family: var(--common_app_font_arabic_naskh), var(--report_theme_display_font_family);
+}
+#settings .settings_tab4 #setting_paper_preview_text.font_arabic_nastaliq .display_font{
+	font-family: var(--common_app_font_arabic_nastaliq), var(--report_theme_display_font_family);
 }
 
 /*SETTINGS PRAYER*/
-#setting_method_params div{
+#settings .settings_tab5 #setting_method_params div{
 	display:inline-block;
 }
-/* SETTINGS USER SETTINGS*/
-#settings .settings_tab6 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(1),
-#settings .settings_tab6 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(4){
-	width: 10%;
-}
-#settings .settings_tab6 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(2){
-	width: 0%;
-}
-#settings .settings_tab6 .setting_horizontal_row:nth-child(5) .setting_horizontal_col:nth-child(3){
-	width: 80%;
-	text-align: center;
-}
-#user_settings .setting_horizontal_col{
-	padding-top:0px !important;
-}
-#user_settings .setting_horizontal_row{
-	max-height: unset;
-}
-#setting_btn_label_user_save, 
-#setting_btn_label_user_add,
-#setting_btn_label_user_delete{
-	text-transform: uppercase;
-}
-#setting_btn_user_delete_account, #setting_btn_label_user_delete_account{
-	display: none !important;
-}
-#setting_btn_label_user_save,
-#setting_btn_label_user_add,
-#setting_btn_label_user_delete{
-	display: inline-block;
-	width: 60px;
-	text-align: center;
-	vertical-align: top;
-}
 
-#settings #setting_data_user_url_day,
-#settings #setting_data_user_url_month,
-#settings #setting_data_user_url_year{
-	display:flex;
+/*SETTINGS USER*/
+#settings .settings_tab6 .settings_row_links {
+    max-height: 100%;
 }
-
 #settings_close{
 	position: absolute;
     bottom: 40px;
@@ -473,10 +382,6 @@
 		margin: 10px;
 		text-align: center;
 		width: auto;
-	}
-	#settings_tab_navigation .settings_tab_nav {
-		border:0px;
-		width:75px;
 	}
 	#toolbar_btn_left {
 		margin-left: 0;

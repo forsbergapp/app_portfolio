@@ -11,9 +11,7 @@
 /**
  * @name template
  * @description Template
- * @param {{theme_id_day:string,
- *          theme_id_month:string,
- *          theme_id_year:string,
+ * @param {{user_settings:APP_user_setting_record,
  *          icons:{ theme_day:string,
  *                  theme_month:string,
  *                  theme_year:string,
@@ -28,84 +26,56 @@
  *                  slider_right:string}}} props
  * @returns {string}
  */
-const template = props =>`  <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'>
+const template = props =>`  <div class='settings_row3'>
+                                <div >
                                     <div id='setting_design_icon_theme_day'>${props.icons.theme_day}</div>
-                                    <div id='setting_design_theme_day' class='setting_design_thumbnail' data-theme_id='${props.theme_id_day}'></div>
+                                    <div id='setting_design_theme_day' class='setting_design_thumbnail' data-theme_id='${props.user_settings.DesignThemeDayId}'></div>
                                     <div id='setting_design_prev_day' class='common_app_dialogues_button setting_design_prev common_link common_icon_title'>${props.icons.slider_left}</div>
                                     <div id='setting_design_next_day' class='common_app_dialogues_button setting_design_next common_link common_icon_title'>${props.icons.slider_right}</div>
-                                    <div id='setting_design_theme_day_id'>${props.theme_id_day}</div>
+                                    <div id='setting_design_theme_day_id'>${props.user_settings.DesignThemeDayId}</div>
                                 </div>
-                                <div class='setting_horizontal_col'>
+                                <div >
                                     <div id='setting_design_icon_theme_month'>${props.icons.theme_month}</div>
-                                    <div id='setting_design_theme_month' class='setting_design_thumbnail' data-theme_id='${props.theme_id_month}'></div>
+                                    <div id='setting_design_theme_month' class='setting_design_thumbnail' data-theme_id='${props.user_settings.DesignThemeMonthId}'></div>
                                     <div id='setting_design_prev_month' class='common_app_dialogues_button setting_design_prev common_link common_icon_title'>${props.icons.slider_left}</div>
                                     <div id='setting_design_next_month' class='common_app_dialogues_button setting_design_next common_link common_icon_title'>${props.icons.slider_right}</div>
-                                    <div id='setting_design_theme_month_id'>${props.theme_id_month}</div>
+                                    <div id='setting_design_theme_month_id'>${props.user_settings.DesignThemeMonthId}</div>
                                 </div>
-                                <div class='setting_horizontal_col'>
+                                <div >
                                     <div id='setting_design_icon_theme_year'>${props.icons.theme_year}</div>
-                                    <div id='setting_design_theme_year' class='setting_design_thumbnail' data-theme_id='${props.theme_id_year}'></div>
+                                    <div id='setting_design_theme_year' class='setting_design_thumbnail' data-theme_id='${props.user_settings.DesignThemeYearId}'></div>
                                     <div id='setting_design_prev_year' class='common_app_dialogues_button setting_design_prev common_link common_icon_title'>${props.icons.slider_left}</div>
                                     <div id='setting_design_next_year' class='common_app_dialogues_button setting_design_next common_link common_icon_title'>${props.icons.slider_right}</div>
-                                    <div id='setting_design_theme_year_id'>${props.theme_id_year}</div>
+                                    <div id='setting_design_theme_year_id'>${props.user_settings.DesignThemeYearId}</div>
                                 </div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.papersize}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_papersize' ></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.papersize}</div>
+                                <div id='setting_select_report_papersize' ></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.highlight}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_highlight_row' ></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.highlight}</div>
+                                <div id='setting_select_report_highlight_row' ></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_weekday}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_checkbox_report_show_weekday' class='common_switch'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_weekday}</div>
+                                <div id='setting_checkbox_report_show_weekday' class='common_switch ${Number(props.user_settings.DesignColumnWeekdayChecked)?'checked':''}'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_calendartype}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_checkbox_report_show_calendartype' class='common_switch'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_calendartype}</div>
+                                <div id='setting_checkbox_report_show_calendartype' class='common_switch ${Number(props.user_settings.DesignColumnCalendarTypeChecked)?'checked':''}'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_notes}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_checkbox_report_show_notes' class='common_switch'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_notes}</div>
+                                <div id='setting_checkbox_report_show_notes' class='common_switch ${Number(props.user_settings.DesignColumnNotesChecked)?'checked':''}'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_gps}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_checkbox_report_show_gps' class='common_switch'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_gps}</div>
+                                <div id='setting_checkbox_report_show_gps' class='common_switch ${Number(props.user_settings.DesignColumnGpsChecked)?'checked':''}'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_timezone}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_checkbox_report_show_timezone' class='common_switch'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_timezone}</div>
+                                <div id='setting_checkbox_report_show_timezone' class='common_switch ${Number(props.user_settings.DesignColumnTimezoneChecked)?'checked':''}'></div>
                             </div>`;
 /**
  * @name component
@@ -183,31 +153,8 @@ const component = async props => {
             path:'/common/component/common_select.js'});
 
         props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.DesignPaperSize);
-        
-        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#paper').className=props.data.user_settings.DesignPaperSize;
 
         props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.DesignRowHighlight);
-
-        if (Number(props.data.user_settings.DesignColumnWeekdayChecked))
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
-        else
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
-        if (Number(props.data.user_settings.DesignColumnCalendarTypeChecked))
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
-        else
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
-        if (Number(props.data.user_settings.DesignColumnNotesChecked))
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
-        else
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
-        if (Number(props.data.user_settings.DesignColumnGpsChecked))
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
-        else
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
-        if (Number(props.data.user_settings.DesignColumnTimezoneChecked))
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
-        else
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
 
         props.methods.appSettingThemeThumbnailsUpdate();
     };
@@ -216,9 +163,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         template:   template({
-                            theme_id_day:props.data.user_settings.DesignThemeDayId,
-                            theme_id_month:props.data.user_settings.DesignThemeMonthId,
-                            theme_id_year:props.data.user_settings.DesignThemeYearId,
+                            user_settings: props.data.user_settings,
                             icons:{ theme_day:props.methods.COMMON.commonGlobalGet('ICONS').regional_day,
                                     theme_month:props.methods.COMMON.commonGlobalGet('ICONS').regional_month,
                                     theme_year:props.methods.COMMON.commonGlobalGet('ICONS').regional_year,

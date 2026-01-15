@@ -21,10 +21,8 @@
  *               aright:string}}} props
  * @returns {string}
  */
-const template = props =>` <div class='setting_horizontal_row'>
-                            <div class='setting_horizontal_col'></div>
-                            <div class='setting_horizontal_col'>
-                                <div id='setting_icon_text_theme_col'>
+const template = props =>` <div class='settings_row'>
+                                <div >
                                     <div id='setting_icon_text_theme_day' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.theme_day}</div>
                                     <div id='setting_icon_text_theme_month' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.theme_month}</div>
                                     <div id='setting_icon_text_theme_year' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.theme_year}</div>
@@ -32,9 +30,9 @@ const template = props =>` <div class='setting_horizontal_row'>
                                 <div id='setting_paper_preview_text' class='setting_paper_preview'>
                                     <div id='setting_paper_preview_header_text' class='setting_paper_preview_header'>
                                         <div id='setting_input_header'>
-                                            <div id='setting_input_reportheader1' contentEditable='true' class='common_input setting_report_title display_font'></div>
-                                            <div id='setting_input_reportheader2' contentEditable='true' class='common_input setting_report_title display_font'></div>
-                                            <div id='setting_input_reportheader3' contentEditable='true' class='common_input setting_report_title display_font'></div>
+                                            <div id='setting_input_reportheader1' contentEditable='true' class='common_input display_font'></div>
+                                            <div id='setting_input_reportheader2' contentEditable='true' class='common_input display_font'></div>
+                                            <div id='setting_input_reportheader3' contentEditable='true' class='common_input display_font'></div>
                                         </div>
                                         <div id='setting_icon_text_header_aleft' class='setting_button common_link common_icon_button' >${props.icons.aleft}</div>
                                         <div id='setting_icon_text_header_acenter' class='setting_button common_link common_icon_button' >${props.icons.acenter}</div>
@@ -45,14 +43,12 @@ const template = props =>` <div class='setting_horizontal_row'>
                                         <div id='setting_icon_text_footer_acenter' class='setting_button common_link common_icon_button' >${props.icons.acenter}</div>
                                         <div id='setting_icon_text_footer_aright' class='setting_button common_link common_icon_button' >${props.icons.aright}</div>
                                         <div id='setting_input_footer'>
-                                            <div id='setting_input_reportfooter1' contentEditable='true' class='common_input setting_report_title display_font'></div>
-                                            <div id='setting_input_reportfooter2' contentEditable='true' class='common_input setting_report_title display_font'></div>
-                                            <div id='setting_input_reportfooter3' contentEditable='true' class='common_input setting_report_title display_font'></div>
+                                            <div id='setting_input_reportfooter1' contentEditable='true' class='common_input display_font'></div>
+                                            <div id='setting_input_reportfooter2' contentEditable='true' class='common_input display_font'></div>
+                                            <div id='setting_input_reportfooter3' contentEditable='true' class='common_input display_font'></div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>        
-                            <div class='setting_horizontal_col'></div>
                         </div>`;
 /**
  * @name component

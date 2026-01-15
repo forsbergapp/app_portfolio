@@ -29,128 +29,68 @@
  *                  show_fast_start_end:string}}} props
  * @returns {string}
  */
-const template = props =>`   <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.method}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_method'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+const template = props =>`   <div class='settings_row'>
+                                <div >${props.icons.method}</div>
+                                <div id='setting_select_method'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_method_params'>
-                                        <div id='setting_method_param_fajr'></div>
-                                        <div id='setting_method_param_isha'></div>
-                                    </div>
+                            <div class='settings_row'>
+                                <div ></div>
+                                <div id='setting_method_params'>
+                                    <div id='setting_method_param_fajr'></div>
+                                    <div id='setting_method_param_isha'></div>
                                 </div>
-                                <div class='setting_horizontal_col'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.asr}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_asr'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.asr}</div>
+                                <div id='setting_select_asr'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.highlatitude}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_highlatitude'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.highlatitude}</div>
+                                <div id='setting_select_highlatitude'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.timeformat}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_timeformat'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.timeformat}</div>
+                                <div id='setting_select_timeformat'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.hijri_adjustment}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_hijri_adjustment'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.hijri_adjustment}</div>
+                                <div id='setting_select_hijri_adjustment'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.iqamat_fajr}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_iqamat_title_fajr'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.iqamat_fajr}</div>
+                                <div id='setting_select_report_iqamat_title_fajr'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.iqamat_dhuhr}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_iqamat_title_dhuhr'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.iqamat_dhuhr}</div>
+                                <div id='setting_select_report_iqamat_title_dhuhr'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.iqamat_asr}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_iqamat_title_asr'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.iqamat_asr}</div>
+                                <div id='setting_select_report_iqamat_title_asr'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.iqamat_maghrib}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_iqamat_title_maghrib'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.iqamat_maghrib}</div>
+                                <div id='setting_select_report_iqamat_title_maghrib'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.iqamat_isha}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_iqamat_title_isha'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.iqamat_isha}</div>
+                                <div id='setting_select_report_iqamat_title_isha'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_imsak}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_checkbox_report_show_imsak' class='common_switch'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_imsak}</div>
+                                <div id='setting_checkbox_report_show_imsak' class='common_switch'></div>                                
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_sunset}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_checkbox_report_show_sunset' class='common_switch'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_sunset}</div>
+                                <div id='setting_checkbox_report_show_sunset' class='common_switch'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_midnight}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_checkbox_report_show_midnight' class='common_switch'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_midnight}</div>
+                                <div id='setting_checkbox_report_show_midnight' class='common_switch'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.show_fast_start_end}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_show_fast_start_end'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.show_fast_start_end}</div>
+                                <div id='setting_select_report_show_fast_start_end'></div>
                             </div>`;
 /**
  * @name component

@@ -296,14 +296,12 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
             path:       '/component/settings_tab3_theme_thumbnail.js'});
     }
     if (theme?.type =='month' || theme?.type=='year' || theme==null){
-        const result_month = appReportTimetable( 'MONTH', null, appReportTimetableSettings());
-        const result_year = appReportTimetable( 'YEAR', null, appReportTimetableSettings());
         await common.commonComponentRender({  mountDiv:   'setting_design_theme_month',
                                         data:       { 
                                                     class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                                                     theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_month').getAttribute('data-theme_id'),
                                                     type:'month',
-                                                    html:result_month
+                                                    html:appReportTimetable( 'MONTH', null, appReportTimetableSettings())
                                                     },
                                         methods:    null,
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
@@ -312,7 +310,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
                                                     class:APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.DesignPaperSize,
                                                     theme_id:COMMON_DOCUMENT.querySelector('#setting_design_theme_year').getAttribute('data-theme_id'),
                                                     type:'year',
-                                                    html:result_year
+                                                    html:appReportTimetable( 'YEAR', null, appReportTimetableSettings())
                                                     },
                                         methods:    null,
                                         path:       '/component/settings_tab3_theme_thumbnail.js'});
@@ -323,7 +321,7 @@ const appSettingThemeThumbnailsUpdate = async (theme=null) => {
  * @name appSettingThemeId
  * @description Get theme id
  * @function
- * @param {string} type 
+ * @param {'day'|'month'|'year'} type 
  * @returns {string}
  */
 const appSettingThemeId = type => {
@@ -331,7 +329,7 @@ const appSettingThemeId = type => {
         return COMMON_DOCUMENT.querySelector(`#setting_design_theme_${type}`).getAttribute('data-theme_id');
     else{
         /**@ts-ignore */
-        return APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id]['design_theme_' + type + '_id'];
+        return APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document[`DesignTheme${type=='day'?'Day':type=='month'?'Month':'Year'}Id`];
     }
         
 };
@@ -1498,10 +1496,12 @@ const appEventClick = event => {
             COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_day').classList.remove('common_app_dialogues_button');
             COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_month').classList.remove('common_app_dialogues_button');
             COMMON_DOCUMENT.querySelector('#setting_icon_text_theme_year').classList.remove('common_app_dialogues_button');
-            const  theme_type = event_target_id.substring(24);
+            /**@type{'day'|'month'|'year'|string} */
+            const theme_type = event_target_id.substring(24);
             //mark active icon
             COMMON_DOCUMENT.querySelector('#' + event_target_id).classList.add('common_app_dialogues_button');
             COMMON_DOCUMENT.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
+                                                                                                                        /**@ts-ignore */
                                                                                 `theme_${theme_type}_${appSettingThemeId(theme_type)} ` + 
                                                                                 APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.RegionalArabicScript;
             break;

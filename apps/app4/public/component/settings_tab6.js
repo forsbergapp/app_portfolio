@@ -23,47 +23,25 @@
  * @returns {string}
  */
 const template = props =>`  <div id='user_settings'>
-                                <div class='setting_horizontal_row'>
-                                    <div class='setting_horizontal_col'></div>
-                                    <div class='setting_horizontal_col'>${props.icons.user_settings}</div>
-                                    <div class='setting_horizontal_col'>
-                                        <div id='setting_select_user_setting'></div>
-                                    </div>
-                                    <div class='setting_horizontal_col'></div>
+                                <div class='settings_row'>
+                                    <div >${props.icons.user_settings}</div>
+                                    <div id='setting_select_user_setting'></div>
                                 </div>
-                                <div class='setting_horizontal_row'>
-                                    <div class='setting_horizontal_col'></div>
-                                    <div class='setting_horizontal_col'>${props.icons.html}</div>
-                                    <div class='setting_horizontal_col'>
-                                        <div id='user_day_html' class='common_app_dialogues_button common_link'>${props.icons.user_url_day}</div>
+                                <div class='settings_row settings_row_links'>
+                                    <div ></div>
+                                    <div class='settings_row3'>
+                                        <div id='user_day_html' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.user_url_day}</div>
+                                        <div id='user_month_html' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.user_url_month}</div>
+                                        <div id='user_year_html' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.user_url_year}</div>
                                     </div>
-                                    <div class='setting_horizontal_col'></div>
                                 </div>
-                                <div class='setting_horizontal_row'>
-                                    <div class='setting_horizontal_col'></div>
-                                    <div class='setting_horizontal_col'>${props.icons.html}</div>
-                                    <div class='setting_horizontal_col'>
-                                        <div id='user_month_html' class='common_app_dialogues_button common_link'>${props.icons.user_url_month}</div>
-                                    </div>
-                                    <div class='setting_horizontal_col'></div>
-                                </div>
-                                <div class='setting_horizontal_row'>
-                                    <div class='setting_horizontal_col'></div>
-                                    <div class='setting_horizontal_col'>${props.icons.html}</div>
-                                    <div class='setting_horizontal_col'>
-                                        <div id='user_year_html' class='common_app_dialogues_button common_link'>${props.icons.user_url_year}</div>
-                                    </div>
-                                    <div class='setting_horizontal_col'></div>
-                                </div>
-                                <div class='setting_horizontal_row'>
-                                    <div class='setting_horizontal_col'></div>
-                                    <div class='setting_horizontal_col'></div>
-                                    <div class='setting_horizontal_col'>
+                                <div class='settings_row'>
+                                    <div ></div>
+                                    <div >
                                         <div id='setting_btn_user_save' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.save}</div>
                                         <div id='setting_btn_user_add' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.add}</div>
                                         <div id='setting_btn_user_delete' class='common_app_dialogues_button common_link common_icon_button'>${props.icons.delete}</div>
                                     </div>
-                                    <div class='setting_horizontal_col'></div>
                                 </div>
                             </div>`;
 /**

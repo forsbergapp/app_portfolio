@@ -323,8 +323,8 @@ body,
 .common_switch {
 	display: inline-block !important;
 	position:relative;
-	width: 48px;
-	height: 24px;
+	width: 3.2em;
+	height: 1.6em;
 	text-indent: -150%;
 	clip: rect(0 0 0 0);
 	user-select: none;
@@ -338,21 +338,21 @@ body,
 	cursor: pointer;
 }
 .common_switch::before {
-	width: 48px;
-	height: 24px;
+	width: 3.2em;
+	height: 1.6em;
 	border-radius: 9999em;
 	transition: background-color 0.25s ease;
 }
 .common_switch::after {
 	top: 0px;
 	left: 0px;
-	width: 24px;
-	height: 24px;
+	width: 1.6em;
+	height: 1.6em;
 	border-radius: 50%;
 	transition: left 0.25s ease;
 }
 .common_switch.checked::after {
-	left: 24px;
+	left: 1.6em;
 }
 .common_app_dialogues_button {
 	background: none;

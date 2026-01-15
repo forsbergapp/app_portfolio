@@ -26,93 +26,49 @@
  *                   regional_calendar_hijri_type:string}}} props
  * @returns {string}
  */
-const template = props => ` <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_locale}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_locale'></div>	
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+const template = props => ` <div class='settings_row'>
+                                <div >${props.icons.regional_locale}</div>
+                                <div id='setting_select_locale'></div>	
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_timezone_current}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_timezone_current'>${props.user_timezone}</div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.regional_timezone_current}</div>
+                                <div id='setting_timezone_current'>${props.user_timezone}</div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_current_date_time_display'>...</div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div ></div>
+                                <div id='setting_current_date_time_display'>...</div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_timezone}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_timezone'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div >${props.icons.regional_timezone}</div>
+                                <div id='setting_select_report_timezone'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_report_date_time_display'>...</div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div ></div>
+                                <div id='setting_report_date_time_display'>...</div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_numbersystem}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_numbersystem'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div settings_row>${props.icons.regional_numbersystem}</div>
+                                <div id='setting_select_report_numbersystem'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_direction}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_direction'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div settings_row>${props.icons.regional_direction}</div>
+                                <div id='setting_select_report_direction'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_locale_second}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_locale_second'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div settings_row>${props.icons.regional_locale_second}</div>
+                                <div id='setting_select_report_locale_second'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_arabic_script}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_report_arabic_script'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div settings_row>${props.icons.regional_arabic_script}</div>
+                                <div id='setting_select_report_arabic_script'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_calendartype}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_calendartype'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div settings_row>${props.icons.regional_calendartype}</div>
+                                <div id='setting_select_calendartype'></div>
                             </div>
-                            <div class='setting_horizontal_row'>
-                                <div class='setting_horizontal_col'></div>
-                                <div class='setting_horizontal_col'>${props.icons.regional_calendar_hijri_type}</div>
-                                <div class='setting_horizontal_col'>
-                                    <div id='setting_select_calendar_hijri_type'></div>
-                                </div>
-                                <div class='setting_horizontal_col'></div>
+                            <div class='settings_row'>
+                                <div settings_row>${props.icons.regional_calendar_hijri_type}</div>
+                                <div id='setting_select_calendar_hijri_type'></div>
                             </div>`;
 /**
  * @name component
