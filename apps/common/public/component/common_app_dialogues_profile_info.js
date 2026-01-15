@@ -42,10 +42,7 @@ const template = props =>`  <div id='common_app_dialogues_profile_info'>
                                 </div>
                                 <div id='common_app_dialogues_profile_info_row2' class='common_app_dialogues_profile_info_row'>
                                     <div class='common_app_dialogues_profile_info_col'>
-                                        <div id='common_app_dialogues_profile_info_joined'>
-                                            <div id='common_app_dialogues_profile_info_joined_date_icon'>${props.icons.user_account_created}</div>
-                                            <div id='common_app_dialogues_profile_info_joined_date'>${props.function_commonMiscFormatJsonDate(props.profile.Created ?? '', 'SHORT')}</div>
-                                        </div>
+                                        ${props.icons.user_account_created}${props.function_commonMiscFormatJsonDate(props.profile.Created ?? '', 'SHORT')}
                                     </div>    
                                     <div class='common_app_dialogues_profile_info_col'>
                                         <div id='common_app_dialogues_profile_info_follow' data-record_id='${props.profile.FollowedId}'>
