@@ -197,33 +197,63 @@ const COMMON_GLOBAL = {
         message_success:        ICON_DUPLICATE.ok,
         message_text:           'ABC'
     },
-    apps:[],
-    app_id:0,
-    app_common_app_id:0,
-    app_admin_app_id:1,
-    app_start_app_id:0,
-    app_toolbar_button_start:1,
-    app_toolbar_button_framework:1,
-    app_framework:1,
-    app_framework_messages:1,
-    app_rest_api_version:null,
-    app_rest_api_basepath:null,
-    app_root:'app_root',
-    app_div:'app',
-    app_console:{warn:COMMON_WINDOW.console.warn, info:COMMON_WINDOW.console.info, error:COMMON_WINDOW.console.error},
-    app_eventListeners:{original: HTMLElement.prototype.addEventListener, REACT:[], VUE:[], OTHER:[]},
-    app_function_session_expired:null,
-    app_function_sse:null,
-    app_fonts:[],
-    app_content_type_json: '',
-    app_content_type_html: '',
-    app_content_type_sse: '',
-    app_fonts_loaded:[],
-    app_request_tries: 5,
-    app_requesttimeout_seconds:5,
-    app_requesttimeout_admin_minutes:60,
-    app_typewatch:[],
-    app_metadata:{  events:{click:null,
+    Apps:[],
+    AppData:[],
+    Parameters:{
+        rest_resource_bff:null,
+        app_rest_api_version:null,
+        app_rest_api_basepath:null,
+        app_common_app_id:0,
+        app_admin_app_id:1,
+        app_start_app_id:0,
+        app_toolbar_button_start:1,
+        app_toolbar_button_framework:1,
+        app_framework:1,
+        app_framework_messages:1,
+        admin_only:null,
+        admin_first_time:null,
+        app_request_tries: 5,
+        app_requesttimeout_seconds:5,
+        app_requesttimeout_admin_minutes:60,
+        app_content_type_json: '',
+        app_content_type_html: '',
+        app_content_type_sse: '',
+        app_root:'app_root',
+        app_div:'app',
+    },
+    Data:{  app_fonts:[],    
+            app_fonts_loaded:[],
+            token_dt: null,
+            token_at:null,
+            token_admin_at:null,
+            token_exp:null,
+            token_iat:null,
+            token_external:null,
+            client_latitude: '',
+            client_longitude: '',
+            client_place: '',
+            client_timezone: ''},
+    User:{
+        iam_user_id:null,
+        iam_user_username:null,
+        iam_user_avatar:null
+    },
+    UserApp:{
+        iam_user_app_id:null,
+        app_id:0,
+        user_locale:'',
+        user_timezone:'',
+        user_direction:'',
+        user_arabic_script:'',
+        user_custom:{}
+    },
+    Functions:{
+        app_console:{warn:COMMON_WINDOW.console.warn, info:COMMON_WINDOW.console.info, error:COMMON_WINDOW.console.error},
+        app_eventListeners:{original: HTMLElement.prototype.addEventListener, REACT:[], VUE:[], OTHER:[]},
+        app_function_session_expired:null,
+        app_function_sse:null,
+        app_typewatch:[],
+        app_metadata:{  events:{click:null,
                             change:null,
                             keydown:null,
                             keyup:null,
@@ -241,43 +271,16 @@ const COMMON_GLOBAL = {
                             copy:null,
                             paste:null,
                             cut:null
-    },
-                    lifeCycle:{
-                        onMounted:()=>null
-                    }
-                },
-    info_link_policy_name:null,
-    info_link_disclaimer_name:null,
-    info_link_terms_name:null,
-    info_link_policy_url:null,
-    info_link_disclaimer_url:null,
-    info_link_terms_url:null,
-    iam_user_app_id:null,
-    iam_user_id:null,
-    iam_user_username:null,
-    iam_user_avatar:null,
-    admin_first_time:null,
-    admin_only:null,
-    x:{encrypt: ()=>'', decrypt: ()=>''},
-    client_latitude:'',
-    client_longitude:'',
-    client_place:'',
-    client_timezone:'',
-    token_dt:null,
-    token_at:null,
-    token_admin_at:null,
-    token_exp:null,
-    token_iat:null,
-    token_external:null,
-    rest_resource_bff:null,
-    user_locale:'',
-    user_timezone:'',
-    user_direction:'',
-    user_arabic_script:'',
-    user_custom:{},
-    resource_import:[],
-    component_import:[],
-    component:{}
+                        },
+                        lifeCycle:{
+                            onMounted:()=>null
+                        }
+                    },
+        x:{encrypt: ()=>'', decrypt: ()=>'', uuid:'', secret:''},
+        resource_import:[],
+        component_import:[],
+        component:{}
+    }
 };
 Object.seal(COMMON_GLOBAL);
 
@@ -296,18 +299,69 @@ const commonGlobalGet = key =>key=='ICONS'?
                                     return icons},{}):
                                 COMMON_GLOBAL[key];
 /**
- * @description Set value for given global key except icons
+ * @description Set value for given global key except ICONS, Apps and AppData
+ *              Only Paameters, Data, User, UserApp and Functions allowed to be updated
  * @param {keyof common['CommonGlobal']} key
+ * @param {string} name
  * @param {*} value
  * @returns {*}
  */
-const commonGlobalSet = (key, value) =>((key in COMMON_GLOBAL) && key !='ICONS')?Object.assign(COMMON_GLOBAL, {[key]:value}):null;
+const commonGlobalSet = (key, name, value) =>((key in COMMON_GLOBAL) && ['ICONS', 'Apps', 'AppData', 'Parameters'].includes(key)==false)?
+                                                (name in COMMON_GLOBAL[key]?
+                                                    /**@ts-ignore */
+                                                    COMMON_GLOBAL[key][name] = value:
+                                                        null):
+                                                    null;
 
 /**
  * @description Get current App record
  * @returns {common['server']['ORM']['Object']['App']}
  */
-const commonGetApp = () =>commonGlobalGet('apps').filter((/**@type{common['server']['ORM']['Object']['App']}*/app)=>app.Id == COMMON_GLOBAL.app_id)[0]
+const commonGetApp = () =>commonGlobalGet('Apps').filter((/**@type{common['server']['ORM']['Object']['App']}*/app)=>app.Id == COMMON_GLOBAL.UserApp.app_id)[0]
+
+/**
+ * @description Get AppData parameter records for given app id and optional name and value
+ *              Fetches and adds records to COMMON_GLOBAL.AppData if records does not exist
+ *              so records are progressively cached
+ * @param  {number} app_id
+ * @param  {string|null} name
+ * @param  {string|null} value
+ * @returns {Promise<{  AppId:      common['CommonGlobal']['AppData'][0][0],
+ *              Name:       common['CommonGlobal']['AppData'][0][1],
+ *              Value:      common['CommonGlobal']['AppData'][0][2],
+ *              DisplayData:common['CommonGlobal']['AppData'][0][3]}[]>}
+ */
+const commonGetAppData = async (app_id, name=null, value=null) =>{
+    const records = commonGlobalGet('AppData')
+        .filter((/**@type{common['CommonGlobal']['AppData'][0]}*/row)=>row[0]==app_id && row[1]==(name??row[1]) && row[2]==(value??row[2]));
+    if (records.length>0)
+        return records
+        .map((/**@type{common['CommonGlobal']['AppData'][0]}*/row)=>{return {AppId:row[0], Name:row[1], Value:row[2], DisplayData:row[3]}});
+    else{
+        if (commonGlobalGet('AppData')
+            .filter((/**@type{common['CommonGlobal']['AppData'][0]}*/row)=>row[0]==app_id && row[1]==name).length==0){
+            //Name not found, fetch records
+            //return new records for new AppData name not cached
+            const new_records = await commonFFB({path:'/server-db/appdata/',
+                                            query:`IAM_data_app_id=${app_id}&name=${name}`,
+                                            method:'GET', 
+                                            authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
+                                                JSON.parse(commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+            if (new_records.length>0){
+                COMMON_GLOBAL.AppData.push(...(new_records.map((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>
+                    [row.AppId, row.Name, row.Value, row.DisplayData]
+                )))
+                return new_records
+                .map((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>{return {AppId:row.AppId, Name:row.Name, Value:row.Value, DisplayData:row.DisplayData}});
+            }
+            else
+                return [];
+        }
+        else
+            return [];
+    }
+}
+        
 
 /**
  * @name commonMiscElementId
@@ -349,7 +403,7 @@ const commonMiscFormatJsonDate = (value, format=null, locale=null, timezone=null
         return '';
     else {
         if (typeof value=='number')
-            return value==0?'0':value.toLocaleString(locale ?? COMMON_GLOBAL.user_locale ?? 'en').padStart(2,(0).toLocaleString(locale ?? COMMON_GLOBAL.user_locale ?? 'en'));
+            return value==0?'0':value.toLocaleString(locale ?? COMMON_GLOBAL.UserApp.user_locale ?? 'en').padStart(2,(0).toLocaleString(locale ?? COMMON_GLOBAL.UserApp.user_locale ?? 'en'));
         else{
             //ISO 8601 format
             //"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
@@ -361,7 +415,7 @@ const commonMiscFormatJsonDate = (value, format=null, locale=null, timezone=null
                     switch (format){
                         case 'SHORT':{
                             options = {
-                                timeZone: timezone ?? COMMON_GLOBAL.user_timezone,
+                                timeZone: timezone ?? COMMON_GLOBAL.UserApp.user_timezone,
                                 year: 'numeric',
                                 month: 'long'
                             };
@@ -369,7 +423,7 @@ const commonMiscFormatJsonDate = (value, format=null, locale=null, timezone=null
                         }
                         case 'LONG':{
                             options = {
-                                timeZone: timezone ?? COMMON_GLOBAL.user_timezone,
+                                timeZone: timezone ?? COMMON_GLOBAL.UserApp.user_timezone,
                                 weekday: 'long',
                                 year: 'numeric',
                                 month: 'long',
@@ -384,7 +438,7 @@ const commonMiscFormatJsonDate = (value, format=null, locale=null, timezone=null
                         default:
                         case 'NORMAL':{
                             options = {
-                                timeZone: timezone ?? COMMON_GLOBAL.user_timezone,
+                                timeZone: timezone ?? COMMON_GLOBAL.UserApp.user_timezone,
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
@@ -403,7 +457,7 @@ const commonMiscFormatJsonDate = (value, format=null, locale=null, timezone=null
                         Number(value.substring(14, 16)), //min
                         Number(value.substring(17, 19)) //sec
                     ));
-                    const format_date = utc_date.toLocaleDateString(locale ?? COMMON_GLOBAL.user_locale, options);
+                    const format_date = utc_date.toLocaleDateString(locale ?? COMMON_GLOBAL.UserApp.user_locale, options);
                     return format_date;
                 }
                 else
@@ -423,12 +477,12 @@ const commonMiscFormatJsonDate = (value, format=null, locale=null, timezone=null
  * @returns {Promise.<*>}
  */
 const commonMiscImport = async (url, content=null) =>{
-    const app_id = url.startsWith('/common')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id;
-    const module = COMMON_GLOBAL.component_import.filter(module=>module.url==url && module.app_id == app_id)[0]?.component;
+    const app_id = url.startsWith('/common')?COMMON_GLOBAL.Parameters.app_common_app_id:COMMON_GLOBAL.UserApp.app_id;
+    const module = COMMON_GLOBAL.Functions.component_import.filter(module=>module.url==url && module.app_id == app_id)[0]?.component;
     if (module)
         return import(module);    
     else{
-        COMMON_GLOBAL.component_import.push(
+        COMMON_GLOBAL.Functions.component_import.push(
                 /*@ts-ignore*/
                 {
                     app_id:app_id,
@@ -442,7 +496,7 @@ const commonMiscImport = async (url, content=null) =>{
                                                         authorization_type:'APP_ID'})
                                             .then(module=>URL.createObjectURL(  new Blob ([JSON.parse(module).resource], {type: 'text/javascript'})))
                 }); 
-        return import(COMMON_GLOBAL.component_import[COMMON_GLOBAL.component_import.length-1].component);
+        return import(COMMON_GLOBAL.Functions.component_import[COMMON_GLOBAL.Functions.component_import.length-1].component);
     }
 };
 /**
@@ -724,8 +778,8 @@ const commonMiscMobile = () =>{
  */
 const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
     const class_app_theme = COMMON_DOCUMENT.body.className.split(' ')[0] ?? '';
-    const class_direction = COMMON_GLOBAL.user_direction;
-    const class_arabic_script = COMMON_GLOBAL.user_arabic_script;
+    const class_direction = COMMON_GLOBAL.UserApp.user_direction;
+    const class_arabic_script = COMMON_GLOBAL.UserApp.user_arabic_script;
     COMMON_DOCUMENT.body.className = '';
     COMMON_DOCUMENT.body.classList.add(class_app_theme);
     if (class_direction)
@@ -758,7 +812,7 @@ const commonMiscPrint = async (element_id, inner=true) => {
         await print.document.open();
         await print.document.write(template);
 
-        for (const font of COMMON_GLOBAL.app_fonts_loaded) {         
+        for (const font of COMMON_GLOBAL.Data.app_fonts_loaded) {         
             const fontNew = new FontFace(
                 font.family,
                 'url(' + font.url + ')',
@@ -790,7 +844,7 @@ const commonMiscPrint = async (element_id, inner=true) => {
  * @returns {Promise.<string|void>}
  */
 const commonMiscResourceFetch = async (url,element, content_type, content=null )=>{
-    const app_id = url.startsWith('/common')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id;
+    const app_id = url.startsWith('/common')?COMMON_GLOBAL.Parameters.app_common_app_id:COMMON_GLOBAL.UserApp.app_id;
     if (element && content_type.startsWith('image')){
         /**@ts-ignore */
         element.alt=' '; 
@@ -800,13 +854,13 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
     * @returns{Promise.<*>}
     */
     const getUrl = async ()=>{        
-        const resource = COMMON_GLOBAL.resource_import.filter(resource=>resource.url==url && resource.app_id == app_id)[0]?.content;
+        const resource = COMMON_GLOBAL.Functions.resource_import.filter(resource=>resource.url==url && resource.app_id == app_id)[0]?.content;
         if (resource) 
             return resource;
         else{
             content?
                 /**@ts-ignore */
-                COMMON_GLOBAL.resource_import.push({
+                COMMON_GLOBAL.Functions.resource_import.push({
                                 app_id:app_id,
                                 url:url,
                                 content:URL.createObjectURL(new Blob ([content], {type: content_type})),
@@ -821,21 +875,21 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
                             .then(module=>
                                 content_type.startsWith('image')?
                                     /**@ts-ignore */
-                                    COMMON_GLOBAL.resource_import.push({
+                                    COMMON_GLOBAL.Functions.resource_import.push({
                                         app_id:app_id,
                                         url:url,
                                         content:JSON.parse(module).resource,
                                         content_type:content_type
                                     }):
                                         /**@ts-ignore */
-                                        COMMON_GLOBAL.resource_import.push({
+                                        COMMON_GLOBAL.Functions.resource_import.push({
                                             app_id:app_id,
                                             url:url,
                                             content:URL.createObjectURL(  new Blob ([JSON.parse(module).resource], {type: content_type})),
                                             content_type:content_type
                                         })
                             );
-            return COMMON_GLOBAL.resource_import[COMMON_GLOBAL.resource_import.length-1].content;
+            return COMMON_GLOBAL.Functions.resource_import[COMMON_GLOBAL.Functions.resource_import.length-1].content;
         }
     }; 
 
@@ -914,9 +968,9 @@ const commonMiscTimezoneDate = timezone =>{
  * @param  {...any} parameter 
  */
 const commonMiscTypewatch = (function_name, ...parameter) =>{
-    if (COMMON_GLOBAL.app_typewatch.filter(row=>row==function_name.name).length==0){
+    if (COMMON_GLOBAL.Functions.app_typewatch.filter(row=>row==function_name.name).length==0){
         /**@ts-ignore */
-        COMMON_GLOBAL.app_typewatch.push(function_name.name);
+        COMMON_GLOBAL.Functions.app_typewatch.push(function_name.name);
         let type_delay=400;
         if (parameter.length>0 && parameter[0] !=null)
             switch (parameter[0].code){
@@ -932,7 +986,7 @@ const commonMiscTypewatch = (function_name, ...parameter) =>{
         commonWindowSetTimeout(() => {
             function_name(...parameter);
             /**@ts-ignore */
-            COMMON_GLOBAL.app_typewatch = COMMON_GLOBAL.app_typewatch.filter(row=>row!=function_name.name);
+            COMMON_GLOBAL.Functions.app_typewatch = COMMON_GLOBAL.Functions.app_typewatch.filter(row=>row!=function_name.name);
         }, type_delay);
     }
 };
@@ -947,7 +1001,7 @@ const commonMiscShowDateUpdate = async element_id => {
     
     if (COMMON_DOCUMENT.querySelector(`#${element_id}`)){
         COMMON_DOCUMENT.querySelector(`#${element_id}`).textContent = 
-            new Date().toLocaleString(COMMON_GLOBAL.user_locale, {timeZone: COMMON_GLOBAL.user_timezone});
+            new Date().toLocaleString(COMMON_GLOBAL.UserApp.user_locale, {timeZone: COMMON_GLOBAL.UserApp.user_timezone});
         await commonWindowWait(1000);
         commonMiscShowDateUpdate(element_id);
     }
@@ -1039,7 +1093,7 @@ const commonMiscLoadFont = parameters => {
                                                             col.trimStart()).join(':'))
                                 .join(',') + '}';
         //load font url where uuid is used
-        for (const fontFaceCSS of (COMMON_GLOBAL.app_fonts ??[])
+        for (const fontFaceCSS of (COMMON_GLOBAL.Data.app_fonts ??[])
                                     .filter((row, index)=>index>0)
                                     /**@ts-ignore */
                                     .filter(row=>row.indexOf(fontData.uuid)>-1)
@@ -1056,7 +1110,7 @@ const commonMiscLoadFont = parameters => {
                                 url:   fontResult,
                                 attributes:attributes
                                 };
-            COMMON_GLOBAL.app_fonts_loaded.push(fontLoad);
+            COMMON_GLOBAL.Data.app_fonts_loaded.push(fontLoad);
             const fontNew = new FontFace(
                     fontLoad.family,
                     'url(' + fontLoad.url + ')',
@@ -1294,8 +1348,8 @@ const commonComponentMutationObserver = (() =>{
                                 //a component can be used on different mounted divs
                                 //and a component can share events to event delegation and methods
                                 //remove if last shared component including methods and events
-                                if (Object.keys(tracked).filter(all_div_id=>COMMON_GLOBAL.component[tracked[all_div_id].componentName]==COMMON_GLOBAL.component[tracked[div_id].componentName]).length==1)
-                                    delete COMMON_GLOBAL.component[tracked[div_id].componentName];
+                                if (Object.keys(tracked).filter(all_div_id=>COMMON_GLOBAL.Functions.component[tracked[all_div_id].componentName]==COMMON_GLOBAL.Functions.component[tracked[div_id].componentName]).length==1)
+                                    delete COMMON_GLOBAL.Functions.component[tracked[div_id].componentName];
                                 //run the onUnMounted for the unmounted component
                                 if (tracked[div_id].onUnmounted){
                                     tracked[div_id].onUnmounted();
@@ -1447,7 +1501,7 @@ const commonComponentRender = async parameters => {
         //component can be mounted inside a third party component
         //and div and template can be empty in this case    
         if (parameters.mountDiv && component.template)
-            switch (COMMON_GLOBAL.app_framework){
+            switch (COMMON_GLOBAL.Parameters.app_framework){
                 case 2:{
                     //Vue
                     await commonFrameworkMount(2, component.template, {}, parameters.mountDiv, true);
@@ -1469,21 +1523,21 @@ const commonComponentRender = async parameters => {
                 null:
                     commonMiscResourceFetch(link.getAttribute('data-href')??'', link,'text/css'));
         //set component with appid and name from filename without .js
-        const componentName = (parameters.path.startsWith('/common/component/')?COMMON_GLOBAL.app_common_app_id:COMMON_GLOBAL.app_id).toString() + '_' +
+        const componentName = (parameters.path.startsWith('/common/component/')?COMMON_GLOBAL.Parameters.app_common_app_id:COMMON_GLOBAL.UserApp.app_id).toString() + '_' +
                                 parameters.path.split('/').reverse()[0].split('.')[0];
         //use Vue.createApp and data() return pattern and React.createRef() + current key pattern to share methods
         //share methods
         if (component.methods){
-            if (!COMMON_GLOBAL.component[componentName])
-                COMMON_GLOBAL.component[componentName]={};
-            COMMON_GLOBAL.component[componentName].methods = component.methods;
+            if (!COMMON_GLOBAL.Functions.component[componentName])
+                COMMON_GLOBAL.Functions.component[componentName]={};
+            COMMON_GLOBAL.Functions.component[componentName].methods = component.methods;
         }
         //share events to event delegation in commonEvent()
         if (component.events){
             
-            if (!COMMON_GLOBAL.component[componentName])
-                COMMON_GLOBAL.component[componentName]={};
-            COMMON_GLOBAL.component[componentName].events = component.events;
+            if (!COMMON_GLOBAL.Functions.component[componentName])
+                COMMON_GLOBAL.Functions.component[componentName]={};
+            COMMON_GLOBAL.Functions.component[componentName].events = component.events;
         }
         /**@type{{div:HTMLElement, componentName:string, onUnmounted:function|null|undefined}} */
         const trackObject = {
@@ -1499,8 +1553,8 @@ const commonComponentRender = async parameters => {
             const Unmounted = () =>{
                 if (COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).textContent==''){
                     //remove shared component including methods and events
-                    if (COMMON_GLOBAL.component[componentName])
-                        delete COMMON_GLOBAL.component[componentName];
+                    if (COMMON_GLOBAL.Functions.component[componentName])
+                        delete COMMON_GLOBAL.Functions.component[componentName];
                     if (component.lifecycle?.onUnmounted){
                         ComponentHook.disconnect();
                         component.lifecycle.onUnmounted();
@@ -1783,7 +1837,7 @@ const commonProfileShow = async (iam_user_id_other = null, username = null) => {
 const commonUserLogin = async () => {
     let spinner_item = '';
     let current_dialogue = '';
-    if (COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id) {
+    if (COMMON_GLOBAL.Parameters.app_admin_app_id == COMMON_GLOBAL.UserApp.app_id) {
         spinner_item = 'common_app_dialogues_iam_start_login_admin_button';
         current_dialogue = 'common_app_dialogues_iam_start';
         if (commonMiscInputControl(COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start'),
@@ -1809,30 +1863,30 @@ const commonUserLogin = async () => {
     const result_iam = await commonFFB({path:'/server-iam-login', 
                                         method:'POST', 
                                         authorization_type:'IAM', 
-                                        username:encodeURI(COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id?
+                                        username:encodeURI(COMMON_GLOBAL.Parameters.app_admin_app_id == COMMON_GLOBAL.UserApp.app_id?
                                                             COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_login_admin_username').textContent:
                                                                 COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_login_username').textContent),
-                                        password:encodeURI(COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id?
+                                        password:encodeURI(COMMON_GLOBAL.Parameters.app_admin_app_id == COMMON_GLOBAL.UserApp.app_id?
                                                             COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_login_admin_password').textContent:
                                                                 COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_start_login_password').textContent),
                                         spinner_id:spinner_item});
     if (JSON.parse(result_iam).active==1){
-        COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result_iam).iam_user_app_id;
-        COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
-        COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
-        COMMON_GLOBAL.iam_user_avatar =         JSON.parse(result_iam).avatar;
-        COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
-        COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
+        COMMON_GLOBAL.UserApp.iam_user_app_id =      JSON.parse(result_iam).iam_user_app_id;
+        COMMON_GLOBAL.User.iam_user_id =             JSON.parse(result_iam).iam_user_id;
+        COMMON_GLOBAL.User.iam_user_username =       JSON.parse(result_iam).iam_user_username;
+        COMMON_GLOBAL.User.iam_user_avatar =         JSON.parse(result_iam).avatar;
+        COMMON_GLOBAL.Data.token_exp =               JSON.parse(result_iam).exp;
+        COMMON_GLOBAL.Data.token_iat =               JSON.parse(result_iam).iat;
 
-        if (COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id){
-            COMMON_GLOBAL.token_admin_at= JSON.parse(result_iam).token_at;
-            COMMON_GLOBAL.token_at	    = null;
+        if (COMMON_GLOBAL.Parameters.app_admin_app_id == COMMON_GLOBAL.UserApp.app_id){
+            COMMON_GLOBAL.Data.token_admin_at= JSON.parse(result_iam).token_at;
+            COMMON_GLOBAL.Data.token_at	    = null;
             commonComponentRemove(current_dialogue);
         }
         else{
-            COMMON_GLOBAL.token_admin_at= null;
-            COMMON_GLOBAL.token_at	    = JSON.parse(result_iam).token_at;
-            commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
+            COMMON_GLOBAL.Data.token_admin_at= null;
+            COMMON_GLOBAL.Data.token_at	    = JSON.parse(result_iam).token_at;
+            commonUserUpdateAvatar(true, COMMON_GLOBAL.User.iam_user_avatar);
             commonComponentRemove(current_dialogue);
             commonComponentRemove('common_app_dialogues_profile');
         }
@@ -1841,15 +1895,15 @@ const commonUserLogin = async () => {
         return {avatar: JSON.parse(result_iam).avatar};
     }
     else{
-        COMMON_GLOBAL.iam_user_app_id =         JSON.parse(result_iam).iam_user_app_id;
-        COMMON_GLOBAL.iam_user_id =             JSON.parse(result_iam).iam_user_id;
-        COMMON_GLOBAL.iam_user_username =       JSON.parse(result_iam).iam_user_username;
-        if (COMMON_GLOBAL.app_admin_app_id == COMMON_GLOBAL.app_id)
-            COMMON_GLOBAL.token_admin_at    = JSON.parse(result_iam).token_at;
+        COMMON_GLOBAL.UserApp.iam_user_app_id =      JSON.parse(result_iam).iam_user_app_id;
+        COMMON_GLOBAL.User.iam_user_id =             JSON.parse(result_iam).iam_user_id;
+        COMMON_GLOBAL.User.iam_user_username =       JSON.parse(result_iam).iam_user_username;
+        if (COMMON_GLOBAL.Parameters.app_admin_app_id == COMMON_GLOBAL.UserApp.app_id)
+            COMMON_GLOBAL.Data.token_admin_at = JSON.parse(result_iam).token_at;
         else
-            COMMON_GLOBAL.token_at	        = JSON.parse(result_iam).token_at;
-        COMMON_GLOBAL.token_exp =               JSON.parse(result_iam).exp;
-        COMMON_GLOBAL.token_iat =               JSON.parse(result_iam).iat;
+            COMMON_GLOBAL.Data.token_at	        = JSON.parse(result_iam).token_at;
+        COMMON_GLOBAL.Data.token_exp =               JSON.parse(result_iam).exp;
+        COMMON_GLOBAL.Data.token_iat =               JSON.parse(result_iam).iat;
         commonDialogueShow('VERIFY', 'LOGIN');
         throw 'ERROR';
     }
@@ -1862,24 +1916,24 @@ const commonUserLogin = async () => {
  * @returns {void}
  */
 const commonUserLoginApp = IamUserApp =>{
-    COMMON_GLOBAL.iam_user_app_id = IamUserApp.Id ?? null;
+    COMMON_GLOBAL.UserApp.iam_user_app_id = IamUserApp.Id ?? null;
     //get preferences saved in Document column
     //locale
     if (IamUserApp.Document?.PreferenceLocale==null)
         commonUserPreferencesGlobalSetDefault('LOCALE');
     else
-        COMMON_GLOBAL.user_locale = IamUserApp.Document.PreferenceLocale;
+        COMMON_GLOBAL.UserApp.user_locale = IamUserApp.Document.PreferenceLocale;
     //timezone
     if (IamUserApp.Document?.PreferenceTimezone==null)
         commonUserPreferencesGlobalSetDefault('TIMEZONE');
     else
-        COMMON_GLOBAL.user_timezone = IamUserApp.Document.PreferenceTimezone;
+        COMMON_GLOBAL.UserApp.user_timezone = IamUserApp.Document.PreferenceTimezone;
     //direction
-    COMMON_GLOBAL.user_direction = IamUserApp.Document?.PreferenceDirection??'';
+    COMMON_GLOBAL.UserApp.user_direction = IamUserApp.Document?.PreferenceDirection??'';
     //arabic script
-    COMMON_GLOBAL.user_arabic_script = IamUserApp.Document?.PreferenceArabicScript??'';
+    COMMON_GLOBAL.UserApp.user_arabic_script = IamUserApp.Document?.PreferenceArabicScript??'';
     //custom data for individual app functionality
-    COMMON_GLOBAL.user_custom = IamUserApp.Document?.Custom??null;
+    COMMON_GLOBAL.UserApp.user_custom = IamUserApp.Document?.Custom??null;
     //update body class with app theme, direction and arabic script usage classes
     commonMiscPreferencesUpdateBodyClassFromPreferences();
 };
@@ -1891,16 +1945,16 @@ const commonUserLoginApp = IamUserApp =>{
  */
 const commonUserSessionClear = () => {
     //iam user
-    COMMON_GLOBAL.iam_user_app_id =         null;
-    COMMON_GLOBAL.iam_user_id =             null;
-    COMMON_GLOBAL.iam_user_username =       null;
+    COMMON_GLOBAL.UserApp.iam_user_app_id =      null;
+    COMMON_GLOBAL.User.iam_user_id =             null;
+    COMMON_GLOBAL.User.iam_user_username =       null;
 
     //admin access token
-    COMMON_GLOBAL.token_admin_at =          null;
+    COMMON_GLOBAL.Data.token_admin_at =          null;
     //user access token
-    COMMON_GLOBAL.token_at	=               null;
-    COMMON_GLOBAL.token_exp =               null;
-    COMMON_GLOBAL.token_iat =               null;
+    COMMON_GLOBAL.Data.token_at	=                null;
+    COMMON_GLOBAL.Data.token_exp =               null;
+    COMMON_GLOBAL.Data.token_iat =               null;
 };
 
 /**
@@ -1908,7 +1962,7 @@ const commonUserSessionClear = () => {
  * @description Countdown function to monitor token expire time
  *              Uses event listener on element instead of setTimeout since element can removed 
  *              and then event listener will automatically be removed
- *              if token_exp is null then users COMMON_GLOBAL.token_exp will be used
+ *              if token_exp is null then users COMMON_GLOBAL.Data.token_exp will be used
  * @function
  * @param {HTMLElement} element
  * @param {number|null} token_exp
@@ -1930,7 +1984,7 @@ const commonUserSessionClear = () => {
     }
         
     if (element){
-        const time_left = ((token_exp ?? COMMON_GLOBAL?.token_exp ??0) * 1000) - (Date.now());
+        const time_left = ((token_exp ?? COMMON_GLOBAL.Data?.token_exp ??0) * 1000) - (Date.now());
         if (time_left < 0){
             element.textContent =commonGlobalGet('ICONS')['user_session_expired'];
         }
@@ -1944,7 +1998,7 @@ const commonUserSessionClear = () => {
             app_function?app_function():null;
             //wait 1 second
             await commonWindowWait(1000);            
-            commonUserSessionCountdown(element, token_exp ?? COMMON_GLOBAL?.token_exp ?? 0, app_function);
+            commonUserSessionCountdown(element, token_exp ?? COMMON_GLOBAL.Data?.token_exp ?? 0, app_function);
         }
     }
 };
@@ -1957,7 +2011,7 @@ const commonUserSessionClear = () => {
 const commonUserLogout = async () => {
     await commonFFB({path:'/server-iam-logout', 
                     method:'DELETE', 
-                    authorization_type:(COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id)?'ADMIN':'APP_ACCESS'})
+                    authorization_type:(COMMON_GLOBAL.UserApp.app_id == COMMON_GLOBAL.Parameters.app_admin_app_id)?'ADMIN':'APP_ACCESS'})
             .catch(()=>{
                 //ignore error since token can be expired
                 null;
@@ -1973,11 +2027,11 @@ const commonUserLogout = async () => {
  */
 const commonLogout = async () => {
     commonComponentRemove('common_app_dialogues_user_menu');
-    COMMON_GLOBAL.component[COMMON_GLOBAL.app_common_app_id + '_' + 'common_app_window_info']?.methods?.commonWindoInfoClose?
-        COMMON_GLOBAL.component[COMMON_GLOBAL.app_common_app_id + '_' + 'common_app_window_info']?.methods?.commonWindoInfoClose():
+    COMMON_GLOBAL.Functions.component[COMMON_GLOBAL.Parameters.app_common_app_id + '_' + 'common_app_window_info']?.methods?.commonWindoInfoClose?
+        COMMON_GLOBAL.Functions.component[COMMON_GLOBAL.Parameters.app_common_app_id + '_' + 'common_app_window_info']?.methods?.commonWindoInfoClose():
             null;
     commonComponentRemove('common_app_dialogues_iam_verify');
-    if (COMMON_GLOBAL.app_id != COMMON_GLOBAL.app_admin_app_id){
+    if (COMMON_GLOBAL.UserApp.app_id != COMMON_GLOBAL.Parameters.app_admin_app_id){
         commonUserUpdateAvatar(false,null );
         commonComponentRemove('common_app_dialogues_iam_verify');
         commonComponentRemove('common_app_dialogues_iam_start');
@@ -2003,9 +2057,9 @@ const commonUserMessageShowStat = async () =>{
         const messageStat = await commonFFB({path:'/app-common-module/COMMON_MESSAGE_COUNT', 
             method:'POST', 
             body:{  type:'FUNCTION', 
-                    IAM_iam_user_id:COMMON_GLOBAL.iam_user_id,
-                    IAM_data_app_id:COMMON_GLOBAL.app_common_app_id},
-            authorization_type:COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id?'ADMIN':'APP_ACCESS'})
+                    IAM_iam_user_id:COMMON_GLOBAL.User.iam_user_id,
+                    IAM_data_app_id:COMMON_GLOBAL.Parameters.app_common_app_id},
+            authorization_type:COMMON_GLOBAL.UserApp.app_id == COMMON_GLOBAL.Parameters.app_admin_app_id?'ADMIN':'APP_ACCESS'})
             .then((/**@type{*}*/result)=>JSON.parse(result).rows[0]);
         if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_nav_messages_count'))
             COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_nav_messages_count').textContent = `${messageStat.unread}(${messageStat.unread+messageStat.read})`;
@@ -2046,7 +2100,7 @@ const commonUserUpdateAvatar = (login, avatar) =>{
  * @function
  * @returns {string}
  */
-const commonUserLocale =() =>COMMON_GLOBAL.user_locale;
+const commonUserLocale =() =>COMMON_GLOBAL.UserApp.user_locale;
 
 /**
  * @name commonUserPreferencesGlobalSetDefault
@@ -2058,19 +2112,19 @@ const commonUserLocale =() =>COMMON_GLOBAL.user_locale;
 const commonUserPreferencesGlobalSetDefault = (preference) => {
     switch (preference){
         case 'LOCALE':{
-            COMMON_GLOBAL.user_locale         = commonWindowNavigatorLocale();
+            COMMON_GLOBAL.UserApp.user_locale         = commonWindowNavigatorLocale();
             break;
         }
         case 'TIMEZONE':{
-            COMMON_GLOBAL.user_timezone       = COMMON_GLOBAL.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
+            COMMON_GLOBAL.UserApp.user_timezone       = COMMON_GLOBAL.Data.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
             break;
         }
         case 'DIRECTION':{
-            COMMON_GLOBAL.user_direction      = '';
+            COMMON_GLOBAL.UserApp.user_direction      = '';
             break;
         }
         case 'ARABIC_SCRIPT':{
-            COMMON_GLOBAL.user_arabic_script  = '';
+            COMMON_GLOBAL.UserApp.user_arabic_script  = '';
             break;
         }
     }
@@ -2137,7 +2191,7 @@ const commonFFB = async parameter =>{
             parameters.data.query = parameters.data.query==null?'':parameters.data.query;
             parameters.data.body = parameters.data.body?parameters.data.body:null;
             //admin uses ADMIN instead of APP_ACCESS so all ADMIN requests use separate admin token
-            const ROLE = (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id && parameters.data.authorization_type =='APP_ACCESS')?
+            const ROLE = (COMMON_GLOBAL.UserApp.app_id == COMMON_GLOBAL.Parameters.app_admin_app_id && parameters.data.authorization_type =='APP_ACCESS')?
                             'ADMIN':parameters.data.authorization_type;
             switch (ROLE){
                 case 'APP_ACCESS_EXTERNAL':{
@@ -2161,7 +2215,7 @@ const commonFFB = async parameter =>{
                                 ROLE.toLowerCase() + 
                                 '/v' + (parameters.rest_api_version ??1);
             //public url
-            const url = (COMMON_GLOBAL.app_rest_api_basepath + parameters.uuid);
+            const url = (COMMON_GLOBAL.Parameters.app_rest_api_basepath + parameters.uuid);
 
             if (parameters.spinner_id && COMMON_DOCUMENT?.querySelector('#' + parameters.spinner_id))
                 COMMON_DOCUMENT.querySelector('#' + parameters.spinner_id).classList.add('common_loading_spinner');
@@ -2171,27 +2225,27 @@ const commonFFB = async parameter =>{
                                 method: 'POST',
                                 headers:{
                                             ...(parameters.response_type =='SSE' && {'Cache-control': 'no-cache'}),
-                                            'Content-Type': COMMON_GLOBAL.app_content_type_json,
+                                            'Content-Type': COMMON_GLOBAL.Parameters.app_content_type_json,
                                             'Connection':   parameters.response_type =='SSE'?
                                                                 'keep-alive':
                                                                     'close',
                                         },
                                 body: JSON.stringify({
-                                        x: COMMON_GLOBAL.x.encrypt({
+                                        x: COMMON_GLOBAL.Functions.x.encrypt({
                                             iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
                                             key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
                                             data:JSON.stringify({  
                                                     headers:{
-                                                            'app-id':       COMMON_GLOBAL.app_id,
-                                                            'app-signature':COMMON_GLOBAL.x.encrypt({ 
+                                                            'app-id':       COMMON_GLOBAL.UserApp.app_id,
+                                                            'app-signature':COMMON_GLOBAL.Functions.x.encrypt({ 
                                                                                 iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
                                                                                 key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
-                                                                                data:   JSON.stringify({app_id: COMMON_GLOBAL.app_id })}),
+                                                                                data:   JSON.stringify({app_id: COMMON_GLOBAL.UserApp.app_id })}),
                                                             'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                             ...(authorization && {Authorization: authorization}),
                                                             'Content-Type': parameters.response_type =='SSE'?
-                                                                                COMMON_GLOBAL.app_content_type_sse:
-                                                                                    COMMON_GLOBAL.app_content_type_json,
+                                                                                COMMON_GLOBAL.Parameters.app_content_type_sse:
+                                                                                    COMMON_GLOBAL.Parameters.app_content_type_json,
                                                             },
                                                     method: parameters.data.method,
                                                     url:    bff_path + parameters.data.path + '?parameters=' + encodedparameters,
@@ -2208,7 +2262,7 @@ const commonFFB = async parameter =>{
              * @returns {string}
              */
             const getDecrypted   = data =>
-                    COMMON_GLOBAL.x.decrypt({
+                    COMMON_GLOBAL.Functions.x.decrypt({
                                 iv:         JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
                                 key:        JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k,
                                 ciphertext: parameters.response_type=='SSE'?
@@ -2231,9 +2285,9 @@ const commonFFB = async parameter =>{
                                     if (resultFetch.finished==false){
                                         return resolve({status:503});
                                     }
-                                    }, (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id?
-                                            (1000 * 60 * COMMON_GLOBAL.app_requesttimeout_admin_minutes):
-                                            parameters.timeout || (1000 * COMMON_GLOBAL.app_requesttimeout_seconds)) + waitBackoffInMilliseconds
+                                    }, (COMMON_GLOBAL.UserApp.app_id == COMMON_GLOBAL.Parameters.app_admin_app_id?
+                                            (1000 * 60 * COMMON_GLOBAL.Parameters.app_requesttimeout_admin_minutes):
+                                            parameters.timeout || (1000 * COMMON_GLOBAL.Parameters.app_requesttimeout_seconds)) + waitBackoffInMilliseconds
                                 )),
                             /**@ts-ignore */
                             fetch(url, options)
@@ -2336,7 +2390,7 @@ const commonFFB = async parameter =>{
                     resolve(result.result);
                 else{
                     retries++;
-                    if (retries <= COMMON_GLOBAL.app_request_tries)
+                    if (retries <= COMMON_GLOBAL.Parameters.app_request_tries)
                         fetchBackOff();
                     else{
                         commonMessageShow('ERROR_BFF', null, null, '🗺⛔?');
@@ -2348,19 +2402,19 @@ const commonFFB = async parameter =>{
         
     };
     return FFB({
-            uuid: COMMON_GLOBAL.x.uuid??'',
-            secret: COMMON_GLOBAL.x.secret??'',
+            uuid: COMMON_GLOBAL.Functions.x.uuid??'',
+            secret: COMMON_GLOBAL.Functions.x.secret??'',
             response_type: parameter.response_type??'TEXT',
             spinner_id: parameter.spinner_id,
             timeout: parameter.timeout,
-            rest_api_version: COMMON_GLOBAL.app_rest_api_version??'',
-            rest_bff_path   : COMMON_GLOBAL.rest_resource_bff??'',
+            rest_api_version: COMMON_GLOBAL.Parameters.app_rest_api_version??'',
+            rest_bff_path   : COMMON_GLOBAL.Parameters.rest_resource_bff??'',
             data: {
-                idToken: COMMON_GLOBAL.token_dt??'',
-                accessToken: (COMMON_GLOBAL.app_id == COMMON_GLOBAL.app_admin_app_id)?
-                                COMMON_GLOBAL.token_admin_at??'':
-                                    COMMON_GLOBAL.token_at??'',
-                externalToken:COMMON_GLOBAL.token_external??null,
+                idToken: COMMON_GLOBAL.Data.token_dt??'',
+                accessToken: (COMMON_GLOBAL.UserApp.app_id == COMMON_GLOBAL.Parameters.app_admin_app_id)?
+                                COMMON_GLOBAL.Data.token_admin_at??'':
+                                    COMMON_GLOBAL.Data.token_at??'',
+                externalToken:COMMON_GLOBAL.Data.token_external??null,
                 path:parameter.path,
                 query: parameter.query,
                 method: parameter.method,
@@ -2388,21 +2442,21 @@ const commonSocketSSEShow = async (sse_message) => {
         }
         case 'EXPIRED_SESSION':{
             commonLogout();
-            COMMON_GLOBAL.app_function_session_expired?COMMON_GLOBAL.app_function_session_expired():null;
+            COMMON_GLOBAL.Functions.app_function_session_expired?COMMON_GLOBAL.Functions.app_function_session_expired():null;
             break;
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.client_latitude =             JSON.parse(sse_message.sse_message).latitude==''?
-                                                            COMMON_GLOBAL.client_latitude:
+            COMMON_GLOBAL.Data.client_latitude =             JSON.parse(sse_message.sse_message).latitude==''?
+                                                            COMMON_GLOBAL.Data.client_latitude:
                                                                 JSON.parse(sse_message.sse_message).latitude;
-            COMMON_GLOBAL.client_longitude =            JSON.parse(sse_message.sse_message).longitude==''?
-                                                            COMMON_GLOBAL.client_longitude:
+            COMMON_GLOBAL.Data.client_longitude =            JSON.parse(sse_message.sse_message).longitude==''?
+                                                            COMMON_GLOBAL.Data.client_longitude:
                                                                 JSON.parse(sse_message.sse_message).longitude;
-            COMMON_GLOBAL.client_place =                JSON.parse(sse_message.sse_message).place==''?
-                                                            COMMON_GLOBAL.client_place:
+            COMMON_GLOBAL.Data.client_place =                JSON.parse(sse_message.sse_message).place==''?
+                                                            COMMON_GLOBAL.Data.client_place:
                                                                 JSON.parse(sse_message.sse_message).place;
-            COMMON_GLOBAL.client_timezone =             JSON.parse(sse_message.sse_message).timezone==''?
-                                                            COMMON_GLOBAL.client_timezone:
+            COMMON_GLOBAL.Data.client_timezone =             JSON.parse(sse_message.sse_message).timezone==''?
+                                                            COMMON_GLOBAL.Data.client_timezone:
                                                                 JSON.parse(sse_message.sse_message).timezone;
             break;
         }
@@ -2430,8 +2484,8 @@ const commonSocketSSEShow = async (sse_message) => {
             break;
         }
         case 'APP_FUNCTION':{
-            if (COMMON_GLOBAL.app_function_sse)
-                COMMON_GLOBAL.app_function_sse(sse_message.sse_message);
+            if (COMMON_GLOBAL.Functions.app_function_sse)
+                COMMON_GLOBAL.Functions.app_function_sse(sse_message.sse_message);
             break;
         }
         case 'MESSAGE':{
@@ -2471,7 +2525,7 @@ const commonTextEditingDisabled = () =>commonGetApp().TextEdit=='0';
  */
 const commonEvent = async (event_type,event=null) =>{
     if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`).addEventListener(event_type, (/**@type{common['CommonAppEvent']}*/event) => {
+        COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_root}`).addEventListener(event_type, (/**@type{common['CommonAppEvent']}*/event) => {
             commonEvent(event_type, event);
         });
     }
@@ -2526,7 +2580,7 @@ const commonEvent = async (event_type,event=null) =>{
                             }
                             // common app toolbar
                             case 'common_app_toolbar_start':{
-                                commonAppMount(COMMON_GLOBAL.app_start_app_id);
+                                commonAppMount(COMMON_GLOBAL.Parameters.app_start_app_id);
                                 break;
                             }
                             case 'common_app_toolbar_framework_js':
@@ -2614,14 +2668,14 @@ const commonEvent = async (event_type,event=null) =>{
             }
         })();
         //2 component events
-        //fire component events defined in each component in COMMON_GLOBAL.component[component].events key
+        //fire component events defined in each component in COMMON_GLOBAL.Functions.component[component].events key
         //component events should be for component elements, use app events to add addional functionality after common event and component events
-        for (const component of Object.values(COMMON_GLOBAL.component))
+        for (const component of Object.values(COMMON_GLOBAL.Functions.component))
             component.events?
                 await component.events(event_type, event):
                     null;
         //3 app events
-        COMMON_GLOBAL.app_metadata.events[event_type]?await COMMON_GLOBAL.app_metadata.events[event_type](event):null;
+        COMMON_GLOBAL.Functions.app_metadata.events[event_type]?await COMMON_GLOBAL.Functions.app_metadata.events[event_type](event):null;
     }
 };
 /**
@@ -2767,15 +2821,15 @@ const commonFrameworkClean = () =>{
         }
     }
     //React events are not created, just reset variable when switching framework
-    COMMON_GLOBAL.app_eventListeners.REACT = [];
+    COMMON_GLOBAL.Functions.app_eventListeners.REACT = [];
     //remove Vue objects
-    COMMON_GLOBAL.app_eventListeners.VUE = [];
+    COMMON_GLOBAL.Functions.app_eventListeners.VUE = [];
     delete COMMON_WINDOW.__VUE_DEVTOOLS_HOOK_REPLAY__;
     delete COMMON_WINDOW.__VUE_HMR_RUNTIME__;
     delete COMMON_WINDOW.__VUE__;
-    const app_root_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`);
-    if (COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}_vue`))
-        app_root_element.textContent = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}_vue`).textContent;
+    const app_root_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_root}`);
+    if (COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_root}_vue`))
+        app_root_element.textContent = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_root}_vue`).textContent;
     app_root_element.removeAttribute('data-v-app');
     delete app_root_element.__vue_app_;
     delete app_root_element.__vue_node;
@@ -2791,14 +2845,14 @@ const commonFrameworkClean = () =>{
  * @returns {Promise.<void>}
  */
 const commonFrameworkSet = async (framework) => {
-    const app_root_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_root}`);
-    const app_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`);
+    const app_root_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_root}`);
+    const app_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_div}`);
     const common_app_element = COMMON_DOCUMENT.querySelector('#common_app');
 
     //get all ellements with data-function
     /**@type{{id:string,element_function:function}[]} */
     const data_function = [];
-    COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.app_root} div`).forEach((/**@type{HTMLElement}*/element) =>{
+    COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.Parameters.app_root} div`).forEach((/**@type{HTMLElement}*/element) =>{
         /**@ts-ignore */
         if (element['data-function']){
             /**@ts-ignore */
@@ -2806,7 +2860,7 @@ const commonFrameworkSet = async (framework) => {
         }
     });
     
-    COMMON_GLOBAL.app_eventListeners.OTHER = [];
+    COMMON_GLOBAL.Functions.app_eventListeners.OTHER = [];
 
     //remove all listeners in app and app root divs including all objects saved on elements
     app_element.replaceWith(app_element.cloneNode(true));
@@ -2815,17 +2869,17 @@ const commonFrameworkSet = async (framework) => {
     commonFrameworkClean();
     
     //app can override framework or use default javascript if Vue or React is not set
-    if (framework ?? COMMON_GLOBAL.app_framework !=COMMON_GLOBAL.app_framework)
-        COMMON_GLOBAL.app_framework = framework ??1;
-    switch (framework ?? COMMON_GLOBAL.app_framework){
+    if (framework ?? COMMON_GLOBAL.Parameters.app_framework !=COMMON_GLOBAL.Parameters.app_framework)
+        COMMON_GLOBAL.Parameters.app_framework = framework ??1;
+    switch (framework ?? COMMON_GLOBAL.Parameters.app_framework){
         case 2:{
             //Vue
-            const template = `  <div id='${COMMON_GLOBAL.app_root}'>
+            const template = `  <div id='${COMMON_GLOBAL.Parameters.app_root}'>
                                     ${app_element.outerHTML}
                                     ${common_app_element.outerHTML}
                                 </div>`;
             const methods = {};
-            await commonFrameworkMount(2, template, methods, COMMON_GLOBAL.app_root, false);
+            await commonFrameworkMount(2, template, methods, COMMON_GLOBAL.Parameters.app_root, false);
             break;
         }
         case 3:{
@@ -2833,7 +2887,7 @@ const commonFrameworkSet = async (framework) => {
             const template = `  ${app_element.outerHTML}
                                 ${common_app_element.outerHTML}`;
             const methods = {};
-            await commonFrameworkMount(3, template, methods, COMMON_GLOBAL.app_root, false);
+            await commonFrameworkMount(3, template, methods, COMMON_GLOBAL.Parameters.app_root, false);
             break;
         }
         case 1:
@@ -2881,7 +2935,7 @@ const commonFrameworkSet = async (framework) => {
  */
 const commonCustomFramework = () => {
 
-    COMMON_GLOBAL.app_eventListeners.original = COMMON_DOCUMENT.addEventListener;
+    COMMON_GLOBAL.Functions.app_eventListeners.original = COMMON_DOCUMENT.addEventListener;
     /**
      * 
      * @param {*} stack 
@@ -2911,11 +2965,11 @@ const commonCustomFramework = () => {
         if (eventParameters[0].indexOf('test')>-1)
             throw 'test of passive listeners not allowed';
         const eventmodule = module(Error().stack);
-        COMMON_GLOBAL.app_eventListeners[eventmodule]
+        COMMON_GLOBAL.Functions.app_eventListeners[eventmodule]
             /**@ts-ignore */
             .push([scope, object, eventParameters[0], eventParameters[1], eventParameters[2]]);
         if (eventmodule!='REACT' && eventmodule!='VUE')
-            COMMON_GLOBAL.app_eventListeners.original.apply(object, eventParameters);
+            COMMON_GLOBAL.Functions.app_eventListeners.original.apply(object, eventParameters);
     };
     /**
      * Custom function used to replace default addEventListener function for Window
@@ -2956,17 +3010,17 @@ const commonCustomFramework = () => {
      * console warn
      * @param  {...any} parameters 
      */
-    const console_warn = (...parameters) => COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.warn(...parameters):null;
+    const console_warn = (...parameters) => COMMON_GLOBAL.Parameters.app_framework_messages == 1?COMMON_GLOBAL.Functions.app_console.warn(...parameters):null;
     /**
      * console error
      * @param  {...any} parameters 
      */
-     const console_error = (...parameters) => COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.error(...parameters):null;
+     const console_error = (...parameters) => COMMON_GLOBAL.Parameters.app_framework_messages == 1?COMMON_GLOBAL.Functions.app_console.error(...parameters):null;
     /**
      * console info
      * @param  {...any} parameters 
      */
-     const console_info = (...parameters) => COMMON_GLOBAL.app_framework_messages == 1?COMMON_GLOBAL.app_console.info(...parameters):null;
+     const console_info = (...parameters) => COMMON_GLOBAL.Parameters.app_framework_messages == 1?COMMON_GLOBAL.Functions.app_console.info(...parameters):null;
 
     //Vue uses console.warn, show or hide from any framework 
     COMMON_WINDOW.console.warn = console_warn;
@@ -2984,24 +3038,24 @@ const commonCustomFramework = () => {
  */
 const commonAppMount = async (app_id, spinner_id=null) =>{   
     
-    COMMON_GLOBAL.app_id =          app_id;
+    COMMON_GLOBAL.UserApp.app_id =          app_id;
     /**@type{common['server']['app']['commonAppMount']} */
     const CommonAppInit = await commonFFB({ path:`/app-mount/${app_id}`, 
                                             method:'GET', 
-                                            query:COMMON_GLOBAL.iam_user_id!=null?`IAM_iam_user_id=${COMMON_GLOBAL.iam_user_id}`:'',
-                                            authorization_type:COMMON_GLOBAL.iam_user_id!=null?'APP_ACCESS':'APP_ID',
+                                            query:COMMON_GLOBAL.User.iam_user_id!=null?`IAM_iam_user_id=${COMMON_GLOBAL.User.iam_user_id}`:'',
+                                            authorization_type:COMMON_GLOBAL.User.iam_user_id!=null?'APP_ACCESS':'APP_ID',
                                             ...(spinner_id !=null  && {spinner_id: spinner_id}),
                                         })
                             .then(app=>JSON.parse(app));
     //remove all dialogues when switching app
     Array.from(COMMON_DOCUMENT.querySelectorAll('#common_app_dialogues > div')).forEach(dialogue=>commonComponentRemove(dialogue.id));
-    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.app_div}`).innerHTML='';
-    if (COMMON_GLOBAL.app_id!=COMMON_GLOBAL.app_start_app_id)
+    COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_div}`).innerHTML='';
+    if (COMMON_GLOBAL.UserApp.app_id!=COMMON_GLOBAL.Parameters.app_start_app_id)
         commonComponentRemove('common_apps');
 
-    COMMON_GLOBAL.app_id =          CommonAppInit.App.Id;
+    COMMON_GLOBAL.UserApp.app_id =          CommonAppInit.App.Id;
     
-    if (COMMON_GLOBAL.iam_user_id != null)
+    if (COMMON_GLOBAL.User.iam_user_id != null)
         commonUserLoginApp(CommonAppInit.IamUserApp);
     
     CommonAppInit.App.Css==''?
@@ -3013,30 +3067,30 @@ const commonAppMount = async (app_id, spinner_id=null) =>{
     /**@type{common['commonMetadata']} */
     const appdata = appMetadata();
     //add metadata using tree shaking pattern
-    COMMON_GLOBAL.app_metadata.events.change = appdata.events.change;
-    COMMON_GLOBAL.app_metadata.events.click = appdata.events.click;
-    COMMON_GLOBAL.app_metadata.events.focusin = appdata.events.focusin;
-    COMMON_GLOBAL.app_metadata.events.input = appdata.events.input;
-    COMMON_GLOBAL.app_metadata.events.keydown = appdata.events.keydown;
-    COMMON_GLOBAL.app_metadata.events.keyup = appdata.events.keyup;
-    COMMON_GLOBAL.app_metadata.events.mousedown = appdata.events.mousedown;
-    COMMON_GLOBAL.app_metadata.events.mouseup = appdata.events.mouseup;
-    COMMON_GLOBAL.app_metadata.events.mousemove = appdata.events.mousemove;
-    COMMON_GLOBAL.app_metadata.events.mouseleave = appdata.events.mouseleave;
-    COMMON_GLOBAL.app_metadata.events.wheel = appdata.events.wheel;
-    COMMON_GLOBAL.app_metadata.events.touchstart = appdata.events.touchstart;
-    COMMON_GLOBAL.app_metadata.events.touchend = appdata.events.touchend;
-    COMMON_GLOBAL.app_metadata.events.touchcancel = appdata.events.touchcancel;
-    COMMON_GLOBAL.app_metadata.events.touchmove = appdata.events.touchmove;
-    COMMON_GLOBAL.app_metadata.lifeCycle.onMounted = appdata.lifeCycle?.onMounted;
+    COMMON_GLOBAL.Functions.app_metadata.events.change = appdata.events.change;
+    COMMON_GLOBAL.Functions.app_metadata.events.click = appdata.events.click;
+    COMMON_GLOBAL.Functions.app_metadata.events.focusin = appdata.events.focusin;
+    COMMON_GLOBAL.Functions.app_metadata.events.input = appdata.events.input;
+    COMMON_GLOBAL.Functions.app_metadata.events.keydown = appdata.events.keydown;
+    COMMON_GLOBAL.Functions.app_metadata.events.keyup = appdata.events.keyup;
+    COMMON_GLOBAL.Functions.app_metadata.events.mousedown = appdata.events.mousedown;
+    COMMON_GLOBAL.Functions.app_metadata.events.mouseup = appdata.events.mouseup;
+    COMMON_GLOBAL.Functions.app_metadata.events.mousemove = appdata.events.mousemove;
+    COMMON_GLOBAL.Functions.app_metadata.events.mouseleave = appdata.events.mouseleave;
+    COMMON_GLOBAL.Functions.app_metadata.events.wheel = appdata.events.wheel;
+    COMMON_GLOBAL.Functions.app_metadata.events.touchstart = appdata.events.touchstart;
+    COMMON_GLOBAL.Functions.app_metadata.events.touchend = appdata.events.touchend;
+    COMMON_GLOBAL.Functions.app_metadata.events.touchcancel = appdata.events.touchcancel;
+    COMMON_GLOBAL.Functions.app_metadata.events.touchmove = appdata.events.touchmove;
+    COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted = appdata.lifeCycle?.onMounted;
     
     await AppInit(commonGet(), CommonAppInit.AppParameter);
-    COMMON_GLOBAL.app_metadata.lifeCycle.onMounted?
-        await COMMON_GLOBAL.app_metadata.lifeCycle.onMounted():
+    COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted?
+        await COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted():
             null;
     commonFrameworkSet(null);
-    if (COMMON_GLOBAL.iam_user_id){
-        commonUserUpdateAvatar(true, COMMON_GLOBAL.iam_user_avatar);
+    if (COMMON_GLOBAL.User.iam_user_id){
+        commonUserUpdateAvatar(true, COMMON_GLOBAL.User.iam_user_avatar);
         commonUserMessageShowStat();
     }
     else
@@ -3058,6 +3112,7 @@ const commonGet = () =>{
         commonGlobalGet,
         commonGlobalSet,
         commonGetApp,
+        commonGetAppData,
         /* MISC */
         commonMiscElementId:commonMiscElementId, 
         commonMiscElementDiv:commonMiscElementDiv,
@@ -3136,10 +3191,16 @@ const commonGet = () =>{
  * @returns {void}
  */
 const commonGlobals = globals => {  
-    Object.entries(globals).forEach(key=>{
-        /**@ts-ignore */
-        COMMON_GLOBAL[key[0]] = key[1];
-    });
+    //Apps []
+    Object.entries(globals).forEach(key=>
+        ['Apps','AppData'].includes(key[0])?
+            /**@ts-ignore */
+            COMMON_GLOBAL[key[0]]=key[1]:
+                Object.entries(key[1]).forEach(subkey=>
+                    /**@ts-ignore */
+                    COMMON_GLOBAL[key[0]][subkey[0]] = subkey[1]
+                )
+    )
 };
 
 export{/* GLOBALS*/
@@ -3147,6 +3208,7 @@ export{/* GLOBALS*/
        commonGlobalGet,
        commonGlobalSet,
        commonGetApp,
+       commonGetAppData,
        /* MISC */
        commonMiscElementId, 
        commonMiscElementDiv,

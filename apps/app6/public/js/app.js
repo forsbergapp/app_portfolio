@@ -91,7 +91,7 @@ const appProductUpdate = async () =>{
                     display_type:'VERTICAL_KEY_VALUE',
                     master_path:'/app-common-module/PRODUCT_LOCATION_GET',
                     master_query:'fields=Stock',
-                    master_body:{type:'FUNCTION',IAM_data_app_id:common.commonGlobalGet('app_id'), resource_id : product_variant_id},
+                    master_body:{type:'FUNCTION',IAM_data_app_id:common.commonGlobalGet('UserApp').app_id, resource_id : product_variant_id},
                     master_method:'POST',
                     master_token_type:'APP_ID',
                     master_resource:'PRODUCT_VARIANT_LOCATION_METADATA',
@@ -130,19 +130,19 @@ const appPaymentRequestStatus = ()=>{
                             method:'POST', 
                             authorization_type:'APP_ACCESS_EXTERNAL',   
                             body:{  type:'FUNCTION',
-                                    IAM_data_app_id:common.commonGlobalGet('app_id'), 
+                                    IAM_data_app_id:common.commonGlobalGet('UserApp').app_id, 
                                     payment_request_id: payment_request_id}})
         .then((/**@type{*}*/result)=>{
             const status = JSON.parse(result).rows[0].status;
             if (status != 'PENDING'){
-                common.commonGlobalSet('token_external',null);
+                common.commonGlobalSet('Data','token_external',null);
                 common.commonComponentRemove('common_app_dialogues_app_data_display');
                 common.commonMessageShow('INFO', null, null,status);
             }
         })
         .catch(()=>{
             common.commonComponentRemove('common_app_dialogues_app_data_display');
-            common.commonGlobalSet('token_external',null);
+            common.commonGlobalSet('Data','token_external',null);
         });
     }
 };
@@ -159,7 +159,7 @@ const appPaymentRequest = async () =>{
         const data = {
             type:'FUNCTION',
             reference:      `SHOP SKU ${sku}`,
-            IAM_data_app_id:common.commonGlobalGet('app_id'),
+            IAM_data_app_id:common.commonGlobalGet('UserApp').app_id,
             payerid:        payerid_element.textContent,
             amount:         COMMON_DOCUMENT.querySelectorAll('#app_page_start_shop .common_select_dropdown_value .common_app_data_display_master_col_list[data-Price]')[0].getAttribute('data-Price'),
             currency_code:  COMMON_DOCUMENT.querySelectorAll('#app_page_start_shop .common_select_dropdown_value .common_app_data_display_master_col_list[data-CurrencyCode]')[0].getAttribute('data-CurrencyCode'),
@@ -198,7 +198,7 @@ const appPaymentRequest = async () =>{
             path:'/common/component/common_app_data_display.js'})
             .then(result=>{
                 //save the returned access token
-                common.commonGlobalSet('token_external',result.data.master_object.Token.Value);
+                common.commonGlobalSet('Data','token_external',result.data.master_object.Token.Value);
                 COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=Amount]').nextElementSibling.textContent += ' ' +
                 COMMON_DOCUMENT.querySelector('#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=CurrencySymbol]').textContent;
     
@@ -259,8 +259,8 @@ const appPay = async () =>{
                     master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
                     master_query:'fields=Document',
                     master_body:{   type:'FUNCTION',
-                                    IAM_module_app_id:common.commonGlobalGet('app_common_app_id'),
-                                    IAM_data_app_id:common.commonGlobalGet('app_id'), 
+                                    IAM_module_app_id:common.commonGlobalGet('Parameters').app_common_app_id,
+                                    IAM_data_app_id:common.commonGlobalGet('UserApp').app_id, 
                                     resource_name:'PAYMENT_METADATA'},
                     master_method:'POST',
                     master_token_type:'APP_ID',
@@ -299,7 +299,7 @@ const appPay = async () =>{
 const appInit = async () => {
     COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
-        mountDiv:   common.commonGlobalGet('app_div'), 
+        mountDiv:   common.commonGlobalGet('Parameters').app_div, 
         data:       null,
         methods:    {pay:appPay},
         path:'/component/app.js'});
@@ -316,7 +316,7 @@ const appInit = async () => {
 const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    common.commonGlobalSet('app_function_session_expired', null);
+    common.commonGlobalSet('Functions', 'app_function_session_expired', null);
     appInit();
 };
 /**

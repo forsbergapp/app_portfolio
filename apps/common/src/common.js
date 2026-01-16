@@ -1158,13 +1158,9 @@ const getAppStart = async parameters =>{
     const DATA_APP_ID =             (await server.app_common.commonAppIam(parameters.host, 'APP')).admin?
                                         ADMIN_APP_ID:
                                             COMMON_APP_ID;
-    const START_APP_ID =            DATA_APP_ID==ADMIN_APP_ID?ADMIN_APP_ID:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_START_APP_ID.default)??1;
+    const START_APP_ID =            DATA_APP_ID==ADMIN_APP_ID?ADMIN_APP_ID:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_START_APP_ID.default)??2;
     const CONT_USER =               server.ORM.db.IamUser.get(DATA_APP_ID, null).result.length;
     const ADMIN_ONLY =              (await server.app_common.commonAppStart(DATA_APP_ID)==true?false:true) && CONT_USER==0;
-    //fetch parameters and convert records to one object with parameter keys
-    /**@type{Object.<string,*>} */
-    const APP_PARAMETER =           server.ORM.db.AppData.getServer({app_id:DATA_APP_ID, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:COMMON_APP_ID}}).result
-                                    .reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['Object']['AppData']}*/row)=>{key[row.Value] = row.DisplayData; return key},{})
     //geodata for APP using start_app_id
     const GEODATA =                 await server.app_common.commonGeodata({ app_id:START_APP_ID, 
                                                             endpoint:'APP', 
@@ -1194,24 +1190,33 @@ const getAppStart = async parameters =>{
             /**@type{server['app']['commonGlobals']} */
             globals:        {
                                 //update COMMON_GLOBAL keys:
-                                apps:                           (await server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null})).result,
-                                rest_resource_bff:              REST_RESOURCE_BFF,
-                                app_rest_api_version:           APP_REST_API_VERSION,
-                                app_rest_api_basepath:          BASE_PATH_REST_API,
-                                app_common_app_id:              COMMON_APP_ID,
-                                app_admin_app_id:               ADMIN_APP_ID,
-                                app_start_app_id:               START_APP_ID,
-                                app_toolbar_button_start:       server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_START.default)??1,
-                                app_toolbar_button_framework:   server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_FRAMEWORK.default)??1,
-                                app_framework:                  server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK.default)??1,
+                                                
+                                Apps:           (await server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null})).result,
+                                AppData:        server.ORM.db.AppData.getServer({app_id:DATA_APP_ID, resource_id:null, data:{name:'APP_PARAMETER',data_app_id:COMMON_APP_ID}})
+                                                    .result.map((/**@type{server['ORM']['Object']['AppData']}*/row)=>{return [row.AppId, row.Name, row.Value, row.DisplayData]}),
+                                Parameters:     {
+                                                rest_resource_bff:              REST_RESOURCE_BFF,
+                                                app_rest_api_version:           APP_REST_API_VERSION,
+                                                app_rest_api_basepath:          BASE_PATH_REST_API,
+                                                app_common_app_id:              COMMON_APP_ID,
+                                                app_admin_app_id:               ADMIN_APP_ID,
+                                                app_start_app_id:               START_APP_ID,
+                                                app_toolbar_button_start:       server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_START.default)??1,
+                                                app_toolbar_button_framework:   server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_TOOLBAR_BUTTON_FRAMEWORK.default)??1,
+                                                app_framework:                  server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK.default)??1,
 
-                                app_framework_messages:         server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK_MESSAGES.default)??1,
-                                admin_only:                     ADMIN_ONLY?1:0,
-                                admin_first_time:               CONT_USER==0?1:0,
-                                app_request_tries:              server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUEST_TRIES.default)??5,
-                                app_requesttimeout_seconds:     server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_SECONDS.default)??5,
-                                app_requesttimeout_admin_minutes:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
-                                app_fonts:                      (await server.app_common.commonResourceFile({ 
+                                                app_framework_messages:         server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FRAMEWORK_MESSAGES.default)??1,
+                                                admin_only:                     ADMIN_ONLY?1:0,
+                                                admin_first_time:               CONT_USER==0?1:0,
+                                                app_request_tries:              server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUEST_TRIES.default)??5,
+                                                app_requesttimeout_seconds:     server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_SECONDS.default)??5,
+                                                app_requesttimeout_admin_minutes:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_REQUESTTIMEOUT_ADMIN_MINUTES.default)??60,
+                                                app_content_type_json:          'application/json; charset=utf-8',
+                                                app_content_type_html:          'text/html; charset=utf-8',
+                                                app_content_type_sse:           'text/event-stream; charset=utf-8',
+                                                },
+                                Data:           {
+                                                app_fonts:       (await server.app_common.commonResourceFile({ 
                                                                         app_id:DATA_APP_ID, 
                                                                         resource_id:'/common/css/common_fonts.css',
                                                                         content_type:'text/css', 
@@ -1226,23 +1231,13 @@ const getAppStart = async parameters =>{
                                                                         return row;
                                                                 }).join('url(')
                                                                 .split('@'),
-                                app_content_type_json:          'application/json; charset=utf-8',
-                                app_content_type_html:          'text/html; charset=utf-8',
-                                app_content_type_sse:           'text/event-stream; charset=utf-8',
-                                //AppData parameters common
-                                info_link_policy_name:          APP_PARAMETER.INFO_LINK_POLICY_NAME,
-                                info_link_policy_url:           APP_PARAMETER.INFO_LINK_POLICY_URL,
-                                info_link_disclaimer_name:      APP_PARAMETER.INFO_LINK_DISCLAIMER_NAME,
-                                info_link_disclaimer_url:       APP_PARAMETER.INFO_LINK_DISCLAIMER_URL,
-                                info_link_terms_name:           APP_PARAMETER.INFO_LINK_TERMS_NAME,
-                                info_link_terms_url:            APP_PARAMETER.INFO_LINK_TERMS_URL,
-                                
-                                //User
-                                token_dt:                       parameters.idToken,
-                                client_latitude:                GEODATA?.latitude,
-                                client_longitude:               GEODATA?.longitude,
-                                client_place:                   GEODATA?.place ?? '',
-                                client_timezone:                GEODATA?.timezone==''?null:GEODATA?.timezone
+
+                                                token_dt:                       parameters.idToken,
+                                                client_latitude:                GEODATA?.latitude,
+                                                client_longitude:               GEODATA?.longitude,
+                                                client_place:                   GEODATA?.place ?? '',
+                                                client_timezone:                GEODATA?.timezone==''?null:GEODATA?.timezone
+                                            }
                             }
             }
         ,

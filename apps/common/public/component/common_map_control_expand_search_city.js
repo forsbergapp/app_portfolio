@@ -61,7 +61,7 @@ const component = async props => {
                                body:{  type:'FUNCTION',
                                        searchType:'SEARCH',
                                        searchString:props.data.search,
-                                       IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id')
+                                       IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id
                                    }
                            })
                            .then(result=>JSON.parse(result).rows);

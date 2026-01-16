@@ -55,8 +55,8 @@ const component = async props => {
                                                     method:'POST', 
                                                     authorization_type:'APP_ACCESS', 
                                                     body:{  type:'FUNCTION',
-                                                            IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
-                                                            IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id')}})
+                                                            IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+                                                            IAM_data_app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id}})
                         .then((/**@type{string}*/result)=>JSON.parse(result));
 
     /**
@@ -86,8 +86,8 @@ const component = async props => {
                             master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
                             master_query:'fields=Document',
                             master_body:{   type:'FUNCTION',
-                                            IAM_module_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
-                                            IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id'), 
+                                            IAM_module_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
+                                            IAM_data_app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id, 
                                             resource_name:'CUSTOMER'},
                             master_method:'POST',
                             master_token_type:'APP_ID',

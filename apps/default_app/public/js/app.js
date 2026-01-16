@@ -20,7 +20,7 @@ let common;
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
-    await common.commonComponentRender({mountDiv:common.commonGlobalGet('app_div'),
+    await common.commonComponentRender({mountDiv:common.commonGlobalGet('Parameters').app_div,
         data:       null,
         methods:    null,
         path:'/component/app.js'});
@@ -43,7 +43,7 @@ const appCommonInit = async (commonLib, start, parameters) => {
     common = commonLib;
     await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';    
-    common.commonGlobalSet('app_function_session_expired', null);
+    common.commonGlobalSet('Functions','app_function_session_expired', null);
     appInit();
 };
 /**

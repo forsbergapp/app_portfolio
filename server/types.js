@@ -31,38 +31,37 @@
 
 /**
  * @description APP server_apps_globals
- * @typedef {object}        server_apps_globals
- * @property {server_db_table_App[]} apps
- * @property {string}       rest_resource_bff
- * @property {string}       app_rest_api_version
- * @property {string}       app_rest_api_basepath
- * @property {number|null}  app_common_app_id
- * @property {number|null}  app_admin_app_id
- * @property {number|null}  app_start_app_id
- * @property {number}       app_toolbar_button_start
- * @property {number}       app_toolbar_button_framework
- * @property {number}       app_framework
- * @property {number}       app_framework_messages
- * @property {number}       admin_only
- * @property {number}       admin_first_time
- * @property {number}       app_request_tries
- * @property {number}       app_requesttimeout_seconds
- * @property {number}       app_requesttimeout_admin_minutes
- * @property {string[]}     app_fonts
- * @property {string}       app_content_type_json,
- * @property {string}       app_content_type_html,
- * @property {string}       app_content_type_sse,
- * @property {string|null}  info_link_policy_name
- * @property {string|null}  info_link_policy_url
- * @property {string|null}  info_link_disclaimer_name
- * @property {string|null}  info_link_disclaimer_url
- * @property {string|null}  info_link_terms_name
- * @property {string|null}  info_link_terms_url
- * @property {string|null}  token_dt
- * @property {string|null}  client_latitude
- * @property {string|null}  client_longitude
- * @property {string|null}  client_place
- * @property {string|null}  client_timezone
+ * @typedef {{  Apps: server_db_table_App[],
+ *              AppData:[   ORM['Object']['AppData']['AppId'], 
+ *                          ORM['Object']['AppData']['Value'],
+ *                          ORM['Object']['AppData']['DisplayData']][],
+ *              Parameters:{rest_resource_bff:string,
+ *                          app_rest_api_version:string,
+ *                          app_rest_api_basepath:string,
+ *                          app_common_app_id:number,
+ *                          app_admin_app_id:number,
+ *                          app_start_app_id:number,
+ *                          app_toolbar_button_start:number,
+ *                          app_toolbar_button_framework:number,
+ *                          app_framework:number,
+ *                          app_framework_messages:number,
+ *                          admin_only:number,
+ *                          admin_first_time:number,
+ *                          app_request_tries:number,
+ *                          app_requesttimeout_seconds:number,
+ *                          app_requesttimeout_admin_minutes:number,
+ *                          app_content_type_json:string,
+ *                          app_content_type_html:string,
+ *                          app_content_type_sse:string,
+ *                          },
+ *              Data:{  app_fonts:string[],
+ *                      token_dt:string|null
+ *                      client_latitude:string|null,
+ *                      client_longitude:string|null,
+ *                      client_place:string|null,
+ *                      client_timezone:string|null
+ *                  }
+ *              }}  server_apps_globals
  */
 
 /**

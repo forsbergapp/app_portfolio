@@ -87,8 +87,8 @@ const component = async props => {
                             mountDiv:   'common_app_window_info',
                             data:       {
                                         info:'URL',
-                                        path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_policy_url'),
-                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`,
+                                        path:'/app-resource/' + (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'APP_PARAMETER', 'INFO_LINK_POLICY_URL' ))[0].DisplayData,
+                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id}`,
                                         method:'GET',
                                         authorization:'APP_ID'
                                         },
@@ -101,8 +101,8 @@ const component = async props => {
                             mountDiv:   'common_app_window_info',
                             data:       {
                                         info:'URL',
-                                        path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_disclaimer_url'),
-                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`,
+                                        path:'/app-resource/' + (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'APP_PARAMETER', 'INFO_LINK_DISCLAIMER_URL' ))[0].DisplayData,
+                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id}`,
                                         method:'GET',
                                         authorization:'APP_ID'
                                         },
@@ -115,8 +115,8 @@ const component = async props => {
                             mountDiv:   'common_app_window_info',
                             data:       {
                                         info:'URL',
-                                        path:'/app-resource/' + props.methods.COMMON.commonGlobalGet('info_link_terms_url'),
-                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`,
+                                        path:'/app-resource/' + (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'APP_PARAMETER', 'INFO_LINK_TERMS_URL' ))[0].DisplayData,
+                                        query:`type=INFO&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id}`,
                                         method:'GET',
                                         authorization:'APP_ID'
                                         },
@@ -139,7 +139,7 @@ const component = async props => {
                         method: 'POST', 
                         body:   {   type:'FUNCTION',
                                     message:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_info_contact_message').textContent,
-                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id')},
+                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id},
                         authorization_type:'APP_ID'
                     })
         .then((/**@type{string}*/result)=>{
@@ -159,9 +159,9 @@ const component = async props => {
                            app_copyright:props.methods.COMMON.commonGetApp().Copyright,
                            app_link_url:props.methods.COMMON.commonGetApp().LinkUrl,
                            app_link_title:props.methods.COMMON.commonGetApp().LinkTitle,
-                           info_link_policy_name:props.methods.COMMON.commonGlobalGet('info_link_policy_name'),
-                           info_link_disclaimer_name:props.methods.COMMON.commonGlobalGet('info_link_disclaimer_name'),
-                           info_link_terms_name:props.methods.COMMON.commonGlobalGet('info_link_terms_name'),
+                           info_link_policy_name:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'APP_PARAMETER', 'INFO_LINK_POLICY_NAME'))[0].DisplayData,
+                           info_link_disclaimer_name:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'APP_PARAMETER', 'INFO_LINK_DISCLAIMER_NAME'))[0].DisplayData,
+                           info_link_terms_name:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'APP_PARAMETER', 'INFO_LINK_TERMS_NAME'))[0].DisplayData,
                            icons:{  email:props.methods.COMMON.commonGlobalGet('ICONS')['email'],
                                     close:props.methods.COMMON.commonGlobalGet('ICONS')['close'],
                                     send:props.methods.COMMON.commonGlobalGet('ICONS')['send']}

@@ -542,11 +542,11 @@ const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, meth
     .then((/**@type{string}*/result)=>{
         if (db_icon!=null)
             if (db_icon){
-                common.commonGlobalSet('admin_only', 0);
+                common.commonGlobalSet('Parameters', 'admin_only', 0);
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.add('installed');
             }
             else{
-                common.commonGlobalSet('admin_only', 1);
+                common.commonGlobalSet('Parameters', 'admin_only', 1);
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.remove('installed');
             }
                 
@@ -729,8 +729,8 @@ const appSecureEvents = (event_type, event, event_target_id)=> {
                     break;
                 }
                 case common.commonMiscElementDiv(event.target).classList.contains('gps_click')?event_target_id:'':{
-                    common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map']?.methods?.goTo?
-                        common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map'].methods.goTo({
+                    common.commonGlobalGet('Functions').component[common.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_map']?.methods?.goTo?
+                        common.commonGlobalGet('Functions').component[common.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_map'].methods.goTo({
                             latitude:   common.commonMiscElementDiv(event.target).getAttribute('data-latitude') ?? '',
                             longitude:  common.commonMiscElementDiv(event.target).getAttribute('data-longitude') ?? '',
                             ip:         common.commonMiscElementDiv(event.target).getAttribute('data-ip') ?? ''
@@ -1021,7 +1021,7 @@ const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
     COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu').style.display = 'none';
-    common.commonGlobalSet('app_function_session_expired', appLogout);
+    common.commonGlobalSet('Functions','app_function_session_expired', appLogout);
     appInit();
 };
 /**

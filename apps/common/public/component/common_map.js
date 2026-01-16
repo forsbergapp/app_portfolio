@@ -356,7 +356,7 @@ const component = async props => {
     const getPlace = async parameters =>
         await props.methods.COMMON.commonFFB({
             path:'/geolocation/place', 
-            query:`locale=${props.methods.COMMON.commonGlobalGet('user_locale')}&longitude=${parameters.longitude}&latitude=${parameters.latitude}`, 
+            query:`locale=${props.methods.COMMON.commonGlobalGet('UserApp').user_locale}&longitude=${parameters.longitude}&latitude=${parameters.latitude}`, 
             method:'GET', 
             authorization_type:'APP_ID'}).then(result=>JSON.parse(result).rows);
     /**
@@ -559,7 +559,7 @@ const component = async props => {
         const place =  parameters.ip?
                             await props.methods.COMMON.commonFFB({ 
                                                             path:'/geolocation/ip', 
-                                                            query:`locale=${props.methods.COMMON.commonGlobalGet('user_locale')}&ip=${parameters.ip}`, 
+                                                            query:`locale=${props.methods.COMMON.commonGlobalGet('UserApp').user_locale}&ip=${parameters.ip}`, 
                                                             method:'GET', 
                                                             authorization_type:'APP_ID'})
                             .then(result=>JSON.parse(result).rows):

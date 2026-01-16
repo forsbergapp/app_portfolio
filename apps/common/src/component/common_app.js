@@ -53,11 +53,11 @@ const template = props =>`  <!DOCTYPE html>
                                                 promise[0].default({
                                                         data:   {
                                                                 globals:    {
-                                                                                x:{ 
+                                                                                Functions:{x:{ 
                                                                                     encrypt:start.Crypto.encrypt,
                                                                                     decrypt:start.Crypto.decrypt,
                                                                                     uuid:   '${props.uuid}',
-                                                                                    secret: '${props.secret}'},
+                                                                                    secret: '${props.secret}'}},
                                                                                 ...start.commonStart.globals
                                                                             },
                                                                 cssCommon:  start.commonStart.cssCommon

@@ -260,7 +260,7 @@ const component = async props => {
             return await props.methods.COMMON.commonFFB({ path:'/app-common-module/CUBE_SOLVE', method:'POST', authorization_type:'APP_ID',
                                 body:{  type:'FUNCTION',
                                         model:              Number(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_select_model .common_select_dropdown_value')?.getAttribute('data-value')),
-                                        IAM_data_app_id:    props.methods.COMMON.commonGlobalGet('app_id'),
+                                        IAM_data_app_id:    props.methods.COMMON.commonGlobalGet('UserApp').app_id,
                                         preamble:           0,
                                         temperature:        Number(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_select_temperature .common_select_dropdown_value')?.getAttribute('data-value')),
                                         cube_currentstate: 	CONSTANTS.cube.getState(),

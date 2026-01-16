@@ -743,18 +743,18 @@ const appUserLogin = async () => {
  * @returns {Promise.<void>}
  */
 const appUserLoginPost = async () =>{
-    if (common.commonGlobalGet('iam_user_id') !=null){
+    if (common.commonGlobalGet('User').iam_user_id !=null){
         //if user has not any posts saved then create default
         const result = await common.commonFFB({ path:'/server-iam/iamuserappdatapost/', 
-                                                query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${common.commonGlobalGet('iam_user_id')??''}`, 
+                                                query:`IAM_data_app_id=${common.commonGlobalGet('UserApp').app_id}&iam_user_id=${common.commonGlobalGet('User').iam_user_id??''}`, 
                                                 method:'GET', authorization_type:'APP_ID'});
          let settings = []
         if (JSON.parse(result).rows.length==0){
             await appUserSettingFunction('ADD_LOGIN', true);
-            settings = await appUserSettingsGet({iam_user_id:common.commonGlobalGet('iam_user_id')});
+            settings = await appUserSettingsGet({iam_user_id:common.commonGlobalGet('User').iam_user_id});
         }
         else
-            settings = await appUserSettingsGet({iam_user_id:common.commonGlobalGet('iam_user_id'), settings_fetched:result})
+            settings = await appUserSettingsGet({iam_user_id:common.commonGlobalGet('User').iam_user_id, settings_fetched:result})
         common.commonComponentRemove('common_app_dialogues_app_custom')
         common.commonComponentRemove('common_app_dialogues_profile');
         
@@ -808,7 +808,7 @@ const appUserLogout = () => {
  * @returns {void}
  */
 const appUserProfileDetail = (detailchoice) => {
-    if (common.commonGlobalGet('iam_user_id') || 0 !== 0) {
+    if (common.commonGlobalGet('User').iam_user_id || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
             COMMON_DOCUMENT.querySelector('#profile_user_settings_row').style.display = 'block';
@@ -837,7 +837,7 @@ const appUserSettingsGet = async parameters => {
     const result = parameters.settings_fetched?
                         parameters.settings_fetched:
                             await common.commonFFB({path:'/server-iam/iamuserappdatapost/', 
-                                                    query:`IAM_data_app_id=${common.commonGlobalGet('app_id')}&iam_user_id=${parameters.iam_user_id ??''}${parameters.sid==null?'':'&id_view=' + parameters.sid}`, 
+                                                    query:`IAM_data_app_id=${common.commonGlobalGet('UserApp').app_id}&iam_user_id=${parameters.iam_user_id ??''}${parameters.sid==null?'':'&id_view=' + parameters.sid}`, 
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'});
     const settings = JSON.parse(result).rows.map((/** @type{APP_user_setting_record}*/setting)=>{
@@ -913,7 +913,7 @@ const appUserSettingLink = (item) => {
                                             .replace('user_','')
                                             .replace('_html','')
                                             .toUpperCase(),
-                                    iam_user_id:common.commonGlobalGet('iam_user_id'),
+                                    iam_user_id:common.commonGlobalGet('User').iam_user_id,
                                     sid:sid ??0,
                                     current:true
             })
@@ -945,7 +945,7 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
                                                 ]})==true){
         
         const body = {  document:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
-                        IAM_iam_user_app_id:    common.commonGlobalGet('iam_user_app_id')
+                        IAM_iam_user_app_id:    common.commonGlobalGet('UserApp').iam_user_app_id
                     };
         /**@type {common['CommonRESTAPIMethod']}*/
         let method;
@@ -1023,7 +1023,7 @@ const appUserSettingDelete = (choice=null) => {
             common.commonFFB({  path:`/server-db/iamuserappdatapost/${user_setting_id}`, 
                                 method:'DELETE', 
                                 authorization_type:'APP_ACCESS', 
-                                body:{IAM_iam_user_app_id:common.commonGlobalGet('iam_user_app_id')}, spinner_id:'setting_btn_user_delete'})
+                                body:{IAM_iam_user_app_id:common.commonGlobalGet('UserApp').iam_user_app_id}, spinner_id:'setting_btn_user_delete'})
             .then(()=>{
                 //check if last setting
                 if (APP_GLOBAL.user_settings.data.length == 1)
@@ -1064,11 +1064,11 @@ const appUserSettingDelete = (choice=null) => {
 const appUserSettingDefaultSet = async () => {
     //update APP_GLOBAL
     const Document = {
-        Description:                        common.commonGlobalGet('client_place'),
-        RegionalLanguageLocale:             common.commonGlobalGet('user_locale'),
-        RegionalTimezone:                   (common.commonGlobalGet('client_latitude') && common.commonGlobalGet('client_longitude'))?
+        Description:                        common.commonGlobalGet('Data').client_place,
+        RegionalLanguageLocale:             common.commonGlobalGet('UserApp').user_locale,
+        RegionalTimezone:                   (common.commonGlobalGet('Data').client_latitude && common.commonGlobalGet('Data').client_longitude)?
                                                 (await common.commonMiscImport(common.commonMiscImportmap('regional')))
-                                                    .getTimezone(common.commonGlobalGet('client_latitude'), common.commonGlobalGet('client_longitude')):
+                                                    .getTimezone(common.commonGlobalGet('Data').client_latitude, common.commonGlobalGet('Data').client_longitude):
                                                         Intl.DateTimeFormat().resolvedOptions().timeZone,
         RegionalNumberSystem:               Intl.NumberFormat().resolvedOptions().numberingSystem,
         RegionalLayoutDirection:            APP_GLOBAL.regional_default_direction,
@@ -1076,8 +1076,8 @@ const appUserSettingDefaultSet = async () => {
         RegionalArabicScript:               APP_GLOBAL.regional_default_arabic_script,
         RegionalCalendarType:               APP_GLOBAL.regional_default_calendartype,
         RegionalCalendarHijriType:         APP_GLOBAL.regional_default_calendar_hijri_type,
-        GpsLatText:                         appCommonFixFloat(common.commonGlobalGet('client_latitude')??''),
-        GpsLongText:                        appCommonFixFloat(common.commonGlobalGet('client_longitude')??''),
+        GpsLatText:                         appCommonFixFloat(common.commonGlobalGet('Data').client_latitude??''),
+        GpsLongText:                        appCommonFixFloat(common.commonGlobalGet('Data').client_longitude??''),
         DesignThemeDayId:                   APP_GLOBAL.design_default_theme_day,
         DesignThemeMonthId:                 APP_GLOBAL.design_default_theme_month,
         DesignThemeYearId:                  APP_GLOBAL.design_default_theme_year,
@@ -1288,9 +1288,9 @@ const appUserSettingProfileLink = item => {
             /**@type{common['CommonRESTAPIMethod']} */
             let method;
             const json = {  iam_user_app_data_post_id: sid, 
-                            IAM_iam_user_id: common.commonGlobalGet('iam_user_id'),
-                            IAM_data_app_id:common.commonGlobalGet('app_id')};
-            if (common.commonGlobalGet('iam_user_id') == null)
+                            IAM_iam_user_id: common.commonGlobalGet('User').iam_user_id,
+                            IAM_data_app_id:common.commonGlobalGet('UserApp').app_id};
+            if (common.commonGlobalGet('User').iam_user_id == null)
                 common.commonDialogueShow('LOGIN');
             else {
                 let path;
@@ -1722,7 +1722,7 @@ const appMapQibblaShow = () => {
                 ]
             }
         };
-        common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map']?.methods?.drawVectors([geoJSONQibbla]);
+        common.commonGlobalGet('Functions').component[common.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_map']?.methods?.drawVectors([geoJSONQibbla]);
         /**@type{common['commonGeoJSONPolyline']}*/
         const geoJSONQibblaOld = 
         {
@@ -1749,7 +1749,7 @@ const appMapQibblaShow = () => {
                 ]
             }
         };
-        common.commonGlobalGet('component')[common.commonGlobalGet('app_common_app_id') + '_' + 'common_map']?.methods?.drawVectors([geoJSONQibblaOld]);
+        common.commonGlobalGet('Functions').component[common.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_map']?.methods?.drawVectors([geoJSONQibblaOld]);
     }
 };
 
@@ -1762,7 +1762,7 @@ const appMapQibblaShow = () => {
  */
 const appInit = async parameters => {
     await common.commonComponentRender({
-        mountDiv:   common.commonGlobalGet('app_div'),
+        mountDiv:   common.commonGlobalGet('Parameters').app_div,
         data:       null,
         methods:    null,
         path:       '/component/app.js'})
@@ -1835,8 +1835,8 @@ const appInit = async parameters => {
 
     //set current date for report month
     //if client_timezone is set, set Date with client_timezone
-    if (common.commonGlobalGet('client_timezone'))
-        APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(common.commonGlobalGet('client_timezone'));
+    if (common.commonGlobalGet('Data').client_timezone)
+        APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = common.commonMiscTimezoneDate(common.commonGlobalGet('Data').client_timezone);
     else
         APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentDate = new Date();
     APP_GLOBAL.appLibTimetable.APP_REPORT_GLOBAL.session_currentHijriDate = [0,0];
@@ -1865,7 +1865,7 @@ const appInit = async parameters => {
 const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    common.commonGlobalSet('app_function_session_expired', appUserLogout);
+    common.commonGlobalSet('Functions','app_function_session_expired', appUserLogout);
     await appInit(parameters);
 };
 /**

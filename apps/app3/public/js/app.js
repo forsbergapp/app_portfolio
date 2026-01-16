@@ -89,8 +89,8 @@ const appEventClick = event => {
  */
 const appInit = async () => {
     await common.commonComponentRender({
-        mountDiv:   common.commonGlobalGet('app_div'),
-        data:       {app_id:common.commonGlobalGet('app_common_app_id')},
+        mountDiv:   common.commonGlobalGet('Parameters').app_div,
+        data:       {app_id:common.commonGlobalGet('Parameters').app_common_app_id},
         methods:    null,
         path:       '/component/app.js'});
 };
@@ -106,7 +106,7 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    common.commonGlobalSet('app_function_session_expired', null);
+    common.commonGlobalSet('Functions','app_function_session_expired', null);
     appInit();
 };
 /**

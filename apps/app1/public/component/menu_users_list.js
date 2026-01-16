@@ -106,7 +106,7 @@ const component = async props => {
       lifecycle:    {onMounted:onMounted},
       data:         null,
       methods:      null,
-      template:     template({  iam_user_id: props.methods.COMMON.commonGlobalGet('iam_user_id'),
+      template:     template({  iam_user_id: props.methods.COMMON.commonGlobalGet('User').iam_user_id,
                                 users:users,
                                 function_get_order_by:get_order_by,
                                 icons:{ avatar:props.methods.COMMON.commonGlobalGet('ICONS')['user_avatar'],

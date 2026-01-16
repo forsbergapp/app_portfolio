@@ -43,15 +43,15 @@ const appEventClick = event =>{
  */
 const appInit = async () =>{
     await common.commonComponentRender({
-        mountDiv:   common.commonGlobalGet('app_div'),
+        mountDiv:   common.commonGlobalGet('Parameters').app_div,
         data:       null,
         methods:    null,
         path:       '/component/app.js'});
         common.commonComponentRender({
             mountDiv:   'mapid',
             data:       { 
-                        longitude:common.commonGlobalGet('client_longitude'),
-                        latitude:common.commonGlobalGet('client_latitude')
+                        longitude:common.commonGlobalGet('Data').client_longitude,
+                        latitude:common.commonGlobalGet('Data').client_latitude
                         },
             methods:    null,
             path:       '/common/component/common_map.js'});
@@ -68,7 +68,7 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
-    common.commonGlobalSet('app_function_session_expired', null);
+    common.commonGlobalSet('Functions', 'app_function_session_expired', null);
     appInit();
 };
 /**

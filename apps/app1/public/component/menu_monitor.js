@@ -141,14 +141,14 @@ const component = async props => {
         props.methods.COMMON.commonComponentRender({
             mountDiv:   'menu_monitor_detail',
             data:       {
-                        app_id:props.methods.COMMON.commonGlobalGet('app_id'),
+                        app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id,
                         monitor_detail:list_detail,
                         offset:offset,
                         sort:sort,
                         order_by:order_by,
                         page:page,
                         page_last:page_last,
-                        iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
+                        iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id,
                         SERVICE_LOG_FILE_INTERVAL:SERVICE_LOG_FILE_INTERVAL,
                         SERVICE_LOG_DATA:SERVICE_LOG_DATA
                         },
@@ -241,8 +241,8 @@ const component = async props => {
         props.methods.COMMON.commonComponentRender({
             mountDiv:   'menu_monitor_mapid',
             data:       { 
-                        longitude:props.methods.COMMON.commonGlobalGet('client_longitude'),
-                        latitude:props.methods.COMMON.commonGlobalGet('client_latitude')
+                        longitude:props.methods.COMMON.commonGlobalGet('Data').client_longitude,
+                        latitude:props.methods.COMMON.commonGlobalGet('Data').client_latitude
                         },
             methods:    null,
             path:       '/common/component/common_map.js'});

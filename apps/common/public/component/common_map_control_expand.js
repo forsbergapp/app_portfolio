@@ -64,7 +64,7 @@ const component = async props => {
                                                 query:`locale=${locale}`,
                                                 method:'POST', 
                                                 authorization_type:'APP_ID', 
-                                                body:{type:'FUNCTION',IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id')}
+                                                body:{type:'FUNCTION',IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id}
                                             })
         .then((/**@type{*}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)))
         .then((/**@type{{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}[]}*/result)=>
@@ -111,7 +111,7 @@ const component = async props => {
                                     body:{  type:'FUNCTION',
                                             searchType:'COUNTRY',
                                             searchString:country_code.toUpperCase(),
-                                            IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id')
+                                            IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id
                                         }})
                             .then(result=>
                                 JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));

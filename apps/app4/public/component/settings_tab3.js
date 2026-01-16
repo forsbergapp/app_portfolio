@@ -94,40 +94,27 @@ const template = props =>`  <div class='settings_row3'>
  *                      template:string}>}
  */
 const component = async props => {
-    //fetch PAPER_SIZE for common app id
-    /**@type{common['server']['ORM']['Object']['AppData'][]} */
-    const settings_common = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
-                                                    query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}&name=PAPER_SIZE`,
-                                                    method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
-                                                        JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
-    //fetch HIGHLIGHT_ROW and REPORT_THEME for current app id
-    /**@type{common['server']['ORM']['Object']['AppData'][]} */
-    const settings_app = await props.methods.COMMON.commonFFB({ path:'/server-db/appdata/',
-                                                            query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_id')}`,
-                                                            method:'GET', 
-                                                            authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
-                                                                JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+    
     //update APP_GLOBAL with themes
     /**@type{import('../js/types.js').APP_GLOBAL['themes']} */
-    props.data.themes.data = settings_app.filter(setting=>
-            setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && 
-            setting.Name.startsWith('REPORT_THEME'))
-            .map(theme=>{
-                return {type:theme.Name, value:theme.Value, text:theme.DisplayData};
-            });
+    props.data.themes.data = (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id))
+                            .filter(setting=>
+                                    setting.Name.startsWith('REPORT_THEME')
+                            )
+                            .map(theme=>{
+                                return {type:theme.Name, value:theme.Value, text:theme.DisplayData};
+                            });
 
     const onMounted = async () =>{
         //paper size
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_papersize',
             data:       {
-                        default_data_value:settings_common.filter(setting=>
-                                                setting.Name.startsWith('PAPER_SIZE'))[0].Value,
-                        default_value:settings_common.filter(setting=>
-                                        setting.Name.startsWith('PAPER_SIZE'))[0].DisplayData,
-                        options: settings_common.filter(setting=>
-                                    setting.Name.startsWith('PAPER_SIZE')),
+                        default_data_value:props.data.user_settings.DesignPaperSize,
+                        default_value:(await props.methods.COMMON.commonGetAppData( props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,
+                                                                                    'PAPER_SIZE',
+                                                                                    props.data.user_settings.DesignPaperSize))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'PAPER_SIZE'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -137,24 +124,17 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_highlight_row',
             data:       {
-                        default_data_value:settings_app.filter(setting=>
-                                                setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && 
-                                                setting.Name.startsWith('HIGHLIGHT_ROW'))[0].Value,
-                        default_value:settings_app.filter(setting=>
-                                        setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && 
-                                        setting.Name.startsWith('HIGHLIGHT_ROW'))[0].DisplayData,
-                        options: settings_app.filter(setting=>
-                                    setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && 
-                                    setting.Name.startsWith('HIGHLIGHT_ROW')),
+                        default_data_value:props.data.user_settings.DesignRowHighlight,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'HIGHLIGHT_ROW',
+                                                                                    props.data.user_settings.DesignRowHighlight))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'HIGHLIGHT_ROW'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
             methods:    null,
             path:'/common/component/common_select.js'});
 
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_papersize', props.data.user_settings.DesignPaperSize);
-
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_highlight_row', props.data.user_settings.DesignRowHighlight);
 
         props.methods.appSettingThemeThumbnailsUpdate();
     };

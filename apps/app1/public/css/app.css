@@ -731,6 +731,7 @@
 }
 #menu_server_os_info, #menu_server_process_info{
 	inset-inline-start: calc(50% - 40px);
+    line-height: 2em;
 }
 #menu_server_os_info div,
 #menu_server_process_info div{

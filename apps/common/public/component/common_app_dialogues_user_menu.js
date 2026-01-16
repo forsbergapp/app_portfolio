@@ -98,7 +98,7 @@ const component = async props => {
         /**@type{common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']}}} */
         const message = {Sender:element.getAttribute('data-sender')==''?null:element.getAttribute('data-sender'),
                          ReceiverId:Number(element.getAttribute('data-receiver_id')),
-                         Username:props.methods.COMMON.commonGlobalGet('iam_user_username') ??'',
+                         Username:props.methods.COMMON.commonGlobalGet('User').iam_user_username ??'',
                          Host:element.getAttribute('data-host')??'',
                          ClientIp:element.getAttribute('data-client_ip')??'',
                          Subject:element.getAttribute('data-subject')??'',
@@ -118,8 +118,8 @@ const component = async props => {
         await props.methods.COMMON.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_READ', 
                 method:'POST', 
                 body:{  type:'FUNCTION', 
-                        IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
-                        IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                        IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+                        IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
                         message_id:message_id},
                 authorization_type:'APP_ACCESS'});
         props.methods.COMMON.commonUserMessageShowStat();
@@ -133,8 +133,8 @@ const component = async props => {
         await props.methods.COMMON.commonFFB({ path:'/app-common-module/COMMON_MESSAGE_DELETE', 
                 method:'POST', 
                 body:{  type:'FUNCTION', 
-                        IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
-                        IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                        IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+                        IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
                         message_id:element.getAttribute('data-id')},
                 authorization_type:'APP_ACCESS'});
         await eventClickNavMessages();
@@ -240,7 +240,7 @@ const component = async props => {
         }
     };
     const onMounted = async () =>{
-        if (props.methods.COMMON.commonGlobalGet('iam_user_id')){
+        if (props.methods.COMMON.commonGlobalGet('User').iam_user_id){
             //mount messages
             await eventClickNavMessages();
         }
@@ -249,9 +249,9 @@ const component = async props => {
             await eventClickNavIamUserApp();
         }
         
-        if (props.methods.COMMON.commonGlobalGet('token_exp') && props.methods.COMMON.commonGlobalGet('token_iat')){
+        if (props.methods.COMMON.commonGlobalGet('Data').token_exp && props.methods.COMMON.commonGlobalGet('Data').token_iat){
             const element_id = 'common_app_dialogues_user_menu_token_countdown_time';
-            props.methods.COMMON.commonUserSessionCountdown(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${element_id}`), props.methods.COMMON.commonGlobalGet('token_exp'));
+            props.methods.COMMON.commonUserSessionCountdown(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${element_id}`), props.methods.COMMON.commonGlobalGet('Data').token_exp);
         }   
     };
     return {
@@ -259,11 +259,11 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template({  app_id:props.methods.COMMON.commonGlobalGet('app_id'),
-                                admin_app_id:props.methods.COMMON.commonGlobalGet('app_admin_app_id'),
-                                iam_user_id:props.methods.COMMON.commonGlobalGet('iam_user_id'),
-                                iam_user_username:props.methods.COMMON.commonGlobalGet('iam_user_username'),
-                                countdown:(props.methods.COMMON.commonGlobalGet('token_exp') && props.methods.COMMON.commonGlobalGet('token_iat'))?1:0,
+        template:   template({  app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id,
+                                admin_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id,
+                                iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+                                iam_user_username:props.methods.COMMON.commonGlobalGet('User').iam_user_username,
+                                countdown:(props.methods.COMMON.commonGlobalGet('Data').token_exp && props.methods.COMMON.commonGlobalGet('Data').token_iat)?1:0,
                                 icons:{ email:props.methods.COMMON.commonGlobalGet('ICONS')['email'],
                                         settings:props.methods.COMMON.commonGlobalGet('ICONS')['settings'],
                                         user:props.methods.COMMON.commonGlobalGet('ICONS')['user'],

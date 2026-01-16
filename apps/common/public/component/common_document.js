@@ -325,7 +325,7 @@ const component = async props => {
                                                                         authorization_type:'APP_ID',
                                                                         body:{  type:'FUNCTION',
                                                                                 documentType:props.data.documentType,
-                                                                                IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
+                                                                                IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
                                                                                 doc:(props.data.href.split('#').length>1?props.data.href.split('#')[0]:props.data.href)} })
                                                         .catch(()=>null),
                                 documentType:props.data.documentType,

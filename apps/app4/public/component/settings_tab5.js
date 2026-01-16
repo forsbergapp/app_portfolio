@@ -110,12 +110,6 @@ const template = props =>`   <div class='settings_row'>
  *                      template:string}>}
  */
 const component = async props => {
-    //fetch all settings for current app id
-    /**@type{common['server']['ORM']['Object']['AppData'][]} */
-    const settings = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
-                                                    query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_id')}`,
-                                                    method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{
         //Method
         await props.methods.COMMON.commonComponentRender({ 
@@ -133,9 +127,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_asr',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'METHOD_ASR')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'METHOD_ASR')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'METHOD_ASR'),
+                        default_data_value:props.data.user_settings.PrayerAsrMethod,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'METHOD_ASR',
+                                                                                    props.data.user_settings.PrayerAsrMethod))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'METHODA_ASR'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -145,9 +141,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_highlatitude',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id')&& setting.Name == 'HIGH_LATITUDE_ADJUSTMENT')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'HIGH_LATITUDE_ADJUSTMENT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'HIGH_LATITUDE_ADJUSTMENT'),
+                        default_data_value:props.data.user_settings.PrayerHighLatitudeAdjustment,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'HIGH_LATITUDE_ADJUSTMENT',
+                                                                                    props.data.user_settings.PrayerHighLatitudeAdjustment))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'HIGH_LATITUDE_ADJUSTMENT'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -157,9 +155,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_timeformat',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'TIMEFORMAT')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'TIMEFORMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'TIMEFORMAT'),
+                        default_data_value:props.data.user_settings.PrayerTimeFormat,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'TIMEFORMAT',
+                                                                                    props.data.user_settings.PrayerTimeFormat))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'TIMEFORMAT'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -169,9 +169,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_hijri_adjustment',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'HIJRI_DATE_ADJUSTMENT')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'HIJRI_DATE_ADJUSTMENT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'HIJRI_DATE_ADJUSTMENT'),
+                        default_data_value:props.data.user_settings.PrayerHijriDateAdjustment,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'HIJRI_DATE_ADJUSTMENT',
+                                                                                    props.data.user_settings.PrayerHijriDateAdjustment.toString()))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'HIJRI_DATE_ADJUSTMENT'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -181,9 +183,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_fajr',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT'),
+                        default_data_value:props.data.user_settings.PrayerFajrIqamat,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'IQAMAT',
+                                                                                    props.data.user_settings.PrayerFajrIqamat))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'IQAMAT'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -192,9 +196,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_dhuhr',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT'),
+                        default_data_value:props.data.user_settings.PrayerDhuhrIqamat,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'IQAMAT',
+                                                                                    props.data.user_settings.PrayerDhuhrIqamat))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'IQAMAT'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -203,9 +209,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_asr',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT'),
+                        default_data_value:props.data.user_settings.PrayerAsrIqamat,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'IQAMAT',
+                                                                                    props.data.user_settings.PrayerAsrIqamat))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'IQAMAT'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -214,9 +222,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_maghrib',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT'),
+                        default_data_value:props.data.user_settings.PrayerMaghribIqamat,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'IQAMAT',
+                                                                                    props.data.user_settings.PrayerMaghribIqamat))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'IQAMAT'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -225,9 +235,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_iqamat_title_isha',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'IQAMAT'),
+                        default_data_value:props.data.user_settings.PrayerIshaIqamat,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'IQAMAT',
+                                                                                    props.data.user_settings.PrayerIshaIqamat))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'IQAMAT'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -237,9 +249,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_show_fast_start_end',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'FAST_START_END')[0].Value,
-                        default_value:settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'FAST_START_END')[0].DisplayData,
-                        options: settings.filter(setting=>setting.AppId == props.methods.COMMON.commonGlobalGet('app_id') && setting.Name == 'FAST_START_END'),
+                        default_data_value:props.data.user_settings.PrayerColumnFastStartEnd,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                                                                                    'FAST_START_END',
+                                                                                    props.data.user_settings.PrayerColumnFastStartEnd.toString()))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'FAST_START_END'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -248,15 +262,6 @@ const component = async props => {
 
         props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_method', props.data.user_settings.PrayerMethod);
         props.methods.appComponentSettingUpdate('PRAYER', 'METHOD');
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_asr', props.data.user_settings.PrayerAsrMethod);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_highlatitude', props.data.user_settings.PrayerHighLatitudeAdjustment);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_timeformat', props.data.user_settings.PrayerTimeFormat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_hijri_adjustment', props.data.user_settings.PrayerHijriDateAdjustment);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_fajr', props.data.user_settings.PrayerFajrIqamat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_dhuhr', props.data.user_settings.PrayerDhuhrIqamat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_asr', props.data.user_settings.PrayerAsrIqamat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_maghrib', props.data.user_settings.PrayerMaghribIqamat);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_iqamat_title_isha', props.data.user_settings.PrayerIshaIqamat);
         
         if (Number(props.data.user_settings.PrayerColumnImsakChecked))
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
@@ -270,7 +275,6 @@ const component = async props => {
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
         else
             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_show_fast_start_end', props.data.user_settings.PrayerColumnFastStartEnd);
     };
     return {
         lifecycle:  {onMounted:onMounted},

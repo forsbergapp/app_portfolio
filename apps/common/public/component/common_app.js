@@ -126,29 +126,29 @@ const component = async props =>{
     
         props.methods.COMMON.commonCustomFramework();
         //set common app id
-        props.methods.COMMON.commonGlobalSet('app_id', props.methods.COMMON.commonGlobalGet('app_common_app_id'));
+        props.methods.COMMON.commonGlobalSet('UserApp','app_id', props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id);
         
         //connect to BFF
-        props.methods.COMMON.commonFFB({path:               '/server-bff/' + props.methods.COMMON.commonGlobalGet('x').uuid, 
+        props.methods.COMMON.commonFFB({path:               '/server-bff/' + props.methods.COMMON.commonGlobalGet('Functions').x.uuid, 
             method:             'POST',
             body:               null,
             response_type:      'SSE',
             authorization_type: 'APP_ID'});
     
         //mount start app
-        await props.methods.COMMON.commonAppMount(props.methods.COMMON.commonGlobalGet('app_start_app_id'));
+        await props.methods.COMMON.commonAppMount(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
     
         //apply font css
-        props.methods.COMMON.commonGlobalGet('app_fonts')?props.methods.COMMON.commonMiscCssApply(props.methods.COMMON.commonGlobalGet('app_fonts').join('@')):null;
+        props.methods.COMMON.commonGlobalGet('Data').app_fonts?props.methods.COMMON.commonMiscCssApply(props.methods.COMMON.commonGlobalGet('Data').app_fonts.join('@')):null;
     }
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
         events:     events,
-        template:   template({  app_toolbar_button_start:           props.methods.COMMON.commonGlobalGet('app_toolbar_button_start'),
-                                app_toolbar_button_framework:       props.methods.COMMON.commonGlobalGet('app_toolbar_button_framework'),
-                                app_framework:                      props.methods.COMMON.commonGlobalGet('app_framework'),
+        template:   template({  app_toolbar_button_start:           props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_start,
+                                app_toolbar_button_framework:       props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_framework,
+                                app_framework:                      props.methods.COMMON.commonGlobalGet('Parameters').app_framework,
                                 icons: {home: props.methods.COMMON.commonGlobalGet('ICONS').home,
                                         framework_js: props.methods.COMMON.commonGlobalGet('ICONS').framework_js,
                                         framework_vue: props.methods.COMMON.commonGlobalGet('ICONS').framework_vue,

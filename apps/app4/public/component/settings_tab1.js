@@ -86,21 +86,14 @@ const template = props => ` <div class='settings_row'>
  *                      template:string}>}
  */
 const component = async props => {
-    //fetch all settings for common app id
-    /**@type{common['server']['ORM']['Object']['AppData'][]} */
-    const settings = await props.methods.COMMON.commonFFB({path:'/server-db/appdata/',
-                                                    query:`IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('app_common_app_id')}`,
-                                                    method:'GET', 
-                                                    authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
-                                                        JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     //fetch locales using user locale
     /**@type{{locale:string, text:string}[]} */
     const locales = await props.methods.COMMON.commonFFB({
                                                     path:'/app-common-module/COMMON_LOCALE', 
                                                     method:'POST', authorization_type:'APP_ID',
                                                     body:{  type:'FUNCTION',
-                                                            IAM_data_app_id : props.methods.COMMON.commonGlobalGet('app_common_app_id'),
-                                                            locale: props.methods.COMMON.commonGlobalGet('user_locale')}
+                                                            IAM_data_app_id : props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
+                                                            locale: props.methods.COMMON.commonGlobalGet('UserApp').user_locale}
                                                 })
                             .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{
@@ -133,9 +126,9 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_timezone',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.Name == 'TIMEZONE')[0].Value,
-                        default_value:settings.filter(setting=>setting.Name == 'TIMEZONE')[0].DisplayData,
-                        options: settings.filter(setting=>setting.Name == 'TIMEZONE'),
+                        default_data_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'TIMEZONE',props.data.user_settings.RegionalTimezone))[0].Value,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'TIMEZONE',props.data.user_settings.RegionalTimezone))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'TIMEZONE'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -145,9 +138,9 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_numbersystem',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.Name == 'NUMBER_SYSTEM')[0].Value,
-                        default_value:settings.filter(setting=>setting.Name == 'NUMBER_SYSTEM')[0].DisplayData,
-                        options: settings.filter(setting=>setting.Name == 'NUMBER_SYSTEM'),
+                        default_data_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'NUMBER_SYSTEM',props.data.user_settings.RegionalNumberSystem))[0].Value,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'NUMBER_SYSTEM',props.data.user_settings.RegionalNumberSystem))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'NUMBER_SYSTEM'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -157,9 +150,13 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_direction',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.Name == 'DIRECTION')[0].Value,
-                        default_value:settings.filter(setting=>setting.Name == 'DIRECTION')[0].DisplayData,
-                        options: [{Value:'', DisplayData:''}].concat(settings.filter(setting=>setting.Name == 'DIRECTION')),
+                        default_data_value:props.data.user_settings.RegionalLayoutDirection,
+                        default_value:['',null].includes(props.data.user_settings.RegionalLayoutDirection)?
+                                            ' ':
+                                            (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,
+                                                                                        'DIRECTION',
+                                                                                        props.data.user_settings.RegionalLayoutDirection))[0].DisplayData??'',
+                        options: [{Value:'', DisplayData:''}].concat(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'DIRECTION')),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -169,9 +166,13 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_report_arabic_script',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.Name == 'ARABIC_SCRIPT')[0].Value,
-                        default_value:settings.filter(setting=>setting.Name == 'ARABIC_SCRIPT')[0].DisplayData,
-                        options: [{Value:'', DisplayData:''}].concat(settings.filter(setting=>setting.Name == 'ARABIC_SCRIPT')),
+                        default_data_value:props.data.user_settings.RegionalArabicScript,
+                        default_value:['',null].includes(props.data.user_settings.RegionalArabicScript)?
+                                            ' ':
+                                                (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,
+                                                                                            'ARABIC_SCRIPT',
+                                                                                            props.data.user_settings.RegionalArabicScript))[0].DisplayData??'',
+                        options: [{Value:'', DisplayData:''}].concat(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'ARABIC_SCRIPT')),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -181,9 +182,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_calendartype',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.Name == 'CALENDAR_TYPE')[0].Value,
-                        default_value:settings.filter(setting=>setting.Name == 'CALENDAR_TYPE')[0].DisplayData,
-                        options: settings.filter(setting=>setting.Name == 'CALENDAR_TYPE'),
+                        default_data_value:props.data.user_settings.RegionalCalendarType,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,
+                                                                                    'CALENDAR_TYPE', 
+                                                                                    props.data.user_settings.RegionalCalendarType))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'CALENDAR_TYPE'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -193,9 +196,11 @@ const component = async props => {
         await props.methods.COMMON.commonComponentRender({
             mountDiv:   'setting_select_calendar_hijri_type',
             data:       {
-                        default_data_value:settings.filter(setting=>setting.Name == 'CALENDAR_HIJRI_TYPE')[0].Value,
-                        default_value:settings.filter(setting=>setting.Name == 'CALENDAR_HIJRI_TYPE')[0].DisplayData,
-                        options: settings.filter(setting=>setting.Name == 'CALENDAR_HIJRI_TYPE'),
+                        default_data_value:props.data.user_settings.RegionalCalendarHijriType,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,
+                                                                                    'CALENDAR_HIJRI_TYPE',
+                                                                                    props.data.user_settings.RegionalCalendarHijriType))[0].DisplayData,
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'CALENDAR_HIJRI_TYPE'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },
@@ -206,13 +211,6 @@ const component = async props => {
         props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_locale', props.data.user_settings.RegionalLanguageLocale);
         props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_locale_second', props.data.user_settings.RegionalSecondLanguageLocale);
 
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_timezone', props.data.user_settings.RegionalTimezone);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_numbersystem', props.data.user_settings.RegionalNumberSystem);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_direction', props.data.user_settings.RegionalLayoutDirection);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_report_arabic_script', props.data.user_settings.RegionalArabicScript);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_calendartype', props.data.user_settings.RegionalCalendarType);
-        props.methods.COMMON.commonMiscSelectCurrentValueSet('setting_select_calendar_hijri_type', props.data.user_settings.RegionalCalendarHijriType);
-
         //display live timezone time
         props.methods.appComponentSettingUpdate('REGIONAL', 'TIMEZONE');
 
@@ -221,7 +219,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({user_timezone:props.methods.COMMON.commonGlobalGet('user_timezone'),
+        template: template({user_timezone:props.methods.COMMON.commonGlobalGet('UserApp').user_timezone,
                             icons:{
                                 regional_locale:props.methods.COMMON.commonGlobalGet('ICONS').regional_locale,
                                 regional_timezone_current:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone + props.methods.COMMON.commonGlobalGet('ICONS').gps_position,

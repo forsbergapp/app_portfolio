@@ -76,7 +76,7 @@ const component = props => {
                 'common_select_option']
                                                                     /**@ts-ignore */
                 .filter(row=>elementDiv.className?.indexOf(row)>-1||elementDiv.parentNode.className?.indexOf(row)>-1).length>0){
-            Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#${props.methods.COMMON.commonGlobalGet('app_root')} .common_select_options`))
+            Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#${props.methods.COMMON.commonGlobalGet('Parameters').app_root} .common_select_options`))
                 .filter((/**@type{HTMLElement}*/element)=>props.methods.COMMON.commonMiscElementId(element) != props.methods.COMMON.commonMiscElementId(event.target))
                 .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
         }

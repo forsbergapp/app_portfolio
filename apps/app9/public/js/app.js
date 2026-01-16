@@ -31,7 +31,7 @@ const appTotpGet = otp_key =>{
             else{
                 const seconds = Math.floor((time_left % (1000 * 60)) / 1000);
                 //show count down using locale
-                COMMON_DOCUMENT.querySelector('#totp_countdown_time').textContent = (seconds).toLocaleString(common.commonGlobalGet('user_locale'));
+                COMMON_DOCUMENT.querySelector('#totp_countdown_time').textContent = (seconds).toLocaleString(common.commonGlobalGet('UserApp').user_locale);
                 //wait 1 second
                 await common.commonWindowWait(1000);            
                 countdown(expire);
@@ -42,7 +42,7 @@ const appTotpGet = otp_key =>{
         path:'/app-common-module/TOTP_GET',
         method:'POST', authorization_type:'APP_ID',
         body:{  type:           'FUNCTION',
-                IAM_data_app_id:common.commonGlobalGet('app_id'),
+                IAM_data_app_id:common.commonGlobalGet('UserApp').app_id,
                 otp_key:        otp_key}
     })
     .then((/**@type{string}*/result)=>{
@@ -106,7 +106,7 @@ const appEventKeyUp = event => {
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
-    await common.commonComponentRender({mountDiv:common.commonGlobalGet('app_div'),
+    await common.commonComponentRender({mountDiv:common.commonGlobalGet('Parameters').app_div,
         data:null,
         methods:null,
         path:'/component/app.js'});
@@ -123,7 +123,7 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';    
-    common.commonGlobalSet('app_function_session_expired', null);
+    common.commonGlobalSet('Functions', 'app_function_session_expired', null);
     appInit();
 };
 /**

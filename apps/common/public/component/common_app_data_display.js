@@ -21,8 +21,8 @@
  *                   master_path:'/app-common-module/COMMON_APP_DATA_METADATA',
  *                   master_query:'fields=Document',
  *                   master_body:{   type:'FUNCTION',
- *                                   IAM_module_app_id:common.commonGlobalGet('app_common_app_id'),
- *                                   IAM_data_app_id:common.commonGlobalGet('app_id'), 
+ *                                   IAM_module_app_id:common.commonGlobalGet('Parameters').app_common_app_id,
+ *                                   IAM_data_app_id:common.commonGlobalGet('UserApp').app_id, 
  *                                   resource_name:'PAYMENT_METADATA'},
  *                   master_method:'POST',
  *                   master_token_type:'APP_ID',
@@ -295,8 +295,8 @@ const component = async props => {
                                                             query:'fields=Document', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{  type:'FUNCTION',
-                                                                    IAM_module_app_id: props.methods.COMMON.commonGlobalGet('app_common_app_id'),
-                                                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id'), 
+                                                                    IAM_module_app_id: props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
+                                                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id, 
                                                                     resource_name:props.data.master_resource}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows);
         for (const key of Object.entries(master_object)){
@@ -312,8 +312,8 @@ const component = async props => {
                                                             query:'fields=Document', 
                                                             method:'POST', authorization_type:'APP_ID', 
                                                             body:{  type:'FUNCTION',
-                                                                    IAM_module_app_id:props.methods.COMMON.commonGlobalGet('app_common_app_id'),
-                                                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('app_id'), 
+                                                                    IAM_module_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
+                                                                    IAM_data_app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id, 
                                                                     resource_name:props.data.detail_resource}})
                                         .then((/**@type{*}*/result)=>JSON.parse(result).rows);
         for (const row of detail_rows){

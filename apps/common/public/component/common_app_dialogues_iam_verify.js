@@ -58,7 +58,7 @@ const component = async props => {
      * @returns {Promise.<boolean>}
      */
     const commonUserAuthenticateCode = async (verification_code, verification_type) => {
-        return await props.methods.COMMON.commonFFB({ path:`/server-db/iamuser-activate/${props.methods.COMMON.commonGlobalGet('iam_user_id') ?? ''}`, 
+        return await props.methods.COMMON.commonFFB({ path:`/server-db/iamuser-activate/${props.methods.COMMON.commonGlobalGet('User').iam_user_id ?? ''}`, 
                     method:'PUT', 
                     authorization_type:'APP_ACCESS_VERIFICATION', 
                     body:{   verification_code:  verification_code,
@@ -119,7 +119,7 @@ const component = async props => {
 
                 if ((props.data.user_verification_type== '3' &&       
                     
-                    await props.methods.COMMON.commonGlobalGet('component')[props.methods.COMMON.commonGlobalGet('app_common_app_id') + '_' + 'common_app_dialogues_user_menu_iam_user']?.methods?.commonUserUpdate(verification_code)) ||
+                    await props.methods.COMMON.commonGlobalGet('Functions').component[props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_app_dialogues_user_menu_iam_user']?.methods?.commonUserUpdate(verification_code)) ||
                     await commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
                         props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify');
                         props.methods.COMMON.commonDialogueShow('LOGIN');
@@ -175,12 +175,12 @@ const component = async props => {
                     case event_target_id=='common_app_dialogues_iam_verify_verification_char4':
                     case event_target_id=='common_app_dialogues_iam_verify_verification_char5':{
                         
-                        props.methods.COMMON.commonGlobalGet('component')[props.methods.COMMON.commonGlobalGet('app_common_app_id') + '_' + 'common_app_dialogues_iam_verify']?.methods?.commonUserVerifyCheckInput( props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
+                        props.methods.COMMON.commonGlobalGet('Functions').component[props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_app_dialogues_iam_verify']?.methods?.commonUserVerifyCheckInput( props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), 
                                                         'common_app_dialogues_iam_verify_verification_char' + (Number(event.target.id.substring(event.target.id.length-1))+1));
                         break;
                     }
                     case event_target_id=='common_app_dialogues_iam_verify_verification_char6':{
-                        props.methods.COMMON.commonGlobalGet('component')[props.methods.COMMON.commonGlobalGet('app_common_app_id') + '_' + 'common_app_dialogues_iam_verify']?.methods?.commonUserVerifyCheckInput(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
+                        props.methods.COMMON.commonGlobalGet('Functions').component[props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_app_dialogues_iam_verify']?.methods?.commonUserVerifyCheckInput(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}`), '');
                         break;
                     }
                 }
