@@ -352,6 +352,7 @@ const commonGetAppData = async (app_id, name=null, value=null) =>{
                     [row.AppId, row.Name, row.Value, row.DisplayData]
                 )))
                 return new_records
+                .filter((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>row.AppId==app_id && row.Name==(name??row.Name) && row.Value==(value??row.Value))
                 .map((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>{return {AppId:row.AppId, Name:row.Name, Value:row.Value, DisplayData:row.DisplayData}});
             }
             else

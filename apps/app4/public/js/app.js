@@ -407,10 +407,10 @@ const settingsTimesShow = async () => {
     const element_setting_report_data_time      = COMMON_DOCUMENT.querySelector('#setting_report_date_time_display');
     
     if (element_setting_current_date){     
-        element_setting_current_date.textContent = common.commonMiscFormatJsonDate(new Date().toISOString(), 'LONG');
+        element_setting_current_date.textContent = common.commonMiscFormatJsonDate(new Date().toISOString(), 'NORMAL');
         if (setting_select_report_timezone){
             element_setting_report_data_time.textContent = common.commonMiscFormatJsonDate( new Date().toISOString(), 
-                                                                                            'LONG', 
+                                                                                            'NORMAL', 
                                                                                             setting_select_locale, 
                                                                                             setting_select_report_timezone);
         }
