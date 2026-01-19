@@ -6,6 +6,7 @@
  */
 const {server} = await import('../../../../server/server.js');
 const fs = await import('node:fs');
+const {exec} = await import('node:child_process');
 
 const MD_PATH =                                 '/apps/common/src/functions/documentation/';
 const MD_SUFFIX =                               '.md';
@@ -14,7 +15,7 @@ const MD_TEMPLATE_OPENAPI =                     'templateOpenApi';
 const MD_TEMPLATE_OPENAPI_RESTAPI_FUNCTIONS =   'templateOpenApiRestApiFunctions';
 const MD_TEMPLATE_OPENAPI_APP_FUNCTIONS =       'templateOpenApiAppFunctions';
 const MD_TEMPLATE_MODULE =                      'templateModule';
-
+const MD_TEMPLATE_RELEASE_INFO =                'templateReleaseInfo'
 
 /**
  * @name getFile
@@ -462,6 +463,16 @@ const markdownRender = async parameters =>{
                 return await renderRouteFuntions('ROUTE_APP', '/server/bff', ['apps'], parameters.doc);
             else
                 return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'serviceregistry','server'], parameters.doc);
+        }
+        case parameters.doc==MD_TEMPLATE_RELEASE_INFO:{
+            const command = `git for-each-ref --sort=-creatordate --format '## [%(refname:short)] - %(creatordate:short) %(contents)' refs/tags`;
+            const template = await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + parameters.doc + MD_SUFFIX}`, true);
+            return await new Promise(resolve=>
+                exec(command, (err, markdown, stderr) => {
+                                const rendered = template.replace('@{CHANGELOG}',markdown.replaceAll('\\n','\n'));
+                                resolve(rendered);
+                            })
+            )
         }
         case parameters.type.toUpperCase()=='GUIDE':{
             return await getFile(`${server.ORM.serverProcess.cwd()}${MD_PATH + parameters.doc + MD_SUFFIX}`, true);

@@ -99,6 +99,11 @@
                 {   "id":5,
                     "menu":"",
                     "doc":"templateOpenApiRestApiFunctions"
+                }, 
+                {
+                    "id":6,
+                    "menu":"",
+                    "doc": "templateReleaseInfo"
                 }]
     },
     {
