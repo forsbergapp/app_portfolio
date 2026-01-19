@@ -23,6 +23,11 @@
                 {   "id":5,
                     "menu":"",
                     "doc":"1.security_implementation"
+                },
+                {
+                    "id":6,
+                    "menu":"",
+                    "doc": "templateReleaseInfo"
                 }]
     },
     {
@@ -99,11 +104,6 @@
                 {   "id":5,
                     "menu":"",
                     "doc":"templateOpenApiRestApiFunctions"
-                }, 
-                {
-                    "id":6,
-                    "menu":"",
-                    "doc": "templateReleaseInfo"
                 }]
     },
     {
