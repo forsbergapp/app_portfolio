@@ -1286,7 +1286,8 @@ class ORM_class {
                             (await this.getObjectRowSum(row.Name, row.Type)).reduce((total_size, row)=>total_size += JSON.stringify(row??'').length??0,0),
                 Pk: row.Pk,
                 Uk: row.Uk,
-                Fk: row.Fk
+                Fk: row.Fk,
+                Description: row.Description
             });
         return {result: records,
                 type: 'JSON'

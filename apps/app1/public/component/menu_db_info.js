@@ -52,6 +52,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                         <div class='menu_db_info_detail_col'>PK</div>
                                         <div class='menu_db_info_detail_col'>UK</div>
                                         <div class='menu_db_info_detail_col'>FK (FK column, ref PK column, ref object)</div>
+                                        <div class='menu_db_info_detail_col'>Description</div>
                                     </div>
                                     ${props.db_detail.map(row=>
                                         `<div class='menu_db_info_detail_row' >
@@ -65,6 +66,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                             <div class='menu_db_info_detail_col'>${row.Pk==null?'':row.Pk}</div>
                                             <div class='menu_db_info_detail_col'>${row.Uk==null?'':row.Uk.join(', ')}</div>
                                             <div class='menu_db_info_detail_col'>${row.Fk==null?'':row.Fk.map(fk=>{ return `(${fk[0]},${fk[1]},${fk[2]})`;}).join('\n')}</div>
+                                            <div class='menu_db_info_detail_col'>${row.Description}</div>
                                         </div>`
                                     ).join('')}
                                     <div id='menu_db_info_detail_row_total' class='menu_db_info_detail_row' >
@@ -75,6 +77,7 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
                                         <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${props.function_roundOff(props.db_detail.reduce((total_rows, row)=>total_rows += row.Rows??0,0))}</div>
                                         <div class='menu_db_info_detail_col menu_db_info_detail_col_number'>${props.function_roundOff(props.db_detail.reduce((total_size, row)=>total_size += (row.Size??0)/1024/1024,0))}</div>
+                                        <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col'></div>
                                         <div class='menu_db_info_detail_col'></div>

@@ -866,7 +866,8 @@
  *            Size:number|null,
  *            Pk:ORM['MetaData']['Object']['Pk'],
  *            Uk:ORM['MetaData']['Object']['Uk'],
- *            Fk:ORM['MetaData']['Object']['Fk']}} ViewORMGetObjects
+ *            Fk:ORM['MetaData']['Object']['Fk'],
+ *            Description:ORM['MetaData']['Object']['Description']}} ViewORMGetObjects
  */
 
 /** 
@@ -882,7 +883,8 @@
  *              CacheContent?:* ,
  *              Pk:string|null,
  *              Uk:string[]|null,
- *              Fk:[string,string, keyof ORM['Object']][]|null}} server_db_ORM
+ *              Fk:[string,string, keyof ORM['Object']][]|null,
+ *              Description:string}} server_db_ORM
  */
 
 /** 
