@@ -76,7 +76,7 @@ const component = async props => {
      *   #####  title_h5
      * 
      * 2.code block:
-     *   ```` must start as first position on a row and ends with ```` on a new row
+     *   ``` must start as first position on a row and ends with ``` on a new row
      *   all text within is a code block
      * 
      * 3.code inline:
