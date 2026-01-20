@@ -12,7 +12,7 @@ const {STATUS_CODES} = await import('node:http');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
 *          data:{   data_app_id:string|null,
-*                   logobject:Extract<server['ORM']['MetaData']['DbObject'],
+*                   logobject:Extract<server['ORM']['MetaData']['Object'],
 *                   'LogAppInfo'|
 *                   'LogAppError'|
 *                   'LogDbInfo'|
@@ -38,7 +38,7 @@ const get = async parameters => {
     /** 
      * @type {{ app_id:number,
      *          data_app_id:number|null,
-     *          logobject:Extract<server['ORM']['MetaData']['DbObject']['Name'], 
+     *          logobject:Extract<server['ORM']['MetaData']['Object']['Name'], 
      *             'LogAppInfo'|
      *             'LogAppError'|
      *             'LogDbInfo'|
@@ -326,7 +326,7 @@ const getFiles = async () => {
  * @description Write log
  * @function
  * @param {{app_id:number,
- *          data:{  object:     Extract<server['ORM']['MetaData']['DbObject']['Name'],
+ *          data:{  object:     Extract<server['ORM']['MetaData']['Object']['Name'],
  *                                  'LogAppInfo'|
  *                                  'LogAppError'|
  *                                  'LogDbInfo'|
@@ -363,7 +363,7 @@ const getFiles = async () => {
  *                              Url:string,
  *                              Operation:string|null,
  *                              Parameters:string},
- *                  db?:{       Object:server['ORM']['MetaData']['DbObject']['Name'],
+ *                  db?:{       Object:server['ORM']['MetaData']['Object']['Name'],
  *                              Dml:string,
  *                              Parameters:*},
  *                  app?:{      AppFilename:string,
@@ -376,7 +376,7 @@ const getFiles = async () => {
  */
 const post = async parameters => {
     let log;
-    /**@type{Extract<server['ORM']['MetaData']['DbObject']['Name'],
+    /**@type{Extract<server['ORM']['MetaData']['Object']['Name'],
      *              'LogAppInfo'|
      *              'LogAppError'|
      *              'LogDbInfo'|

@@ -206,7 +206,7 @@
 
 /**
  * @description DB TABLE App
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{
  *              Id?: number,
  *              Name: string,
@@ -223,7 +223,7 @@
  */
 /**
  * @description DB TABLE AppDataEntity
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number, 
  *              Document:{[key:string]:string}|null,
  *              Created?:string,
@@ -233,7 +233,7 @@
 
 /**
  * @description DB TABLE AppDataEntityResource
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id:number, 
  *              Document:{[key:string]:*}|null, 
  *              Created:string,
@@ -244,7 +244,7 @@
 
 /**
  * @description DB TABLE AppDataResourceMaster
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number, 
  *              Document:{[key:string]:*}|null, 
  *              Created?:string,
@@ -255,7 +255,7 @@
 
 /**
  * @description DB TABLE AppDataResourceDetail
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number, 
  *              Document:{[key:string]:*}|null, 
  *              Created?:string,
@@ -267,7 +267,7 @@
 
 /**
  * @description DB TABLE AppDataResourceDetailData
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number, 
  *              Document:{[key:string]:*}|null, 
  *              Created?:string,
@@ -278,7 +278,7 @@
 
 /**
  * @description DB TABLE AppModule
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id:number,
  *              ModuleType: 'FUNCTION'|'ASSET'|'REPORT',
  *              ModuleName:string,
@@ -289,7 +289,7 @@
  */
 /**
  * @description DB TABLE AppModuleQueue
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id:number,
  *              Type:'REPORT',          //copied from app_module
  *              Name: string,           //copied from app_module
@@ -308,7 +308,7 @@
 
 /**
  * @description DB TABLE AppTranslation
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{Id: number,
  *			  Locale: string,
  *			  Document: {   ScreenshotStart:string,
@@ -327,7 +327,7 @@
 
 /**
  * @description DB TABLE AppData
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id:number,
  *              Name: string,
  *              Value:string,
@@ -341,7 +341,7 @@
 
 /**
  * @description DB TABLE IamControlIp
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id:number,
  *              From:string, 
  *              To:string, 
@@ -354,7 +354,7 @@
  */
 /**
  * @description DB TABLE IamControlObserve
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Ip:string, 
  *              UserAgent:string 
@@ -371,14 +371,14 @@
  */
 /**
  * @description DB TABLE IamControlUserAgent
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id:number,
  *              Name:string, 
  *              UserAgent:string}} server_db_table_IamControlUserAgent
  */
 /**
  * @description DB TABLE IamEncryption
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Uuid:string, 
  *              Secret:string,
@@ -391,7 +391,7 @@
 
 /** 
  * @description DB TABLE IamMicroserviceToken
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{Id?:                  number,
  *            ServiceRegistryName:  string,
  *		        Res:	                0|1,
@@ -406,7 +406,7 @@
 
 /**
  * @description DB TABLE IamUser
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number, 
  *              Username:string, 
  *              Password:string, 
@@ -426,7 +426,7 @@
 
 /**
  * @description DB TABLE IamUserFollow
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Created?:string,
  *              IamUserId:number,
@@ -434,7 +434,7 @@
  */
 /**
  * @description DB TABLE IamUserLike
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Created?:string,
  *              IamUserId:number,
@@ -442,7 +442,7 @@
  */
 /**
  * @description DB TABLE IamUserView
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              ClientIp:string|null,
  *              ClientUserAgent:string|null,
@@ -453,7 +453,7 @@
 
 /**
  * @description DB TABLE IamUserApp
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number, 
  *              Document:{
  *                          PreferenceLocale?:string|null,
@@ -471,7 +471,7 @@
  */
 /**
  * @description DB TABLE IamUserAppDataPost
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Document:{[key:string]:string}|null,
  *              Created?:string,
@@ -481,7 +481,7 @@
 
 /**
  * @description DB TABLE IamUserAppDataPostLike
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id:number,
  *              Created:string,
  *              IamUserAppDataPostId:number,
@@ -489,7 +489,7 @@
  */
 /**
  * @description DB TABLE IamUserAppDataPostView
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Document:{client_ip:string|null,
  *                        client_user_agent:string|null},
@@ -500,7 +500,7 @@
     
 /**
  * @description DB TABLE IamUserEvent
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number, 
  *              Event:'OTP_LOGIN'|'OTP_SIGNUP'|'OTP_2FA'|'USER_UPDATE', 
  *              EventStatus?:'INPROGRESS'|'SUCCESSFUL'|'FAIL',
@@ -510,7 +510,7 @@
 
 /** 
  * @description DB TABLE IamAppIdToken
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:          number,
  *		          Res:		      0|1,
  *   	          Token:        string,
@@ -523,7 +523,7 @@
 
  /**
  * @description DB TABLE IamAppAccess
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{	Id?:              number,
  *              Type:             'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN',
  *              Res:	            0|1|2,          //0=fail, 1=success, 2=invalidated
@@ -542,7 +542,7 @@
 
 /**
  * @description DB TABLE_LOG LogAppInfo
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{   Id?:number,
  *               AppId:number|null,
  *               AppFilename:string,
@@ -554,7 +554,7 @@
 
 /**
  * @description DB TABLE_LOG LogDbInfo
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              AppId:number|null,
  *              Object:string,
@@ -566,7 +566,7 @@
 
 /**
  * @description DB TABLE_LOG LogBffInfo
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              AppId:number|null,
  *              Service:string,
@@ -580,7 +580,7 @@
          
 /**
  * @description DB TABLE_LOG LogRequestInfo
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Host:string,
  *              AppId:number|null,
@@ -607,7 +607,7 @@
 
 /**
  * @description DB TABLE_LOG LogServerInfo
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              LogText:string,
  *              Created?:string}} server_db_table_LogServerInfo
@@ -615,7 +615,7 @@
 
 /** 
  * @description DB DOCUMENT ServiceRegistry
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:                number,
  *              Name:               string,
  *              ServerProtocol:     'http',
@@ -634,7 +634,7 @@
 /**
  * @description DB DOCUMENT OpenApi
  *              Follows Open API syntax
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef  {{ info: {
  *                      title: string,
  *                      version: string,
@@ -716,7 +716,7 @@
 
 /**
  * @description DB TABLE MessageQueuePublish
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Service:'MESSAGE'|'BATCH',
  *              Message:{ Id?:number,
@@ -734,7 +734,7 @@
 
 /**
  * @description DB TABLE MessageQueueConsume
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Message:*,
  *              Start:string|null,
@@ -747,7 +747,7 @@
 
 /**
  * @description DB TABLE MessageQueueError
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{  Id?:number,
  *              Message:*,
  *              Result:*,
@@ -767,7 +767,7 @@
  */
 /**
  * @description DB VIEW ViewAppGetInfo
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{
  *              Id: server_db_table_App['Id'],
  *              Name: server_db_table_App['Name'],
@@ -798,7 +798,7 @@
  */
 /**
  * @description DB VIEW ViewIamUserGetProfileDetail
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{Detail:'FOLLOWING'|'FOLLOWED'|'LIKE_USER'|'LIKED_USER',
  *                               IamUserId:ORM['Object']['IamUserFollow']['IamUserId'],
  *                               Avatar:ORM['Object']['IamUser']['Avatar'],
@@ -806,7 +806,7 @@
  */
 /**
  * @description DB VIEW ViewIamUserGetProfileStat
- * @memberof dbObjects
+ * @memberof ORM
  * @typedef {{Top:'VISITED|FOLLOWING|LIKE_USER', 
  *            Id:ORM['Object']['IamUser']['Id'], 
  *            Avatar:ORM['Object']['IamUser']['Avatar'],
@@ -857,21 +857,21 @@
  */
 /**
  * @description DB VIEW ViewORMGetObjects
- * @typedef {{Name:ORM['MetaData']['DbObject']['Name'],
- *            Type:ORM['MetaData']['DbObject']['Type'],
- *            InMemory:ORM['MetaData']['DbObject']['InMemory'],
- *            Lock:ORM['MetaData']['DbObject']['Lock'],
- *            TransactionId:ORM['MetaData']['DbObject']['TransactionId'],
+ * @typedef {{Name:ORM['MetaData']['Object']['Name'],
+ *            Type:ORM['MetaData']['Object']['Type'],
+ *            InMemory:ORM['MetaData']['Object']['InMemory'],
+ *            Lock:ORM['MetaData']['Object']['Lock'],
+ *            TransactionId:ORM['MetaData']['Object']['TransactionId'],
  *            Rows:number|null,
  *            Size:number|null,
- *            Pk:ORM['MetaData']['DbObject']['Pk'],
- *            Uk:ORM['MetaData']['DbObject']['Uk'],
- *            Fk:ORM['MetaData']['DbObject']['Fk']}} ViewORMGetObjects
+ *            Pk:ORM['MetaData']['Object']['Pk'],
+ *            Uk:ORM['MetaData']['Object']['Uk'],
+ *            Fk:ORM['MetaData']['Object']['Fk']}} ViewORMGetObjects
  */
 
 /** 
  * @description DB object record
- * @namespace dbObjects
+ * @namespace ORM
  * @typedef {{  Name:keyof ORM['Object'], 
  *              Type:'DOCUMENT'|'TABLE'|'TABLE_KEY_VALUE'|'TABLE_LOG'|'TABLE_LOG_DATE',
  *              InMemory:boolean,
@@ -882,7 +882,7 @@
  *              CacheContent?:* ,
  *              Pk:string|null,
  *              Uk:string[]|null,
- *              Fk:[string,string, keyof ORM['Object']][]|null}} server_db_DbObject
+ *              Fk:[string,string, keyof ORM['Object']][]|null}} server_db_ORM
  */
 
 /** 
@@ -1374,8 +1374,8 @@
  *              DemoData:server_db_database_demo_data
  *              },
  *            MetaData:{
- *                DbObject:server_db_DbObject,
- *                AllObjects: server_db_DbObject['Name']|'DbObjects'
+ *                Object:server_db_ORM,
+ *                AllObjects: server_db_ORM['Name']|'ORM'
  *                result_fileFsRead:server_db_result_fileFsRead,
  *                common_result:server_db_common_result,
  *                common_result_select:server_db_common_result_select,

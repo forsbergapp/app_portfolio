@@ -796,13 +796,13 @@ const postConfigDefault = async () => {
                                             pathServiceRegistry:'/server/install/default/ServiceRegistry.json'
     });
     /**
-     * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['MetaData']['DbObject'][]],
+     * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['MetaData']['Object'][]],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['OpenApi']],
      *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['ServiceRegistry'][]]
      *       ]}
      */
     const config_obj = [
-                            ['DbObjects',       await getDefaultObject('DbObjects')],
+                            ['ORM',       await getDefaultObject('ORM')],
                             ['OpenApi',         updatedConfigSecurity.OpenApi],
                             ['ServiceRegistry', updatedConfigSecurity.ServiceRegistry]
                         ]; 
@@ -829,7 +829,7 @@ const postConfigDefault = async () => {
                                 //Content
                                 config_row[1], 
                                 //type
-                                config_row[0]=='DbObjects'?'DOCUMENT':config_obj[0][1].filter(row=>row.Name==config_row[0])[0].Type); 
+                                config_row[0]=='ORM'?'DOCUMENT':config_obj[0][1].filter(row=>row.Name==config_row[0])[0].Type); 
     }
 };
 /**
@@ -868,8 +868,8 @@ const postDataDefault = async () => {
     
     //write files to ORM
     //read default where type is configured
-    /**@type{server['ORM']['MetaData']['DbObject'][]}*/
-    const DbObjects = await getDefaultObject('DbObjects');
+    /**@type{server['ORM']['MetaData']['Object'][]}*/
+    const ORM = await getDefaultObject('ORM');
     
     for (const config_row of config_obj){
         //Object
@@ -877,7 +877,7 @@ const postDataDefault = async () => {
             //Content
             config_row[1], 
             //type
-            DbObjects.filter(row=>row.Name==config_row[0])[0].Type); 
+            ORM.filter(row=>row.Name==config_row[0])[0].Type); 
     }
 };
 /**
