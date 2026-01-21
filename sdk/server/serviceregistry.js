@@ -31,6 +31,7 @@ const commonFromBase64 = str => {
  *          path:string}} parameters
  * @returns {Promise.<{
  *   name:                              string,
+ *   environment:                       string,
  *   server_protocol:	                string,
  *   server_host:		                string,
  *   server_port:                       number,
@@ -47,6 +48,7 @@ const commonConfig = async parameters =>{
     const Config = JSON.parse(await fs.promises.readFile(parameters.path + `/data/microservice/${parameters.service}.json`, 'utf8'));
     return {
         name:                               Config.name,
+        environment:                        Config.environment,
         server_protocol:                    Config.server_protocol,
         server_host:                        Config.server_host,
         server_port:                        Config.server_port,

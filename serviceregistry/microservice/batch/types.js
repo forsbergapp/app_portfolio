@@ -6,6 +6,7 @@
  * @description config
  * @typedef {{
  *   name:                              string,
+ *   environment:                       string,
  *   server_protocol:	                string,
  *   server_host:		                string,
  *   server_port:                       number,

@@ -290,7 +290,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
                                 status:'RUNNING', 
                                 result:null});
                     try{
-                        exec(command, (err, stdout, stderr) => {
+                        exec(command.replaceAll('$ENVIRONMENT',config.environment), (err, stdout, stderr) => {
                             log({
                                     log_id: log_id,
                                     jobid: jobid, 
