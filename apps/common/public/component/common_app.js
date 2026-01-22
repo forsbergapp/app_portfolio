@@ -112,9 +112,6 @@ const component = async props =>{
         }
     }
     const onMounted = async ()=>{
-        document.head.innerHTML = ` <meta charset='UTF-8'>
-                                    <title></title>
-                                    <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>`;
         
         //set globals
         props.methods.COMMON.commonGlobals(props.data.globals);
@@ -137,7 +134,10 @@ const component = async props =>{
     
         //mount start app
         await props.methods.COMMON.commonAppMount(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
-    
+        //replace old head wtith start styles and start script with new content
+        props.methods.COMMON.COMMON_DOCUMENT.head.innerHTML = ` <meta charset='UTF-8'>
+                                        <title></title>
+                                        <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>`;
         //apply font css
         props.methods.COMMON.commonGlobalGet('Data').app_fonts?props.methods.COMMON.commonMiscCssApply(props.methods.COMMON.commonGlobalGet('Data').app_fonts.join('@')):null;
     }

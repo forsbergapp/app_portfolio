@@ -11,6 +11,13 @@ const {server} = await import('../../../../server/server.js');
 /**
  * @name template
  * @description Template
+ *              
+ *              Start script:
+ *              1. import SDK Crypto (base64 in browser) rendered in server
+ *              2. fetch common start objects with options set in server (base64 with server rendered encrypted fetch option string in browser)
+ *              3. import common library and common component
+ *              4. mount component
+ *              5. onMounted replaces <head> with new content so style and script tags are removed and all data needed is now inside the blobs only using closure pattern
  * @function
  * @param {{crypto:string,
  *          secret:string,
@@ -20,54 +27,93 @@ const {server} = await import('../../../../server/server.js');
  * @returns {string}
  */
 const template = props =>`  <!DOCTYPE html>
-                            <html>
-                                <body class='start'>
-                                    <script type='module'>
-                                        const commonWindowFromBase64 = str => {
-                                            const binary_string = atob(str);
-                                            const len = binary_string.length;
-                                            const bytes = new Uint8Array(len);
-                                            for (let i = 0; i < len; i++) {
-                                                bytes[i] = binary_string.charCodeAt(i);
-                                            }
-                                            return new TextDecoder('utf-8').decode(bytes);
-                                        };
-                                        Promise.all([
-                                            import(URL.createObjectURL(  new Blob ([commonWindowFromBase64('${props.crypto}')],{type: 'text/javascript'}))),
-                                            fetch('${props.url}', (()=>{const temp = JSON.parse('${props.options}');temp.body = JSON.stringify(temp.body);return temp;})()).then(response=>response.text())
-                                        ])
-                                        .then(promise=>{
-                                            return {Crypto: {encrypt:promise[0].subtle.encrypt, 
-                                                            decrypt:promise[0].subtle.decrypt},
-                                                    commonStart:JSON.parse(promise[0].subtle.decrypt({
-                                                                    iv:         JSON.parse(commonWindowFromBase64('${props.secret}')).iv,
-                                                                    key:        JSON.parse(commonWindowFromBase64('${props.secret}')).jwk.k,
-                                                                    ciphertext: promise[1]}))};
-                                        })
-                                        .then(start=>
+                            <head>
+                                <style>
+                                    body {   
+                                        --common_app_color_blue1: rgb(81, 171, 255); 
+                                        display:flex;
+                                        justify-content:center;
+                                        align-items:center;
+                                        min-height:100vh;
+                                        margin:0;
+                                        background: var(--common_app_color_blue1);
+                                        }
+                                    body *{
+                                        display:none
+                                    }
+                                    @keyframes start_spin{
+                                        from {transform:rotate(0deg);}
+                                        to {transform:rotate(360deg);}
+                                    }
+                                    body::before{
+                                        content:'' !important;
+                                        width:25px;
+                                        height:25px;
+                                        position:absolute;
+                                        border:4px solid #404040;
+                                        border-top-color: rgb(81, 171, 255);
+                                        border-radius:50%;
+                                        animation:start_spin 1s linear infinite;
+                                    }
+                                </style>
+                                <script >
+                                    const start = async ()=>{
+                                        return new Promise(resolve=>{
+                                            const commonWindowFromBase64 = str => {
+                                                const binary_string = atob(str);
+                                                const len = binary_string.length;
+                                                const bytes = new Uint8Array(len);
+                                                for (let i = 0; i < len; i++) {
+                                                    bytes[i] = binary_string.charCodeAt(i);
+                                                }
+                                                return new TextDecoder('utf-8').decode(bytes);
+                                            };
                                             Promise.all([
-                                                import(URL.createObjectURL(  new Blob ([start.commonStart.commonComponent],{type: 'text/javascript'}))),
-                                                import(URL.createObjectURL(  new Blob ([start.commonStart.jsCommon],{type: 'text/javascript'})))
+                                                import(URL.createObjectURL(  new Blob ([commonWindowFromBase64('${props.crypto}')],{type: 'text/javascript'}))),
+                                                fetch('${props.url}', (()=>{const temp = JSON.parse(commonWindowFromBase64('${props.options}'));temp.body = JSON.stringify(temp.body);return temp;})()).then(response=>response.text())
                                             ])
-                                            .then(promise=>
-                                                promise[0].default({
-                                                        data:   {
-                                                                globals:    {
-                                                                                Functions:{x:{ 
-                                                                                    encrypt:start.Crypto.encrypt,
-                                                                                    decrypt:start.Crypto.decrypt,
-                                                                                    uuid:   '${props.uuid}',
-                                                                                    secret: '${props.secret}'}},
-                                                                                ...start.commonStart.globals
-                                                                            },
-                                                                cssCommon:  start.commonStart.cssCommon
-                                                                },
-                                                        methods:{
-                                                                COMMON:     promise[1]
-                                                                }
-                                                    }).then(component=>{document.body.innerHTML += component.template;component.lifecycle.onMounted()})
+                                            .then(promise=>{
+                                                return {Crypto: {encrypt:promise[0].subtle.encrypt, 
+                                                                decrypt:promise[0].subtle.decrypt},
+                                                        commonStart:JSON.parse(promise[0].subtle.decrypt({
+                                                                        iv:         JSON.parse(commonWindowFromBase64('${props.secret}')).iv,
+                                                                        key:        JSON.parse(commonWindowFromBase64('${props.secret}')).jwk.k,
+                                                                        ciphertext: promise[1]}))};
+                                            })
+                                            .then(result=>
+                                                Promise.all([
+                                                    import(URL.createObjectURL(  new Blob ([result.commonStart.commonComponent],{type: 'text/javascript'}))),
+                                                    import(URL.createObjectURL(  new Blob ([result.commonStart.jsCommon],{type: 'text/javascript'})))
+                                                ])
+                                                .then(promise2=>
+                                                    resolve(promise2[0].default({
+                                                                                    data:   {
+                                                                                            globals:    {
+                                                                                                            Functions:{x:{ 
+                                                                                                                encrypt:result.Crypto.encrypt,
+                                                                                                                decrypt:result.Crypto.decrypt,
+                                                                                                                uuid:   '${props.uuid}',
+                                                                                                                secret: '${props.secret}'}},
+                                                                                                            ...result.commonStart.globals
+                                                                                                        },
+                                                                                            cssCommon:  result.commonStart.cssCommon
+                                                                                            },
+                                                                                    methods:{
+                                                                                            COMMON:     promise2[1]
+                                                                                            }
+                                                                                }))    
+                                                )
                                             )
-                                        );
+                                        })
+                                    }
+                                </script
+                            </head>
+                            <html>
+                                <body>
+                                    <script type='module'>
+                                        start().then(component=>{
+                                                document.body.innerHTML = component.template;component.lifecycle.onMounted()
+                                            })
                                     </script>
                                 </body>
                             </html>  `;
@@ -133,34 +179,36 @@ const component = async props =>{
                         secret: postData.secret,
                         uuid:   postData.uuid,
                         url:    basePathRESTAPI + postData.uuid,
-                        options:JSON.stringify({
-                                    cache:  'no-store',
-                                    method: 'POST',
-                                    headers:{
-                                                'Content-Type': server.CONTENT_TYPE_JSON,
-                                                'Connection':   'close'
-                                            },
-                                    body: {x: server.security.securityTransportEncrypt({
-                                                app_id: data_app_id,
-                                                iv:     JSON.parse(Buffer.from(postData.secret,'base64').toString('utf8')).iv,  
-                                                jwk:    JSON.parse(Buffer.from(postData.secret,'base64').toString('utf8')).jwk, 
-                                                data:   JSON.stringify({  
-                                                            headers:{
-                                                                    'app-id':       start_app_id,
-                                                                    'app-signature':server.security.securityTransportEncrypt({ 
-                                                                                        app_id: data_app_id,
-                                                                                        iv:     JSON.parse(Buffer.from(postData.secret,'base64').toString('utf8')).iv,
-                                                                                        jwk:    JSON.parse(Buffer.from(postData.secret,'base64').toString('utf8')).jwk, 
-                                                                                        data:   JSON.stringify({app_id: start_app_id })}),
-                                                                    'app-id-token': 'Bearer ' + postData.idToken.token,
-                                                                    'Content-Type': server.CONTENT_TYPE_JSON
-                                                                    },
-                                                            method: 'GET',
-                                                            url:    `${rest_resource_bff}/app_id/v${app_rest_api_version ??1}/server-app/${data_app_id}?parameters=`,
-                                                            body:   null
-                                                        })
-                                                })}
-                                })
+                        options:Buffer.from(
+                                    JSON.stringify({
+                                        cache:  'no-store',
+                                        method: 'POST',
+                                        headers:{
+                                                    'Content-Type': server.CONTENT_TYPE_JSON,
+                                                    'Connection':   'close'
+                                                },
+                                        body: {x: server.security.securityTransportEncrypt({
+                                                    app_id: data_app_id,
+                                                    iv:     JSON.parse(Buffer.from(postData.secret,'base64').toString('utf8')).iv,  
+                                                    jwk:    JSON.parse(Buffer.from(postData.secret,'base64').toString('utf8')).jwk, 
+                                                    data:   JSON.stringify({  
+                                                                headers:{
+                                                                        'app-id':       start_app_id,
+                                                                        'app-signature':server.security.securityTransportEncrypt({ 
+                                                                                            app_id: data_app_id,
+                                                                                            iv:     JSON.parse(Buffer.from(postData.secret,'base64').toString('utf8')).iv,
+                                                                                            jwk:    JSON.parse(Buffer.from(postData.secret,'base64').toString('utf8')).jwk, 
+                                                                                            data:   JSON.stringify({app_id: start_app_id })}),
+                                                                        'app-id-token': 'Bearer ' + postData.idToken.token,
+                                                                        'Content-Type': server.CONTENT_TYPE_JSON
+                                                                        },
+                                                                method: 'GET',
+                                                                url:    `${rest_resource_bff}/app_id/v${app_rest_api_version ??1}/server-app/${data_app_id}?parameters=`,
+                                                                body:   null
+                                                            })
+                                                    })}
+                                    })
+                                ).toString('base64')
                     });
 };
 export default component;

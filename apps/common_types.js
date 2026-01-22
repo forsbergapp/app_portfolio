@@ -34,7 +34,8 @@
 
 /**
  * @description Type COMMON_DOCUMENT
- * @typedef {{  body:{className:string, requestFullscreen:function, classList:DOMTokenList},
+ * @typedef {{  head:{innerHTML:string},
+ *              body:{className:string, requestFullscreen:function, classList:DOMTokenList},
  *              createElement:function,
  *              addEventListener:function,
  *              adoptedStyleSheets:DocumentOrShadowRoot['adoptedStyleSheets'],
