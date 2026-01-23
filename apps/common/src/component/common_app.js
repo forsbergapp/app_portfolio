@@ -95,8 +95,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                                                                 uuid:   '${props.uuid}',
                                                                                                                 secret: '${props.secret}'}},
                                                                                                             ...result.commonStart.globals
-                                                                                                        },
-                                                                                            cssCommon:  result.commonStart.cssCommon
+                                                                                                        }
                                                                                             },
                                                                                     methods:{
                                                                                             COMMON:     promise2[1]

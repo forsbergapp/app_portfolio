@@ -10,9 +10,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{app_link_app_css:string,
- *          app_link_app_report_css:string,
- *          cssCommon:string,
+ * @param {{css:string,
  *          html:string}} props
  * @returns {string}
  */
@@ -22,10 +20,8 @@ const template = props =>`  <!DOCTYPE html>
                                <meta charset='UTF-8'>
                                <title></title>
                                <style>
-                                    ${props.cssCommon} 
+                                    ${props.css} 
                                </style>
-                               <link rel='stylesheet' type='text/css' href='${props.app_link_app_css}' />
-                               <link rel='stylesheet' type='text/css' href='${props.app_link_app_report_css}' />
                             </head>
                             <body id="printbody">
                                 ${props.html}
@@ -49,20 +45,26 @@ const template = props =>`  <!DOCTYPE html>
  *                      template:string}>}
  */
 const component = async props => {
-    //get common css 
-    let cssCommon ='';
-     props.methods.COMMON.COMMON_DOCUMENT.adoptedStyleSheets.forEach(sheet => { 
-        for (const i in sheet.cssRules) {
-            //skip fonts
-            if (sheet.cssRules[i].cssText?.indexOf('@font-face')==-1)
-                cssCommon += sheet.cssRules[i].cssText + '\n'; 
-        }
-        return;
-    });
+    /**
+     * 
+     * @param {common['COMMON_DOCUMENT']|ShadowRoot} element 
+     * @returns {string}
+     */
+    const getCss = element =>{
+        let css ='';
+        element.adoptedStyleSheets.forEach(sheet => { 
+            for (const i in sheet.cssRules) {
+                //skip fonts
+                if (sheet.cssRules[i].cssText?.indexOf('@font-face')==-1)
+                    css += sheet.cssRules[i].cssText + '\n'; 
+            }
+            
+        });
+        return css;
+    }
+    
     const templateRendered =  template({  
-                                app_link_app_css:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_link_app_css').attributes['href'].textContent,
-                                app_link_app_report_css:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_link_app_report_css').attributes['href'].textContent,
-                                cssCommon:cssCommon,
+                                css:getCss(props.methods.COMMON.COMMON_DOCUMENT),
                                 html: props.data.appHtml});
     return {
         lifecycle:  null,

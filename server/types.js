@@ -54,7 +54,8 @@
  *                          app_content_type_html:string,
  *                          app_content_type_sse:string,
  *                          },
- *              Data:{  app_fonts:string[],
+ *              Data:{  cssCommon:string,
+ *                      app_fonts:string[],
  *                      token_dt:string|null
  *                      client_latitude:string|null,
  *                      client_longitude:string|null,

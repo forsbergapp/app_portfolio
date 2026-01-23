@@ -308,6 +308,7 @@
  *                          app_div:string
  *                          },
  *              Data:{
+ *                  cssCommon:string,
  *                  app_fonts:[],
  *                  app_fonts_loaded:{family:string, url:string, attributes:Object.<string,*>}[],
  *                  token_dt:string|null, 

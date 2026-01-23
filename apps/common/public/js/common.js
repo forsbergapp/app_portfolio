@@ -221,7 +221,8 @@ const COMMON_GLOBAL = {
         app_root:'app_root',
         app_div:'app',
     },
-    Data:{  app_fonts:[],    
+    Data:{  cssCommon:'',
+            app_fonts:[],    
             app_fonts_loaded:[],
             token_dt: null,
             token_at:null,
@@ -1126,15 +1127,19 @@ const commonMiscLoadFont = parameters => {
 };
 /**
  * @name commonMisCssApply
- * @description apply css
+ * @description apply common css if empty (=null) or app css
  * @function
- * @param {string} cssText
+ * @param {string|null} cssText
 */
-const commonMiscCssApply = cssText =>{
+const commonMiscCssApply = (cssText=null) =>{
     const css = new CSSStyleSheet();
-    css.replace(cssText);
+    const css_common = commonGlobalGet('Data').cssCommon + (commonGlobalGet('Data').app_fonts?commonGlobalGet('Data').app_fonts.join('@'):'');
+    if (cssText!=null)
+        css.replace(css_common + cssText);
+    else
+        css.replace(css_common);
     
-    document.adoptedStyleSheets = [...document.adoptedStyleSheets, css];
+    document.adoptedStyleSheets = [css];
 };
 
 /**
@@ -3058,11 +3063,9 @@ const commonAppMount = async (app_id, spinner_id=null) =>{
     
     if (COMMON_GLOBAL.User.iam_user_id != null)
         commonUserLoginApp(CommonAppInit.IamUserApp);
-    
-    CommonAppInit.App.Css==''?
-        null:
-            COMMON_DOCUMENT.querySelector('#app_link_app_css').href = await commonMiscResourceFetch(CommonAppInit.App.Css, null, 'text/css', CommonAppInit.App.CssContent);
-
+    //Css => link, CssContent => the css 
+    if (CommonAppInit.App.CssContent!='' || CommonAppInit.App.CssReportContent!='')
+        commonMiscCssApply((CommonAppInit.App.CssContent??'') + (CommonAppInit.App.CssReportContent??''))
     const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.Js, CommonAppInit.App.JsContent);
     
     /**@type{common['commonMetadata']} */
@@ -3097,9 +3100,6 @@ const commonAppMount = async (app_id, spinner_id=null) =>{
     else
         commonUserUpdateAvatar(false, null);
 
-    CommonAppInit.App.CssReport==''?
-        null:
-            COMMON_DOCUMENT.querySelector('#app_link_app_report_css').href = await commonMiscResourceFetch(CommonAppInit.App.CssReport, null, 'text/css', CommonAppInit.App.CssReportContent);
 };
 /**
  * @name commonGet

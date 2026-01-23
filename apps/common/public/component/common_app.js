@@ -25,8 +25,6 @@
  * @returns {string}
  */
 const template = props =>`  
-                            <link id='app_link_app_css'         rel='stylesheet'  type='text/css'     href=''/>
-                            <link id='app_link_app_report_css'  rel='stylesheet'  type='text/css'     href=''/>
                             <div id='app_root'>
                                 <div id='app'></div>
                                 <div id='common_app'>
@@ -81,8 +79,7 @@ const template = props =>`
 * @description Component
 * @function
 * @param {{data:       {
-*                      globals:common['server']['app']['commonGlobals'],
-*                      cssCommon:string,
+*                      globals:common['server']['app']['commonGlobals']
 *                      },
 *          methods:    {
 *                      COMMON:common['CommonModuleCommon']
@@ -95,8 +92,7 @@ const template = props =>`
 *                      template:string}>}
 */
 const component = async props =>{
-    //apply common css
-    props.methods.COMMON.commonMiscCssApply(props.data.cssCommon);
+    
     /**
      * @name events
      * @descption Events for map
@@ -112,7 +108,8 @@ const component = async props =>{
         }
     }
     const onMounted = async ()=>{
-        
+        //apply common css
+        props.methods.COMMON.commonMiscCssApply();
         //set globals
         props.methods.COMMON.commonGlobals(props.data.globals);
         
@@ -138,8 +135,7 @@ const component = async props =>{
         props.methods.COMMON.COMMON_DOCUMENT.head.innerHTML = ` <meta charset='UTF-8'>
                                         <title></title>
                                         <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>`;
-        //apply font css
-        props.methods.COMMON.commonGlobalGet('Data').app_fonts?props.methods.COMMON.commonMiscCssApply(props.methods.COMMON.commonGlobalGet('Data').app_fonts.join('@')):null;
+        
     }
     return {
         lifecycle:  {onMounted:onMounted},
