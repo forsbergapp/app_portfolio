@@ -68,7 +68,7 @@ const component = async props => {
     };
     const onMounted =()=>{
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_broadcast_info_logo').innerHTML = 
-            props.methods.COMMON.commonGlobalGet('Apps').filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id)[0].Logo;
+            props.methods.COMMON.commonGlobalGet('Data').Apps.filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id)[0].Logo;
 
     };
     return {

@@ -56,7 +56,7 @@ const appInit = async () => {
 const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
-    common.commonGlobalSet('Functions', 'app_function_session_expired', null);
+    common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:null});
     appInit();
 };
 /**

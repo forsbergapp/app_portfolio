@@ -93,7 +93,7 @@ const component = async props => {
                                                     method:'POST', authorization_type:'APP_ID',
                                                     body:{  type:'FUNCTION',
                                                             IAM_data_app_id : props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
-                                                            locale: props.methods.COMMON.commonGlobalGet('UserApp').user_locale}
+                                                            locale: props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale}
                                                 })
                             .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{
@@ -219,7 +219,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:   null,
         methods:null,
-        template: template({user_timezone:props.methods.COMMON.commonGlobalGet('UserApp').user_timezone,
+        template: template({user_timezone:props.methods.COMMON.commonGlobalGet('Data').UserApp.user_timezone,
                             icons:{
                                 regional_locale:props.methods.COMMON.commonGlobalGet('ICONS').regional_locale,
                                 regional_timezone_current:props.methods.COMMON.commonGlobalGet('ICONS').regional_timezone + props.methods.COMMON.commonGlobalGet('ICONS').gps_position,

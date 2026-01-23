@@ -542,11 +542,11 @@ const appSecureMenuInstallationDbInstallationFunction = (id, db_icon, path, meth
     .then((/**@type{string}*/result)=>{
         if (db_icon!=null)
             if (db_icon){
-                common.commonGlobalSet('Parameters', 'admin_only', 0);
+                common.commonGlobalSet({key:'Parameters', name:'admin_only', value:0});
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.add('installed');
             }
             else{
-                common.commonGlobalSet('Parameters', 'admin_only', 1);
+                common.commonGlobalSet({key:'Parameters', name:'admin_only', value:1});
                 COMMON_DOCUMENT.querySelector('#menu_installation_db_icon').classList.remove('installed');
             }
                 
@@ -1021,7 +1021,7 @@ const appCommonInit = async (commonLib, parameters) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
     COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu').style.display = 'none';
-    common.commonGlobalSet('Functions','app_function_session_expired', appLogout);
+    common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:appLogout});
     appInit();
 };
 /**

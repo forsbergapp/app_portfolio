@@ -120,7 +120,7 @@ const component = async props =>{
     
         props.methods.COMMON.commonCustomFramework();
         //set common app id
-        props.methods.COMMON.commonGlobalSet('UserApp','app_id', props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id);
+        props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'UserApp', name:'app_id', value:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id});
         
         //connect to BFF
         props.methods.COMMON.commonFFB({path:               '/server-bff/' + props.methods.COMMON.commonGlobalGet('Functions').x.uuid, 

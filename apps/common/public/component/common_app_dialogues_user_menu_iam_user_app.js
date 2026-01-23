@@ -64,7 +64,7 @@ const component = async props => {
             method:'POST', authorization_type:'APP_ID',
             body:{  type:'FUNCTION',
                     IAM_data_app_id : props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
-                    locale: props.methods.COMMON.commonGlobalGet('UserApp').user_locale}
+                    locale: props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale}
         })
         .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)))
 
@@ -116,10 +116,10 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const UserPreferenceSave = async () => {
-        if (props.methods.COMMON.commonGlobalGet('UserApp').iam_user_app_id != null){
+        if (props.methods.COMMON.commonGlobalGet('Data').UserApp.iam_user_app_id != null){
             const body = {
-                            IAM_data_app_id: props.methods.COMMON.commonGlobalGet('UserApp').app_id,
-                            IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+                            IAM_data_app_id: props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id,
+                            IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id,
                             document: 
                             {  
                                 preference_locale:       props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_locale_select .common_select_dropdown_value')
@@ -133,7 +133,7 @@ const component = async props => {
                                 custom:                  null,
                             }
                         };
-            await props.methods.COMMON.commonFFB({path:`/server-db/iamuserapp/${props.methods.COMMON.commonGlobalGet('UserApp').iam_user_app_id}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
+            await props.methods.COMMON.commonFFB({path:`/server-db/iamuserapp/${props.methods.COMMON.commonGlobalGet('Data').UserApp.iam_user_app_id}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
         }
     };
 
@@ -158,7 +158,7 @@ const component = async props => {
                     }
                     case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select' &&
                          event.target.classList.contains('common_select_option'):{
-                        props.methods.COMMON.commonGlobalSet('UserApp','user_locale', event.target?.getAttribute('data-value') ?? '');
+                        props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'UserApp', name:'user_locale', value:event.target?.getAttribute('data-value') ?? ''});
                         /**
                          * @todo change COMMON_WINDOW.navigator.language using Object.defineProperties(COMMON_WINDOW.navigator, {'language': {'value':COMMON_GLOBAL.UserApp.user_locale, writable: true}});
                          */
@@ -166,7 +166,7 @@ const component = async props => {
                         await props.methods.COMMON.commonComponentRender({
                          mountDiv:   'common_app_dialogues_user_menu_iam_user_app_locale_select', 
                          data:       {
-                                     default_data_value:props.methods.COMMON.commonGlobalGet('UserApp').user_locale,
+                                     default_data_value:props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale,
                                      default_value:'',
                                      options: await getLocales(),
                                      column_value:'locale',
@@ -175,12 +175,12 @@ const component = async props => {
                          methods:    null,
                          path:       '/common/component/common_select.js'});
                          props.methods.COMMON.commonMiscSelectCurrentValueSet(  'common_app_dialogues_user_menu_iam_user_app_locale_select', 
-                                                                                props.methods.COMMON.commonGlobalGet('UserApp').user_locale);
+                                                                                props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale);
                          break;
                     }
                     case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_timezone_select' &&
                          event.target.classList.contains('common_select_option'):{
-                        props.methods.COMMON.commonGlobalSet('UserApp','user_timezone', event.target?.getAttribute('data-value') ?? '');
+                        props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'UserApp', name:'user_timezone', value:event.target?.getAttribute('data-value') ?? ''});
                         await UserPreferenceSave();
                         break;
                     }
@@ -190,14 +190,14 @@ const component = async props => {
                             props.methods.COMMON.COMMON_DOCUMENT.body.classList.add('rtl');
                         else
                             props.methods.COMMON.COMMON_DOCUMENT.body.classList.remove('rtl');
-                        props.methods.COMMON.commonGlobalSet('UserApp','user_direction', event.target?.getAttribute('data-value') ?? '');
+                        props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'UserApp', name:'user_direction', value:event.target?.getAttribute('data-value') ?? ''});
                         await UserPreferenceSave();
                         appThemeUpdate();
                         break;
                     }
                     case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_arabic_script_select' &&
                          event.target.classList.contains('common_select_option'):{
-                        props.methods.COMMON.commonGlobalSet('UserApp','user_arabic_script', event.target?.getAttribute('data-value') ?? '');
+                        props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'UserApp', name:'user_arabic_script', value:event.target?.getAttribute('data-value') ?? ''});
                         //check if app theme div is using default theme with common select div
                         if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select').className?
                             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select').className.toLowerCase().indexOf('common_select')>-1:false){
@@ -232,7 +232,7 @@ const component = async props => {
        await props.methods.COMMON.commonComponentRender({
            mountDiv:   'common_app_dialogues_user_menu_iam_user_app_locale_select', 
            data:       {
-                       default_data_value:props.methods.COMMON.commonGlobalGet('UserApp').user_locale,
+                       default_data_value:props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale,
                        default_value:'',
                        options: locales,
                        column_value:'locale',
@@ -245,8 +245,8 @@ const component = async props => {
            await props.methods.COMMON.commonComponentRender({
                mountDiv:  'common_app_dialogues_user_menu_iam_user_app_timezone_select', 
                data:       {
-                           default_data_value:props.methods.COMMON.commonGlobalGet('UserApp').user_timezone,
-                           default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'TIMEZONE', props.methods.COMMON.commonGlobalGet('UserApp').user_timezone))[0].DisplayData,
+                           default_data_value:props.methods.COMMON.commonGlobalGet('Data').UserApp.user_timezone,
+                           default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'TIMEZONE', props.methods.COMMON.commonGlobalGet('Data').UserApp.user_timezone))[0].DisplayData,
                            options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'TIMEZONE'),
                            column_value:'Value',
                            column_text:'DisplayData'
@@ -257,12 +257,12 @@ const component = async props => {
            await props.methods.COMMON.commonComponentRender({
                mountDiv:   'common_app_dialogues_user_menu_iam_user_app_direction_select', 
                data:       {
-                           default_data_value:props.methods.COMMON.commonGlobalGet('UserApp').user_direction,
-                           default_value:['',null].includes(props.methods.COMMON.commonGlobalGet('UserApp').user_direction)?
+                           default_data_value:props.methods.COMMON.commonGlobalGet('Data').UserApp.user_direction,
+                           default_value:['',null].includes(props.methods.COMMON.commonGlobalGet('Data').UserApp.user_direction)?
                                             ' ':
                                                 (await props.methods.COMMON.commonGetAppData(  props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,
                                                         'DIRECTION', 
-                                                        props.methods.COMMON.commonGlobalGet('UserApp').user_direction))[0].DisplayData??'',
+                                                        props.methods.COMMON.commonGlobalGet('Data').UserApp.user_direction))[0].DisplayData??'',
                            options: [{Value:'', DisplayData:' '}].concat(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'DIRECTION')),
                            column_value:'Value',
                            column_text:'DisplayData'
@@ -273,12 +273,12 @@ const component = async props => {
            await props.methods.COMMON.commonComponentRender({
                mountDiv:   'common_app_dialogues_user_menu_iam_user_app_arabic_script_select', 
                data:       {
-                           default_data_value:props.methods.COMMON.commonGlobalGet('UserApp').user_arabic_script,
-                           default_value:['',null].includes(props.methods.COMMON.commonGlobalGet('UserApp').user_arabic_script)?
+                           default_data_value:props.methods.COMMON.commonGlobalGet('Data').UserApp.user_arabic_script,
+                           default_value:['',null].includes(props.methods.COMMON.commonGlobalGet('Data').UserApp.user_arabic_script)?
                                             ' ':
                                                 (await props.methods.COMMON.commonGetAppData(  props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,
                                                         'ARABIC_SCRIPT', 
-                                                        props.methods.COMMON.commonGlobalGet('UserApp').user_arabic_script))[0].DisplayData??'',
+                                                        props.methods.COMMON.commonGlobalGet('Data').UserApp.user_arabic_script))[0].DisplayData??'',
                            options: [{Value:'', DisplayData:' '}].concat(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id ,'ARABIC_SCRIPT')),
                            column_value:'Value',
                            column_text:'DisplayData'
@@ -287,7 +287,7 @@ const component = async props => {
                path:       '/common/component/common_select.js'});
        }
        //set current value on all the selects
-       props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_locale_select', props.methods.COMMON.commonGlobalGet('UserApp').user_locale);
+       props.methods.COMMON.commonMiscSelectCurrentValueSet('common_app_dialogues_user_menu_iam_user_app_locale_select', props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale);
        
    };
    return {

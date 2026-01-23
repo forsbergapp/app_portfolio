@@ -144,11 +144,13 @@ const component = async props => {
                
            props.methods.COMMON.commonFFB({path:'/server-iam/iamuser', method:'POST', authorization_type:'IAM_SIGNUP', body:json, spinner_id:'common_app_dialogues_iam_start_signup_button'})
             .then(result=>{
-                props.methods.COMMON.commonGlobalSet('UserApp','iam_user_app_id', JSON.parse(result).iam_user_app_id);
-                props.methods.COMMON.commonGlobalSet('User','iam_user_id',     JSON.parse(result).iam_user_id);
-                props.methods.COMMON.commonGlobalSet('Data','token_at',        JSON.parse(result).token_at);
-                props.methods.COMMON.commonGlobalSet('Data','token_exp',       JSON.parse(result).exp);
-                props.methods.COMMON.commonGlobalSet('Data','token_iat',       JSON.parse(result).iat);
+                props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'UserApp', name:'iam_user_app_id', value:JSON.parse(result).iam_user_app_id});
+                props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'User', name:'iam_user_id', value:JSON.parse(result).iam_user_id});
+
+                props.methods.COMMON.commonGlobalSet({key:'Data', name:'token_at', value:JSON.parse(result).token_at});
+                props.methods.COMMON.commonGlobalSet({key:'Data', name:'token_exp', value:JSON.parse(result).exp});
+                props.methods.COMMON.commonGlobalSet({key:'Data', name:'token_iat', value:JSON.parse(result).iat});
+
                 props.methods.COMMON.commonMessageShow('INFO', null, null,JSON.parse(result).otp_key);
                 
                 props.methods.COMMON.commonDialogueShow('VERIFY', 'SIGNUP');
@@ -193,7 +195,7 @@ const component = async props => {
         methods:    null,
         events:     events,
         template:   template({
-                            admin_app:props.methods.COMMON.commonGlobalGet('UserApp').app_id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id,
+                            admin_app:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id,
                             type:props.data.type,
                             first_time: props.methods.COMMON.commonGlobalGet('Parameters').admin_first_time == 1,
                             icons:{ user: props.methods.COMMON.commonGlobalGet('ICONS')['user'],

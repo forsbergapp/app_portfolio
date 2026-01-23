@@ -43,20 +43,20 @@ const component = async props => {
 
     const onMounted = async () =>{
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_top_logo').innerHTML = 
-            props.methods.COMMON.commonGlobalGet('Apps').filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('UserApp').app_id)[0].Logo;
+            props.methods.COMMON.commonGlobalGet('Data').Apps.filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id)[0].Logo;
         await props.methods.COMMON.commonComponentRender({
                 mountDiv:   'app_page_start_shop', 
                 data:       {
                             display_type:'MASTER_DETAIL_VERTICAL',
                             master_path:'/app-common-module/PRODUCT_GET',
                             master_query:'fields=Name,Image,Description,Sku,Stock',
-                            master_body:{type:'FUNCTION',IAM_data_app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id, resource_id : 6000},
+                            master_body:{type:'FUNCTION',IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id, resource_id : 6000},
                             master_method:'POST',
                             master_token_type:'APP_ID',
                             master_resource:'PRODUCT_METADATA',
                             detail_path:'/app-common-module/PRODUCT_GET',
                             detail_query:'fields=Attributes',
-                            detail_body:{type:'FUNCTION',IAM_data_app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id, resource_id : 6000},
+                            detail_body:{type:'FUNCTION',IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id, resource_id : 6000},
                             detail_method:'POST',
                             detail_token_type:'APP_ID',
                             detail_class:null,

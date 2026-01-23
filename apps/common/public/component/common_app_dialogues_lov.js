@@ -87,7 +87,7 @@ const component = async props => {
             lov_column_id = 'Value';
             lov_column_value = 'text';
             path = '/app-common-module/COMMON_COUNTRY';
-            query= `locale=${props.methods.COMMON.commonGlobalGet('UserApp').user_locale}`;
+            query= `locale=${props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale}`;
             token_type = 'APP_ID';
             body = {type:'FUNCTION',IAM_data_app_id : props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id};
             break;
@@ -98,7 +98,7 @@ const component = async props => {
             lov_column_id = 'Value';
             lov_column_value = 'DisplayData';
             path = '/server-db/appdata/';
-            query= `name=${props.data.lov}&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('UserApp').app_id}`;
+            query= `name=${props.data.lov}&IAM_data_app_id=${props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id}`;
             token_type = 'APP_ID';
         }
     }

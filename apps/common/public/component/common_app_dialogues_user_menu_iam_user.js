@@ -113,8 +113,8 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
 */
 const component = async props => {
     /**@type{common['server']['iam']['iam_user']} */    
-    const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.methods.COMMON.commonGlobalGet('User').iam_user_id}`, 
-                                                method:'GET', authorization_type:props.methods.COMMON.commonGlobalGet('UserApp').app_id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id?'ADMIN':'APP_ACCESS'})
+    const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id}`, 
+                                                method:'GET', authorization_type:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id?'ADMIN':'APP_ACCESS'})
                         .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
 
     /**
@@ -151,9 +151,9 @@ const component = async props => {
                 const password_new =        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_new').textContent;
                 const password_reminder =   props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_input_password_reminder').textContent;
 
-                props.methods.COMMON.commonFFB({ path:`/server-iam/iamuser/${props.methods.COMMON.commonGlobalGet('User').iam_user_id ?? ''}`, 
+                props.methods.COMMON.commonFFB({ path:`/server-iam/iamuser/${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id ?? ''}`, 
                             method:'PATCH', 
-                            authorization_type:props.methods.COMMON.commonGlobalGet('UserApp').app_id==props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id?'ADMIN':'APP_ACCESS', 
+                            authorization_type:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id==props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id?'ADMIN':'APP_ACCESS', 
                             body:{  username:           username,
                                     password:           password,
                                     password_new:       password_new==''?null:password_new,
@@ -201,10 +201,10 @@ const component = async props => {
                     break;
                 }
                 case 1:{
-                    props.methods.COMMON.commonFFB({ path:`/server-iam/iamuserapp/${props.methods.COMMON.commonGlobalGet('UserApp').iam_user_app_id}`, 
+                    props.methods.COMMON.commonFFB({ path:`/server-iam/iamuserapp/${props.methods.COMMON.commonGlobalGet('Data').UserApp.iam_user_app_id}`, 
                                 body:{  password: password,
-                                        IAM_data_app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id, 
-                                        IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id}, 
+                                        IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id, 
+                                        IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id}, 
                                 method:'DELETE', 
                                 authorization_type:'APP_ACCESS',
                                 spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_delete_account'})
@@ -256,7 +256,7 @@ const component = async props => {
         * @returns {Promise.<void>}
         */
     const onMounted = async () => {
-        if (props.methods.COMMON.commonGlobalGet('User').iam_user_id == user.Id) {
+        if (props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id == user.Id) {
 
             if (Number(user.Private))
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.add('checked');

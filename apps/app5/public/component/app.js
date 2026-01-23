@@ -39,7 +39,7 @@ const component = async props => {
 
     const onMounted = async () =>
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_top_logo').innerHTML = 
-            props.methods.COMMON.commonGlobalGet('Apps').filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('UserApp').app_id)[0].Logo;
+            props.methods.COMMON.commonGlobalGet('Data').Apps.filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id)[0].Logo;
     
     return {
         lifecycle:  {onMounted:onMounted},

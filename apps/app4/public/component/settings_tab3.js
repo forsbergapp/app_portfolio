@@ -97,7 +97,7 @@ const component = async props => {
     
     //update APP_GLOBAL with themes
     /**@type{import('../js/types.js').APP_GLOBAL['themes']} */
-    props.data.themes.data = (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id))
+    props.data.themes.data = (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id))
                             .filter(setting=>
                                     setting.Name.startsWith('REPORT_THEME')
                             )
@@ -125,10 +125,10 @@ const component = async props => {
             mountDiv:   'setting_select_report_highlight_row',
             data:       {
                         default_data_value:props.data.user_settings.DesignRowHighlight,
-                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,
+                        default_value:(await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id ,
                                                                                     'HIGHLIGHT_ROW',
                                                                                     props.data.user_settings.DesignRowHighlight))[0].DisplayData,
-                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('UserApp').app_id ,'HIGHLIGHT_ROW'),
+                        options: await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id ,'HIGHLIGHT_ROW'),
                         column_value:'Value',
                         column_text:'DisplayData'
                         },

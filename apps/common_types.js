@@ -280,11 +280,6 @@
  *                      message_fail: string,
  *                      message_success: string,
  *                      message_text:string},
- *              Apps:common['server']['ORM']['Object']['App'][],
- *              AppData:[   common['server']['ORM']['Object']['AppData']['AppId'], 
- *                          common['server']['ORM']['Object']['AppData']['Name'],
- *                          common['server']['ORM']['Object']['AppData']['Value'],
- *                          common['server']['ORM']['Object']['AppData']['DisplayData']][],
  *              Parameters:{
  *                          rest_resource_bff:string|null,
  *                          app_rest_api_version:string|null,
@@ -308,9 +303,28 @@
  *                          app_div:string
  *                          },
  *              Data:{
+ *                  Apps:common['server']['ORM']['View']['AppGetInfo'][],
+ *                  AppData:[   common['server']['ORM']['Object']['AppData']['AppId'], 
+ *                              common['server']['ORM']['Object']['AppData']['Name'],
+ *                              common['server']['ORM']['Object']['AppData']['Value'],
+ *                              common['server']['ORM']['Object']['AppData']['DisplayData']][],
+ *                  User:{
+ *                          iam_user_id:number|null,
+ *                          iam_user_username:string|null,
+ *                          iam_user_avatar:string|null
+ *                  },
+ *                  UserApp:{
+ *                          iam_user_app_id:number|null,
+ *                          app_id:number,
+ *                          user_locale:string,
+ *                          user_timezone:string,
+ *                          user_direction:string,
+ *                          user_arabic_script:string,
+ *                          user_custom:{ [key: string]: string}|null
+ *                  },
  *                  cssCommon:string,
- *                  app_fonts:[],
- *                  app_fonts_loaded:{family:string, url:string, attributes:Object.<string,*>}[],
+ *                  cssFontsArray:[],
+ *                  fonts_loaded:{family:string, url:string, attributes:Object.<string,*>}[],
  *                  token_dt:string|null, 
  *                  token_at:string|null,
  *                  token_admin_at:string|null,
@@ -321,21 +335,14 @@
  *                  client_longitude:string|null,
  *                  client_place:string|null,
  *                  client_timezone:string|null
- *                  },
- *              User:{
- *                  iam_user_id:number|null,
- *                  iam_user_username:string|null,
- *                  iam_user_avatar:string|null
- *                  },
- *              UserApp:{
- *                  iam_user_app_id:number|null,
- *                  app_id:number,
- *                  user_locale:string,
- *                  user_timezone:string,
- *                  user_direction:string,
- *                  user_arabic_script:string,
- *                  user_custom:{ [key: string]: string}|null
- *                  },
+ *                  resource:{  app_id:number, 
+ *                              url:string, 
+ *                              content:*, 
+ *                              content_type:string}[]|[],
+ *                  componentSource:{   app_id:number, 
+ *                                      url:string,
+ *                                      component:*}[]|[]
+ *              },
  *              Functions:{
  *                  app_console:{warn:function, info:function, error:function},
  *                  app_eventListeners:{original:function,  REACT:['WINDOW'|'DOCUMENT'|'HTMLELEMENT',*,*,*,*]|[], 
@@ -349,12 +356,8 @@
  *                      encrypt:(arg0:{iv:string, key:string, data:string})=> string,
  *                      decrypt:(arg0:{iv:string, key:string, ciphertext:string})=> string 
  *                      uuid?:   string,
- *                      secret?: string},
- *                  resource_import:{   app_id:number, 
- *                                      url:string, 
- *                                      content:*, 
- *                                      content_type:string}[]|[],
- *                  component_import:{app_id:number, url:string,component:*}[]|[],
+ *                      secret?: string
+ *                  },
  *                  component:Object.<string,   {
  *                                              methods?:Object.<string,function>|null, 
  *                                              events?:commonComponentEvents}>

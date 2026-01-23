@@ -63,7 +63,7 @@ const component = async props => {
     const records = commonMiscInputControl?await props.methods.COMMON.commonFFB(
                                                 {
                                                     path:   '/server-db/iamuser-profile/', 
-                                                    query:  `id=${props.methods.COMMON.commonGlobalGet('User').iam_user_id?? ''}&search=${encodeURI(searched_username)}`, 
+                                                    query:  `id=${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id?? ''}&search=${encodeURI(searched_username)}`, 
                                                     method: 'GET', 
                                                     authorization_type:'APP_ID'
                                                 })

@@ -141,14 +141,14 @@ const component = async props => {
         props.methods.COMMON.commonComponentRender({
             mountDiv:   'menu_monitor_detail',
             data:       {
-                        app_id:props.methods.COMMON.commonGlobalGet('UserApp').app_id,
+                        app_id:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id,
                         monitor_detail:list_detail,
                         offset:offset,
                         sort:sort,
                         order_by:order_by,
                         page:page,
                         page_last:page_last,
-                        iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+                        iam_user_id:props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id,
                         SERVICE_LOG_FILE_INTERVAL:SERVICE_LOG_FILE_INTERVAL,
                         SERVICE_LOG_DATA:SERVICE_LOG_DATA
                         },

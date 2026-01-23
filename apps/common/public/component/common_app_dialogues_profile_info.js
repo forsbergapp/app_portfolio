@@ -118,13 +118,13 @@ const component = async props => {
             if (props.data.username !== null)
                 return '/server-db/iamuser-profile/';
             else
-                return `/server-db/iamuser-profile/${props.methods.COMMON.commonGlobalGet('User').iam_user_id ?? ''}`;
+                return `/server-db/iamuser-profile/${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id ?? ''}`;
     };
     /**@type{common['server']['ORM']['View']['IamUsetGetProfile'] & {Id:number}}*/
     const profile = await props.methods.COMMON.commonFFB(
                             {
                                 path:pathInfoGet(), 
-                                query:`id=${props.methods.COMMON.commonGlobalGet('User').iam_user_id ?? ''}` + (props.data.username!=null?`&name=${props.data.username}`:''), 
+                                query:`id=${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id ?? ''}` + (props.data.username!=null?`&name=${props.data.username}`:''), 
                                 method:'GET', 
                                 authorization_type:'APP_ID'
                             })
@@ -133,7 +133,7 @@ const component = async props => {
     const onMounted = async () => {
         setButtonUI('common_app_dialogues_profile_info_follow',profile.FollowedId!=null);
         setButtonUI('common_app_dialogues_profile_info_like',profile.LikedId!=null);
-        if (props.methods.COMMON.commonGlobalGet('User').iam_user_id !=null)
+        if (props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id !=null)
             props.methods.COMMON.commonSocketConnectOnlineCheck('common_app_dialogues_profile_info_avatar_online_status', profile.Id);
     };
     /**
@@ -169,15 +169,15 @@ const component = async props => {
             if (check_div.style.display == 'block') {
                 path = `/server-db/iamuser${function_name.toLowerCase()}`;
                 method = 'POST';
-                json = {    IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+                json = {    IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id,
                             [`iam_user_id_${function_name.toLowerCase()}`]: user_id_profile
                         };
             } else {
                 path = `/server-db/iamuser${function_name.toLowerCase()}/${props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#common_app_dialogues_profile_info_${function_name.toLowerCase()}`).getAttribute('data-record_id')}`;
                 method = 'DELETE';
-                json = { IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('User').iam_user_id};
+                json = { IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id};
             }
-            if (props.methods.COMMON.commonGlobalGet('User').iam_user_id == null)
+            if (props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id == null)
                 props.methods.COMMON.commonDialogueShow('LOGIN');
             else {
                props.methods.COMMON.commonFFB({path:path, method:method, authorization_type:'APP_ACCESS', body:json})

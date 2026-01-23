@@ -65,7 +65,7 @@ const component = async props => {
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        template:   template({  iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+        template:   template({  iam_user_id:props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id,
                                 avatar:props.data.avatar,
                                 icons:{
                                     regional:props.methods.COMMON.commonGlobalGet('ICONS').regional,

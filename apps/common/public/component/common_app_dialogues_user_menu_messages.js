@@ -121,9 +121,9 @@ const component = async props => {
             method:'POST', 
             query:`offset=${offset}`,
             body:{  type:'FUNCTION', 
-                    IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('User').iam_user_id,
+                    IAM_iam_user_id:props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id,
                     IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id},
-            authorization_type:props.methods.COMMON.commonGlobalGet('UserApp').app_id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id?'ADMIN':'APP_ACCESS'})
+            authorization_type:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id?'ADMIN':'APP_ACCESS'})
         .then((/**@type{*}*/result)=>JSON.parse(result))
         .catch(()=>[]);
         return messages;

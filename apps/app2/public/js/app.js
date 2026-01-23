@@ -89,7 +89,7 @@ const appCommonInit = async (commonLib, parameters) => {
     parameters;
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
-    common.commonGlobalSet('Functions','app_function_session_expired', null);
+    common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:null});
     await common.commonComponentRender({
         mountDiv:   common.commonGlobalGet('Parameters').app_div,
         data:       null,

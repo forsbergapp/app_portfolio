@@ -1183,10 +1183,6 @@ const getAppStart = async parameters =>{
             /**@type{server['app']['commonGlobals']} */
             globals:        {
                                 //update COMMON_GLOBAL keys:
-                                                
-                                Apps:           (await server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null})).result,
-                                AppData:        server.ORM.db.AppData.getServer({app_id:DATA_APP_ID, resource_id:null, data:{name:'APP_PARAMETER',data_app_id:COMMON_APP_ID}})
-                                                    .result.map((/**@type{server['ORM']['Object']['AppData']}*/row)=>{return [row.AppId, row.Name, row.Value, row.DisplayData]}),
                                 Parameters:     {
                                                 rest_resource_bff:              REST_RESOURCE_BFF,
                                                 app_rest_api_version:           APP_REST_API_VERSION,
@@ -1209,13 +1205,16 @@ const getAppStart = async parameters =>{
                                                 app_content_type_sse:           'text/event-stream; charset=utf-8',
                                                 },
                                 Data:           {
+                                                Apps:           (await server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null})).result,
+                                                AppData:        server.ORM.db.AppData.getServer({app_id:DATA_APP_ID, resource_id:null, data:{name:'APP_PARAMETER',data_app_id:COMMON_APP_ID}})
+                                                                .result.map((/**@type{server['ORM']['Object']['AppData']}*/row)=>{return [row.AppId, row.Name, row.Value, row.DisplayData]}),
                                                                 /**@type{string} */
                                                 cssCommon:      (await server.app_common.commonResourceFile({ 
                                                                                                 app_id:DATA_APP_ID, 
                                                                                                 resource_id:'/common/css/common.css',
                                                                                                 content_type:'text/css', 
                                                                                                 data_app_id:COMMON_APP_ID})).result.resource,
-                                                app_fonts:       (await server.app_common.commonResourceFile({ 
+                                                cssFontsArray:  (await server.app_common.commonResourceFile({ 
                                                                         app_id:DATA_APP_ID, 
                                                                         resource_id:'/common/css/common_fonts.css',
                                                                         content_type:'text/css', 

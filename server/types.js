@@ -31,11 +31,7 @@
 
 /**
  * @description APP server_apps_globals
- * @typedef {{  Apps: server_db_table_App[],
- *              AppData:[   ORM['Object']['AppData']['AppId'], 
- *                          ORM['Object']['AppData']['Value'],
- *                          ORM['Object']['AppData']['DisplayData']][],
- *              Parameters:{rest_resource_bff:string,
+ * @typedef {{  Parameters:{rest_resource_bff:string,
  *                          app_rest_api_version:string,
  *                          app_rest_api_basepath:string,
  *                          app_common_app_id:number,
@@ -54,8 +50,12 @@
  *                          app_content_type_html:string,
  *                          app_content_type_sse:string,
  *                          },
- *              Data:{  cssCommon:string,
- *                      app_fonts:string[],
+ *              Data:{  Apps: ORM['View']['AppGetInfo'][],
+ *                      AppData:[   ORM['Object']['AppData']['AppId'], 
+ *                                  ORM['Object']['AppData']['Value'],
+ *                                  ORM['Object']['AppData']['DisplayData']][],
+ *                      cssCommon:string,
+ *                      cssFontsArray:string[],
  *                      token_dt:string|null
  *                      client_latitude:string|null,
  *                      client_longitude:string|null,

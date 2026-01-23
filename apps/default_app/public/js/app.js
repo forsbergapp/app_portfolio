@@ -43,7 +43,7 @@ const appCommonInit = async (commonLib, start, parameters) => {
     common = commonLib;
     await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';    
-    common.commonGlobalSet('Functions','app_function_session_expired', null);
+    common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:null});
     appInit();
 };
 /**

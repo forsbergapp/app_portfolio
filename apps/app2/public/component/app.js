@@ -124,7 +124,7 @@ const component = async props => {
         data:       null,
         methods:    null,
         events:     events,
-        template:   template({apps:props.methods.COMMON.commonGlobalGet('Apps')
+        template:   template({apps:props.methods.COMMON.commonGlobalGet('Data').Apps
                                     .filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>
                                             [props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
                                             props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id,
