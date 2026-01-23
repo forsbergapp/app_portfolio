@@ -60,7 +60,7 @@ body{
     font-size: 1em;
     left: 250px;
     transition: left 500ms;
-    position:absolute;
+    position:fixed;
     padding:0;
     overflow: auto;
     top: 0;
