@@ -1073,39 +1073,7 @@ const commonAppMount = async parameters =>{
         /**@type{server['ORM']['Object']['App']} */
         const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
         if (app)
-            return {result:{App:{   Id:                     app.Id,
-                                    Name:                   app.Name,
-                                    Js:                     app.Js,
-                                    JsContent:              (app.Js && app.Js!='')?
-                                                                (await commonResourceFile({ app_id:parameters.app_id, 
-                                                                                            resource_id:app.Js,
-                                                                                            content_type:'text/javascript', 
-                                                                                            data_app_id:parameters.app_id})).result.resource:
-                                                                    null,
-                                    Css:                    app.Css,
-                                    CssContent:             (app.Css && app.Css!='')?
-                                                                (await commonResourceFile({ app_id:parameters.app_id, 
-                                                                                            resource_id:app.Css,
-                                                                                            content_type:'text/css', 
-                                                                                            data_app_id:parameters.app_id})).result.resource:
-                                                                    null,
-                                    CssReport:              app.CssReport,
-                                    CssReportContent:       (app.CssReport && app.CssReport!='')?
-                                                                (await commonResourceFile({ app_id:parameters.app_id, 
-                                                                                            resource_id:app.CssReport,
-                                                                                            content_type:'text/css', 
-                                                                                            data_app_id:parameters.app_id})).result.resource:
-                                                                    null,
-                                    Logo:                   app.Logo,
-                                    Copyright:              app.Copyright,
-                                    LinkUrl:                app.LinkUrl,
-                                    LinkTitle:              app.LinkTitle,
-                                    TextEdit:               app.TextEdit
-                                },
-                            //fetch parameters and convert records to one object with parameter keys
-                            AppParameter:server.ORM.db.AppData.getServer({app_id:parameters.app_id, resource_id:null, data:{name:'APP_PARAMETER', data_app_id:parameters.app_id}}).result
-                                         .reduce((/**@type{Object.<string,*>}*/key, /**@type{server['ORM']['Object']['AppData']}*/row)=>{key[row.Value] = row.DisplayData; return key},{}) ,
-                            ...(await server.socket.socketConnectedUpdate(parameters.app_id, 
+            return {result:{...(await server.socket.socketConnectedUpdate(parameters.app_id, 
                                                             {idToken:parameters.idToken, 
                                                              app_only:true,
                                                              iam_user_id:null,

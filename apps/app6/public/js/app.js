@@ -310,11 +310,9 @@ const appInit = async () => {
  * @description Init common
  * @function
  * @param {common['CommonModuleCommon']} commonLib
- * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, parameters) => {
-    parameters;
+const appCommonInit = async (commonLib) => {
     common = commonLib;
     common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:null});
     appInit();

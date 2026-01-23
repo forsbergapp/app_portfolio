@@ -138,22 +138,7 @@
 
  /**
   * @description APP commonAppMount
-  * @typedef {{App:{Id:server['ORM']['Object']['App']['Id'] & {Id:number},
-  *                 Name:server['ORM']['Object']['App']['Name'],
-  *                 Js:server['ORM']['Object']['App']['Js'],
-  *                 JsContent:string|null,
-  *                 Css:server['ORM']['Object']['App']['Css'],
-  *                 CssContent:string|null,
-  *                 CssReport:server['ORM']['Object']['App']['CssReport'],
-  *                 CssReportContent:string|null,
-  *                 Logo:server['ORM']['Object']['App']['Logo'],
-  *                 Copyright:server['ORM']['Object']['App']['Copyright'],
-  *                 LinkUrl:server['ORM']['Object']['App']['LinkUrl'],
-  *                 LinkTitle:server['ORM']['Object']['App']['LinkTitle'],
-  *                 TextEdit:server['ORM']['Object']['App']['TextEdit']},
-  *           AppParameter:Object.<string,*>,
-  *           IamUserApp:ORM['Object']['IamUserApp']
-  *          }} commonAppMount
+  * @typedef {{IamUserApp:ORM['Object']['IamUserApp']}} commonAppMount
   */
 
 /**
@@ -773,6 +758,9 @@
  *              Id: server_db_table_App['Id'],
  *              Name: server_db_table_App['Name'],
  *              Logo:server_db_table_App['Logo'],
+ *              Js: server_db_table_App['Js'],
+ *              Css: server_db_table_App['Css'],
+ *              CssReport: server_db_table_App['CssReport'],
  *              TextEdit:server_db_table_App['TextEdit'],
  *              Copyright:server_db_table_App['Copyright'],
  *              LinkTitle:server_db_table_App['LinkTitle'],

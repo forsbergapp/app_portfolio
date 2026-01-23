@@ -894,7 +894,8 @@ const commonMiscResourceFetch = async (url,element, content_type, content=null )
                                         response_type:'TEXT',
                                         authorization_type:'APP_ID'})
                             .then(module=>
-                                content_type.startsWith('image')?
+                                //save source for images and css
+                                (content_type.startsWith('image')||content_type == 'text/css')?
                                     /**@ts-ignore */
                                     COMMON_GLOBAL.Data.resource.push({
                                         app_id:app_id,
@@ -3077,15 +3078,23 @@ const commonAppMount = async (app_id, spinner_id=null) =>{
     COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_div}`).innerHTML='';
     if (COMMON_GLOBAL.Data.UserApp.app_id!=COMMON_GLOBAL.Parameters.app_start_app_id)
         commonComponentRemove('common_apps');
-
-    COMMON_GLOBAL.Data.UserApp.app_id =          CommonAppInit.App.Id;
     
     if (COMMON_GLOBAL.Data.User.iam_user_id != null)
         commonUserLoginApp(CommonAppInit.IamUserApp);
-    //Css => link, CssContent => the css 
-    if (CommonAppInit.App.CssContent!='' || CommonAppInit.App.CssReportContent!='')
-        commonMiscCssApply((CommonAppInit.App.CssContent??'') + (CommonAppInit.App.CssReportContent??''))
-    const {appMetadata, default:AppInit} = await commonMiscImport(CommonAppInit.App.Js, CommonAppInit.App.JsContent);
+        
+    
+    const css = (COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].Css?
+                    await commonMiscResourceFetch(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].Css,null, 'text/css'):
+                        '')
+                +
+                '\n'
+                +
+                (COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].CssReport?
+                    await commonMiscResourceFetch(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].CssReport,null, 'text/css'):
+                        '');
+    if (css && css!='')
+        commonMiscCssApply(css)
+    const {appMetadata, default:AppInit} = await commonMiscImport(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].Js);
     
     /**@type{common['commonMetadata']} */
     const appdata = appMetadata();
@@ -3107,7 +3116,7 @@ const commonAppMount = async (app_id, spinner_id=null) =>{
     COMMON_GLOBAL.Functions.app_metadata.events.touchmove = appdata.events.touchmove;
     COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted = appdata.lifeCycle?.onMounted;
     
-    await AppInit(commonGet(), CommonAppInit.AppParameter);
+    await AppInit(commonGet());
     COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted?
         await COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted():
             null;

@@ -82,11 +82,9 @@ const appEventKeyUp = event => {
  * @description Init common
  * @function
  * @param {common['CommonModuleCommon']} commonLib
- * @param {Object.<string,*>} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, parameters) => {
-    parameters;
+const appCommonInit = async (commonLib) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:null});

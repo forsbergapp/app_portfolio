@@ -35,11 +35,9 @@ const appInit = async () => {
  * @function
  * @param {common['CommonModuleCommon']} commonLib
  * @param {function} start
- * @param {Object.<String,*>} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, start, parameters) => {        
-    parameters;
+const appCommonInit = async (commonLib, start) => {
     common = commonLib;
     await start();
     COMMON_DOCUMENT.body.className = 'app_theme1';    

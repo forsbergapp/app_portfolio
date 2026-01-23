@@ -1757,10 +1757,18 @@ const appMapQibblaShow = () => {
  * @name appInit
  * @description Init app
  * @function
- * @param {APP_PARAMETERS} parameters 
  * @returns {Promise.<void>}
  */
-const appInit = async parameters => {
+const appInit = async () => {
+    /**@ts-ignore @type{APP_PARAMETERS} */
+    const parameters = (await common.commonGetAppData(common.commonGlobalGet('Data').UserApp.app_id,'APP_PARAMETER'))
+                        .reduce((key, row)=>{
+                            /**@ts-ignore */
+                            key[row.Value] = row.DisplayData; return key
+                        },
+                        {});
+                        
+
     await common.commonComponentRender({
         mountDiv:   common.commonGlobalGet('Parameters').app_div,
         data:       null,
@@ -1859,14 +1867,13 @@ const appInit = async parameters => {
  * @description Init common
  * @function
  * @param {common['CommonModuleCommon']} commonLib
- * @param {APP_PARAMETERS} parameters 
  * @returns {Promise.<void>}
  */
-const appCommonInit = async (commonLib, parameters) => {
+const appCommonInit = async (commonLib) => {
     common = commonLib;
     COMMON_DOCUMENT.body.className = 'app_theme1';
     common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:appUserLogout});
-    await appInit(parameters);
+    await appInit();
 };
 /**
  * @name appMetadata
