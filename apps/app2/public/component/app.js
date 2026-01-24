@@ -108,7 +108,7 @@ const component = async props => {
                     }            
                     case elementDiv.classList.contains('apps_app_logo'):{
                                                             /**@ts-ignore */
-                        props.methods.COMMON.commonAppMount(elementDiv.getAttribute('data-app_id'),
+                        props.methods.COMMON.commonAppSwitch(elementDiv.getAttribute('data-app_id'),
                                                             event_target_id);
                         break;
                     }

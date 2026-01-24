@@ -1263,10 +1263,10 @@
                 }
             }
         },
-        "/bff/app_id/v1/app-mount/${IAM_data_app_id}": {
+        "/bff/app_id/v1/app-switch/${IAM_data_app_id}": {
             "get": {
                 "summary": "",
-                "operationId": "apps_common_src.common.commonAppMount",
+                "operationId": "apps_common_src.common.commonAppSwitch",
                 "security":[
                     {"$ref":"#/components/securitySchemes/SecurityApp"},
                     {"$ref": "#/components/securitySchemes/AuthorizationAccess"}
@@ -1319,10 +1319,10 @@
                 }
             }
         },
-        "/bff/app_access/v1/app-mount/${IAM_data_app_id}": {
+        "/bff/app_access/v1/app-switch/${IAM_data_app_id}": {
             "get": {
                 "summary": "",
-                "operationId": "apps_common_src.common.commonAppMount",
+                "operationId": "apps_common_src.common.commonAppSwitch",
                 "security":[
                     {"$ref":"#/components/securitySchemes/SecurityApp"},
                     {"$ref": "#/components/securitySchemes/AuthorizationAccess"}

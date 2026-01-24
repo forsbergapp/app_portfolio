@@ -2606,7 +2606,7 @@ const commonEvent = async (event_type,event=null) =>{
                             }
                             // common app toolbar
                             case 'common_app_toolbar_start':{
-                                commonAppMount(COMMON_GLOBAL.Parameters.app_start_app_id);
+                                commonAppSwitch(COMMON_GLOBAL.Parameters.app_start_app_id);
                                 break;
                             }
                             case 'common_app_toolbar_framework_js':
@@ -3055,18 +3055,18 @@ const commonCustomFramework = () => {
     COMMON_WINDOW.console.error = console_error;
 };
 /**
- * @name commonAppMount
+ * @name commonAppSwitch
  * @description Mount app
  * @function
  * @param {number} app_id
  * @param {|null|string} spinner_id?
  * @returns {Promise.<void>}
  */
-const commonAppMount = async (app_id, spinner_id=null) =>{   
+const commonAppSwitch = async (app_id, spinner_id=null) =>{   
     
     COMMON_GLOBAL.Data.UserApp.app_id =          app_id;
-    /**@type{common['server']['app']['commonAppMount']} */
-    const CommonAppInit = await commonFFB({ path:`/app-mount/${app_id}`, 
+    /**@type{common['server']['app']['commonAppSwitch']} */
+    const CommonAppInit = await commonFFB({ path:`/app-switch/${app_id}`, 
                                             method:'GET', 
                                             query:COMMON_GLOBAL.Data.User.iam_user_id!=null?`IAM_iam_user_id=${COMMON_GLOBAL.Data.User.iam_user_id}`:'',
                                             authorization_type:COMMON_GLOBAL.Data.User.iam_user_id!=null?'APP_ACCESS':'APP_ID',
@@ -3207,7 +3207,7 @@ const commonGet = () =>{
         /* EVENT */
         commonEvent:commonEvent,
         /* INIT */
-        commonAppMount:commonAppMount,
+        commonAppSwitch:commonAppSwitch,
         commonGlobals:commonGlobals};
 };
 
@@ -3284,4 +3284,4 @@ export{/* GLOBALS*/
        /* EVENT */
        commonEvent,
        /* INIT */
-       commonAppMount};
+       commonAppSwitch};

@@ -130,7 +130,7 @@ const component = async props =>{
             authorization_type: 'APP_ID'});
     
         //mount start app
-        await props.methods.COMMON.commonAppMount(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
+        await props.methods.COMMON.commonAppSwitch(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
         //replace old head wtith start styles and start script with new content
         props.methods.COMMON.COMMON_DOCUMENT.head.innerHTML = ` <meta charset='UTF-8'>
                                         <title></title>

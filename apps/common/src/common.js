@@ -1048,7 +1048,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
     
  };
  /**
-  * @name commonAppMount
+  * @name commonAppSwitch
   * @memberof ROUTE_REST_API
   * @description Get app 
   * @function
@@ -1059,14 +1059,14 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   *          user_agent:string
   *          idToken:string, 
   *          data:{ iam_user_id:server['ORM']['Object']['IamUser']['Id']} } } parameters
-  * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppMount']}>}
+  * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppSwitch']}>}
   */
-const commonAppMount = async parameters =>{
+const commonAppSwitch = async parameters =>{
     if (parameters.resource_id == server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default))
         return {http:400,
             code:null,
             text:null,
-            developerText:'commonAppMount',
+            developerText:'commonAppSwitch',
             moreInfo:null,
             type:'JSON'};
     else{
@@ -1095,7 +1095,7 @@ const commonAppMount = async parameters =>{
             return {http:404,
                 code:null,
                 text:null,
-                developerText:'commonAppMount',
+                developerText:'commonAppSwitch',
                 moreInfo:null,
                 type:'JSON'};
     }
@@ -1433,7 +1433,7 @@ export {commonValidImagePixelSize,
         commonAppStart, 
         commonAppIam, commonResourceFile,
         commonModuleRun,commonAppReport, commonAppReportQueue, commonModuleMetaDataGet, 
-        commonAppMount,
+        commonAppSwitch,
         getAppInit,
         getAppStart,
         commonAppError,

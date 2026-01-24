@@ -137,8 +137,8 @@
  */
 
  /**
-  * @description APP commonAppMount
-  * @typedef {{IamUserApp:ORM['Object']['IamUserApp']}} commonAppMount
+  * @description APP commonAppSwitch
+  * @typedef {{IamUserApp:ORM['Object']['IamUserApp']}} commonAppSwitch
   */
 
 /**
@@ -1389,7 +1389,7 @@
  *                commonComponentLifecycle:serverComponentLifecycle,
  *                commonDocumentMenu:serverDocumentMenu,
  *                commonWorldCitiesCity:commonWorldCitiesCity
- *                commonAppMount:commonAppMount
+ *                commonAppSwitch:commonAppSwitch
  *                },
  *          bff:{
  *                parameters:server_bff_parameters,

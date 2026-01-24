@@ -210,7 +210,7 @@ const component = async props => {
                                 spinner_id:'common_app_dialogues_user_menu_iam_user_btn_user_delete_account'})
                     .then(()=>  resolve((()=>{
                                             props.methods.COMMON.commonComponentRemove('common_app_dialogues_user_menu');
-                                            props.methods.COMMON.commonAppMount(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
+                                            props.methods.COMMON.commonAppSwitch(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
                                             return null;
                                             })()))
                     .catch(err=>reject(err));
