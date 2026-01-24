@@ -1293,14 +1293,17 @@ const commonWindowWait = async milliseconds => new Promise ((resolve)=>{commonWi
 
             //rename attributes used
             const rename_attributes =  [
-                                    //Map SVG:
-                                    ['stroke-width',    'strokeWidth'],
-                                    //other used SVG attributes:
-                                    ['xmlns:xlink',     'xmlnsXlink'],
+                                    //SVG:
+                                    ['stroke-width',        'strokeWidth'],
+                                    ['stroke-linecap',      'strokeLinecap'],
+                                    ['font-family',         'fontFamily'],
+                                    ['font-weight',         'fontWeight'],
+                                    ['font-size',           'fontSize'],
+                                    ['enable-background',   'enableBackground'],                                    
                                     //other attributes
-                                    ['charset',         'charSet'],
-                                    ['tabindex',        'tabIndex'],
-                                    ['contenteditable', 'contentEditable'],
+                                    ['charset',             'charSet'],
+                                    ['tabindex',            'tabIndex'],
+                                    ['contenteditable',     'contentEditable'],
                                     ];
             for (const element_attribute of Object.keys(element_object)){
                 for (const element_svg of rename_attributes)
