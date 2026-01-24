@@ -75,7 +75,7 @@ const component = props => {
                 'common_select_options',
                 'common_select_option']
                                                                     /**@ts-ignore */
-                .filter(row=>elementDiv.className?.indexOf(row)>-1||elementDiv.parentNode.className?.indexOf(row)>-1).length>0){
+                .filter(row=>elementDiv.className?.indexOf(row)>-1||elementDiv.parentNode?.className?.indexOf(row)>-1).length>0){
             Array.from(props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll(`#${props.methods.COMMON.commonGlobalGet('Parameters').app_root} .common_select_options`))
                 .filter((/**@type{HTMLElement}*/element)=>props.methods.COMMON.commonMiscElementId(element) != props.methods.COMMON.commonMiscElementId(event.target))
                 .forEach((/**@type{HTMLElement}*/element)=>element.style.display='none');
@@ -85,7 +85,7 @@ const component = props => {
                 ['common_select_dropdown', 
                  'common_select_dropdown_value']
                                                                         /**@ts-ignore */
-                .filter(row=>elementDiv.className?.indexOf(row)>-1 || elementDiv.parentNode.className.indexOf(row)>-1 ).length>0:{
+                .filter(row=>elementDiv.className?.indexOf(row)>-1 || elementDiv.parentNode?.className.indexOf(row)>-1 ).length>0:{
                 //div , parent div or div with svg selected in dropdown
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display = 
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
@@ -93,7 +93,7 @@ const component = props => {
             }
             case event_type== 'click' && props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`)?.classList?.contains('common_select') && 
                                                                             /**@ts-ignore */
-                (elementDiv.classList.contains('common_select_option') || elementDiv.parentNode.classList.contains('common_select_option')):{
+                (elementDiv.classList.contains('common_select_option') || elementDiv.parentNode?.classList.contains('common_select_option')):{
                 //div, parent div oor div with svg selected in option
                 //select can show HTML, use innerHTML
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = 
