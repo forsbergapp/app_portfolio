@@ -47,10 +47,10 @@
 	--common_report_color_white: white;
 
 	/*fonts*/
-	--common_app_font_arabic_sans: 		'Noto Sans Arabic',   'sans-serif';
-	--common_app_font_arabic_kufi: 		'Noto Kufi Arabic',   'sans-serif';
-	--common_app_font_arabic_naskh: 	'Noto Naskh Arabic',  'sans-serif';
-	--common_app_font_arabic_nastaliq: 	'Noto Nastaliq Urdu', 'sans-serif';
+	--common_app_font_arabic_sans: 		'Noto Sans Arabic',   'Noto Sans KR', 'Noto Sans Telugu', 'sans-serif';
+	--common_app_font_arabic_kufi: 		'Noto Kufi Arabic',   'Noto Sans KR', 'Noto Sans Telugu', 'sans-serif';
+	--common_app_font_arabic_naskh: 	'Noto Naskh Arabic',  'Noto Sans KR', 'Noto Sans Telugu', 'sans-serif';
+	--common_app_font_arabic_nastaliq: 	'Noto Nastaliq Urdu', 'Noto Sans KR', 'Noto Sans Telugu', 'sans-serif';
 }
 /*default font*/
 body
