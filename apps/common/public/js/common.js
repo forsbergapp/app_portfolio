@@ -216,6 +216,7 @@ const COMMON_GLOBAL = {
         app_content_type_json: '',
         app_content_type_html: '',
         app_content_type_sse: '',
+        app_font_timeout:60,
         app_root:'app_root',
         app_div:'app',
     },
@@ -1095,8 +1096,7 @@ const commonMiscLoadFont = parameters => {
                 query:              'content_type=font/woff2&IAM_data_app_id=0', 
                 method:             'GET',
                 authorization_type: 'APP_ID',
-                //5 minutes timeout for fonts
-                timeout:1000 * 60 * 5 })
+                timeout:1000 * commonGlobalGet('Parameters').app_font_timeout})
     .then((/**@type{string}*/result)=> {
         const fontResult = JSON.parse(result).resource;
         /**
@@ -1147,23 +1147,48 @@ const commonMiscLoadFont = parameters => {
 };
 /**
  * @name commonMisCssApply
- * @description Apply only common css if app css is empty. Adds optional font css to optimize app start
+ * @description Apply css using document .adoptedStylesheet and let common.css remain and update app css and optional font
+ *              when switching app to avoid temporary rendering issues and let font load after app is mounted
+ *              Execution order
+ *              1. Call commonMiscCssApply({cssApp:null, cssFont:false})
+ *              in each commonAppSwitch() 
+ *              2. Call commonMiscCssApply({cssApp:cssApp, cssFont:false}) before app init
+ *              3. Call commonMiscCssApply({cssApp:null, cssFont:true}) after app init
  * @function
  * @param {{cssApp:string|null,
  *          cssFont:boolean}} parameters
 */
 const commonMiscCssApply = parameters =>{
     const css = new CSSStyleSheet();
-    const css_common =  commonGlobalGet('Data').cssCommon + 
-                        (parameters.cssFont?
-                            (commonGlobalGet('Data').cssFontsArray?commonGlobalGet('Data').cssFontsArray.join('@'):''):
-                                '');
-    if (parameters.cssApp!=null)
-        css.replace(css_common + parameters.cssApp);
-    else
-        css.replace(css_common);
+    if (parameters.cssFont){
+        //Add font css last to existing css
+        css.replace((parameters.cssFont?
+                        (commonGlobalGet('Data').cssFontsArray?commonGlobalGet('Data').cssFontsArray.join('@'):''):
+                            ''));
+        document.adoptedStyleSheets = [...document.adoptedStyleSheets,css];
+    }
+    else{
+        //add comon and app css if provided
+        const css_common =  commonGlobalGet('Data').cssCommon;
+        if (parameters.cssApp==null){
+            css.replace(css_common);
+            document.adoptedStyleSheets = [css];
+        }
+        else{
+            //remove app css and ny font css
+            css.replace(parameters.cssApp);
+            for (const sheet of document.adoptedStyleSheets)
+                if(document.adoptedStyleSheets.length>1)
+                    document.adoptedStyleSheets = document.adoptedStyleSheets.slice(0,-1)
+
+            //add the new app css and optional font css
+            document.adoptedStyleSheets = [...document.adoptedStyleSheets,css];
+        }
+            
+            
+        
+    }
     
-    document.adoptedStyleSheets = [css];
 };
 /**
  * @name commonWindowBase64From
@@ -2292,13 +2317,10 @@ const commonFFB = async parameter =>{
                                                             const SSEmessage = getSSEMessage(getDecrypted(BFFmessage));
                                                             switch (SSEmessage.sse_type){
                                                                 case 'FONT_URL':{
-                                                                    //delay font loading 1 second to prioritze code first
-                                                                    new Promise ((resolve)=>commonWindowSetTimeout(()=> 
-                                                                        resolve(commonMiscLoadFont({
+                                                                    commonMiscLoadFont({
                                                                                         uuid:               parameters.uuid??'',
                                                                                         secret:             parameters.secret??'',
-                                                                                        message:            SSEmessage.sse_message})), 1000)
-                                                                    );
+                                                                                        message:            SSEmessage.sse_message})
                                                                     break;
                                                                 }
                                                                 default:{
@@ -2755,7 +2777,8 @@ const commonAppSwitch = async (app_id, spinner_id=null) =>{
                     await commonMiscResourceFetch(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].CssReport,null, 'text/css'):
                         '');
     if (css && css!='')
-        commonMiscCssApply({cssApp:css, cssFont:true});
+        //apply app css that removes old app css and old font css without removing the common css applied initially
+        commonMiscCssApply({cssApp:css, cssFont:false});
     const {appMetadata, default:AppInit} = await commonMiscImport(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].Js);
     
     /**@type{common['commonMetadata']} */
@@ -2782,14 +2805,15 @@ const commonAppSwitch = async (app_id, spinner_id=null) =>{
     COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted?
         await COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted():
             null;
-
+    
     if (COMMON_GLOBAL.Data.User.iam_user_id){
         commonUserUpdateAvatar(true, COMMON_GLOBAL.Data.User.iam_user_avatar);
         commonUserMessageShowStat();
     }
     else
         commonUserUpdateAvatar(false, null);
-
+    //apply font css after common css and app css
+    commonMiscCssApply({cssApp:null, cssFont:true});
 };
 /**
  * @name commonGet

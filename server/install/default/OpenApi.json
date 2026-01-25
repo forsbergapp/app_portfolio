@@ -4849,6 +4849,10 @@
                     "default":60,
                     "description":""
                 },
+                "APP_FONT_TIMEOUT":{
+                    "default":60,
+                    "description":"Request timeout to adjust for slow server in seconds"
+                },
                 "DB_JOURNAL":{
                     "default":"1", 
                     "description": "1=on, 0=off"

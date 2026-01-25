@@ -49,6 +49,7 @@
  *                          app_content_type_json:string,
  *                          app_content_type_html:string,
  *                          app_content_type_sse:string,
+ *                          app_font_timeout:number
  *                          },
  *              Data:{  Apps: ORM['View']['AppGetInfo'][],
  *                      AppData:[   ORM['Object']['AppData']['AppId'], 

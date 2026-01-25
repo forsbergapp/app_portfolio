@@ -297,6 +297,7 @@
  *                          app_content_type_json: string,
  *                          app_content_type_html: string,
  *                          app_content_type_sse:  string,
+ *                          app_font_timeout:number,
  *                          app_root:string,
  *                          app_div:string
  *                          },

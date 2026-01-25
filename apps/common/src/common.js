@@ -1171,6 +1171,7 @@ const getAppStart = async parameters =>{
                                                 app_content_type_json:          'application/json; charset=utf-8',
                                                 app_content_type_html:          'text/html; charset=utf-8',
                                                 app_content_type_sse:           'text/event-stream; charset=utf-8',
+                                                app_font_timeout:               server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_FONT_TIMEOUT.default)??1
                                                 },
                                 Data:           {
                                                 Apps:           server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null}).result,
