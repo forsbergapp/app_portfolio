@@ -12,7 +12,7 @@ const {server} = await import('../../../../server/server.js');
  * @name template
  * @description Template
  *              
- *              Start script:
+ *              Start script using stateless pattern:
  *              1. import SDK Crypto (base64 in browser) rendered in server
  *              2. fetch common start objects with options set in server (base64 with server rendered encrypted fetch option string in browser)
  *              3. import common library and common component
@@ -103,10 +103,6 @@ const template = props =>`  <!DOCTYPE html>
                                                                             }
                                                                 })
                                             .then(component=>{
-                                                promise2[1].commonGlobalSet({key:'Data', 
-                                                                        subkey:'UserApp', 
-                                                                        name:'app_id', 
-                                                                        value: promise2[1].commonGlobalGet('Parameters').app_common_app_id});
                                                 if (component.methods){
                                                     promise2[1].commonGlobalSet({key:'Functions',  
                                                                             name:'component', 

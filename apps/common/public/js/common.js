@@ -1413,61 +1413,7 @@ const commonComponentMutationObserver = (() =>{
     };
 })();
 
-/**
- * @name commonComponentTemplateMessage
- * @description Displays message, 
- *              local component template to be able to display app start errors and also to improve performance
- * @function
- * @param {{message:*,
- *          message_type:string,
- *          message_title_font_class:string|null,
- *          message_title_icon_class:'message_text'|'message_success'|'message_fail'|null,
- *          icons:{ close:string,
- *                  cancel:string,
- *                  message_text:string,
- *                  message_success:string,
- *                  message_fail:string,
- *                  message_confirm:string}}} props 
- * @returns {string}
- */
-const commonComponentTemplateMessage = props =>`  
-        ${props.message_type=='CONFIRM'?
-            `<div id='common_app_dialogues_message_confirm_question' class='common_icon_title'>${props.icons.message_confirm}</div>`:''
-        }
-        ${props.message_type!='CONFIRM'?
-        `<div id='common_app_dialogues_message_title_container'>
-            <div id='common_app_dialogues_message_title_icon' class='common_icon_title'>${props.message_title_icon_class?props.icons[props.message_title_icon_class]:''}</div>
-            <div id='common_app_dialogues_message_title' class='${props.message_title_font_class}'>
-                ${props.message !=null && props.message !='' && typeof props.message == 'object'?Object.entries(props.message).map((/**@type{*}*/list_row)=>
-                    //loop manages both object and array
-                    `<div id='common_app_dialogues_message_info_list'>
-                        <div class='common_app_dialogues_message_info_list_row'>
-                            <div class='common_app_dialogues_message_info_list_col'>
-                                <div>${props.message.constructor===Array?Object.keys(list_row[1])[0]:list_row[0]}</div>
-                            </div>
-                            <div class='common_app_dialogues_message_info_list_col'>
-                                <div>${props.message.constructor===Array?Object.values(list_row[1])[0]:list_row[1]}</div>
-                            </div>
-                        </div>
-                    </div>`).join(''):
-                    (props.message?props.message:'')
-                }
-            </div>
-        </div>`:''
-        }
-        ${props.message_type=='PROGRESS'?
-            `<div id='common_app_dialogues_message_progressbar_wrap'>
-                <div id='common_app_dialogues_message_progressbar'></div>
-            </div>`:''
-        }
-        <div id='common_app_dialogues_message_buttons'>
-            ${props.message_type=='CONFIRM'?
-                `<div id='common_app_dialogues_message_cancel' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.cancel}</div>`:''
-            }
-            ${props.message_type!='PROGRESS'?
-                `<div id='common_app_dialogues_message_close' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.close}</div>`:''
-            }
-        </div>`;
+
 /**
  * @name commonComponentName
  * @description Get component name, set component with appid and name from filename without .js
@@ -1501,10 +1447,7 @@ const commonComponentRender = async parameters => {
     const {default:ComponentCreate} = await commonMiscImport(parameters.path);
     if (parameters.mountDiv)
         COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).innerHTML = 
-            await commonMiscImport('/common/component/common_loading.js')
-            .then((({default:module})=>module()
-                                        .then((/**@type{common['CommonComponentResult']}*/component)=>component.template)))
-            .catch(()=>'');
+            commonGlobalGet('Functions').component[commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_app']?.methods?.getTemplateLoading()
     //manage async and synchronous function with corresponding syntax        
     /**@type{common['CommonComponentResult']}*/
     const component = Object.prototype.toString.call(ComponentCreate).toLowerCase().indexOf('async')>-1?
@@ -1743,19 +1686,14 @@ const commonMessageShow = async (message_type, function_event, text_class=null, 
             break;
         }
     }
-    COMMON_DOCUMENT.querySelector('#common_app_dialogues_message').innerHTML = commonComponentTemplateMessage({  
-                                message:                    display_message,
-                                message_type:               message_type,
-                                message_title_font_class:   display_message_font_class,
-                                message_title_icon_class:   text_class,
-                                icons:{ close:commonGlobalGet('ICONS')['ok'],
-                                        cancel:commonGlobalGet('ICONS')['cancel'],
-                                        message_text:commonGlobalGet('ICONS')['message_text'],
-                                        message_success:commonGlobalGet('ICONS')['message_success'],
-                                        message_fail:commonGlobalGet('ICONS')['message_fail'],
-                                        message_confirm:commonGlobalGet('ICONS')['question']
-                                }
-                            })
+
+    COMMON_DOCUMENT.querySelector('#common_app_dialogues_message').innerHTML = 
+        commonGlobalGet('Functions').component[commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_app']?.methods?.getTemplateMessage({  
+            message:                    display_message,
+            message_type:               message_type,
+            message_title_font_class:   display_message_font_class,
+            message_title_icon_class:   text_class});
+    
     if (message_type == 'PROGRESS')
         COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_progressbar').style.width = `${(message.part/message.total)*100}%`;
     else{
@@ -2893,6 +2831,7 @@ const commonGet = () =>{
         commonWindowWait:commonWindowWait,
         /* COMPONENTS */
         commonComponentRemove:commonComponentRemove,
+        commonComponentName:commonComponentName,
         commonComponentRender:commonComponentRender,
         /* FRAMEWORK */
         commonFrameworkSwitch:commonFrameworkSwitch,
@@ -2970,6 +2909,7 @@ export{/* GLOBALS*/
        commonWindowWait,
        /* COMPONENTS */
        commonComponentRemove,
+       commonComponentName,
        commonComponentRender,
        /* FRAMEWORK */
        commonFrameworkSwitch,

@@ -10,9 +10,14 @@
  * @name template
  * @description Template
  * @function
- * @param {{app_toolbar_button_start:number,
+ * @param {{current: 'START'|'MESSAGE'|'LOADING',
+ *          app_toolbar_button_start:number,
  *          app_toolbar_button_framework:number,
  *          app_framework:number,
+ *          message?:*,
+ *          message_type?:string,
+ *          message_title_font_class?:string|null,
+ *          message_title_icon_class?:'message_text'|'message_success'|'message_fail'|null,
  *          icons: {home: string,
  *                  framework_js: string,
  *                  framework_vue: string,
@@ -20,11 +25,18 @@
  *                  user: string,
  *                  search: string,
  *                  user_profile_stat: string,
- *                  email: string
+ *                  email: string,
+ *                  close:string,
+ *                  cancel:string,
+ *                  message_text:string,
+ *                  message_success:string,
+ *                  message_fail:string,
+ *                  message_confirm:string
  *                  }}} props
  * @returns {string}
  */
-const template = props =>`  
+const template = props => props.current=='START'?
+                            `  
                             <div id='app_root'>
                                 <div id='app'></div>
                                 <div id='common_app'>
@@ -73,7 +85,54 @@ const template = props =>`
                                         </div>
                                     </div>
                                 </div>
-                            </div>`;
+                            </div>`:
+                                props.current=='LOADING'?
+                                `
+                                <div class='common_loading_spinner'></div>
+                                <div id='common_loading_progressbar_wrap'>
+                                    <div id='common_loading_progressbar_info'></div>
+                                    <div id='common_loading_progressbar'></div>
+                                </div>`:
+                                    props.current=='MESSAGE'?
+                                        `  
+                                        ${props.message_type=='CONFIRM'?
+                                            `<div id='common_app_dialogues_message_confirm_question' class='common_icon_title'>${props.icons.message_confirm}</div>`:''
+                                        }
+                                        ${props.message_type!='CONFIRM'?
+                                        `<div id='common_app_dialogues_message_title_container'>
+                                            <div id='common_app_dialogues_message_title_icon' class='common_icon_title'>${props.message_title_icon_class?props.icons[props.message_title_icon_class]:''}</div>
+                                            <div id='common_app_dialogues_message_title' class='${props.message_title_font_class}'>
+                                                ${props.message !=null && props.message !='' && typeof props.message == 'object'?Object.entries(props.message).map((/**@type{*}*/list_row)=>
+                                                    //loop manages both object and array
+                                                    `<div id='common_app_dialogues_message_info_list'>
+                                                        <div class='common_app_dialogues_message_info_list_row'>
+                                                            <div class='common_app_dialogues_message_info_list_col'>
+                                                                <div>${props.message.constructor===Array?Object.keys(list_row[1])[0]:list_row[0]}</div>
+                                                            </div>
+                                                            <div class='common_app_dialogues_message_info_list_col'>
+                                                                <div>${props.message.constructor===Array?Object.values(list_row[1])[0]:list_row[1]}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>`).join(''):
+                                                    (props.message?props.message:'')
+                                                }
+                                            </div>
+                                        </div>`:''
+                                        }
+                                        ${props.message_type=='PROGRESS'?
+                                            `<div id='common_app_dialogues_message_progressbar_wrap'>
+                                                <div id='common_app_dialogues_message_progressbar'></div>
+                                            </div>`:''
+                                        }
+                                        <div id='common_app_dialogues_message_buttons'>
+                                            ${props.message_type=='CONFIRM'?
+                                                `<div id='common_app_dialogues_message_cancel' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.cancel}</div>`:''
+                                            }
+                                            ${props.message_type!='PROGRESS'?
+                                                `<div id='common_app_dialogues_message_close' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.close}</div>`:''
+                                            }
+                                        </div>`:
+                                        '';
 /**
 * @name component
 * @description Component
@@ -87,18 +146,45 @@ const template = props =>`
 *      }} props 
 * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
-*                      methods:null,
+*                      methods:{
+*                               getTemplateMessage:getTemplateMessage,
+*                               getTemplateLoading:getTemplateLoading
+*                               },
 *                      events:null,
 *                      template:string}>}
 */
 const component = async props =>{
     //set globals
     props.methods.COMMON.commonGlobals(props.data.globals);
+    //set current app id
+    props.methods.COMMON.commonGlobalSet({  key:'Data', 
+                                            subkey:'UserApp', 
+                                            name:'app_id', 
+                                            value: props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id});
     props.methods.COMMON.commonUserPreferencesGlobalSetDefault('LOCALE');
     props.methods.COMMON.commonUserPreferencesGlobalSetDefault('TIMEZONE');
     props.methods.COMMON.commonUserPreferencesGlobalSetDefault('DIRECTION');
     props.methods.COMMON.commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
-    
+    const COMMON_TEMPLATE_PARAMETERS = {
+                                        app_toolbar_button_start:           props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_start,
+                                        app_toolbar_button_framework:       props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_framework,
+                                        app_framework:                      props.methods.COMMON.commonGlobalGet('Parameters').app_framework,
+                                        icons : {   home: props.methods.COMMON.commonGlobalGet('ICONS').home,
+                                                    framework_js: props.methods.COMMON.commonGlobalGet('ICONS').framework_js,
+                                                    framework_vue: props.methods.COMMON.commonGlobalGet('ICONS').framework_vue,
+                                                    framework_react: props.methods.COMMON.commonGlobalGet('ICONS').framework_react,
+                                                    user: props.methods.COMMON.commonGlobalGet('ICONS').user,
+                                                    search: props.methods.COMMON.commonGlobalGet('ICONS').search,
+                                                    user_profile_stat: props.methods.COMMON.commonGlobalGet('ICONS').user_profile_stat,
+                                                    email: props.methods.COMMON.commonGlobalGet('ICONS').email,
+                                                    close:props.methods.COMMON.commonGlobalGet('ICONS')['ok'],
+                                                    cancel:props.methods.COMMON.commonGlobalGet('ICONS')['cancel'],
+                                                    message_text:props.methods.COMMON.commonGlobalGet('ICONS')['message_text'],
+                                                    message_success:props.methods.COMMON.commonGlobalGet('ICONS')['message_success'],
+                                                    message_fail:props.methods.COMMON.commonGlobalGet('ICONS')['message_fail'],
+                                                    message_confirm:props.methods.COMMON.commonGlobalGet('ICONS')['question']
+                                                }
+                                    };
     /**
      * @name commonEventCopyPasteCutDisable
      * @description Disable copy cut paste
@@ -141,6 +227,27 @@ const component = async props =>{
      * @returns {boolean}
      */
     const commonTextEditingDisabled = () =>props.methods.COMMON.commonGetApp().TextEdit=='0';
+    /**
+     * @name getTemplateMessage
+     * @description Get template message
+     * @function
+     * @param {{message:                    string,
+     *          message_type:               string,
+     *          message_title_font_class:   string|null,
+     *          message_title_icon_class:   'message_text'|'message_success'|'message_fail'|null}} parameters
+     * @returns {string}
+     */
+    const getTemplateMessage = parameters => template({ current:'MESSAGE',
+                                                        ...parameters,
+                                                        ...COMMON_TEMPLATE_PARAMETERS })
+    /**
+     * @name getTemplateLoading
+     * @description Get template loading
+     * @function
+     * @returns {string}
+     */
+    const getTemplateLoading = () => template({current:'LOADING',  
+                                                ...COMMON_TEMPLATE_PARAMETERS})
 
     
     /**
@@ -358,20 +465,13 @@ const component = async props =>{
     return {
         lifecycle:  {onMounted:onMounted},
         data:       null,
-        methods:    null,
+        methods:    {
+                    getTemplateMessage:getTemplateMessage,
+                    getTemplateLoading:getTemplateLoading
+                    },
         events:     null,
-        template:   template({  app_toolbar_button_start:           props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_start,
-                                app_toolbar_button_framework:       props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_framework,
-                                app_framework:                      props.methods.COMMON.commonGlobalGet('Parameters').app_framework,
-                                icons: {home: props.methods.COMMON.commonGlobalGet('ICONS').home,
-                                        framework_js: props.methods.COMMON.commonGlobalGet('ICONS').framework_js,
-                                        framework_vue: props.methods.COMMON.commonGlobalGet('ICONS').framework_vue,
-                                        framework_react: props.methods.COMMON.commonGlobalGet('ICONS').framework_react,
-                                        user: props.methods.COMMON.commonGlobalGet('ICONS').user,
-                                        search: props.methods.COMMON.commonGlobalGet('ICONS').search,
-                                        user_profile_stat: props.methods.COMMON.commonGlobalGet('ICONS').user_profile_stat,
-                                        email: props.methods.COMMON.commonGlobalGet('ICONS').email
-                                    }
+        template:   template({  current: 'START',
+                                ...COMMON_TEMPLATE_PARAMETERS
                             })
     };
 };
