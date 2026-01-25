@@ -30,6 +30,7 @@ const template = props =>`  <!DOCTYPE html>
                             <head>
                                 <style>
                                     body {   
+                                        --common_app_color_black: #404040;
                                         --common_app_color_blue1: rgb(81, 171, 255); 
                                         display:flex;
                                         justify-content:center;
@@ -50,8 +51,8 @@ const template = props =>`  <!DOCTYPE html>
                                         width:25px;
                                         height:25px;
                                         position:absolute;
-                                        border:4px solid #404040;
-                                        border-top-color: rgb(81, 171, 255);
+                                        border:4px solid var(--common_app_color_black);
+                                        border-top-color: transparent;
                                         border-radius:50%;
                                         animation:start_spin 1s linear infinite;
                                     }

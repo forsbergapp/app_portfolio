@@ -169,12 +169,6 @@ body {
 	background-color: var(--common_app_color_blue3);
 	box-shadow: 0 0 1px var(--common_app_color_light);
 }
-.app_shop_div .common_loading_spinner{
-	--common_app_color_background_spinner:var(--common_app_color_blue3);
-}
-.common_app_dialogues_content .common_loading_spinner{
-	--common_app_color_background_spinner:var(--common_app_color_white);
-}
 /* APP THEME COMMON*/
 .common_app_data_display_master_col1[data-key=Token],
 .common_app_data_display_master_col2[data-key=Token],

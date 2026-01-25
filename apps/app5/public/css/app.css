@@ -115,7 +115,6 @@ body {
 /*APP THEME*/
 body {
 	--common_app_color_spinner:var(--common_app_color_gold);
-	--common_app_color_background_spinner:var(--common_app_color_white);
 	color: var(--common_app_color_gold) !important;
 	background: var(--common_app_color_white) !important;
 	caret-color: var(--common_app_color_gold) !important;
@@ -123,9 +122,6 @@ body {
 .app_bank_div{
 	background-color: var(--common_app_color_blue3);
 	box-shadow: 0 0 1px var(--common_app_color_gold);
-}
-.app_bank_div .common_loading_spinner{
-	--common_app_color_background_spinner:var(--common_app_color_blue3);
 }
 .app_page_start_bank_div:hover,
 .app_page_start_bank_div:active{

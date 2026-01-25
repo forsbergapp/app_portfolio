@@ -82,7 +82,6 @@
 }
 body{
 	--common_app_color_spinner:var(--app_theme_text_color);
-	--common_app_color_background_spinner:var(--app_theme_background_color);
 	color: var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
 	caret-color: var(--app_theme_text_color);

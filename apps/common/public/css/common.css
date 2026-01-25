@@ -29,7 +29,6 @@
 	--common_app_color_white4: #e2e2e2;
 	--common_app_color_white_transparent: rgb(255,255,255,0.25);
 	--common_app_color_spinner:var(--common_app_color_black);
-	--common_app_color_background_spinner:var(--common_app_color_blue1);
 	/*report colors*/
 	--common_report_color_black: #404040;
 	--common_report_color_blue: #1da1f2;
@@ -1198,7 +1197,7 @@ body,
     height:25px;
     position:absolute;
     border:4px solid var(--common_app_color_spinner);
-    border-top-color: var(--common_app_color_background_spinner);
+    border-top-color: transparent;
     border-radius:50%;
     animation:spin 1s linear infinite;
 }

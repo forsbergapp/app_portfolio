@@ -535,7 +535,6 @@
 /*theme app colors*/
 body{
 	--common_app_color_spinner:var(--app_theme_main_color3);
-	--common_app_color_background_spinner:var(--app_theme_main_color1);
 	caret-color: var(--app_theme_main_color3);
 }
 body,

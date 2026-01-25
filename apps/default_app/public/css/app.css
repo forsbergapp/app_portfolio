@@ -6,7 +6,6 @@ html, body, #app {
 body {
     text-align: center;
 	--common_app_color_spinner:var(--common_app_color_black);
-	--common_app_color_background_spinner:var(--common_app_color_blue1);
 	color: var(--common_app_color_black);
 	background: var(--common_app_color_blue1);
 	caret-color: var(--common_app_color_black);
