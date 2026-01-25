@@ -415,8 +415,8 @@ const component = async props =>{
         }
     }
     const onMounted = async ()=>{
-        //apply common css
-        props.methods.COMMON.commonMiscCssApply();
+        //apply common css without fonts
+        props.methods.COMMON.commonMiscCssApply({cssApp:null, cssFont:false});
         
     
         props.methods.COMMON.commonCustomFramework();

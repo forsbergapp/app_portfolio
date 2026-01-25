@@ -1147,15 +1147,19 @@ const commonMiscLoadFont = parameters => {
 };
 /**
  * @name commonMisCssApply
- * @description apply common css if empty (=null) or app css
+ * @description Apply only common css if app css is empty. Adds optional font css to optimize app start
  * @function
- * @param {string|null} cssText
+ * @param {{cssApp:string|null,
+ *          cssFont:boolean}} parameters
 */
-const commonMiscCssApply = (cssText=null) =>{
+const commonMiscCssApply = parameters =>{
     const css = new CSSStyleSheet();
-    const css_common = commonGlobalGet('Data').cssCommon + (commonGlobalGet('Data').cssFontsArray?commonGlobalGet('Data').cssFontsArray.join('@'):'');
-    if (cssText!=null)
-        css.replace(css_common + cssText);
+    const css_common =  commonGlobalGet('Data').cssCommon + 
+                        (parameters.cssFont?
+                            (commonGlobalGet('Data').cssFontsArray?commonGlobalGet('Data').cssFontsArray.join('@'):''):
+                                '');
+    if (parameters.cssApp!=null)
+        css.replace(css_common + parameters.cssApp);
     else
         css.replace(css_common);
     
@@ -2288,9 +2292,13 @@ const commonFFB = async parameter =>{
                                                             const SSEmessage = getSSEMessage(getDecrypted(BFFmessage));
                                                             switch (SSEmessage.sse_type){
                                                                 case 'FONT_URL':{
-                                                                    commonMiscLoadFont({uuid:               parameters.uuid??'',
+                                                                    //delay font loading 1 second to prioritze code first
+                                                                    new Promise ((resolve)=>commonWindowSetTimeout(()=> 
+                                                                        resolve(commonMiscLoadFont({
+                                                                                        uuid:               parameters.uuid??'',
                                                                                         secret:             parameters.secret??'',
-                                                                                        message:            SSEmessage.sse_message});
+                                                                                        message:            SSEmessage.sse_message})), 1000)
+                                                                    );
                                                                     break;
                                                                 }
                                                                 default:{
@@ -2713,7 +2721,7 @@ const commonCustomFramework = () => {
  * @description Mount app
  * @function
  * @param {number} app_id
- * @param {|null|string} spinner_id?
+ * @param {null|string} spinner_id?
  * @returns {Promise.<void>}
  */
 const commonAppSwitch = async (app_id, spinner_id=null) =>{   
@@ -2747,7 +2755,7 @@ const commonAppSwitch = async (app_id, spinner_id=null) =>{
                     await commonMiscResourceFetch(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].CssReport,null, 'text/css'):
                         '');
     if (css && css!='')
-        commonMiscCssApply(css)
+        commonMiscCssApply({cssApp:css, cssFont:true});
     const {appMetadata, default:AppInit} = await commonMiscImport(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].Js);
     
     /**@type{common['commonMetadata']} */
