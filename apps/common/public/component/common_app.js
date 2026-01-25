@@ -92,19 +92,212 @@ const template = props =>`
 *                      template:string}>}
 */
 const component = async props =>{
+    /**
+     * @name commonEventCopyPasteCutDisable
+     * @description Disable copy cut paste
+     * @function
+     * @param {common['CommonAppEvent']} event 
+     * @returns {void}
+     */
+    const commonEventCopyPasteCutDisable = event => {
+        if (commonTextEditingDisabled()){
+            if(event.target.nodeName !='SELECT'){
+                event.preventDefault();
+                event.target.focus();
+            }
+        }
+        else{
+            if (event.type=='paste'){
+                event.preventDefault();
+                event.target.textContent = event.clipboardData.getData('Text');
+            }
+        }
+    };
+    /**
+     * @name commonEventInputDisable
+     * @description Disable common input textediting
+     * @function
+     * @param {common['CommonAppEvent']} event 
+     * @returns {void}
+     */
+    const commonEventInputDisable = event => {
+        if (commonTextEditingDisabled())
+            if (event.target.classList.contains('common_input')){
+                event.preventDefault();
+                event.target.focus();
+            }
+    };
+    /**
+     * @name commonTextEditingDisabled
+     * @description Check if textediting is disabled
+     * @function
+     * @returns {boolean}
+     */
+    const commonTextEditingDisabled = () =>props.methods.COMMON.commonGetApp().TextEdit=='0';
+
     
     /**
      * @name events
-     * @descption Events for map
+     * @descption Central event delegation on app root
+     *            order of events: 1 common, 2 module, 3 app 
      * @function
      * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {common['CommonAppEvent']|null} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{
-        const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
-        const elementDiv = props.methods.COMMON.commonMiscElementDiv(event.target);
-        switch (true){
+        if (event==null){
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.methods.COMMON.commonGlobalGet('Parameters').app_root}`).addEventListener(event_type, (/**@type{common['CommonAppEvent']}*/event) => {
+                events(event_type, event);
+            });
+        }
+        else{
+            const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);
+            //1 common events
+            //uses IIFE and waits until finished
+            await (async ()=>{
+                switch (event_type){
+                    case 'click':{
+                        if (event.target.classList.contains('common_switch')){
+                            if (event.target.classList.contains('checked'))
+                                event.target.classList.remove('checked');
+                            else
+                                event.target.classList.add('checked');
+                        }
+                        else{
+                            switch(event_target_id){
+                                case 'common_app_profile_search_icon':{
+                                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').focus();
+                                    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                                    break;
+                                }
+                                /**Dialogue message */
+                                case 'common_app_dialogues_message_close':{
+                                    if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function'])
+                                        await props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function']();
+                                    break;
+                                }
+                                case 'common_app_dialogues_message_cancel':{
+                                    props.methods.COMMON.commonComponentRemove('common_app_dialogues_message');
+                                    break;
+                                }
+                                /* Dialogue user menu*/
+                                case 'common_app_iam_user_menu':
+                                case 'common_app_iam_user_menu_logged_in':
+                                case 'common_app_iam_user_menu_avatar':
+                                case 'common_app_iam_user_menu_avatar_img':
+                                case 'common_app_iam_user_menu_logged_out':
+                                case 'common_app_iam_user_menu_default_avatar':{
+                                    await props.methods.COMMON.commonComponentRender({
+                                        mountDiv:   'common_app_dialogues_user_menu',
+                                        data:       null,
+                                        methods:    null,
+                                        path:       '/common/component/common_app_dialogues_user_menu.js'});
+                                    break;
+                                }
+                                //dialogue button stat
+                                case 'common_app_profile_toolbar_stat':{
+                                    await props.methods.COMMON.commonProfileStat(1, null);
+                                    break;
+                                }
+                                // common app toolbar
+                                case 'common_app_toolbar_start':{
+                                    props.methods.COMMON.commonAppSwitch(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
+                                    break;
+                                }
+                                case 'common_app_toolbar_framework_js':
+                                case 'common_app_toolbar_framework_vue':
+                                case 'common_app_toolbar_framework_react':{
+                                    props.methods.COMMON.COMMON_DOCUMENT.querySelectorAll('#common_app_toolbar .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
+                                    props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
+                                    if (event_target_id=='common_app_toolbar_framework_js')
+                                        await props.methods.COMMON.commonFrameworkSwitch(1);
+                                    if (event_target_id=='common_app_toolbar_framework_vue')
+                                        await props.methods.COMMON.commonFrameworkSwitch(2);
+                                    if (event_target_id=='common_app_toolbar_framework_react')
+                                        await props.methods.COMMON.commonFrameworkSwitch(3);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    case 'keydown':{
+                        if (event.code=='Enter')
+                            event.preventDefault();
+                        if (commonTextEditingDisabled() &&
+                            event.target.classList.contains('common_input') && 
+                                (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
+                                (event.shiftKey ==true && (event.code=='ArrowLeft' || 
+                                                            event.code=='ArrowRight' || 
+                                                            event.code=='ArrowUp' || 
+                                                            event.code=='ArrowDown'|| 
+                                                            event.code=='Home'|| 
+                                                            event.code=='End'|| 
+                                                            event.code=='PageUp'|| 
+                                                            event.code=='PageDown') ) )
+                            ){
+                                event.preventDefault();
+                        }
+                        break;                
+                    }
+                    case 'keyup':{
+                        if (event.target.classList.contains('common_password')){   
+                            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event.target.id}_mask`).textContent = 
+                                event.target.textContent.replace(event.target.textContent, '*'.repeat(props.methods.COMMON.commonMiscLengthWithoutDiacrites(event.target.textContent)));
+                        }
+                        else
+                            switch (event.target.id){
+                                case 'common_app_profile_search_input':{
+                                    props.methods.COMMON.commonMiscListKeyEvent({event:event,
+                                                            event_function:props.methods.COMMON.commonProfileSearch,
+                                                            event_parameters:null,
+                                                            rows_element:'common_app_profile_search_list',
+                                                            search_input:'common_app_profile_search_input'});
+                                    break;
+                                }
+                            }
+                        break;
+                    }
+                    case 'mousedown':{
+                        //common event only
+                        commonEventCopyPasteCutDisable(event);
+                        break;
+                    }
+                    case 'touchstart':{
+                        //common event only
+                        commonEventInputDisable(event);
+                        break;
+                    }
+                    case 'copy':{
+                        //common event only
+                        commonEventCopyPasteCutDisable(event);
+                        break;
+                    }
+                    case 'paste':{
+                        //common event only
+                        commonEventCopyPasteCutDisable(event);
+                        break;
+                    }
+                    case 'cut':{
+                        //common event only
+                        commonEventCopyPasteCutDisable(event);
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
+                }
+            })();
+            //2 component events
+            //fire component events defined in each component in COMMON_GLOBAL.Functions.component[component].events key
+            //component events should be for component elements, use app events to add addional functionality after common event and component events
+            for (const component of Object.values(props.methods.COMMON.commonGlobalGet('Functions').component))
+                component.events?
+                    await component.events(event_type, event):
+                        null;
+            //3 app events
+            props.methods.COMMON.commonGlobalGet('Functions').app_metadata.events[event_type]?await props.methods.COMMON.commonGlobalGet('Functions').app_metadata.events[event_type](event):null;
         }
     }
     const onMounted = async ()=>{
@@ -128,7 +321,31 @@ const component = async props =>{
             body:               null,
             response_type:      'SSE',
             authorization_type: 'APP_ID'});
+        //Set event delegation
+        //App events are not supported on other frameworks
+        //All events are managed in event delegation
+        //call event function to add listeners using null parameter
+        events('click', null);
+        events('change', null);
+        events('focusin', null);
+        events('input', null);
+        events('keydown', null);
+        events('keyup', null);
+        events('mousedown', null);
+        events('mouseup', null);
+        events('mousemove', null);
+        events('mouseleave', null);
+        events('wheel', null);
     
+        events('touchstart', null);
+        events('touchend', null);
+        events('touchcancel', null);
+        events('touchmove', null);
+    
+        //common only security events
+        events('copy', null);
+        events('paste', null);
+        events('cut', null);
         //mount start app
         await props.methods.COMMON.commonAppSwitch(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
         //replace old head wtith start styles and start script with new content

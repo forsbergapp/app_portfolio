@@ -1525,11 +1525,11 @@ const commonComponentRender = async parameters => {
             switch (COMMON_GLOBAL.Parameters.app_framework){
                 case 2:{
                     //Vue
-                    await commonFrameworkMount(2, component.template, {}, parameters.mountDiv, true);
+                    await commonFrameworkMount(2, component.template, {}, parameters.mountDiv);
                     break;
                 }
                 case 3:{
-                    await commonFrameworkMount(3, component.template, {}, parameters.mountDiv, true);
+                    await commonFrameworkMount(3, component.template, {}, parameters.mountDiv);
                     break;
                 }
                 case 1:
@@ -1553,9 +1553,8 @@ const commonComponentRender = async parameters => {
                 COMMON_GLOBAL.Functions.component[componentName]={};
             COMMON_GLOBAL.Functions.component[componentName].methods = component.methods;
         }
-        //share events to event delegation in commonEvent()
+        //share events to event delegation
         if (component.events){
-            
             if (!COMMON_GLOBAL.Functions.component[componentName])
                 COMMON_GLOBAL.Functions.component[componentName]={};
             COMMON_GLOBAL.Functions.component[componentName].events = component.events;
@@ -2527,220 +2526,11 @@ const commonSocketConnectOnlineCheck = (div_icon_online, iam_user_id) => {
    commonFFB({path:`/server-socket/socket-status/${iam_user_id}`, method:'GET', authorization_type:'APP_ID'})
     .then(result=>COMMON_DOCUMENT.querySelector('#' + div_icon_online).className = JSON.parse(result).online==1?'common_online':'common_offline');
 };
-/**
- * @name commonTextEditingDisabled
- * @description Check if textediting is disabled
- * @function
- * @returns {boolean}
- */
-const commonTextEditingDisabled = () =>commonGetApp().TextEdit=='0';
-
-/**
- * @name commonEvent
- * @description Central event delegation on app root
- *              order of events: 1 common, 2 module, 3 app 
- * @function
- * @param {common['commonEventType']} event_type 
- * @param {common['CommonAppEvent']|null} event 
- * @returns {Promise.<void>}
- */
-const commonEvent = async (event_type,event=null) =>{
-    if (event==null){
-        COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_root}`).addEventListener(event_type, (/**@type{common['CommonAppEvent']}*/event) => {
-            commonEvent(event_type, event);
-        });
-    }
-    else{
-        //1 common events
-        //uses IIFE and waits until finished
-        await (async ()=>{
-            switch (event_type){
-                case 'click':{
-                    if (event.target.classList.contains('common_switch')){
-                        if (event.target.classList.contains('checked'))
-                            event.target.classList.remove('checked');
-                        else
-                            event.target.classList.add('checked');
-                    }
-                    else{
-                        const event_target_id = commonMiscElementId(event.target);
-                        switch(event_target_id){
-                            case 'common_app_profile_search_icon':{
-                                COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').focus();
-                                COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
-                                break;
-                            }
-                            /**Dialogue message */
-                            case 'common_app_dialogues_message_close':{
-                                if (COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function'])
-                                    await COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close')['data-function']();
-                                break;
-                            }
-                            case 'common_app_dialogues_message_cancel':{
-                                commonComponentRemove('common_app_dialogues_message');
-                                break;
-                            }
-                            /* Dialogue user menu*/
-                            case 'common_app_iam_user_menu':
-                            case 'common_app_iam_user_menu_logged_in':
-                            case 'common_app_iam_user_menu_avatar':
-                            case 'common_app_iam_user_menu_avatar_img':
-                            case 'common_app_iam_user_menu_logged_out':
-                            case 'common_app_iam_user_menu_default_avatar':{
-                                await commonComponentRender({
-                                    mountDiv:   'common_app_dialogues_user_menu',
-                                    data:       null,
-                                    methods:    null,
-                                    path:       '/common/component/common_app_dialogues_user_menu.js'});
-                                break;
-                            }
-                            //dialogue button stat
-                            case 'common_app_profile_toolbar_stat':{
-                                await commonProfileStat(1, null);
-                                break;
-                            }
-                            // common app toolbar
-                            case 'common_app_toolbar_start':{
-                                commonAppSwitch(COMMON_GLOBAL.Parameters.app_start_app_id);
-                                break;
-                            }
-                            case 'common_app_toolbar_framework_js':
-                            case 'common_app_toolbar_framework_vue':
-                            case 'common_app_toolbar_framework_react':{
-                                COMMON_DOCUMENT.querySelectorAll('#common_app_toolbar .common_toolbar_selected').forEach((/**@type{HTMLElement}*/btn)=>btn.classList.remove('common_toolbar_selected'));
-                                COMMON_DOCUMENT.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
-                                if (event_target_id=='common_app_toolbar_framework_js')
-                                    await commonFrameworkSet(1);
-                                if (event_target_id=='common_app_toolbar_framework_vue')
-                                    await commonFrameworkSet(2);
-                                if (event_target_id=='common_app_toolbar_framework_react')
-                                    await commonFrameworkSet(3);
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                }
-                case 'keydown':{
-                    if (event.code=='Enter')
-                        event.preventDefault();
-                    if (commonTextEditingDisabled() &&
-                        event.target.classList.contains('common_input') && 
-                            (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
-                            (event.shiftKey ==true && (event.code=='ArrowLeft' || 
-                                                        event.code=='ArrowRight' || 
-                                                        event.code=='ArrowUp' || 
-                                                        event.code=='ArrowDown'|| 
-                                                        event.code=='Home'|| 
-                                                        event.code=='End'|| 
-                                                        event.code=='PageUp'|| 
-                                                        event.code=='PageDown') ) )
-                        ){
-                            event.preventDefault();
-                    }
-                    break;                
-                }
-                case 'keyup':{
-                    if (event.target.classList.contains('common_password')){   
-                        COMMON_DOCUMENT.querySelector(`#${event.target.id}_mask`).textContent = 
-                            event.target.textContent.replace(event.target.textContent, '*'.repeat(commonMiscLengthWithoutDiacrites(event.target.textContent)));
-                    }
-                    else
-                        switch (event.target.id){
-                            case 'common_app_profile_search_input':{
-                                commonMiscListKeyEvent({event:event,
-                                                        event_function:commonProfileSearch,
-                                                        event_parameters:null,
-                                                        rows_element:'common_app_profile_search_list',
-                                                        search_input:'common_app_profile_search_input'});
-                                break;
-                            }
-                        }
-                    break;
-                }
-                case 'mousedown':{
-                    //common event only
-                    commonEventCopyPasteCutDisable(event);
-                    break;
-                }
-                case 'touchstart':{
-                    //common event only
-                    commonEventInputDisable(event);
-                    break;
-                }
-                case 'copy':{
-                    //common event only
-                    commonEventCopyPasteCutDisable(event);
-                    break;
-                }
-                case 'paste':{
-                    //common event only
-                    commonEventCopyPasteCutDisable(event);
-                    break;
-                }
-                case 'cut':{
-                    //common event only
-                    commonEventCopyPasteCutDisable(event);
-                    break;
-                }
-                default:{
-                    break;
-                }
-            }
-        })();
-        //2 component events
-        //fire component events defined in each component in COMMON_GLOBAL.Functions.component[component].events key
-        //component events should be for component elements, use app events to add addional functionality after common event and component events
-        for (const component of Object.values(COMMON_GLOBAL.Functions.component))
-            component.events?
-                await component.events(event_type, event):
-                    null;
-        //3 app events
-        COMMON_GLOBAL.Functions.app_metadata.events[event_type]?await COMMON_GLOBAL.Functions.app_metadata.events[event_type](event):null;
-    }
-};
-/**
- * @name commonEventCopyPasteCutDisable
- * @description Disable copy cut paste
- * @function
- * @param {common['CommonAppEvent']} event 
- * @returns {void}
- */
- const commonEventCopyPasteCutDisable = event => {
-    if (commonTextEditingDisabled()){
-        if(event.target.nodeName !='SELECT'){
-            event.preventDefault();
-            event.target.focus();
-        }
-    }
-    else{
-        if (event.type=='paste'){
-            event.preventDefault();
-            event.target.textContent = event.clipboardData.getData('Text');
-        }
-    }
-};
-/**
- * @name commonEventInputDisable
- * @description Disable common input textediting
- * @function
- * @param {common['CommonAppEvent']} event 
- * @returns {void}
- */
-const commonEventInputDisable = event => {
-    if (commonTextEditingDisabled())
-        if (event.target.classList.contains('common_input')){
-            event.preventDefault();
-            event.target.focus();
-        }
-};
 
 /**
  * @name commonFrameworkMount
  * @description Mount app using Vue or React framework
  *              Component is mounted as pure HTML without events
- *              App component is mounted with supported events on app root for Vue
- *              App component is mounted without events on app root for React
  *              Template is already rendered HTML
  *              Mounting the rendered template means parsing HTML according to Vue or React standards
  *              that validate that the component renders valid HTML
@@ -2749,10 +2539,9 @@ const commonEventInputDisable = event => {
  * @param {string} template
  * @param {{}} methods
  * @param {string} mount_div
- * @param {boolean} component
  * @returns {Promise.<void>}
  */
-const commonFrameworkMount = async (framework, template, methods,mount_div, component) =>{
+const commonFrameworkMount = async (framework, template, methods,mount_div) =>{
     switch (framework){
         case 2:{
             //Vue
@@ -2773,14 +2562,9 @@ const commonFrameworkMount = async (framework, template, methods,mount_div, comp
                     }
                 }).mount('#tempmount');
 
-                if (component){
-                    //replace mount div with tempmount div without events
-                    COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = COMMON_DOCUMENT.querySelector('#tempmount').innerHTML;
-                }
-                else{
-                    //replace mount div with tempmount element with events
-                    COMMON_DOCUMENT.querySelector(`#${mount_div}`).replaceWith(COMMON_DOCUMENT.querySelector('#tempmount >div'));
-                }    
+                //replace mount div with tempmount div without events
+                COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = COMMON_DOCUMENT.querySelector('#tempmount').innerHTML;
+
             } catch (error) {
                 COMMON_DOCUMENT.querySelector(`#${mount_div}`).innerHTML = template;
             }
@@ -2859,92 +2643,18 @@ const commonFrameworkClean = () =>{
     Object.entries(app_root_element.attributes).forEach((/**@type{*}*/attribute)=>attribute[1].name=='id'?null:app_root_element.removeAttribute(attribute[1].name));
 };
 /**
- * @name commonFrameworkSet
+ * @name commonFrameworkSwitch
  * @description Sets framework and uses given list of event functions
  * @function
  * @param {number|null} framework
  * @returns {Promise.<void>}
  */
-const commonFrameworkSet = async (framework) => {
-    const app_root_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_root}`);
-    const app_element = COMMON_DOCUMENT.querySelector(`#${COMMON_GLOBAL.Parameters.app_div}`);
-    const common_app_element = COMMON_DOCUMENT.querySelector('#common_app');
-
-    //get all ellements with data-function
-    /**@type{{id:string,element_function:function}[]} */
-    const data_function = [];
-    COMMON_DOCUMENT.querySelectorAll(`#${COMMON_GLOBAL.Parameters.app_root} div`).forEach((/**@type{HTMLElement}*/element) =>{
-        /**@ts-ignore */
-        if (element['data-function']){
-            /**@ts-ignore */
-            data_function.push({id:element.id, element_function:element['data-function']});
-        }
-    });
+const commonFrameworkSwitch = async (framework=null) => {
     
-    COMMON_GLOBAL.Functions.app_eventListeners.OTHER = [];
-
-    //remove all listeners in app and app root divs including all objects saved on elements
-    app_element.replaceWith(app_element.cloneNode(true));
-    app_root_element.replaceWith(app_root_element.cloneNode(true));
-    
+    COMMON_GLOBAL.Functions.app_eventListeners.OTHER = [];    
     commonFrameworkClean();
-    
-    //app can override framework or use default javascript if Vue or React is not set
-    if (framework ?? COMMON_GLOBAL.Parameters.app_framework !=COMMON_GLOBAL.Parameters.app_framework)
-        COMMON_GLOBAL.Parameters.app_framework = framework ??1;
-    switch (framework ?? COMMON_GLOBAL.Parameters.app_framework){
-        case 2:{
-            //Vue
-            const template = `  <div id='${COMMON_GLOBAL.Parameters.app_root}'>
-                                    ${app_element.outerHTML}
-                                    ${common_app_element.outerHTML}
-                                </div>`;
-            const methods = {};
-            await commonFrameworkMount(2, template, methods, COMMON_GLOBAL.Parameters.app_root, false);
-            break;
-        }
-        case 3:{
-            //React
-            const template = `  ${app_element.outerHTML}
-                                ${common_app_element.outerHTML}`;
-            const methods = {};
-            await commonFrameworkMount(3, template, methods, COMMON_GLOBAL.Parameters.app_root, false);
-            break;
-        }
-        case 1:
-        default:{
-            //Javascript
-            break;
-        }
-    }
-    //App events are not supported on other frameworks
-    //All events are managed in event delegation
-    //call event function to add listeners using null parameter
-    commonEvent('click', null);
-    commonEvent('change', null);
-    commonEvent('focusin', null);
-    commonEvent('input', null);
-    commonEvent('keydown', null);
-    commonEvent('keyup', null);
-    commonEvent('mousedown', null);
-    commonEvent('mouseup', null);
-    commonEvent('mousemove', null);
-    commonEvent('mouseleave', null);
-    commonEvent('wheel', null);
+    COMMON_GLOBAL.Parameters.app_framework = framework ??1;
 
-    commonEvent('touchstart', null);
-    commonEvent('touchend', null);
-    commonEvent('touchcancel', null);
-    commonEvent('touchmove', null);
-
-    //common only security events
-    commonEvent('copy', null);
-    commonEvent('paste', null);
-    commonEvent('cut', null);
-
-    //update all elements with data-function since copying outerHTML does not include data-function
-    data_function.forEach(element =>COMMON_DOCUMENT.querySelector(`#${element.id}`)['data-function'] = element.element_function);
-    
 };
 /**
  * @name commonCustomFramework
@@ -3115,7 +2825,7 @@ const commonAppSwitch = async (app_id, spinner_id=null) =>{
     COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted?
         await COMMON_GLOBAL.Functions.app_metadata.lifeCycle.onMounted():
             null;
-    commonFrameworkSet(null);
+
     if (COMMON_GLOBAL.Data.User.iam_user_id){
         commonUserUpdateAvatar(true, COMMON_GLOBAL.Data.User.iam_user_avatar);
         commonUserMessageShowStat();
@@ -3156,6 +2866,7 @@ const commonGet = () =>{
         commonMiscTypewatch:commonMiscTypewatch,
         commonMiscShowDateUpdate:commonMiscShowDateUpdate,
         commonMiscSecondsToTime:commonMiscSecondsToTime,
+        commonMiscLengthWithoutDiacrites:commonMiscLengthWithoutDiacrites,
         commonMiscLoadFont:commonMiscLoadFont,
         commonMiscCssApply:commonMiscCssApply,
         /**WINDOW OBJECT */
@@ -3173,7 +2884,7 @@ const commonGet = () =>{
         commonComponentRemove:commonComponentRemove,
         commonComponentRender:commonComponentRender,
         /* FRAMEWORK */
-        commonFrameworkSet:commonFrameworkSet,
+        commonFrameworkSwitch:commonFrameworkSwitch,
         commonCustomFramework:commonCustomFramework,
         /* DIALOGUE */
         commonDialogueShow:commonDialogueShow, 
@@ -3182,6 +2893,7 @@ const commonGet = () =>{
         commonMesssageNotAuthorized:commonMesssageNotAuthorized,
         /* PROFILE */
         commonProfileDetail:commonProfileDetail, 
+        commonProfileSearch:commonProfileSearch,
         commonProfileShow:commonProfileShow,
         commonProfileStat:commonProfileStat, 
         /* USER  */
@@ -3199,8 +2911,6 @@ const commonGet = () =>{
         /* SERVICE SOCKET */
         commonSocketSSEShow:commonSocketSSEShow, 
         commonSocketConnectOnlineCheck:commonSocketConnectOnlineCheck,
-        /* EVENT */
-        commonEvent:commonEvent,
         /* INIT */
         commonAppSwitch:commonAppSwitch,
         commonGlobals:commonGlobals};
@@ -3233,6 +2943,7 @@ export{/* GLOBALS*/
        commonMiscTypewatch,      
        commonMiscShowDateUpdate,
        commonMiscSecondsToTime,
+       commonMiscLengthWithoutDiacrites,
        commonMiscLoadFont,
        commonMiscCssApply,
        /**WINDOW OBJECT */
@@ -3250,7 +2961,7 @@ export{/* GLOBALS*/
        commonComponentRemove,
        commonComponentRender,
        /* FRAMEWORK */
-       commonFrameworkSet,
+       commonFrameworkSwitch,
        commonCustomFramework,
        /* DIALOGUE */
        commonDialogueShow,
@@ -3259,6 +2970,7 @@ export{/* GLOBALS*/
        commonMesssageNotAuthorized,
        /* PROFILE */
        commonProfileDetail, 
+       commonProfileSearch,
        commonProfileShow,
        commonProfileStat, 
        /* USER  */
@@ -3276,7 +2988,5 @@ export{/* GLOBALS*/
        /* SERVICE SOCKET */
        commonSocketSSEShow, 
        commonSocketConnectOnlineCheck,
-       /* EVENT */
-       commonEvent,
        /* INIT */
        commonAppSwitch};
