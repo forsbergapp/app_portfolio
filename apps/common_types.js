@@ -11,8 +11,6 @@
  *              atob:function,
  *              btoa:function,
  *              crypto:window['crypto'],
- *              encodeURIComponent:function,
- *              decodeURIComponent:function,
  *              setTimeout:function,
  *              clearTimeout:function,
  *              open:function,

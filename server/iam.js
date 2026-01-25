@@ -189,7 +189,7 @@ const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
  */
 const iamAuthenticateUser = async parameters =>{
     const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default);
-    const userpass =  decodeURIComponent(Buffer.from((parameters.authorization || '').split(' ')[1] || '', 'base64').toString('utf-8'));
+    const userpass =  Buffer.from((parameters.authorization || '').split(' ')[1] || '', 'base64').toString('utf-8');
     const username = userpass.split(':')[0];
     const password = userpass.split(':')[1];
 

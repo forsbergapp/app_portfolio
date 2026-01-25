@@ -148,7 +148,7 @@ const component = async props => {
     //return result for both charts
     /**@type{common['server']['ORM']['View']['LogGetStat'][]} */
     const charts = await props.methods.COMMON.commonFFB({path:'/server-db/log-stat', query:query, method:'GET', authorization_type:'ADMIN'})
-                        .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows)));
+                        .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowBase64From(JSON.parse(result).rows)));
       
     return {
         lifecycle:  null,

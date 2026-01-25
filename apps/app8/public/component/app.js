@@ -280,7 +280,7 @@ const component = async props => {
                             return cube_result.map(row=>{return {
                                 //use base64 for solution in id column
                                 //replace single quote display with ’ to avoid string issues
-                                Id:props.methods.COMMON.commonWindowToBase64(row.cube_solution, true), 
+                                Id:props.methods.COMMON.commonWindowBase64To(row.cube_solution), 
                                 cube_solution: `${row.cube_solution_model==0?props.methods.COMMON.commonGlobalGet('ICONS').robot:props.methods.COMMON.commonGlobalGet('ICONS').human} 
                                                 (${props.methods.COMMON.commonGlobalGet('ICONS').misc_scramble}:${row.cube_solution_length}, ${props.methods.COMMON.commonGlobalGet('ICONS').hourglass}:${row.cube_solution_time}) - ${row.cube_solution.replaceAll('\'', '’')}`}; 
                             });
@@ -310,14 +310,14 @@ const component = async props => {
      */
     const appCubeSolveShowResult = async record =>{
         CONSTANTS.cube_goalstate = null;
-        const solution = props.methods.COMMON.commonWindowFromBase64(record.id);
+        const solution = props.methods.COMMON.commonWindowBase64From(record.id);
         CONSTANTS.cube.makeMoves(solution);
     };
     /**
      * @param{{id:*, value:*}} record
      */
     const appCubeSolveCubestateShowResult = async record =>{
-        const solution = props.methods.COMMON.commonWindowFromBase64(record.id);
+        const solution = props.methods.COMMON.commonWindowBase64From(record.id);
         CONSTANTS.cube_controls.setSolution(solution);
     };
     const initCube = ()=>{

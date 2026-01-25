@@ -66,7 +66,7 @@ const component = async props => {
                                                 authorization_type:'APP_ID', 
                                                 body:{type:'FUNCTION',IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id}
                                             })
-        .then((/**@type{*}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)))
+        .then((/**@type{*}*/result)=>JSON.parse(props.methods.COMMON.commonWindowBase64From(JSON.parse(result).rows[0].data)))
         .then((/**@type{{id:number, country_code:string, flag_emoji:string, group_name:string, text:string}[]}*/result)=>
             result.map(country=>{
                         return {value:JSON.stringify({  id:country.id, 
@@ -100,59 +100,37 @@ const component = async props => {
                 methods:        null,
                 path:           '/common/component/common_select.js'});
         };
-        if (country_code==null)
-            await updateSelect('...', [{value:'', text:''}]);
-        else{
+        await updateSelect('...', [{value:'', text:''}]);
+        if (country_code!=null){
             /**@type{{id:number, country:string, iso2:string, lat:string, lng:string, admin_name:string, city:string}[]} */
             const cities = await props.methods.COMMON.commonFFB({
                                     path:'/app-common-module/COMMON_WORLDCITIES', 
                                     method:'POST', 
                                     authorization_type:'APP_ID', 
+                                    spinner_id:'common_map_control_expand_select_city',
                                     body:{  type:'FUNCTION',
                                             searchType:'COUNTRY',
                                             searchString:country_code.toUpperCase(),
                                             IAM_data_app_id:props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id
                                         }})
                             .then(result=>
-                                JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                                JSON.parse(props.methods.COMMON.commonWindowBase64From(JSON.parse(result).rows[0].data)));
             await updateSelect( '...', 
                                 [{value:'', text:''}]
                                 .concat(cities.map(city=>{
-                                            return {value:JSON.stringify({  id:city.id,
+                                            const data = JSON.stringify({  id:city.id,
                                                                             countrycode:city.iso2, 
                                                                             country:city.country, 
                                                                             admin_name:city.admin_name, 
                                                                             city:city.city,
                                                                             latitude:city.lat, 
-                                                                            longitude:city.lng}),
+                                                                            longitude:city.lng});
+                                            return {value:props.methods.COMMON.commonWindowBase64To(data),
                                                     text:`${city.admin_name} - ${city.city}`};
                                             })));
         }
     };
-    /**
-     * @param {string} event_target_id
-     */
-    const eventClickCountry = event_target_id =>{
-        const country_code = props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')==''?
-                                null:
-                                JSON.parse(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value')).country_code;
-        map_city(country_code);
-    };
-    /**
-     * @param {string} event_target_id
-     */
-    const eventClickCity = async event_target_id => {
-        /**
-         * @type{{  countrycode:string,
-         *          country:string,
-         *          admin_name:string,
-         *          city:string,
-         *          latitude:string,
-         *          longitude:string}}
-         */
-        const city = JSON.parse(props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${event_target_id} .common_select_dropdown_value`).getAttribute('data-value'));
-        props.methods.goTo({ip:null, longitude:city.longitude, latitude:city.latitude});
-    };
+    
     /**
      * @description delay search result using delay type watch pattern
      * @function
@@ -196,13 +174,26 @@ const component = async props => {
         switch (event_type){
             case 'click':{
                 switch (true){
-                    case event_target_id== 'common_map_control_expand_select_country':{
-                        eventClickCountry(event_target_id);
+                    case event_target_id== 'common_map_control_expand_select_country' && 
+                        event.target.classList.contains('common_select_option'):{
+                        const country_code = event.target.getAttribute('data-value')==''?
+                                null:
+                                JSON.parse(event.target.getAttribute('data-value')).country_code;
+                        map_city(country_code);
                         break;
                     }
                     case event_target_id== 'common_map_control_expand_select_city' && 
                         event.target.classList.contains('common_select_option'):{
-                        eventClickCity(event_target_id);
+                            /**
+                             * @type{{  countrycode:string,
+                             *          country:string,
+                             *          admin_name:string,
+                             *          city:string,
+                             *          latitude:string,
+                             *          longitude:string}}
+                             */
+                            const city = JSON.parse(props.methods.COMMON.commonWindowBase64From(event.target.getAttribute('data-value')));
+                            props.methods.goTo({ip:null, longitude:city.longitude, latitude:city.latitude}); 
                         break;
                     }
                     case event_target_id=='common_map_control_expand_search_icon':{

@@ -59,7 +59,7 @@ const template = props =>`  <!DOCTYPE html>
                                 <script >
                                     const start = async ()=>{
                                         return new Promise(resolve=>{
-                                            const commonWindowFromBase64 = str => {
+                                            const commonWindowBase64From = str => {
                                                 const binary_string = atob(str);
                                                 const len = binary_string.length;
                                                 const bytes = new Uint8Array(len);
@@ -69,15 +69,15 @@ const template = props =>`  <!DOCTYPE html>
                                                 return new TextDecoder('utf-8').decode(bytes);
                                             };
                                             Promise.all([
-                                                import(URL.createObjectURL(  new Blob ([commonWindowFromBase64('${props.crypto}')],{type: 'text/javascript'}))),
-                                                fetch('${props.url}', (()=>{const temp = JSON.parse(commonWindowFromBase64('${props.options}'));temp.body = JSON.stringify(temp.body);return temp;})()).then(response=>response.text())
+                                                import(URL.createObjectURL(  new Blob ([commonWindowBase64From('${props.crypto}')],{type: 'text/javascript'}))),
+                                                fetch('${props.url}', (()=>{const temp = JSON.parse(commonWindowBase64From('${props.options}'));temp.body = JSON.stringify(temp.body);return temp;})()).then(response=>response.text())
                                             ])
                                             .then(promise=>{
                                                 return {Crypto: {encrypt:promise[0].subtle.encrypt, 
                                                                 decrypt:promise[0].subtle.decrypt},
                                                         commonStart:JSON.parse(promise[0].subtle.decrypt({
-                                                                        iv:         JSON.parse(commonWindowFromBase64('${props.secret}')).iv,
-                                                                        key:        JSON.parse(commonWindowFromBase64('${props.secret}')).jwk.k,
+                                                                        iv:         JSON.parse(commonWindowBase64From('${props.secret}')).iv,
+                                                                        key:        JSON.parse(commonWindowBase64From('${props.secret}')).jwk.k,
                                                                         ciphertext: promise[1]}))};
                                             })
                                             .then(result=>

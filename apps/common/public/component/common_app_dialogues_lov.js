@@ -116,7 +116,7 @@ const component = async props => {
                                                         props.data.lov =='SERVER_LOG_FILES'?
                                                             JSON.parse(result).rows:
                                                                 //COUNTRY and default use base64
-                                                                JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data))),
+                                                                JSON.parse(props.methods.COMMON.commonWindowBase64From(JSON.parse(result).rows[0].data))),
                     lov_column_id     : props.data.lov=='CUSTOM'?'Id':lov_column_id,
                     lov_column_value  : props.data.lov=='CUSTOM'?
                                             props.data.lov_custom_value:

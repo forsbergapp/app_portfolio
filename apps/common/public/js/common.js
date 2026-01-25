@@ -352,7 +352,7 @@ const commonGetAppData = async (app_id, name=null, value=null) =>{
                                             query:`IAM_data_app_id=${app_id}&name=${name}`,
                                             method:'GET', 
                                             authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
-                                                JSON.parse(commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                                                JSON.parse(commonWindowBase64From(JSON.parse(result).rows[0].data)));
             if (new_records.length>0){
                 COMMON_GLOBAL.Data.AppData.push(...(new_records.map((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>
                     [row.AppId, row.Name, row.Value, row.DisplayData]
@@ -1161,6 +1161,25 @@ const commonMiscCssApply = (cssText=null) =>{
     
     document.adoptedStyleSheets = [css];
 };
+/**
+ * @name commonWindowBase64From
+ * @description Convert base64 containing unicode to string
+ * @function
+ * @param {string} str 
+ * @returns {string}
+ */
+const commonWindowBase64From = str =>
+    new TextDecoder('utf-8').decode(Uint8Array.from(COMMON_WINDOW.atob(str), ch => ch.charCodeAt(0)));
+
+/**
+ * @name commonWindowBase64To
+ * @description Convert string to Base64
+ * @function
+ * @param {string} str
+ * @returns {string}
+ */
+const commonWindowBase64To = str =>
+    COMMON_WINDOW.btoa(String.fromCharCode(...new TextEncoder().encode(str)));
 
 /**
  * @name commonWindoGet
@@ -1169,23 +1188,6 @@ const commonMiscCssApply = (cssText=null) =>{
  * @returns {common['COMMON_WINDOW']}
  */
 const commonWindowGet = () =>COMMON_WINDOW;
-
-/**
- * @name commonWindowFromBase64
- * @description Convert base64 containing unicode to string
- * @function
- * @param {string} str 
- * @returns {string}
- */
-const commonWindowFromBase64 = str => {
-    const binary_string = COMMON_WINDOW.atob(str);
-    const len = binary_string.length;
-    const bytes = new Uint8Array(len);
-    for (let i = 0; i < len; i++) {
-        bytes[i] = binary_string.charCodeAt(i);
-    }
-    return new TextDecoder('utf-8').decode(bytes);
-};
 
 /**
  * @name commonWindowDocumentFrame
@@ -1231,16 +1233,6 @@ const commonWindowPrompt = text => COMMON_WINDOW.prompt(text);
  */
 const commonWindowSetTimeout = (function_timeout, milliseconds) => COMMON_WINDOW.setTimeout(function_timeout, milliseconds);
 
-
-/**
- * @name commonWindowToBase64
- * @description Convert string to Base64
- * @function
- * @param {string} str 
- * @aram {boolean} btoa_only
- * @returns {string}
- */
-const commonWindowToBase64 = (str,btoa=false) => COMMON_WINDOW.btoa(btoa?str:COMMON_WINDOW.encodeURIComponent(str));
 
 /**
  * @name commonWindowUserAgentPlatform
@@ -2234,12 +2226,12 @@ const commonFFB = async parameter =>{
                     break;
                 }
                 case 'IAM':{
-                    authorization = 'Basic ' + commonWindowToBase64(parameters.data.username + ':' + parameters.data.password);
+                    authorization = 'Basic ' + commonWindowBase64To(parameters.data.username + ':' + parameters.data.password);
                     break;
                 }
             }
             //encode query parameters
-            const encodedparameters = parameters.data.query?commonWindowToBase64(parameters.data.query):'';
+            const encodedparameters = parameters.data.query?commonWindowBase64To(parameters.data.query):'';
             const bff_path = parameters.rest_bff_path + '/' + 
                                 ROLE.toLowerCase() + 
                                 '/v' + (parameters.rest_api_version ??1);
@@ -2261,14 +2253,14 @@ const commonFFB = async parameter =>{
                                         },
                                 body: JSON.stringify({
                                         x: COMMON_GLOBAL.Functions.x.encrypt({
-                                            iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
-                                            key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
+                                            iv:     JSON.parse(commonWindowBase64From(parameters.secret)).iv,
+                                            key:    JSON.parse(commonWindowBase64From(parameters.secret)).jwk.k, 
                                             data:JSON.stringify({  
                                                     headers:{
                                                             'app-id':       COMMON_GLOBAL.Data.UserApp.app_id,
                                                             'app-signature':COMMON_GLOBAL.Functions.x.encrypt({ 
-                                                                                iv:     JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
-                                                                                key:    JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k, 
+                                                                                iv:     JSON.parse(commonWindowBase64From(parameters.secret)).iv,
+                                                                                key:    JSON.parse(commonWindowBase64From(parameters.secret)).jwk.k, 
                                                                                 data:   JSON.stringify({app_id: COMMON_GLOBAL.Data.UserApp.app_id })}),
                                                             'app-id-token': 'Bearer ' + parameters.data.idToken,
                                                             ...(authorization && {Authorization: authorization}),
@@ -2279,7 +2271,7 @@ const commonFFB = async parameter =>{
                                                     method: parameters.data.method,
                                                     url:    bff_path + parameters.data.path + '?parameters=' + encodedparameters,
                                                     body:   parameters.data.body?
-                                                                JSON.stringify({data:commonWindowToBase64(JSON.stringify(parameters.data.body))}):
+                                                                JSON.stringify({data:commonWindowBase64To(JSON.stringify(parameters.data.body))}):
                                                                     null
                                                 })
                                             })
@@ -2292,8 +2284,8 @@ const commonFFB = async parameter =>{
              */
             const getDecrypted   = data =>
                     COMMON_GLOBAL.Functions.x.decrypt({
-                                iv:         JSON.parse(commonWindowFromBase64(parameters.secret)).iv,
-                                key:        JSON.parse(commonWindowFromBase64(parameters.secret)).jwk.k,
+                                iv:         JSON.parse(commonWindowBase64From(parameters.secret)).iv,
+                                key:        JSON.parse(commonWindowBase64From(parameters.secret)).jwk.k,
                                 ciphertext: parameters.response_type=='SSE'?
                                                 new TextDecoder('utf-8').decode(data).split('\\n\\n')[0].split('data: ')[1]:
                                                 data});
@@ -2338,7 +2330,7 @@ const commonFFB = async parameter =>{
                                                  *           sse_message:string}}
                                                  */
                                                 const getSSEMessage = BFFmessage =>{
-                                                    const messageDecoded = commonWindowFromBase64(BFFmessage);
+                                                    const messageDecoded = commonWindowBase64From(BFFmessage);
                                                     return {sse_type:JSON.parse(messageDecoded).sse_type,
                                                             sse_message:JSON.parse(messageDecoded).sse_message};
                                                 };
@@ -3167,14 +3159,14 @@ const commonGet = () =>{
         commonMiscLoadFont:commonMiscLoadFont,
         commonMiscCssApply:commonMiscCssApply,
         /**WINDOW OBJECT */
+        commonWindowBase64From:commonWindowBase64From, 
+        commonWindowBase64To:commonWindowBase64To, 
         commonWindowGet:commonWindowGet,
         commonWindowDocumentFrame:commonWindowDocumentFrame,
-        commonWindowFromBase64:commonWindowFromBase64, 
         commonWindowNavigatorLocale:commonWindowNavigatorLocale,
         commonWindowOpen:commonWindowOpen,
         commonWindowPrompt:commonWindowPrompt,
         commonWindowSetTimeout:commonWindowSetTimeout,
-        commonWindowToBase64:commonWindowToBase64, 
         commonWindowUserAgentPlatform:commonWindowUserAgentPlatform,
         commonWindowWait:commonWindowWait,
         /* COMPONENTS */
@@ -3244,14 +3236,14 @@ export{/* GLOBALS*/
        commonMiscLoadFont,
        commonMiscCssApply,
        /**WINDOW OBJECT */
+       commonWindowBase64From, 
+       commonWindowBase64To, 
        commonWindowGet,
        commonWindowDocumentFrame,
-       commonWindowFromBase64, 
        commonWindowNavigatorLocale,
        commonWindowOpen,
        commonWindowPrompt,
        commonWindowSetTimeout,
-       commonWindowToBase64, 
        commonWindowUserAgentPlatform,
        commonWindowWait,
        /* COMPONENTS */

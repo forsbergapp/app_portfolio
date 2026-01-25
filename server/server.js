@@ -175,7 +175,7 @@ class serverClass {
         req.query =         req.path.indexOf('?')>-1?Array.from(new URLSearchParams(req.path
                             .substring(req.path.indexOf('?')+1)))
                             .reduce((query, param)=>{
-                                const key = {[param[0]] : decodeURIComponent(param[1])};
+                                const key = {[param[0]] : param[1]};
                                 return {...query, ...key};
                             }, {}):null;
         if (server.ORM.OpenApiComponentParameters.config.IAM_CONTENT_SECURITY_POLICY_ENABLE.default == '1'){

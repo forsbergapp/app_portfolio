@@ -95,7 +95,7 @@ const component = async props => {
                                                             IAM_data_app_id : props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
                                                             locale: props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale}
                                                 })
-                            .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowFromBase64(JSON.parse(result).rows[0].data)));
+                            .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowBase64From(JSON.parse(result).rows[0].data)));
     const onMounted = async () =>{
         //Locale using setting locale
         await props.methods.COMMON.commonComponentRender({

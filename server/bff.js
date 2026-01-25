@@ -580,7 +580,7 @@ const bffDecryptRequest = async parameters =>{
                                                                     Array.from(new URLSearchParams(decrypted.url
                                                                     .substring(decrypted.url.indexOf('?')+1)))
                                                                     .reduce((query, param)=>{
-                                                                        const key = {[param[0]] : decodeURIComponent(param[1])};
+                                                                        const key = {[param[0]] : param[1]};
                                                                         return {...query, ...key};
                                                                                     /**@ts-ignore */
                                                                     }, {}):null)?.parameters ?? '',
@@ -834,7 +834,7 @@ const bffDecryptRequest = async parameters =>{
                         else{
                             //REST API route
                             //REST API requests from client are encoded using base64
-                            const decodedquery = bff_parameters.query?decodeURIComponent(Buffer.from(bff_parameters.query, 'base64').toString('utf-8')):'';   
+                            const decodedquery = bff_parameters.query?Buffer.from(bff_parameters.query, 'base64').toString('utf-8'):'';   
                             return await bffRestApi({  
                                                     app_id:bff_parameters.app_id,
                                                     endpoint:bff_parameters.endpoint,
@@ -848,7 +848,7 @@ const bffDecryptRequest = async parameters =>{
                                                                 new URLSearchParams(decodedquery):
                                                                     null,
                                                     body:bff_parameters.body?.data?
-                                                            JSON.parse(decodeURIComponent(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8'))):
+                                                            JSON.parse(Buffer.from(bff_parameters.body.data, 'base64').toString('utf-8')):
                                                                 '',
                                                     idToken:bff_parameters.security_app?.AppIdToken??'', 
                                                     authorization:bff_parameters.authorization ?? '', 
