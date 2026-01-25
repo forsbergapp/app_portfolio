@@ -88,10 +88,17 @@ const template = props =>`
 * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
 *                      data:   null,
 *                      methods:null,
-*                      events:common['commonComponentEvents'],
+*                      events:null,
 *                      template:string}>}
 */
 const component = async props =>{
+    //set globals
+    props.methods.COMMON.commonGlobals(props.data.globals);
+    props.methods.COMMON.commonUserPreferencesGlobalSetDefault('LOCALE');
+    props.methods.COMMON.commonUserPreferencesGlobalSetDefault('TIMEZONE');
+    props.methods.COMMON.commonUserPreferencesGlobalSetDefault('DIRECTION');
+    props.methods.COMMON.commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
+    
     /**
      * @name commonEventCopyPasteCutDisable
      * @description Disable copy cut paste
@@ -303,13 +310,7 @@ const component = async props =>{
     const onMounted = async ()=>{
         //apply common css
         props.methods.COMMON.commonMiscCssApply();
-        //set globals
-        props.methods.COMMON.commonGlobals(props.data.globals);
         
-        props.methods.COMMON.commonUserPreferencesGlobalSetDefault('LOCALE');
-        props.methods.COMMON.commonUserPreferencesGlobalSetDefault('TIMEZONE');
-        props.methods.COMMON.commonUserPreferencesGlobalSetDefault('DIRECTION');
-        props.methods.COMMON.commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
     
         props.methods.COMMON.commonCustomFramework();
         //set common app id
@@ -358,7 +359,7 @@ const component = async props =>{
         lifecycle:  {onMounted:onMounted},
         data:       null,
         methods:    null,
-        events:     events,
+        events:     null,
         template:   template({  app_toolbar_button_start:           props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_start,
                                 app_toolbar_button_framework:       props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_framework,
                                 app_framework:                      props.methods.COMMON.commonGlobalGet('Parameters').app_framework,

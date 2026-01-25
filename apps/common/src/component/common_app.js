@@ -17,7 +17,9 @@ const {server} = await import('../../../../server/server.js');
  *              2. fetch common start objects with options set in server (base64 with server rendered encrypted fetch option string in browser)
  *              3. import common library and common component
  *              4. mount component
- *              5. onMounted replaces <head> with new content so style and script tags are removed and all data needed is now inside the blobs only using closure pattern
+ *              5. sets app_id to common app id
+ *              6. shares methods from common app components
+ *              7. onMounted replaces <head> with new content so style and script tags are removed and all data needed is now inside the blobs only using closure pattern
  * @function
  * @param {{crypto:string,
  *          secret:string,
@@ -57,65 +59,67 @@ const template = props =>`  <!DOCTYPE html>
                                         animation:start_spin 1s linear infinite;
                                     }
                                 </style>
-                                <script >
-                                    const start = async ()=>{
-                                        return new Promise(resolve=>{
-                                            const commonWindowBase64From = str => {
-                                                const binary_string = atob(str);
-                                                const len = binary_string.length;
-                                                const bytes = new Uint8Array(len);
-                                                for (let i = 0; i < len; i++) {
-                                                    bytes[i] = binary_string.charCodeAt(i);
+                                <script type=module>
+                                    const commonWindowBase64From = str => {
+                                        const binary_string = atob(str);
+                                        const len = binary_string.length;
+                                        const bytes = new Uint8Array(len);
+                                        for (let i = 0; i < len; i++) {
+                                            bytes[i] = binary_string.charCodeAt(i);
+                                        }
+                                        return new TextDecoder('utf-8').decode(bytes);
+                                    };
+                                    Promise.all([
+                                        import(URL.createObjectURL(  new Blob ([commonWindowBase64From('${props.crypto}')],{type: 'text/javascript'}))),
+                                        fetch('${props.url}', (()=>{const temp = JSON.parse(commonWindowBase64From('${props.options}'));temp.body = JSON.stringify(temp.body);return temp;})()).then(response=>response.text())
+                                    ])
+                                    .then(promise=>{
+                                        return {Crypto: {encrypt:promise[0].subtle.encrypt, 
+                                                        decrypt:promise[0].subtle.decrypt},
+                                                commonStart:JSON.parse(promise[0].subtle.decrypt({
+                                                                iv:         JSON.parse(commonWindowBase64From('${props.secret}')).iv,
+                                                                key:        JSON.parse(commonWindowBase64From('${props.secret}')).jwk.k,
+                                                                ciphertext: promise[1]}))};
+                                    })
+                                    .then(result=>
+                                        Promise.all([
+                                            import(URL.createObjectURL(  new Blob ([result.commonStart.commonComponent],{type: 'text/javascript'}))),
+                                            import(URL.createObjectURL(  new Blob ([result.commonStart.jsCommon],{type: 'text/javascript'})))
+                                        ])
+                                        .then(promise2=>
+                                            promise2[0].default({
+                                                                    data:   {
+                                                                            globals:    {
+                                                                                            Functions:{x:{ 
+                                                                                                encrypt:result.Crypto.encrypt,
+                                                                                                decrypt:result.Crypto.decrypt,
+                                                                                                uuid:   '${props.uuid}',
+                                                                                                secret: '${props.secret}'}},
+                                                                                            ...result.commonStart.globals
+                                                                                        }
+                                                                            },
+                                                                    methods:{
+                                                                            COMMON:     promise2[1]
+                                                                            }
+                                                                })
+                                            .then(component=>{
+                                                promise2[1].commonGlobalSet({key:'Data', 
+                                                                        subkey:'UserApp', 
+                                                                        name:'app_id', 
+                                                                        value: promise2[1].commonGlobalGet('Parameters').app_common_app_id});
+                                                if (component.methods){
+                                                    promise2[1].commonGlobalSet({key:'Functions',  
+                                                                            name:'component', 
+                                                                            value: {[promise2[1].commonComponentName(promise2[1].commonGetApp().Js)]:{methods:component.methods}}})
                                                 }
-                                                return new TextDecoder('utf-8').decode(bytes);
-                                            };
-                                            Promise.all([
-                                                import(URL.createObjectURL(  new Blob ([commonWindowBase64From('${props.crypto}')],{type: 'text/javascript'}))),
-                                                fetch('${props.url}', (()=>{const temp = JSON.parse(commonWindowBase64From('${props.options}'));temp.body = JSON.stringify(temp.body);return temp;})()).then(response=>response.text())
-                                            ])
-                                            .then(promise=>{
-                                                return {Crypto: {encrypt:promise[0].subtle.encrypt, 
-                                                                decrypt:promise[0].subtle.decrypt},
-                                                        commonStart:JSON.parse(promise[0].subtle.decrypt({
-                                                                        iv:         JSON.parse(commonWindowBase64From('${props.secret}')).iv,
-                                                                        key:        JSON.parse(commonWindowBase64From('${props.secret}')).jwk.k,
-                                                                        ciphertext: promise[1]}))};
+                                                document.body.innerHTML = component.template;component.lifecycle.onMounted();
                                             })
-                                            .then(result=>
-                                                Promise.all([
-                                                    import(URL.createObjectURL(  new Blob ([result.commonStart.commonComponent],{type: 'text/javascript'}))),
-                                                    import(URL.createObjectURL(  new Blob ([result.commonStart.jsCommon],{type: 'text/javascript'})))
-                                                ])
-                                                .then(promise2=>
-                                                    resolve(promise2[0].default({
-                                                                                    data:   {
-                                                                                            globals:    {
-                                                                                                            Functions:{x:{ 
-                                                                                                                encrypt:result.Crypto.encrypt,
-                                                                                                                decrypt:result.Crypto.decrypt,
-                                                                                                                uuid:   '${props.uuid}',
-                                                                                                                secret: '${props.secret}'}},
-                                                                                                            ...result.commonStart.globals
-                                                                                                        }
-                                                                                            },
-                                                                                    methods:{
-                                                                                            COMMON:     promise2[1]
-                                                                                            }
-                                                                                }))    
-                                                )
-                                            )
-                                        })
-                                    }
-                                </script
+                                        )
+                                    )
+                                </script>
                             </head>
                             <html>
-                                <body>
-                                    <script type='module'>
-                                        start().then(component=>{
-                                                document.body.innerHTML = component.template;component.lifecycle.onMounted()
-                                            })
-                                    </script>
-                                </body>
+                                <body></body>
                             </html>  `;
 /**
 * @name component

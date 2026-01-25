@@ -1469,6 +1469,18 @@ const commonComponentTemplateMessage = props =>`
             }
         </div>`;
 /**
+ * @name commonComponentName
+ * @description Get component name, set component with appid and name from filename without .js
+ * @function
+ * @param {string} path
+ * @returns {string}
+ */
+const commonComponentName =  path => {
+    return (path.startsWith('/common/component/')?
+        COMMON_GLOBAL.Parameters.app_common_app_id:
+            COMMON_GLOBAL.Data.UserApp.app_id).toString() + '_' + path.split('/').reverse()[0].split('.')[0]
+}
+/**
  * @name commonComponentRender
  * @description Renders component
  *              Components use analogic Vue SFC structure
@@ -1544,8 +1556,7 @@ const commonComponentRender = async parameters => {
                 null:
                     commonMiscResourceFetch(link.getAttribute('data-href')??'', link,'text/css'));
         //set component with appid and name from filename without .js
-        const componentName = (parameters.path.startsWith('/common/component/')?COMMON_GLOBAL.Parameters.app_common_app_id:COMMON_GLOBAL.Data.UserApp.app_id).toString() + '_' +
-                                parameters.path.split('/').reverse()[0].split('.')[0];
+        const componentName = commonComponentName(parameters.path);
         //use Vue.createApp and data() return pattern and React.createRef() + current key pattern to share methods
         //share methods
         if (component.methods){

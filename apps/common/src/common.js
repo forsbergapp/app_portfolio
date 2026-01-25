@@ -1145,7 +1145,7 @@ const getAppStart = async parameters =>{
             /**@type{string} */
             commonComponent:(await server.app_common.commonResourceFile({ 
                                                             app_id:DATA_APP_ID, 
-                                                            resource_id:'/common/component/common_app.js',
+                                                            resource_id:server.ORM.db.App.get({app_id:COMMON_APP_ID, resource_id:null}).result.filter((/**@type{server['ORM']['Object']['App']}*/app)=>app.Id == COMMON_APP_ID)[0].Js,
                                                             content_type:'text/javascript', 
                                                             data_app_id:COMMON_APP_ID})).result.resource,
             /**@type{server['app']['commonGlobals']} */
@@ -1173,7 +1173,7 @@ const getAppStart = async parameters =>{
                                                 app_content_type_sse:           'text/event-stream; charset=utf-8',
                                                 },
                                 Data:           {
-                                                Apps:           (await server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null})).result,
+                                                Apps:           server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null}).result,
                                                 AppData:        server.ORM.db.AppData.getServer({app_id:DATA_APP_ID, resource_id:null, data:{name:'APP_PARAMETER',data_app_id:COMMON_APP_ID}})
                                                                 .result.map((/**@type{server['ORM']['Object']['AppData']}*/row)=>{return [row.AppId, row.Name, row.Value, row.DisplayData]}),
                                                                 /**@type{string} */

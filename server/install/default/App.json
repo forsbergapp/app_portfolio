@@ -4,7 +4,7 @@
         "Name": "Common",            
         "Path": "/apps/common/public",   
         "Logo":"",  
-        "Js":"/js/common.js",
+        "Js":"/common/component/common_app.js",
         "Css": "/css/common.css",
         "CssReport": "",
         "TextEdit": "1",

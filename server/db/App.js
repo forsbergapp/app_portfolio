@@ -22,9 +22,9 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameter
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
 *          resource_id:number|null}} parameters
-* @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['AppGetInfo'][] }>}
+* @returns {server['server']['response'] & {result?:server['ORM']['View']['AppGetInfo'][] }}
 */
-const getViewInfo = async parameters =>{
+const getViewInfo = parameters =>{
     return {result:get({app_id:parameters.app_id, resource_id:null}).result
                     .filter((/**@type{server['ORM']['Object']['App']}*/app)=>app.Id == (parameters.resource_id ?? app.Id))
                     .map((/**@type{server['ORM']['Object']['App']}*/app)=>{
