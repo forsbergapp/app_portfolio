@@ -1,12 +1,17 @@
 variable "oci_tenency_ocid" {
     description = "Oracle Cloud tenancy ocid"
     type        = string
-    default     = "ocid1.tenancy.oc1..."
+    default     = "ocid1.tenancy.oc1.."
+}
+variable "oci_compartment_ocid" {
+    description = "Oracle Cloud compartment ocid"
+    type        = string
+    default     = "ocid1.compartment.oc1.."
 }
 variable "oci_user_ocid" {
     description = "Oracle Cloud user ocid"
     type        = string
-    default     = "ocid1.user.oc1..."
+    default     = "ocid1.user.oc1.."
 }
 variable "oci_fingerprint" {
     description = "Oracle Cloud API KEY fingerprint"
@@ -23,13 +28,8 @@ variable "oci_region" {
     type        = string
     default     = "[REGION]"
 }
-variable "vcn_availability_domain" {
-    description = "Oracle Cloud VCN availability domain"
+variable "git_repository_url" {
+    description = "GIT Repository"
     type        = string
-    default     = "[AVAILABILITY DOMAIN]"
-}
-variable "vcn_subnet_id" {
-    description = "Oracle Cloud VCN subnet id"
-    type        = string
-    default     = "ocid1.subnet.oc1..."
+    default     = "https://[server]/[path]/[file].git"
 }
