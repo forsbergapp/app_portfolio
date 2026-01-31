@@ -10,4 +10,4 @@ Type=simple
 ExecStart=/bin/sh -c 'cd $HOME/app_portfolio && /usr/bin/node server/init.js'
 
 [Install]
-WantedBy=multi.user.target
+WantedBy=multi-user.target

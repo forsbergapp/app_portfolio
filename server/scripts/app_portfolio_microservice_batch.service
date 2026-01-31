@@ -10,4 +10,4 @@ Type=simple
 ExecStart=/bin/sh -c 'cd $HOME/app_portfolio && /usr/bin/node serviceregistry/microservice/batch/server.js'
 
 [Install]
-WantedBy=multi.user.target
+WantedBy=multi-user.target
