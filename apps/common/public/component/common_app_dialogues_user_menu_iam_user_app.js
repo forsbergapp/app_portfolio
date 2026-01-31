@@ -72,28 +72,14 @@ const component = async props => {
     const locales = await getLocales();
 
     /**
-     * @name appThemeUpdate
-     * @description App theme update
-     * @function
-     * @returns {void}
-     */
-    const appThemeUpdate = () => {
-        props.methods.COMMON.COMMON_DOCUMENT.body.className =   props.methods.COMMON.COMMON_DOCUMENT
-                                                                    .querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select .common_select_dropdown_value')
-                                                                    .getAttribute('data-value');
-        props.methods.COMMON.commonMiscPreferencesUpdateBodyClassFromPreferences();
-    };
-    /**
      * @name MiscThemeDefaultList
      * @description Default app themes 
      * @function
      * @returns {{VALUE:*, TEXT:string}[]}
      */
-    const MiscThemeDefaultList = () =>[ {VALUE:'app_theme1', TEXT:'Light'}, 
-                                        {VALUE:'app_theme2', TEXT:'Dark'}, 
-                                        {VALUE:'app_theme3', TEXT:'Caffè Latte'},
-                                        {VALUE:'app_theme_sun', TEXT:'Sun'},
-                                        {VALUE:'app_theme_moon', TEXT:'Moon'}];
+    const MiscThemeDefaultList = () =>[ {VALUE:'common_theme1', TEXT:'Light'}, 
+                                        {VALUE:'common_theme2', TEXT:'Dark'}, 
+                                        {VALUE:'common_theme3', TEXT:'Caffè Latte'}];
     /**
      * @name MiscThemeUpdateFromBody
      * @description Common theme get
@@ -122,15 +108,12 @@ const component = async props => {
                             IAM_iam_user_id: props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id,
                             document: 
                             {  
-                                preference_locale:       props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_locale_select .common_select_dropdown_value')
-                                                                            .getAttribute('data-value'),
-                                preference_timezone:     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_timezone_select .common_select_dropdown_value')
-                                                                            .getAttribute('data-value'),
-                                preference_direction:    props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_direction_select .common_select_dropdown_value')
-                                                                            .getAttribute('data-value'),
-                                preference_arabic_script:props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_arabic_script_select .common_select_dropdown_value')
-                                                                            .getAttribute('data-value'),
-                                custom:                  null,
+                                preference_theme:           props.methods.COMMON.commonGlobalGet('Data').UserApp.user_theme,
+                                preference_locale:          props.methods.COMMON.commonGlobalGet('Data').UserApp.user_locale,
+                                preference_timezone:        props.methods.COMMON.commonGlobalGet('Data').UserApp.user_timezone,
+                                preference_direction:       props.methods.COMMON.commonGlobalGet('Data').UserApp.user_direction,
+                                preference_arabic_script:   props.methods.COMMON.commonGlobalGet('Data').UserApp.user_arabic_script,
+                                custom:                     null,
                             }
                         };
             await props.methods.COMMON.commonFFB({path:`/server-db/iamuserapp/${props.methods.COMMON.commonGlobalGet('Data').UserApp.iam_user_app_id}`, method:'PATCH', authorization_type:'APP_ACCESS', body:body});
@@ -153,7 +136,9 @@ const component = async props => {
                 switch (true){
                     case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_theme_select' &&
                         event.target.classList.contains('common_select_option'):{
-                        appThemeUpdate();
+                        props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'UserApp', name:'user_theme', value:event.target?.getAttribute('data-value') ?? ''});
+                        await UserPreferenceSave();
+                        props.methods.COMMON.commonMiscPreferencesUpdateBodyClassFromPreferences();
                         break;
                     }
                     case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_locale_select' &&
@@ -186,13 +171,9 @@ const component = async props => {
                     }
                     case event_target_id =='common_app_dialogues_user_menu_iam_user_app_direction_select' &&
                          event.target.classList.contains('common_select_option'):{
-                        if(event.target?.getAttribute('data-value')=='rtl')
-                            props.methods.COMMON.COMMON_DOCUMENT.body.classList.add('rtl');
-                        else
-                            props.methods.COMMON.COMMON_DOCUMENT.body.classList.remove('rtl');
                         props.methods.COMMON.commonGlobalSet({key:'Data', subkey:'UserApp', name:'user_direction', value:event.target?.getAttribute('data-value') ?? ''});
                         await UserPreferenceSave();
-                        appThemeUpdate();
+                        props.methods.COMMON.commonMiscPreferencesUpdateBodyClassFromPreferences();
                         break;
                     }
                     case event_target_id == 'common_app_dialogues_user_menu_iam_user_app_arabic_script_select' &&
@@ -201,7 +182,7 @@ const component = async props => {
                         //check if app theme div is using default theme with common select div
                         if (props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select').className?
                             props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_app_theme_select').className.toLowerCase().indexOf('common_select')>-1:false){
-                            appThemeUpdate();
+                            props.methods.COMMON.commonMiscPreferencesUpdateBodyClassFromPreferences();
                         }
                         await UserPreferenceSave();
                         break;

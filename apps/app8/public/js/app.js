@@ -38,7 +38,6 @@ const appEventClick = event => {
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
-    COMMON_DOCUMENT.body.className = 'app_theme1';
     await common.commonComponentRender({
         mountDiv:   common.commonGlobalGet('Parameters').app_div, 
         data:       null,

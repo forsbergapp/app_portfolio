@@ -315,6 +315,7 @@
  *                  UserApp:{
  *                          iam_user_app_id:number|null,
  *                          app_id:number,
+ *                          user_theme:string,
  *                          user_locale:string,
  *                          user_timezone:string,
  *                          user_direction:string,

@@ -443,6 +443,7 @@
  * @memberof ORM
  * @typedef {{  Id?:number, 
  *              Document:{
+ *                          PreferenceTheme?:string|null,
  *                          PreferenceLocale?:string|null,
  *                          PreferenceTimezone?:string|null,
  *                          PreferenceDirection?:string|null,

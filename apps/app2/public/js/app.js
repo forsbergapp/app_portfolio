@@ -86,7 +86,6 @@ const appEventKeyUp = event => {
  */
 const appCommonInit = async (commonLib) => {
     common = commonLib;
-    COMMON_DOCUMENT.body.className = 'app_theme_sun';
     common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:null});
     await common.commonComponentRender({
         mountDiv:   common.commonGlobalGet('Parameters').app_div,

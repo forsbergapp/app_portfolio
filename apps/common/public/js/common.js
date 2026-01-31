@@ -230,6 +230,7 @@ const COMMON_GLOBAL = {
             UserApp:{
                 iam_user_app_id:null,
                 app_id:0,
+                user_theme:'common_theme1',
                 user_locale:'',
                 user_timezone:'',
                 user_direction:'',
@@ -799,15 +800,7 @@ const commonMiscMobile = () =>{
  * @returns {void}
  */
 const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
-    const class_app_theme = COMMON_DOCUMENT.body.className.split(' ')[0] ?? '';
-    const class_direction = COMMON_GLOBAL.Data.UserApp.user_direction;
-    const class_arabic_script = COMMON_GLOBAL.Data.UserApp.user_arabic_script;
-    COMMON_DOCUMENT.body.className = '';
-    COMMON_DOCUMENT.body.classList.add(class_app_theme);
-    if (class_direction)
-        COMMON_DOCUMENT.body.classList.add(class_direction);
-    if (class_arabic_script)
-        COMMON_DOCUMENT.body.classList.add(class_arabic_script);
+    COMMON_DOCUMENT.body.className = `${COMMON_GLOBAL.Data.UserApp.user_theme} ${COMMON_GLOBAL.Data.UserApp.user_direction??''} ${COMMON_GLOBAL.Data.UserApp.user_arabic_script??''}`;
 };
 /**
  * @name commonMiscPrint
@@ -1225,14 +1218,6 @@ const commonWindowGet = () =>COMMON_WINDOW;
  * @returns {COMMON_DOCUMENT}
  */
 const commonWindowDocumentFrame = () => COMMON_WINDOW.frames.document;
-
-/**
- * @name commonWindowNavigatorLocale
- * @description Read Navigator language
- * @function
- * @returns {string}
- */
-const commonWindowNavigatorLocale = () => COMMON_WINDOW.navigator.language.toLowerCase();
 
 /**
  * @name commonWindowOpen
@@ -1910,29 +1895,12 @@ const commonUserLogin = async () => {
  * @name commonUserLoginApp
  * @description
  * @function
- * @param {common['server']['ORM']['Object']['IamUserApp']} IamUserApp
+ * @param {common['server']['ORM']['Object']['IamUserApp']|null} IamUserApp
  * @returns {void}
  */
-const commonUserLoginApp = IamUserApp =>{
-    COMMON_GLOBAL.Data.UserApp.iam_user_app_id = IamUserApp.Id ?? null;
-    //get preferences saved in Document column
-    //locale
-    if (IamUserApp.Document?.PreferenceLocale==null)
-        commonUserPreferencesGlobalSetDefault('LOCALE');
-    else
-        COMMON_GLOBAL.Data.UserApp.user_locale = IamUserApp.Document.PreferenceLocale;
-    //timezone
-    if (IamUserApp.Document?.PreferenceTimezone==null)
-        commonUserPreferencesGlobalSetDefault('TIMEZONE');
-    else
-        COMMON_GLOBAL.Data.UserApp.user_timezone = IamUserApp.Document.PreferenceTimezone;
-    //direction
-    COMMON_GLOBAL.Data.UserApp.user_direction = IamUserApp.Document?.PreferenceDirection??'';
-    //arabic script
-    COMMON_GLOBAL.Data.UserApp.user_arabic_script = IamUserApp.Document?.PreferenceArabicScript??'';
-    //custom data for individual app functionality
-    COMMON_GLOBAL.Data.UserApp.user_custom = IamUserApp.Document?.Custom??null;
-    //update body class with app theme, direction and arabic script usage classes
+const commonUserLoginApp = (IamUserApp=null) =>{
+    COMMON_GLOBAL.Data.UserApp.iam_user_app_id = IamUserApp?.Id ?? null;
+    commonUserPreferencesGlobalSetDefault(IamUserApp?.Document??null);
     commonMiscPreferencesUpdateBodyClassFromPreferences();
 };
 /**
@@ -2035,11 +2003,7 @@ const commonLogout = async () => {
         commonComponentRemove('common_app_dialogues_iam_start');
         commonComponentRemove('common_app_dialogues_profile');
     }
-    commonUserPreferencesGlobalSetDefault('LOCALE');
-    commonUserPreferencesGlobalSetDefault('TIMEZONE');
-    commonUserPreferencesGlobalSetDefault('DIRECTION');
-    commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
-    //update body class with app theme, direction and arabic script usage classes
+    commonUserPreferencesGlobalSetDefault();
     commonMiscPreferencesUpdateBodyClassFromPreferences();
     commonUserSessionClear();
 };
@@ -2102,32 +2066,20 @@ const commonUserLocale =() =>COMMON_GLOBAL.Data.UserApp.user_locale;
 
 /**
  * @name commonUserPreferencesGlobalSetDefault
- * @description User prefernce set default globals
+ * @description User prefernce set 
  * @function
- * @param {*} preference 
+ * @param {common['server']['ORM']['Object']['IamUserApp']['Document']|null} preferences 
  * @returns {void}
  */
-const commonUserPreferencesGlobalSetDefault = (preference) => {
-    switch (preference){
-        case 'LOCALE':{
-            COMMON_GLOBAL.Data.UserApp.user_locale         = commonWindowNavigatorLocale();
-            break;
-        }
-        case 'TIMEZONE':{
-            COMMON_GLOBAL.Data.UserApp.user_timezone       = COMMON_GLOBAL.Data.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
-            break;
-        }
-        case 'DIRECTION':{
-            COMMON_GLOBAL.Data.UserApp.user_direction      = '';
-            break;
-        }
-        case 'ARABIC_SCRIPT':{
-            COMMON_GLOBAL.Data.UserApp.user_arabic_script  = '';
-            break;
-        }
-    }
+const commonUserPreferencesGlobalSetDefault = (preferences=null) => {
+    COMMON_GLOBAL.Data.UserApp.user_theme = preferences?.PreferenceTheme ?? 'common_theme1';
+    COMMON_GLOBAL.Data.UserApp.user_locale = preferences?.PreferenceLocale ?? COMMON_WINDOW.navigator.language.toLowerCase();
+    COMMON_GLOBAL.Data.UserApp.user_direction = preferences?.PreferenceDirection ?? '';
+    COMMON_GLOBAL.Data.UserApp.user_arabic_script = preferences?.PreferenceArabicScript??'';
+    COMMON_GLOBAL.Data.UserApp.user_timezone       = preferences?.PreferenceTimezone ?? COMMON_GLOBAL.Data.client_timezone ?? COMMON_WINDOW.Intl.DateTimeFormat().resolvedOptions().timeZone;
+    //custom data for individual app functionality
+    COMMON_GLOBAL.Data.UserApp.user_custom = preferences?.Custom ?? null;
 };
-
 
 /**
  * @name commonFFB
@@ -2765,7 +2717,8 @@ const commonAppSwitch = async (app_id, spinner_id=null) =>{
     
     if (COMMON_GLOBAL.Data.User.iam_user_id != null)
         commonUserLoginApp(CommonAppInit.IamUserApp);
-        
+    else
+        commonUserLoginApp();
     
     const css = (COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].Css?
                     await commonMiscResourceFetch(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].Css,null, 'text/css'):
@@ -2855,7 +2808,6 @@ const commonGet = () =>{
         commonWindowBase64To:commonWindowBase64To, 
         commonWindowGet:commonWindowGet,
         commonWindowDocumentFrame:commonWindowDocumentFrame,
-        commonWindowNavigatorLocale:commonWindowNavigatorLocale,
         commonWindowOpen:commonWindowOpen,
         commonWindowPrompt:commonWindowPrompt,
         commonWindowSetTimeout:commonWindowSetTimeout,
@@ -2933,7 +2885,6 @@ export{/* GLOBALS*/
        commonWindowBase64To, 
        commonWindowGet,
        commonWindowDocumentFrame,
-       commonWindowNavigatorLocale,
        commonWindowOpen,
        commonWindowPrompt,
        commonWindowSetTimeout,

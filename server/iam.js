@@ -1627,6 +1627,7 @@ const iamUserLoginApp = async parameters => {
                                                                             AppId:parameters.app_id, 
                                                                             IamUserId:parameters.data.iam_user_id, 
                                                                             Document:{
+                                                                                PreferenceTheme: null, 
                                                                                 PreferenceLocale: null, 
                                                                                 PreferenceTimezone: null, 
                                                                                 PreferenceDirection: null, 

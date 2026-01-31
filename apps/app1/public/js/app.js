@@ -1017,7 +1017,6 @@ const appInit = async () => {
  */
 const appCommonInit = async (commonLib) => {
     common = commonLib;
-    COMMON_DOCUMENT.body.className = 'app_theme1';
     COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu').style.display = 'none';
     common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:appLogout});
     appInit();

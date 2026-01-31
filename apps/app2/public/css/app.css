@@ -12,228 +12,6 @@ body.font_arabic_nastaliq #common_app_iam_user_menu_default_avatar{
     display: block !important;
 	text-align: center;
 }
-/* Background with clouds*/
-#theme_background {
-    bottom: 0;
-	left: 0;
-	position: fixed;
-	right: 0;
-	top: 0;
-	z-index: 0;
-}
-
-/* ANIMATIONS */
-@keyframes animateCloud {
-    0% {
-        margin-inline-start: -500px;
-    }
-    100% {
-        margin-inline-start: 100%;
-    }
-}
-.x1 {
-	animation: animateCloud 55s linear infinite;	
-	transform: scale(0.7);
-}
-
-.x2 {
-	animation: animateCloud 40s linear infinite;
-	transform: scale(0.6);
-}
-
-.x3 {
-	animation: animateCloud 50s linear infinite;
-	transform: scale(0.8);
-}
-
-.x4 {
-	animation: animateCloud 38s linear infinite;
-	transform: scale(0.6);
-}
-
-.x5 {
-	animation: animateCloud 45s linear infinite;
-	transform: scale(0.7);
-	margin-top: -160px;
-}
-
-/* CLOUD */
-.cloud {
-	border-radius: 100px;
-	height: 120px;
-	position: relative;
-	width: 350px;
-}
-.cloud:after, .cloud:before {
-	content: '';
-	position: absolute;
-	z-indeX: -1;
-}
-.cloud:after {
-	border-radius: 100px;
-	height: 100px;
-	left: 50px;
-	top: -50px;
-	width: 100px;
-}
-.cloud:before {
-	border-radius: 200px;
-	width: 180px;
-	height: 180px;
-	right: 50px;
-	top: -90px;
-}
-/* SUN */
-div.sunholder {
-    display: inline-block;
-	transform: translate(0px,0px);
-    animation: spin 80s linear 0s infinite;
-	margin:25px;
-	z-index:-1;
-}
-div.sun {
-    height: 53px;
-    width: 53px;
-	margin-top: -6px;
-    border-radius: 50%;
-	margin-left: -1px;
-}
-div.raybase {
-    position: absolute;
-    top: 19px; /*50px/2-6px*/
-    left: 19px; /*(50px-12px)/2*/
-}
-div.ray {
-    display: block;
-    width: 0;
-    height: 0;
-	opacity:0.4;
-    border-top: 2px solid transparent;
-    border-bottom: 2px solid transparent;
-    animation: shine 0.1s linear 0s infinite alternate;
-}
-div.ray1 {
-    transform: translate(28px,0px); /*(50px+6px)/2*/
-}
-div.ray2 {
-    transform: rotate(45deg) translate(28px,0px) ;
-}
-div.ray3 {
-    transform: rotate(90deg) translate(28px,0px) ;
-}
-div.ray4 {
-    transform: rotate(135deg) translate(28px,0px) ;
-}
-div.ray5 {
-    transform: rotate(180deg) translate(28px,0px) ;
-}
-div.ray6 {
-    transform: rotate(225deg) translate(28px,0px) ;
-}
-div.ray7 {
-    transform: rotate(270deg) translate(28px,0px) ;
-}
-div.ray8 {
-    transform: rotate(315deg) translate(28px,0px) ;
-}
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-@keyframes shine {
-    from { transform: translate(0px,0px) }
-    to { transform: translate(5px,0px) }
-}
-
-/*Moon*/
-.app_theme_moon .x1{
-    margin-top:47px;
-}
-.moon {
-    position: absolute;
-    margin-left: 25px;
-    margin-top: 19px;
-    width: 53px;
-    height: 53px;
-    border-radius: 50%;
-    overflow: hidden;
-    transition: all 500ms ease-out;
-    z-index:-1;
-}
-.moon .crater-1, .moon .crater-2, .moon .crater-3,
-.moon .crater-4, .moon .crater-5, .moon .crater-6,
-.moon .crater-7{
-    transform: scale(0.61);
-}
-.moon .crater-1{
-    transform-origin: -6px 95px;
-}
-.moon .crater-2{
-transform-origin: -39px 8px;
-}
-.moon .crater-3{
-    transform-origin: 10px -17px;
-}
-.moon .crater-4{
-    transform-origin: -20px -18px;
-}
-.moon .crater-5{
-    transform-origin: -41px -40px;
-}
-.moon .crater-6{
-    transform-origin: -9px -41px;
-}
-.moon .crater-7{
-    transform-origin: -25px 14px;
-}
-.crater {
-    position: absolute;
-    display: inline-block;
-    border-radius: 50%;
-    transition: 500ms;
-}
-.crater-1 {
-    width: 86px;
-    height: 86px;
-    left: 10px;
-    bottom: 10px;
-}
-.crater-2 {
-    width: 20px;
-    height: 20px;
-    top: -7px;
-    left: 44px;
-}
-.crater-3 {
-    width: 16px;
-    height: 16px;
-    top: 20px;
-    right: -4px;
-}
-.crater-4 {
-    width: 10px;
-    height: 10px;
-    top: 24px;
-    left: 30px;
-}
-.crater-5 {
-    width: 15px;
-    height: 15px;
-    top: 40px;
-    left: 48px;
-}
-.crater-6 {
-    width: 10px;
-    height: 10px;
-    top: 48px;
-    left: 20px;
-}
-.crater-7 {
-    width: 12px;
-    height: 12px;
-    bottom: 5px;
-    left: 35px;
-}
 #apps{
     width: 350px;
     z-index: 1;
@@ -302,23 +80,8 @@ transform-origin: -39px 8px;
 #common_app_profile_toolbar_stat{
 	bottom: 0px !important;
 }
-/*RESPONSIVE SETTINGS*/
-/*CSS for minimum 768px*/
-@media only screen and (min-width: 768px) {
-	@keyframes animateCloud {
-		0% {
-			margin-inline-start: -1000px;
-		}
-		100% {
-			margin-inline-start: 100%;
-		}
-	}	
-}
 /*APP THEME*/
-.app_theme1,
-.app_theme3,
-.app_theme_sun{
-
+.common_theme1{
 	/*concept*/
 	--app_theme_main_branding_color1: var(--common_app_color_blue1);
 	--app_theme_main_branding_color2: var(--common_app_color_blue2);
@@ -374,15 +137,8 @@ transform-origin: -39px 8px;
     --app_theme_list_scrollbar_color2: var(--app_theme_main_branding_color5);
     --app_theme_menu_selected_hover_background_color: var(--app_theme_main_select_color);
 	--app_theme_menu_selected_hover_color: var(--app_theme_main_select_color4);
-	--app_theme_clouds_background_color:var(--app_theme_main_branding_color3);
-	--app_theme_clouds_gradient_color1:var(--app_theme_main_gradient_color1);
-	--app_theme_clouds_gradient_color2:var(--app_theme_main_gradient_color1);
-	--app_theme_clouds_gradient_color3:var(--app_theme_main_branding_color3);
-	--app_theme_clouds_shadow_color:var(--app_theme_main_shadow_color3);
-	--app_theme_sun_color:var(--app_theme_main_branding_color7);
-	--app_theme_sun_shadow_color:var(--app_theme_main_shadow_color4);
-	--app_theme_moon_color:var(--app_theme_main_branding_color9);
-	--app_theme_moon_shadow_color:var(--app_theme_main_shadow_color4);
+	--app_theme_dark_color:var(--app_theme_main_branding_color9);
+	--app_theme_dark_shadow_color:var(--app_theme_main_shadow_color4);
 	--app_theme_dialogue_button_color:var(--app_theme_main_branding_color1);
 	--app_theme_toolbar_button_color:var(--app_theme_main_branding_color1);
 	--app_theme_common_window_background_color: var(--app_theme_main_branding_color10);
@@ -397,9 +153,8 @@ transform-origin: -39px 8px;
 
 	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 }
-.app_theme2,
-.app_theme_moon{
-
+.common_theme2{
+    /*concept*/
 	--app_theme_main_branding_color1: var(--common_app_color_dark);
 	--app_theme_main_branding_color2: var(--common_app_color_blue2);
 	--app_theme_main_branding_color3: var(--common_app_color_dark2);
@@ -412,7 +167,6 @@ transform-origin: -39px 8px;
 	--app_theme_main_branding_color10: var(--common_app_color_white);
 	--app_theme_main_branding_color11: var(--common_app_color_lightgreen);
 	--app_theme_main_branding_color12: var(--common_app_color_lightyellow);
-	
 
 	--app_theme_main_shadow_color1: var(--common_app_color_shadow1);
 	--app_theme_main_shadow_color2: var(--common_app_color_shadow2);
@@ -454,15 +208,8 @@ transform-origin: -39px 8px;
     --app_theme_list_scrollbar_color2: var(--app_theme_main_branding_color5);
     --app_theme_menu_selected_hover_background_color: var(--app_theme_main_select_color);
 	--app_theme_menu_selected_hover_color: var(--app_theme_main_select_color4);
-	--app_theme_clouds_background_color:var(--app_theme_main_gradient_color1);
-	--app_theme_clouds_gradient_color1:var(--app_theme_main_gradient_color1);
-	--app_theme_clouds_gradient_color2:var(--app_theme_main_gradient_color1);
-	--app_theme_clouds_gradient_color3:var(--app_theme_main_branding_color3);
-	--app_theme_clouds_shadow_color:var(--app_theme_main_shadow_color3);
-	--app_theme_sun_color:var(--app_theme_main_branding_color7);
-	--app_theme_sun_shadow_color:var(--app_theme_main_shadow_color4);
-	--app_theme_moon_color:var(--app_theme_main_branding_color9);
-	--app_theme_moon_shadow_color:var(--app_theme_main_shadow_color4);
+	--app_theme_dark_color:var(--app_theme_main_branding_color9);
+	--app_theme_dark_shadow_color:var(--app_theme_main_shadow_color4);
 	--app_theme_dialogue_button_color:var(--app_theme_main_branding_color6);
 	--app_theme_toolbar_button_color:var(--app_theme_main_branding_color6);
 	--app_theme_common_window_background_color: var(--app_theme_main_branding_color10);
@@ -477,11 +224,77 @@ transform-origin: -39px 8px;
 
 	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 }
-.crater {
-	background: var(--app_theme_crater_background_color);
-}
-.crater-1 {
-	background: var(--app_theme_crater1_background_color);
+.common_theme3{
+    /*concept*/
+	--app_theme_main_branding_color1: var(--common_app_color_cafe_latte);
+	--app_theme_main_branding_color2: var(--common_app_color_cafe_latte2);
+	--app_theme_main_branding_color3: var(--common_app_color_cafe_latte3);
+	--app_theme_main_branding_color4: var(--common_app_color_white4);
+	--app_theme_main_branding_color5: var(--common_app_color_white2);
+	--app_theme_main_branding_color6: var(--common_app_color_gold);
+	--app_theme_main_branding_color7: var(--common_app_color_yellow);
+	--app_theme_main_branding_color8: var(--common_app_color_dark);
+	--app_theme_main_branding_color9: var(--common_app_color_light);
+	--app_theme_main_branding_color10: var(--common_app_color_white);
+	--app_theme_main_branding_color11: var(--common_app_color_lightgreen);
+	--app_theme_main_branding_color12: var(--common_app_color_lightyellow);
+	
+
+	--app_theme_main_shadow_color1: var(--common_app_color_shadow1);
+	--app_theme_main_shadow_color2: var(--common_app_color_shadow2);
+	--app_theme_main_shadow_color3: var(--common_app_color_white_transparent);
+	--app_theme_main_shadow_color4: var(--common_app_color_white);
+	--app_theme_main_select_color: var(--common_app_color_white2);
+	--app_theme_main_select_color2: var(--common_app_color_green);
+	--app_theme_main_select_color3: var(--common_app_color_dark2);
+	--app_theme_main_select_color4: var(--common_app_color_dark);
+	--app_theme_main_border_color: var(--common_app_color_white2);
+	--app_theme_main_border_color2: var(--common_app_color_blue2);
+	--app_theme_main_border_color3: var(--common_app_color_white1);
+	--app_theme_main_gradient_color1: var(--common_app_color_white);
+
+	/*entities*/
+	--app_theme_animation_box_shadow_color: var(--app_theme_main_shadow_color4);
+	--app_theme_checked_background_color: var(--app_theme_main_branding_color1);
+	--app_theme_unchecked_background_color: var(--app_theme_main_branding_color8);
+	--app_theme_star_background_color:var(--app_theme_main_branding_color10);
+	--app_theme_star_shadow_color:var(--app_theme_main_branding_color10);
+	--app_theme_button_color: var(--app_theme_main_branding_color9);
+	--app_theme_shadow_color: var(--app_theme_main_branding_color10);
+	--app_theme_crater_background_color:var(--app_theme_main_branding_color9);
+	--app_theme_crater1_background_color:var(--app_theme_main_branding_color12);
+
+	--app_theme_text_color: var(--app_theme_main_branding_color4);
+	--app_theme_background_color: var(--app_theme_main_branding_color1);
+	--app_theme_background_color2: var(--app_theme_main_branding_color5);
+	--app_theme_dialogue_background_color: var(--app_theme_main_branding_color2);
+	--app_theme_dialogue_boxshadow_color1:var(--app_theme_main_shadow_color1);
+	--app_theme_dialogue_boxshadow_color2:var(--app_theme_main_shadow_color2);
+	--app_theme_dialogue_boxshadow_active_color:var(--app_theme_main_shadow_color3);
+	--app_theme_input_border_color:var(--app_theme_main_branding_color2);
+	--app_theme_hover_color: var(--app_theme_main_select_color2);
+
+	--app_theme_a_color:var(--app_theme_main_branding_color6);
+
+	--app_theme_list_scrollbar_color1: var(--app_theme_main_branding_color2);
+    --app_theme_list_scrollbar_color2: var(--app_theme_main_branding_color5);
+    --app_theme_menu_selected_hover_background_color: var(--app_theme_main_select_color);
+	--app_theme_menu_selected_hover_color: var(--app_theme_main_select_color4);
+	--app_theme_dark_color:var(--app_theme_main_branding_color9);
+	--app_theme_dark_shadow_color:var(--app_theme_main_shadow_color4);
+	--app_theme_dialogue_button_color:var(--app_theme_main_branding_color6);
+	--app_theme_toolbar_button_color:var(--app_theme_main_branding_color6);
+	--app_theme_common_window_background_color: var(--app_theme_main_branding_color10);
+	--app_theme_input_error_color:var(--app_theme_main_select_color3);
+	--app_theme_switch_button_color:var(--app_theme_main_branding_color6);
+    --app_theme_switch_checked_background_color:var(--app_theme_main_branding_color1);
+    --app_theme_switch_unchecked_background_color:var(--app_theme_background_color2);
+    --app_theme_switch_boxshadow_color:var(--app_theme_main_shadow_color1);
+	--app_theme_online_status_online_color: var(--app_theme_main_select_color2);
+	--app_theme_online_status_offline_color: var(--app_theme_main_select_color3);
+	--app_theme_list_selected_background_color: var(--app_theme_main_select_color);
+
+	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 }
 /*app colors*/
 body{
@@ -489,49 +302,7 @@ body{
 	background: var(--app_theme_background_color) !important;
 	caret-color: var(--app_theme_text_color);
 }
-/*background*/
-.cloud {
-	background: var(--app_theme_clouds_background_color);
-	background: linear-gradient(var(--app_theme_clouds_gradient_color1),  var(--app_theme_clouds_gradient_color2) 5%,var(--app_theme_clouds_gradient_color3) 100%);
-	box-shadow: 0 3px 5px var(--app_theme_clouds_shadow_color);	
-}
-.cloud:after, .cloud:before {
-background: var(--app_theme_clouds_background_color);
-}
-.cloud:hover, .cloud:active{
-box-shadow: 0 0 35px 4px var(--app_theme_clouds_shadow_color);
-}
-.sun {
-box-shadow: 0 0 35px 4px var(--app_theme_sun_shadow_color);
-background-color: var(--app_theme_sun_color);
-}
-.moon {
-background: var(--app_theme_moon_color);
-box-shadow: 0 0 35px 4px var(--app_theme_moon_shadow_color);
-}
-.ray {
-border-left: 12px solid var(--app_theme_sun_color);
-}
-
 /*app other theme css*/
-.app_theme1 .sunholder,
-.app_theme3 .sunholder,
-.app_theme_sun .sunholder{
-	display:inline-block;
-}
-.app_theme1 .moon,
-.app_theme3 .moon,
-.app_theme_sun .moon{
-	display:none;
-}
-.app_theme2 .sunholder,
-.app_theme_moon .sunholder{
-	display:none;
-}
-.app_theme2 .moon,
-.app_theme_moon .moon{
-	display:inline-block;	
-}
 #common_app_profile_toolbar >.common_loading_spinner::before,
 #app >.common_loading_spinner::before{
 	background-color:var(--app_theme_spinner_background_color);
@@ -575,6 +346,11 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_link:active{
 	color:var(--app_theme_hover_color);
 }
+.common_select,
+.common_select_options{
+    background-color: var(--app_theme_main_branding_color3);
+    color: var(--app_theme_main_branding_color1);
+}
 .common_app_dialogues_button{
 	color: var(--app_theme_dialogue_button_color) !important;
 }
@@ -583,13 +359,13 @@ border-left: 12px solid var(--app_theme_sun_color);
 	color:var(--app_theme_hover_color) !important;
 }
 .common_toolbar_button{
+    background-color: var(--app_theme_dialogue_background_color);
 	color: var(--app_theme_toolbar_button_color) !important;
 }
 .common_input_error{
 	border: 2px solid var(--app_theme_input_error_color) !important;
 }
 #common_app_profile_toolbar_stat{
-	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
 

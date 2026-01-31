@@ -123,6 +123,7 @@ const postDemo = async parameters=> {
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserApp.post(parameters.app_id, 
                     {AppId:app_id, Document:{
+                                        PreferenceTheme: null, 
                                         PreferenceLocale: null, 
                                         PreferenceTimezone: null, 
                                         PreferenceDirection: null, 

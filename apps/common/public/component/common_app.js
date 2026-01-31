@@ -161,10 +161,8 @@ const component = async props =>{
                                             subkey:'UserApp', 
                                             name:'app_id', 
                                             value: props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id});
-    props.methods.COMMON.commonUserPreferencesGlobalSetDefault('LOCALE');
-    props.methods.COMMON.commonUserPreferencesGlobalSetDefault('TIMEZONE');
-    props.methods.COMMON.commonUserPreferencesGlobalSetDefault('DIRECTION');
-    props.methods.COMMON.commonUserPreferencesGlobalSetDefault('ARABIC_SCRIPT');
+    props.methods.COMMON.commonUserPreferencesGlobalSetDefault();
+    
     const COMMON_TEMPLATE_PARAMETERS = {
                                         app_toolbar_button_start:           props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_start,
                                         app_toolbar_button_framework:       props.methods.COMMON.commonGlobalGet('Parameters').app_toolbar_button_framework,

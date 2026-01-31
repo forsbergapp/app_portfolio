@@ -43,7 +43,9 @@ const post = async (app_id, data) =>{
                                 Id:Date.now(),
                                 AppId:data.AppId, 
                                 IamUserId:data.IamUserId,
-                                Document:{  PreferenceLocale: data.Document?.PreferenceLocale, 
+                                Document:{  
+                                            PreferenceTheme:data.Document?.PreferenceTheme, 
+                                            PreferenceLocale: data.Document?.PreferenceLocale, 
                                             PreferenceTimezone: data.Document?.PreferenceTimezone, 
                                             PreferenceDirection: data.Document?.PreferenceDirection, 
                                             PreferenceArabicScript: data.Document?.PreferenceArabicScript,
@@ -73,6 +75,7 @@ const post = async (app_id, data) =>{
  *          data:{
  *                  data_app_id: number,
  *                  document :{
+ *                      preference_theme?:Extract<server['ORM']['Object']['IamUserApp']['Document'], 'PreferenceTheme'>, 
  *                      preference_locale?: Extract<server['ORM']['Object']['IamUserApp']['Document'], 'PreferenceLocale'>, 
  *                      preference_timezone?: server['ORM']['Object']['IamUserApp']['Document']['PreferenceTimezone'], 
  *                      preference_direction?: server['ORM']['Object']['IamUserApp']['Document']['PreferenceDirection'], 
@@ -86,7 +89,8 @@ const update = async parameters =>{
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.document!=null)
-        data_update.Document = {PreferenceLocale: parameters.data.document.preference_locale, 
+        data_update.Document = {PreferenceTheme:parameters.data.document.preference_theme, 
+                                PreferenceLocale: parameters.data.document.preference_locale, 
                                 PreferenceTimezone: parameters.data.document.preference_timezone, 
                                 PreferenceDirection: parameters.data.document.preference_direction, 
                                 PreferenceArabicScript: parameters.data.document.preference_arabic_script,

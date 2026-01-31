@@ -1871,7 +1871,6 @@ const appInit = async () => {
  */
 const appCommonInit = async (commonLib) => {
     common = commonLib;
-    COMMON_DOCUMENT.body.className = 'app_theme1';
     common.commonGlobalSet({key:'Functions', name:'app_function_session_expired', value:appUserLogout});
     await appInit();
 };
