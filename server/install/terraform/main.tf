@@ -30,7 +30,6 @@ resource "oci_core_vcn" "vcn" {
   compartment_id = var.oci_tenency_ocid
   display_name   = "${terraform.workspace}_vcn"
   cidr_blocks    = [var.vcn_cidr_block]
-  dns_label      = "${terraform.workspace}_dns"
 }
 
 resource "oci_core_dhcp_options" "dhcp_options"{
@@ -175,8 +174,8 @@ resource "oci_core_instance" "instance" {
                               sudo apt remove --purge -y rsyslog
                               sudo apt -y autoremove --purge
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
-                              sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio.service
-                              sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
+                              sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio.service
+                              sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
                               sudo systemctl daemon-reload
                               sudo systemctl start app_portfolio.service -- ${terraform.workspace} ${oci_core_public_ip.public_ip.ip_address} ${var.environment_app_port} ${var.environment_admin_port}
                               sudo systemctl start app_portfolio_microservice_batch.service
