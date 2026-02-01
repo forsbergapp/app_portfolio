@@ -25,7 +25,7 @@ const fs = await import('node:fs');
  * @returns {Promise.<server['server']['response']>}
  */
 const commonConvertBinary = async (content_type, path) =>
-    fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${path}`)
+    fs.promises.readFile(`${server.info.serverProcess.cwd()}${path}`)
             .then(file=> {
                 return {type:'JSON', 
                         result:{resource:
@@ -379,8 +379,8 @@ const commonGetFile = async parameters =>{
     };
     
     return (['font/woff2','image/png', 'image/webp'].includes(parameters.content_type)?
-                fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${parameters.path}`):
-                    fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${parameters.path}`, 'utf8'))
+                fs.promises.readFile(`${server.info.serverProcess.cwd()}${parameters.path}`):
+                    fs.promises.readFile(`${server.info.serverProcess.cwd()}${parameters.path}`, 'utf8'))
             .then(result=>{
                 const file = ['font/woff2','image/png', 'image/webp'].includes(parameters.content_type)?
                                 parameters.content_type == 'font/woff2'? 
@@ -447,7 +447,7 @@ const commonCssFonts = async (base64=false)=>{
     const db_records = [];
     const resource_directory = server.ORM.db.App.get({app_id:0, resource_id:0}).result[0].Path;
     for (const fontFace of (await fs.promises
-                            .readFile(`${server.ORM.serverProcess.cwd()}${server.ORM.db.App.get({app_id:0, resource_id:0}).result[0].Path}/css/common_fonts.css`))
+                            .readFile(`${server.info.serverProcess.cwd()}${server.ORM.db.App.get({app_id:0, resource_id:0}).result[0].Path}/css/common_fonts.css`))
                             .toString('utf8')
                             .replaceAll('\r','\n')
                             .split('@')){

@@ -7,7 +7,6 @@ After=network-online.target
 [Service]
 User=ubuntu
 Type=simple
-ExecStart=/bin/sh -c 'cd $HOME/app_portfolio && /usr/bin/node server/init.js'
-
+ExecStart=/bin/sh -c 'cd $HOME/app_portfolio && /usr/bin/node server/init.js "$@"' --'%1'
 [Install]
 WantedBy=multi-user.target

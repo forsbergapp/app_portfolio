@@ -641,7 +641,7 @@
  *				                    "default": string
  *		                        },
  *		                        "port": {
- *				                    "default": string
+ *				                    "default": number
  *		                        },
  *		                        "basePath": {
  *				                    "default": string
@@ -1286,14 +1286,15 @@
  * @description SERVICE_REGISTRY microservice_local_config
  * @typedef {{
  *   name:                          'BATCH' & string,
- *   server_host:		                string,
+ *   environment:                   string,
+ *   server_host:		            string,
  *   server_port:                   number,
- *   service_registry_auth_path:		string,
+ *   service_registry_auth_url:		string,
  *   service_registry_auth_method:  'POST',
- *   message_queue_path:	          string,
+ *   message_queue_url:	            string,
  *   message_queue_method:	        'POST',
  *   iam_auth_app_path:	            string,
- *   iam_auth_app_method:	          'POST',
+ *   iam_auth_app_method:	        'POST',
  *   uuid:                          string,
  *   secret:                        string,
  *   config:{url_ip:string, url_place:string}}} microservice_local_config

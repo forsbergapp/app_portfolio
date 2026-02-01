@@ -16,7 +16,7 @@ const fs = await import('node:fs');
  * @param {server['ORM']['MetaData']['AllObjects']} object
  */
 const getDefaultObject = async object => 
-    await fs.promises.readFile(server.ORM.serverProcess.cwd() + `/server/install/default/${object}.json`)
+    await fs.promises.readFile(server.info.serverProcess.cwd() + `/server/install/default/${object}.json`)
             .then(filebuffer=>JSON.parse(filebuffer.toString()));
 /**
  * @name postDemo
@@ -56,7 +56,7 @@ const postDemo = async parameters=> {
     /**@type{{[key:string]: string|number}[]} */
     const install_result = [];
     install_result.push({'⌚': new Date().toISOString()});
-    const fileBuffer = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
+    const fileBuffer = await fs.promises.readFile(`${server.info.serverProcess.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
     /**@type{server['ORM']['Type']['DemoData'][]}*/
     const demo_users = JSON.parse(fileBuffer.toString()).DemoUsers;
     //create social records
@@ -310,7 +310,7 @@ const postDemo = async parameters=> {
                 else
                     settings_header_image = `${demo_user.Username}.webp`;
                 /**@type{Buffer} */
-                const image = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}${DB_DEMO_PATH}${settings_header_image}`);
+                const image = await fs.promises.readFile(`${server.info.serverProcess.cwd()}${DB_DEMO_PATH}${settings_header_image}`);
                 /**@ts-ignore */
                 const image_string = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
                 //update settings with loaded image into BASE64 format
@@ -817,11 +817,32 @@ const postConfigDefault = async () => {
     .catch((/**@type{server['server']['error']}*/err) => {
         throw err;
     }); 
-    
+    //update default environment in OpenApi
+    const app_host      = server.info.serverProcess.argv[1];
+    const app_port      = server.ORM.UtilNumberValue(server.info.serverProcess.argv[2]);
+	const admin_port    = server.ORM.UtilNumberValue(server.info.serverProcess.argv[3]);
+    for (const server of config_obj[1][1].servers){
+        switch (server['x-type'].default){
+            case 'APP':{
+                server.variables.host.default = app_host;
+                server.variables.port.default = app_port ?? 80;    
+            }
+            case 'ADMIN':{
+                server.variables.host.default = app_host;
+                server.variables.port.default = admin_port ?? 80;    
+            }
+            case 'REST_API':{
+                server.variables.host.default = app_host;
+                server.variables.port.default = app_port ?? 80;    
+            }
+        }
+    }
+        
     //install default microservice configuration
     updateMicroserviceSecurity({serveRegistry:              config_obj[2][1],
                                 pathMicroserviceSource:     '/server/install/default/microservice/',
-                                pathMicroserviceDestination:'/data/microservice/'});
+                                pathMicroserviceDestination:'/data/microservice/',
+                                init:                      true});
     
     //write files to ORM
     for (const config_row of config_obj){
@@ -934,16 +955,25 @@ const updateConfigSecrets = async () =>{
  * @function
  * @param {{serveRegistry:server['ORM']['Object']['ServiceRegistry'][],
  *          pathMicroserviceSource:      string,
- *          pathMicroserviceDestination:   string}} parameters
+ *          pathMicroserviceDestination:   string,
+ *          init?: boolean}} parameters
  * @returns {Promise.<void>}
  */
 const updateMicroserviceSecurity = async parameters =>{
     for (const file of ['BATCH']){
         /**@type{server['serviceregistry']['microservice_local_config']} */
-        const content = await fs.promises.readFile(server.ORM.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
+        const content = await fs.promises.readFile(server.info.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
+        if (parameters.init){
+            const environment = server.info.serverProcess.argv[0];
+            const app_host = server.info.serverProcess.argv[1];
+            const app_port = server.ORM.UtilNumberValue(server.info.serverProcess.argv[2]);
+            content.environment = environment;
+            content.service_registry_auth_url = content.service_registry_auth_url.replace('localhost:3000',app_host + (app_port==80?'':':' + app_port))
+		    content.message_queue_url.replace('localhost:3000',app_host + (app_port==80?'':':' + app_port))
+        }
         content.uuid = parameters.serveRegistry.filter(microservice=>microservice.Name==content.name)[0].Uuid;
         content.secret = parameters.serveRegistry.filter(microservice=>microservice.Name==content.name)[0].Secret;
-        await fs.promises.writeFile(server.ORM.serverProcess.cwd() + `${parameters.pathMicroserviceDestination}${file}.json`, 
+        await fs.promises.writeFile(server.info.serverProcess.cwd() + `${parameters.pathMicroserviceDestination}${file}.json`, 
                                                             JSON.stringify(content, undefined, 2),'utf8');
     }
 };
@@ -962,7 +992,7 @@ const getConfigSecurityUpdate = async parameters =>{
     return {
         OpenApi:await new Promise(resolve=>{(async () =>{ 
                             /**@type{server['ORM']['Object']['OpenApi']}*/
-                            const openApi = parameters.pathOpenApi?await fs.promises.readFile(server.ORM.serverProcess.cwd() + parameters.pathOpenApi)
+                            const openApi = parameters.pathOpenApi?await fs.promises.readFile(server.info.serverProcess.cwd() + parameters.pathOpenApi)
                                                 .then(file=>JSON.parse(file.toString())):server.ORM.getObject(0,'OpenApi');
                             //generate secrets
                             openApi.components.parameters.config.IAM_MICROSERVICE_TOKEN_SECRET.default = server.security.securitySecretCreate();
@@ -979,7 +1009,7 @@ const getConfigSecurityUpdate = async parameters =>{
                         })();}),
         ServiceRegistry:parameters.pathServiceRegistry?await new Promise(resolve=>{(async () =>{ 
                                 /**@type{server['ORM']['Object']['ServiceRegistry'][]}*/
-                                const content = await fs.promises.readFile(server.ORM.serverProcess.cwd() + parameters.pathServiceRegistry)
+                                const content = await fs.promises.readFile(server.info.serverProcess.cwd() + parameters.pathServiceRegistry)
                                                     .then(file=>JSON.parse(file.toString()));
                                 for (const row of content){
                                     row.Uuid = server.security.securityUUIDCreate();

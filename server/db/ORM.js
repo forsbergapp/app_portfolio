@@ -36,7 +36,6 @@
  * @import {Dirent} from 'node:fs'
  */
 
-const {serverProcess} = await import('../info.js');
 const {server} = await import('../server.js');
 const fs = await import('node:fs');
 //Private properties
@@ -84,11 +83,7 @@ Object.seal(DB_DIR);
  * @class
  */
 class ORM_class {
-    /**
-     * @description Using Dependency Injection pattern
-     * @param {import('../info.js')['serverProcess']}serverProcess
-     */
-    constructor (serverProcess) {    
+    constructor () {    
         /** 
          * @description Get all imported ORM objects from file system
          *              Using Dependency Injection pattern
@@ -128,7 +123,6 @@ class ORM_class {
          */
         this.db;
         this.init = this.InitAsync;
-        this.serverProcess = serverProcess;
         /**@type{server['ORM']['Object']['OpenApi']['servers']} */
         this.OpenApiServers;
         /**@type{server['ORM']['Object']['OpenApi']['paths']} */
@@ -388,7 +382,7 @@ class ORM_class {
      * @method
      * @returns {Promise.<Dirent[]>}
      */
-    getFsDir = async () => await fs.promises.readdir(`${this.serverProcess.cwd()}${DB_DIR.db}`,{ withFileTypes: true });
+    getFsDir = async () => await fs.promises.readdir(`${server.info.serverProcess.cwd()}${DB_DIR.db}`,{ withFileTypes: true });
 
     /**
      * @name getFsFile
@@ -398,7 +392,7 @@ class ORM_class {
      * @param {server['ORM']['MetaData']['Object']['Type']|null} [object_type]
      * @returns {Promise.<*>}
      */
-    getFsFile = async (filepath, object_type=null) => fs.promises.readFile(this.serverProcess.cwd() + filepath, 'utf8')
+    getFsFile = async (filepath, object_type=null) => fs.promises.readFile(server.info.serverProcess.cwd() + filepath, 'utf8')
     .then(result=>
         JSON.parse(result==''?
                         (object_type?.startsWith('TABLE')?'[]':
@@ -418,7 +412,7 @@ class ORM_class {
      */
     getFsDataExists = async () => {    
         try {
-            await fs.promises.access(this.serverProcess.cwd() + '/data');
+            await fs.promises.access(server.info.serverProcess.cwd() + '/data');
             return true;
         } catch (error) {
             return false;
@@ -485,7 +479,7 @@ class ORM_class {
                                                         .write(this.formatContent(object_type, [content]));    
         }
         else
-            await fs.promises.writeFile(this.serverProcess.cwd() + path, this.formatContent(object_type, content),'utf8');
+            await fs.promises.writeFile(server.info.serverProcess.cwd() + path, this.formatContent(object_type, content),'utf8');
     };
 
     /**
@@ -497,13 +491,13 @@ class ORM_class {
      */
     postFsDir = async paths => {
         const mkdir = async (/**@type{string} */dir) =>{
-            await fs.promises.mkdir(this.serverProcess.cwd() + dir)
+            await fs.promises.mkdir(server.info.serverProcess.cwd() + dir)
             .catch((error)=>{
                 throw error;
             });
         };
         for (const dir of paths){
-            await fs.promises.access(this.serverProcess.cwd() + dir)
+            await fs.promises.access(server.info.serverProcess.cwd() + dir)
             .catch(()=>{
                 mkdir(dir);  
             });
@@ -834,7 +828,7 @@ class ORM_class {
          * @param {boolean} directory
          */
         const getDir = async (dir, directory) =>
-            fs.promises.readdir(`${serverProcess.cwd()}${dir}`,{ withFileTypes: true })
+            fs.promises.readdir(`${server.info.serverProcess.cwd()}${dir}`,{ withFileTypes: true })
                 .then(result=>
                     result
                     .filter(row=>row.isDirectory()==directory)
@@ -849,7 +843,7 @@ class ORM_class {
          * @param {string} file
          */
         const getFile = async (dir, file) =>
-            fs.promises.readFile(   (serverProcess.cwd() + `${dir}/${file}`).replaceAll('\\','/'),
+            fs.promises.readFile(   (server.info.serverProcess.cwd() + `${dir}/${file}`).replaceAll('\\','/'),
                                     'utf8').then(file=>file.toString());
         
         /**
@@ -1252,7 +1246,7 @@ class ORM_class {
                             Version:        1,
                             Hostname:       this.getObject(parameters.app_id,'OpenApi').servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/row)=>row['x-type'].default=='APP')[0].variables.host.default,
                             Connections:    server.socket.socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
-                            Started:        this.serverProcess.uptime()
+                            Started:        server.info.serverProcess.uptime()
                         }],
                 type:'JSON'};
     };
@@ -1313,6 +1307,6 @@ const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
  */
 const getViewObjects = async parameters =>ORM.getViewObjects(parameters);
 
-const ORM = new ORM_class(serverProcess);
+const ORM = new ORM_class();
 
 export {ORM_class, ORM, getViewInfo, getViewObjects};

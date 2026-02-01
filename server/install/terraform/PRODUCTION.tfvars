@@ -1,15 +1,3 @@
 #Network
-vcn_name = "PRODUCTION_vcn"
-vcn_dns_label = "PRODUCTION"
 vcn_cidr_block = "10.2.0.0/16"
-vcn_dhcp_options_name = "PRODUCTION_dhcp"
-vcn_subnet_name = "PRODUCTION_subnet"
 vcn_subnet_cidr_block = "10.2.0.0/24"
-vcn_security_list_display_name = "PRODUCTION_security_list"
-vcn_route_table_display_name = "PRODUCTION Route table"
-vcn_route_table_route_rules_description = "PRODUCTION Route rules"
-vcn_internet_gateway_display_name = "PRODUCTION Internet gateway"
-#Compute
-compute_display_name = "PRODUCTION"
-compute_vnic_display_name = "PRODUCTION"
-compute_host_name = "PRODUCTION"

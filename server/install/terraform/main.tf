@@ -28,15 +28,15 @@ resource "tls_private_key" "PRIVATE_KEY"{
 
 resource "oci_core_vcn" "vcn" {
   compartment_id = var.oci_tenency_ocid
-  display_name   = var.vcn_name
+  display_name   = "${terraform.workspace}_vcn"
   cidr_blocks    = [var.vcn_cidr_block]
-  dns_label      = var.vcn_dns_label
+  dns_label      = "${terraform.workspace}_dns"
 }
 
 resource "oci_core_dhcp_options" "dhcp_options"{
     compartment_id = var.oci_tenency_ocid
     vcn_id = oci_core_vcn.vcn.id
-    display_name   = var.vcn_dhcp_options_name
+    display_name   = "${terraform.workspace}_dhcp_options"
     
     options {
         type = "DomainNameServer"
@@ -48,7 +48,7 @@ resource "oci_core_dhcp_options" "dhcp_options"{
 resource "oci_core_subnet" "subnet" {
   vcn_id              = oci_core_vcn.vcn.id
   compartment_id      = var.oci_tenency_ocid
-  display_name        = var.vcn_subnet_name
+  display_name        = "${terraform.workspace}_subnet"
   cidr_block          = var.vcn_subnet_cidr_block
   availability_domain = data.oci_identity_availability_domain.ad.name
   security_list_ids   = [oci_core_security_list.security-list.id]
@@ -57,7 +57,7 @@ resource "oci_core_subnet" "subnet" {
 
 resource "oci_core_internet_gateway" "ig" {
     compartment_id = var.oci_tenency_ocid
-    display_name = var.vcn_internet_gateway_display_name
+    display_name = "${terraform.workspace}_internet_gateway"
     vcn_id = oci_core_vcn.vcn.id
 
     enabled = true
@@ -65,11 +65,11 @@ resource "oci_core_internet_gateway" "ig" {
 
 resource oci_core_default_route_table "route_table" {
     compartment_id = var.oci_tenency_ocid
-    display_name = var.vcn_route_table_display_name
+    display_name = "${terraform.workspace}_route_table"
     manage_default_resource_id = oci_core_vcn.vcn.default_route_table_id
 
     route_rules {
-        description       = var.vcn_route_table_route_rules_description
+        description       = "${terraform.workspace}_route_rules"
         destination       = "0.0.0.0/0"
         destination_type  = "CIDR_BLOCK"
         network_entity_id = oci_core_internet_gateway.ig.id
@@ -79,7 +79,7 @@ resource oci_core_default_route_table "route_table" {
 resource "oci_core_security_list" "security-list" {
   vcn_id           = oci_core_vcn.vcn.id
   compartment_id   = var.oci_tenency_ocid
-  display_name     = var.vcn_security_list_display_name
+  display_name     = "${terraform.workspace}_security_list"
 
   ingress_security_rules {
     protocol = "6" #tcp protocol
@@ -94,8 +94,8 @@ resource "oci_core_security_list" "security-list" {
     protocol = "6" #tcp protocol
     source  = "0.0.0.0/0"
     tcp_options {
-        min = 80
-        max = 80
+        min = var.environment_app_port
+        max = var.environment_app_port
     }
     description = "HTTP"
   }
@@ -103,8 +103,8 @@ resource "oci_core_security_list" "security-list" {
     protocol = "6" #tcp protocol
     source  = "0.0.0.0/0"
     tcp_options {
-        min = 3333
-        max = 3333
+        min = var.environment_admin_port
+        max = var.environment_admin_port
     }
     description = "HTTP Admin"
   }
@@ -125,17 +125,22 @@ resource "oci_core_security_list" "security-list" {
 
 }
 
+resource "oci_core_public_ip" "public_ip" {
+    compartment_id = var.oci_tenency_ocid
+    lifetime = "RESERVED"
+}
+
 resource "oci_core_instance" "instance" {
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.oci_tenency_ocid
   
   shape              = var.compute_shape
   
-  display_name       = var.compute_display_name
+  display_name       = "${terraform.workspace}"
 
   create_vnic_details {
     subnet_id          = oci_core_subnet.subnet.id
-    display_name       = var.compute_vnic_display_name
+    display_name       = "${terraform.workspace}_vnic"
     assign_public_ip   = var.compute_public_ip
     assign_private_dns_record = false
   }
@@ -153,9 +158,9 @@ resource "oci_core_instance" "instance" {
                               sudo apt install -y git vim inetutils-ping net-tools ufw nodejs
                               sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/node
                               sudo ufw allow 22/tcp
-                              sudo ufw allow 80/tcp
+                              sudo ufw allow ${var.environment_app_port}/tcp
                               sudo ufw allow 443/tcp
-                              sudo ufw allow 3333/tcp
+                              sudo ufw allow ${var.environment_admin_port}/tcp
                               sudo ufw --force enable
                               sudo apt remove --purge -y update-notifier-common
                               sudo apt remove --purge -y ubuntu-release-upgrader-core
@@ -173,7 +178,7 @@ resource "oci_core_instance" "instance" {
                               sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio.service
                               sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
                               sudo systemctl daemon-reload
-                              sudo systemctl start app_portfolio.service
+                              sudo systemctl start app_portfolio.service -- ${terraform.workspace} ${oci_core_public_ip.public_ip.ip_address} ${var.environment_app_port} ${var.environment_admin_port}
                               sudo systemctl start app_portfolio_microservice_batch.service
                               EOF
                               )

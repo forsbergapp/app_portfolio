@@ -1,15 +1,3 @@
 #Network
-vcn_name = "TEST_vcn"
-vcn_dns_label = "TEST"
 vcn_cidr_block = "10.1.0.0/16"
-vcn_dhcp_options_name = "TEST_dhcp"
-vcn_subnet_name = "TEST_subnet"
 vcn_subnet_cidr_block = "10.1.0.0/24"
-vcn_security_list_display_name = "TEST_security_list"
-vcn_route_table_display_name = "TEST Route table"
-vcn_route_table_route_rules_description = "TEST Route rules"
-vcn_internet_gateway_display_name = "TEST Internet gateway"
-#Compute
-compute_display_name = "TEST"
-compute_vnic_display_name = "TEST"
-compute_host_name = "TEST"

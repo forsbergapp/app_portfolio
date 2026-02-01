@@ -29,6 +29,8 @@ class serverClass {
         this.bff;
         /**@type {import('./iam.js')}*/
         this.iam;
+        /**@type {import('./info.js')}*/
+        this.info;
         /**@type {import('./installation.js')}*/
         this.installation;
         /**@type {import('./security.js')}*/
@@ -67,10 +69,13 @@ class serverClass {
         this.ORM = ORM;
         this.bff = await import('./bff.js');
         this.iam = await import('./iam.js');
+        this.info = await import('./info.js');
         this.installation = await import('./installation.js');
         this.security = await import('./security.js');
         this.socket   = await import('./socket.js');
         this.app_common = await import('../apps/common/src/common.js');
+        //set timezone to UTC
+        this.info.serverProcess.env.TZ = 'UTC';
     };
     /**
      * @name request
@@ -428,11 +433,8 @@ class serverClass {
     postServer = () =>{
         /**@type{string} */
         const NETWORK_INTERFACE = server.ORM.OpenApiComponentParameters.config.SERVER_NETWORK_INTERFACE.default;
-        /**@type{string} */
         const PORT_APP = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.port.default;
-        /**@type{string} */
         const PORT_ADMIN = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='ADMIN')[0].variables.port.default;
-        /**@type{string} */
         const PORT_DUMMY = server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='NOHANGING_HTTPS')[0].variables.port.default;
         //Start http server and listener for apps
         this.server_app = http.createServer((req,res)=>server.request(
@@ -483,7 +485,7 @@ class serverClass {
      * @returns {string}
      */
     UtilAppFilename = module =>{
-        const from_app_root = ('file://' + serverProcess.cwd()).length;
+        const from_app_root = ('file://' + this.info.serverProcess.cwd()).length;
         return module.substring(from_app_root);
     };
     /**
@@ -500,8 +502,6 @@ class serverClass {
         return lineNumber;
     };    
 }
-const {serverProcess} = await import('./info.js');
-
 /**
  * @type {serverClass}
  */
@@ -658,7 +658,7 @@ class serverCircuitBreakerClass {
  * @returns{Promise.<void>}
  */
 const serverStart = async () =>{
-    serverProcess.env.TZ = 'UTC';
+    
     try {
         //Create ORM and server instances
         server = new serverClass();
@@ -669,7 +669,7 @@ const serverStart = async () =>{
         await ORM.init();       
         Object.seal(ORM);
         //Set server process events that need ORM started
-        serverProcess.on('uncaughtException', err =>{
+        server.info.serverProcess.on('uncaughtException', err =>{
             console.log(err);
             server.ORM.db.Log.post({   app_id:0, 
                 data:{  object:'LogServerError', 
@@ -677,7 +677,7 @@ const serverStart = async () =>{
                     }
                 });
         });
-        serverProcess.on('unhandledRejection', (/**@type{*}*/reason) =>{
+        server.info.serverProcess.on('unhandledRejection', (/**@type{*}*/reason) =>{
             console.log(reason?.stack ?? reason?.message ?? reason ?? new Error().stack);
             server.ORM.db.Log.post({   app_id:0, 
                 data:{  object:'LogServerError', 

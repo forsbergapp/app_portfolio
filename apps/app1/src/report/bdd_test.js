@@ -102,7 +102,7 @@ const component = async props => {
     const specs = [];
 
     /**@type {server['test']['specrunner']} */
-    const specrunner = await fs.promises.readFile(`${server.ORM.serverProcess.cwd()}/test/specrunner.json`, 'utf8')
+    const specrunner = await fs.promises.readFile(`${server.info.serverProcess.cwd()}/test/specrunner.json`, 'utf8')
                         .then((/**@type{string}*/result)=>JSON.parse(result));
     //run in random order if RANDOM parameter = '1'
     if (server.ORM.OpenApiComponentParameters.config.TEST_RANDOM.default=='1')
