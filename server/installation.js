@@ -825,19 +825,23 @@ const postConfigDefault = async () => {
         switch (server['x-type'].default){
             case 'APP':{
                 server.variables.host.default = app_host;
-                server.variables.port.default = app_port ?? 80;    
+                server.variables.port.default = app_port ?? 80;
+                break;
             }
             case 'ADMIN':{
                 server.variables.host.default = app_host;
-                server.variables.port.default = admin_port ?? 80;    
+                server.variables.port.default = admin_port ?? 80;
+                break;
             }
             case 'REST_API':{
                 server.variables.host.default = app_host;
-                server.variables.port.default = app_port ?? 80;    
+                server.variables.port.default = app_port ?? 80;
+                break;
             }
             case 'NOHANGING_HTTPS':{
                 //must remain 443 due to browser hangning issue if not used
                 server.variables.host.default = app_host;
+                break;
             }
         }
     }
@@ -964,16 +968,23 @@ const updateConfigSecrets = async () =>{
  * @returns {Promise.<void>}
  */
 const updateMicroserviceSecurity = async parameters =>{
+    /**
+     * 
+     * @param {string} url
+     * @returns {string}
+     */
+    const updateUrl = url =>{
+        const app_host = server.info.serverProcess.argv[3];
+        const app_port = server.ORM.UtilNumberValue(server.info.serverProcess.argv[4]);
+        return url.replace('localhost:3000',app_host + (app_port==80?'':':' + app_port));
+    }
     for (const file of ['BATCH']){
         /**@type{server['serviceregistry']['microservice_local_config']} */
         const content = await fs.promises.readFile(server.info.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
         if (parameters.init){
-            const environment = server.info.serverProcess.argv[2];
-            const app_host = server.info.serverProcess.argv[3];
-            const app_port = server.ORM.UtilNumberValue(server.info.serverProcess.argv[4]);
-            content.environment = environment;
-            content.service_registry_auth_url = content.service_registry_auth_url.replace('localhost:3000',app_host + (app_port==80?'':':' + app_port))
-		    content.message_queue_url.replace('localhost:3000',app_host + (app_port==80?'':':' + app_port))
+            content.environment                 = server.info.serverProcess.argv[2];
+            content.service_registry_auth_url   = updateUrl(content.service_registry_auth_url)
+		    content.message_queue_url           = updateUrl(content.message_queue_url)
         }
         content.uuid = parameters.serveRegistry.filter(microservice=>microservice.Name==content.name)[0].Uuid;
         content.secret = parameters.serveRegistry.filter(microservice=>microservice.Name==content.name)[0].Secret;
