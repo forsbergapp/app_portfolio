@@ -172,7 +172,7 @@ resource "oci_core_instance" "instance" {
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio.service
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
                               sudo systemctl daemon-reload
-                              sudo systemctl start app_portfolio.service -- ${terraform.workspace} localhost ${var.environment_app_port} ${var.environment_admin_port}
+                              sudo systemctl start app_portfolio.service ${terraform.workspace} localhost ${var.environment_app_port} ${var.environment_admin_port}
                               sudo systemctl start app_portfolio_microservice_batch.service
                               EOF
                               )
