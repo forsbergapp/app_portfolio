@@ -5,12 +5,39 @@
  */
 const os = await import('node:os');
 
+/**
+ * @name ClassServerProcess
+ * @description server process class
+ * @class
+ */
 class ClassServerProcess {
+    /**
+     * @name cwd
+     * @description current working directory
+     * @method
+     * @returns {string}
+     */
     cwd = () => import.meta.dirname
                 .replaceAll('\\','/')
                 .replaceAll('/server','');
-
+    /**
+     * @name uptime
+     * @description uptime
+     * @method
+     * @returns {number}
+     */
     uptime = () => process.uptime();
+    /**
+     * @name memoryUsage
+     * @description memory usage
+     * @method
+     * @returns {{rss:number,
+     *           heapTotal:number,
+     *           heapUsed:number,
+     *           external:number,
+     *           arrayBuffers:number
+     *          }}
+     */
     memoryUsage = () => {
         return {rss:process.memoryUsage().rss,
                 heapTotal:process.memoryUsage().heapTotal,
@@ -20,13 +47,40 @@ class ClassServerProcess {
         };
     };
     /**
+     * @name on
+     * @description on event
+     * @method
      * @param {string|symbol} event
      * @param {(...args: any[]) => void} listener
      */
     on = (event, listener) => process.on(event, listener);
-
+    /**
+     * @name argv
+     * @description process arguments
+     *              0: node binary
+     *              1: server start script
+     *              first time used from IaC setup:
+     *              2: terraform.workspace
+     *              3: host 
+     *              4: app_port
+     *              5: admin_port
+     * @method
+     * @returns {string[]}
+     */
     argv = process.argv;
+    /**
+     * @name env
+     * @description process env
+     * @method
+     * @returns {NodeJS.ProcessEnv}
+     */
     env = process.env;
+    /**
+     * @name version
+     * @description process version
+     * @method
+     * @returns {string}
+     */
     version = process.version;
 }
 const serverProcess = new ClassServerProcess();

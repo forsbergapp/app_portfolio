@@ -818,9 +818,9 @@ const postConfigDefault = async () => {
         throw err;
     }); 
     //update default environment in OpenApi
-    const app_host      = server.info.serverProcess.argv[1];
-    const app_port      = server.ORM.UtilNumberValue(server.info.serverProcess.argv[2]);
-	const admin_port    = server.ORM.UtilNumberValue(server.info.serverProcess.argv[3]);
+    const app_host      = server.info.serverProcess.argv[3];
+    const app_port      = server.ORM.UtilNumberValue(server.info.serverProcess.argv[4]);
+	const admin_port    = server.ORM.UtilNumberValue(server.info.serverProcess.argv[5]);
     for (const server of config_obj[1][1].servers){
         switch (server['x-type'].default){
             case 'APP':{
@@ -968,9 +968,9 @@ const updateMicroserviceSecurity = async parameters =>{
         /**@type{server['serviceregistry']['microservice_local_config']} */
         const content = await fs.promises.readFile(server.info.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
         if (parameters.init){
-            const environment = server.info.serverProcess.argv[0];
-            const app_host = server.info.serverProcess.argv[1];
-            const app_port = server.ORM.UtilNumberValue(server.info.serverProcess.argv[2]);
+            const environment = server.info.serverProcess.argv[2];
+            const app_host = server.info.serverProcess.argv[3];
+            const app_port = server.ORM.UtilNumberValue(server.info.serverProcess.argv[4]);
             content.environment = environment;
             content.service_registry_auth_url = content.service_registry_auth_url.replace('localhost:3000',app_host + (app_port==80?'':':' + app_port))
 		    content.message_queue_url.replace('localhost:3000',app_host + (app_port==80?'':':' + app_port))

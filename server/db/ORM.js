@@ -471,7 +471,7 @@ class ORM_class {
                 //add new write stream with append
                 DB_LOG.push({  path:path, 
                                     /**@ts-ignore */
-                                    writeStream:fs.createWriteStream(this.serverProcess.cwd() + path, { flags: 'a' })});    
+                                    writeStream:fs.createWriteStream(server.info.serverProcess.cwd() + path, { flags: 'a' })});    
                 
             }
             DB_LOG.filter(row=>row.path==path)[0].writeStream
