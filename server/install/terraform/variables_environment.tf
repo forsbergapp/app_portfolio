@@ -7,7 +7,7 @@ variable "environment_app_port" {
 variable "environment_admin_port" {
     description = "Environment ADMIN port"
     type = number
-    default = 80
+    default = 3333
 }
 #Network
 variable "vcn_cidr_block" {

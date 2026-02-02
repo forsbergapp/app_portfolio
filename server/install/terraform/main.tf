@@ -172,7 +172,7 @@ resource "oci_core_instance" "instance" {
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio.service
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
                               sudo systemctl daemon-reload
-                              sudo -u ubuntu bash -c "cd /home/ubuntu/app_portfolio && /usr/bin/node server/init.js ${terraform.workspace} localhost ${var.environment_app_port} ${var.environment_admin_port}"
+                              sudo -u ubuntu bash -c 'cd /home/ubuntu/app_portfolio && /usr/bin/node server/init.js ${terraform.workspace} localhost ${var.environment_app_port} ${var.environment_admin_port}'
                               sleep 10
                               sudo reboot
                               EOF
