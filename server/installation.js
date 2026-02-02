@@ -835,6 +835,10 @@ const postConfigDefault = async () => {
                 server.variables.host.default = app_host;
                 server.variables.port.default = app_port ?? 80;    
             }
+            case 'NOHANGING_HTTPS':{
+                //must remain 443 due to browser hangning issue if not used
+                server.variables.host.default = app_host;
+            }
         }
     }
         

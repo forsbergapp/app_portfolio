@@ -172,8 +172,9 @@ resource "oci_core_instance" "instance" {
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio.service
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
                               sudo systemctl daemon-reload
-                              sudo systemctl start app_portfolio.service ${terraform.workspace} localhost ${var.environment_app_port} ${var.environment_admin_port}
-                              sudo systemctl start app_portfolio_microservice_batch.service
+                              sudo -u ubuntu -H bash -c "$HOME/app_portfolio && /usr/bin/node server/init.js localhost ${var.environment_app_port} ${var.environment_admin_port}"
+                              sleep 10
+                              sudo reboot
                               EOF
                               )
     ssh_authorized_keys     = tls_private_key.PRIVATE_KEY.public_key_openssh
