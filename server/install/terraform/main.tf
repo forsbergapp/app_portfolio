@@ -124,11 +124,6 @@ resource "oci_core_security_list" "security-list" {
 
 }
 
-resource "oci_core_public_ip" "public_ip" {
-    compartment_id = var.oci_tenency_ocid
-    lifetime = "RESERVED"
-}
-
 resource "oci_core_instance" "instance" {
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.oci_tenency_ocid
@@ -177,7 +172,7 @@ resource "oci_core_instance" "instance" {
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio.service
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
                               sudo systemctl daemon-reload
-                              sudo systemctl start app_portfolio.service -- ${terraform.workspace} ${oci_core_public_ip.public_ip.ip_address} ${var.environment_app_port} ${var.environment_admin_port}
+                              sudo systemctl start app_portfolio.service -- ${terraform.workspace} localhost ${var.environment_app_port} ${var.environment_admin_port}
                               sudo systemctl start app_portfolio_microservice_batch.service
                               EOF
                               )
