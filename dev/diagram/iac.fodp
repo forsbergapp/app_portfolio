@@ -41,7 +41,7 @@
   <draw:stroke-dash draw:name="Double_20_Dash" draw:display-name="Double Dash" draw:style="rect" draw:dots1="1" draw:dots1-length="800%" draw:distance="300%"/>
   <style:default-style style:family="graphic">
    <style:graphic-properties svg:stroke-color="#3465a4" draw:fill-color="#729fcf" fo:wrap-option="no-wrap" style:writing-mode="lr-tb"/>
-   <style:paragraph-properties style:text-autospace="ideograph-alpha" style:punctuation-wrap="simple" style:line-break="strict" loext:tab-stop-distance="0cm" style:writing-mode="lr-tb" style:font-independent-line-spacing="false">
+   <style:paragraph-properties style:text-autospace="ideograph-alpha" style:punctuation-wrap="simple" style:line-break="strict" loext:tab-stop-distance="0cm" style:font-independent-line-spacing="false">
     <style:tab-stops/>
    </style:paragraph-properties>
    <style:text-properties style:use-window-font-color="true" loext:opacity="0%" style:font-name="Liberation Serif" fo:font-size="24pt" fo:language="sv" fo:country="SE" style:font-name-asian="Segoe UI" style:font-size-asian="24pt" style:language-asian="zh" style:country-asian="CN" style:font-name-complex="Tahoma" style:font-size-complex="24pt" style:language-complex="hi" style:country-complex="IN"/>
@@ -847,11 +847,11 @@
       <text:p text:style-name="P10"><text:span text:style-name="T4">Virtual Cloud Netwok</text:span></text:p>
       <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:mirror-vertical="false" draw:mirror-horizontal="false" draw:type="rectangle" draw:enhanced-path="M 0 0 L 21600 0 21600 21600 0 21600 0 0 Z N"/>
      </draw:custom-shape>
-     <draw:custom-shape draw:name="subnet" draw:style-name="gr8" draw:text-style-name="P13" xml:id="id2" draw:id="id2" draw:layer="layout" svg:width="9.003cm" svg:height="15.064cm" draw:transform="rotate (-1.57289072189729) translate (22.31cm 5.618cm)">
+     <draw:custom-shape draw:name="subnet" draw:style-name="gr8" draw:text-style-name="P13" draw:layer="layout" svg:width="9.003cm" svg:height="15.064cm" draw:transform="rotate (-1.57289072189729) translate (22.31cm 5.618cm)">
       <text:p text:style-name="P12"><text:span text:style-name="T4">Availability domain</text:span></text:p>
       <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:mirror-vertical="false" draw:mirror-horizontal="false" draw:type="rectangle" draw:enhanced-path="M 0 0 L 21600 0 21600 21600 0 21600 0 0 Z N"/>
      </draw:custom-shape>
-     <draw:custom-shape draw:name="AD" draw:style-name="gr9" draw:text-style-name="P11" draw:layer="layout" svg:width="7.325cm" svg:height="11.789cm" draw:transform="rotate (-1.57289072189729) translate (20.752cm 6.85cm)">
+     <draw:custom-shape draw:name="AD" draw:style-name="gr9" draw:text-style-name="P11" xml:id="id2" draw:id="id2" draw:layer="layout" svg:width="7.325cm" svg:height="11.789cm" draw:transform="rotate (-1.57289072189729) translate (20.752cm 6.85cm)">
       <text:p text:style-name="P10"><text:span text:style-name="T4">Public subnet</text:span></text:p>
       <draw:enhanced-geometry svg:viewBox="0 0 21600 21600" draw:mirror-vertical="false" draw:mirror-horizontal="false" draw:type="rectangle" draw:enhanced-path="M 0 0 L 21600 0 21600 21600 0 21600 0 0 Z N"/>
      </draw:custom-shape>
@@ -887,10 +887,10 @@
        <draw:equation draw:name="f1" draw:formula="logheight"/>
       </draw:enhanced-geometry>
      </draw:custom-shape>
-     <draw:connector draw:name="connector1" draw:style-name="gr15" draw:text-style-name="P17" draw:layer="layout" draw:line-skew="-0.359cm" svg:x1="8.546cm" svg:y1="16.124cm" svg:x2="14.759cm" svg:y2="14.605cm" draw:start-shape="id1" draw:start-glue-point="0" draw:end-shape="id2" draw:end-glue-point="1" svg:d="M8546 16124v-1131h6213v-388" svg:viewBox="0 0 6214 1520">
+     <draw:connector draw:name="connector1" draw:style-name="gr15" draw:text-style-name="P17" draw:layer="layout" svg:x1="8.546cm" svg:y1="16.124cm" svg:x2="14.843cm" svg:y2="14.163cm" draw:start-shape="id1" draw:start-glue-point="0" draw:end-shape="id2" draw:end-glue-point="1" svg:d="M8546 16124v-995h6297v-966" svg:viewBox="0 0 6298 1962">
       <text:p/>
      </draw:connector>
-     <draw:connector draw:name="connector2" draw:style-name="gr15" draw:text-style-name="P17" draw:layer="layout" draw:line-skew="-0.359cm" svg:x1="12.996cm" svg:y1="16.124cm" svg:x2="14.759cm" svg:y2="14.605cm" draw:start-shape="id3" draw:start-glue-point="0" draw:end-shape="id2" draw:end-glue-point="1" svg:d="M12996 16124v-1131h1763v-388" svg:viewBox="0 0 1764 1520">
+     <draw:connector draw:name="connector2" draw:style-name="gr15" draw:text-style-name="P17" draw:layer="layout" svg:x1="12.996cm" svg:y1="16.124cm" svg:x2="14.843cm" svg:y2="14.163cm" draw:start-shape="id3" draw:start-glue-point="0" draw:end-shape="id2" svg:d="M12996 16124v-995h1847v-966" svg:viewBox="0 0 1848 1962">
       <text:p/>
      </draw:connector>
      <draw:connector draw:style-name="gr16" draw:text-style-name="P18" draw:layer="layout" svg:x1="18.803cm" svg:y1="16.812cm" svg:x2="20.131cm" svg:y2="16.813cm" draw:start-shape="id4" draw:start-glue-point="1" draw:end-shape="id5" draw:end-glue-point="3" svg:d="M18803 16812h663v1h665" svg:viewBox="0 0 1329 2">
