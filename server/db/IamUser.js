@@ -99,7 +99,7 @@ const getViewProfile = async parameters =>{
   else
       if (result_getProfileUser[0]){
           //always save stat who is viewing, same user, none or someone else
-          /**@type{server['ORM']['Object']['IamUserView']} */
+          /**@ts-ignore @type{server['ORM']['Object']['IamUserView']} */
           const data_body = { IamUserId:       server.ORM.UtilNumberValue(parameters.data.id),    //who views
                               IamUserIdView:   server.ORM.UtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].Id, //viewed account
                               ClientIp:        parameters.ip,
@@ -238,7 +238,7 @@ const getViewStatCountAdmin = parameters => {return {result: [{CountUsers:get(pa
  * @name validationData
  * @description Validates user data
  * @function
- * @param {server['ORM']['Object']['IamUser']} data
+ * @param {server['ORM']['Object']['IamUser'] & {PasswordNew:string|null}} data
  * @returns {Promise.<boolean>}
  */
 const validationData = async data =>{
@@ -272,7 +272,7 @@ const validationData = async data =>{
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamUser']} data
+ * @param {server['ORM']['Object']['IamUser'] & {PasswordNew:string|null}} data
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
@@ -350,7 +350,7 @@ const postAdmin = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server['ORM']['Object']['IamUser']} data
+ * @param {server['ORM']['Object']['IamUser'] & {PasswordNew:string|null}} data
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async (app_id, resource_id, data) => {
@@ -408,7 +408,7 @@ const update = async (app_id, resource_id, data) => {
  *          data :{
  *              username?: server['ORM']['Object']['IamUser']['Username'],
  *              password?: server['ORM']['Object']['IamUser']['Password'],
- *              password_new?: server['ORM']['Object']['IamUser']['PasswordNew'],
+ *              password_new?: string|null,
  *              password_reminder?: server['ORM']['Object']['IamUser']['PasswordReminder'],
  *              bio?: server['ORM']['Object']['IamUser']['Bio'],
  *              private?: server['ORM']['Object']['IamUser']['Private'],

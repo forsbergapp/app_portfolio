@@ -41,7 +41,7 @@ const customerCreate = async parameters =>{
                                                                     resource_name:'CUSTOMER'
                                                             }});
     if (resource_customer.result){
-        /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer}} */
+        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer}} */
         const post_data = {
             Document                    :{
                                             CustomerType   :parameters.data.customer_type,

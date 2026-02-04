@@ -25,9 +25,8 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlObse
 const post = async (app_id, data) => {
     //check required attributes
     if ((data.Status==0 ||data.Status==1) && data.Type){
-        const id = Date.now();
         /**@type{server['ORM']['Object']['IamControlObserve']}*/
-        const data_new = {  Id:id, 
+        const data_new = {  Id:Date.now(), 
                             IamUserId:data.IamUserId??null,
                             AppId:data.AppId,
                             Ip:data.Ip, 
@@ -38,11 +37,12 @@ const post = async (app_id, data) => {
                             Url:data.Url,
                             Status:data.Status, //0=dont stop, 1=stop immediately 
                             Type:data.Type,
-                            Created:new Date().toISOString()};
+                            Created:new Date().toISOString(),
+                            Modified:null};
         return server.ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', 
                                     post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
             if (result.AffectedRows>0){
-                result.InsertId = id;
+                result.InsertId = result.InsertId;
                 return {result:result,type:'JSON'};
             }
             else

@@ -87,7 +87,7 @@ const postDemo = async parameters=> {
                 * @returns 
                 */
                 const create_update_id = async demo_user=>{
-                    /**@type{server['ORM']['Object']['IamUser']}}*/
+                    /**@ts-ignore @type{server['ORM']['Object']['IamUser']}}*/
                     const data_create = {   Username:           demo_user.Username,
                                             Bio:                demo_user.Bio,
                                             Avatar:             demo_user.Avatar,
@@ -122,6 +122,7 @@ const postDemo = async parameters=> {
         const create_iam_user_app = async (app_id, iam_user_id) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserApp.post(parameters.app_id, 
+                    /**@ts-ignore */
                     {AppId:app_id, Document:{
                                         PreferenceTheme: null, 
                                         PreferenceLocale: null, 
@@ -219,6 +220,7 @@ const postDemo = async parameters=> {
                 const result_update = await server.ORM.db.AppDataEntity.update({   app_id:user_account_post_app_id, 
                                                                             /**@ts-ignore */
                                                                             resource_id:data.Id, 
+                                                                            /**@ts-ignore */
                                                                             data:{Document:update_Document}});
                 if(result_update.result){
                     if (result_update.result.AffectedRows == 1)
@@ -381,7 +383,7 @@ const postDemo = async parameters=> {
             };
             //3D.Create app data master records if any
             for (const resource_master of demo_user.AppDataResourceMaster ?? []){
-                /**@type{server['ORM']['Object']['AppDataResourceMaster']} */
+                /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster']} */
                 const data = {  
                                 IamUserAppId:               iam_user_app_id ??null,
                                 AppDataEntityResourceId:    resource_master.AppDataEntityResourceId,
@@ -415,7 +417,7 @@ const postDemo = async parameters=> {
                     
                 //3F.Create app data detail records if any
                 for (const resource_detail of resource_master.AppDataResourceDetail ?? []){
-                    /**@type{server['ORM']['Object']['AppDataResourceDetail']} */
+                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail']} */
                     const data = {  AppDataResourceMasterId                    : master_id,
                                     AppDataEntityResourceId                    : resource_detail.AppDataEntityResourceId,
                                     AppDataResourceMasterAttributeId           : resource_detail.AppDataResourceMasterAttributeId,
@@ -424,7 +426,7 @@ const postDemo = async parameters=> {
                     const detail_id = await create_app_data_resource_detail(data);
                     //3G.Create app data detail data records if any
                     for (const resource_detail_data of resource_detail.AppDataResourceDetailData ?? []){
-                        /**@type{server['ORM']['Object']['AppDataResourceDetailData']} */
+                        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData']} */
                         const data ={   AppDataResourceDetailId            : detail_id,
                                         AppDataResourceMasterAttributeId   : resource_detail_data.AppDataResourceMasterAttributeId,
                                         Document                           : await demo_data_update(resource_detail_data)
@@ -555,7 +557,9 @@ const postDemo = async parameters=> {
                         iam_user_id = user2;
                     else
                         iam_user_id = null;
-                    server.ORM.db.IamUserAppDataPostView.post(parameters.app_id, {
+                    server.ORM.db.IamUserAppDataPostView.post(parameters.app_id, 
+                                                                    /**@ts-ignore */
+                                                                    {
                                                                         Document: { client_ip: null,
                                                                                     client_user_agent: null},
                                                                         IamUserAppId: iam_user_id?
@@ -628,6 +632,7 @@ const postDemo = async parameters=> {
                         case 'IamUserView':{
                             //4E.Create user view by a user
                             await create_iam_user_view(parameters.app_id, 
+                                                            /**@ts-ignore */
                                                             {   IamUserId: user1,
                                                                 IamUserIdView: user2,
                                                                 ClientIp: null,
@@ -638,6 +643,7 @@ const postDemo = async parameters=> {
                         case 'IamUserViewX':{
                             //4F.Create user view by anonymous
                             await create_iam_user_view(parameters.app_id, 
+                                                            /**@ts-ignore */
                                                             {
                                                                 IamUserId: null,
                                                                 IamUserIdView: user1,

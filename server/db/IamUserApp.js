@@ -44,12 +44,12 @@ const post = async (app_id, data) =>{
                                 AppId:data.AppId, 
                                 IamUserId:data.IamUserId,
                                 Document:{  
-                                            PreferenceTheme:data.Document?.PreferenceTheme, 
-                                            PreferenceLocale: data.Document?.PreferenceLocale, 
-                                            PreferenceTimezone: data.Document?.PreferenceTimezone, 
-                                            PreferenceDirection: data.Document?.PreferenceDirection, 
-                                            PreferenceArabicScript: data.Document?.PreferenceArabicScript,
-                                            Custom: data.Document?.Custom
+                                            PreferenceTheme:data.Document?.PreferenceTheme??null, 
+                                            PreferenceLocale: data.Document?.PreferenceLocale??null, 
+                                            PreferenceTimezone: data.Document?.PreferenceTimezone??null, 
+                                            PreferenceDirection: data.Document?.PreferenceDirection??null, 
+                                            PreferenceArabicScript: data.Document?.PreferenceArabicScript??null,
+                                            Custom: data.Document?.Custom??null
                                         },
                                 Created:new Date().toISOString(),
                                 Modified:null
@@ -89,12 +89,12 @@ const update = async parameters =>{
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.document!=null)
-        data_update.Document = {PreferenceTheme:parameters.data.document.preference_theme, 
-                                PreferenceLocale: parameters.data.document.preference_locale, 
-                                PreferenceTimezone: parameters.data.document.preference_timezone, 
-                                PreferenceDirection: parameters.data.document.preference_direction, 
-                                PreferenceArabicScript: parameters.data.document.preference_arabic_script,
-                                Custom: parameters.data.document.custom}
+        data_update.Document = {PreferenceTheme:parameters.data.document.preference_theme??null, 
+                                PreferenceLocale: parameters.data.document.preference_locale??null, 
+                                PreferenceTimezone: parameters.data.document.preference_timezone??null, 
+                                PreferenceDirection: parameters.data.document.preference_direction??null, 
+                                PreferenceArabicScript: parameters.data.document.preference_arabic_script??null,
+                                Custom: parameters.data.document.custom??null}
     
     data_update.Modified = new Date().toISOString();
 

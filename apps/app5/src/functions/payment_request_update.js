@@ -88,7 +88,7 @@ const paymentRequestUpdate = async parameters =>{
                 if ((account_payer_saldo - (payment_request.Document.Amount??0)) <0)
                     status='NO FUNDS';
                 else{
-                    /**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction}} */
+                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction}} */
                     const data_debit = {Document                               : {  Timestamp:new Date().toISOString(),
                                                                                     Logo:'',
                                                                                     Origin:payment_request.Document.Reference,
@@ -113,7 +113,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                 account.Document?.BankAccountVpa == payment_request.Document.PayeeId
                                                             )[0];
                     if (account_payee && account_payee.Id!=null){
-                        /**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction}} */
+                        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction}} */
                         const data_credit = {   Document                               : { Timestamp:new Date().toISOString(),
                                                                                            Logo:'',
                                                                                            Origin:payment_request.Document.Reference,

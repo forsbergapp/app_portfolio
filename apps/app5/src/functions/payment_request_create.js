@@ -140,7 +140,7 @@ const paymentRequestCreate = async parameters =>{
                                                Message:         body_decrypted.message,
                                                Status:          'PENDING'
                                            };
-               /**@type{server['ORM']['Object']['AppDataResourceMaster']} */
+               /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster']} */
                const data_new_payment_request = {
                                                Document                                : data_payment_request,
                                                IamUserAppId                            : merchant.IamUserAppId,
@@ -164,7 +164,7 @@ const paymentRequestCreate = async parameters =>{
                                                                                                ip:                 parameters.ip,
                                                                                                scope:              'APP_EXTERNAL'});
                //Save access info in IAM_APP_ACCESS table
-               /**@type{server['ORM']['Object']['IamAppAccess']} */
+               /**@ts-ignore @type{server['ORM']['Object']['IamAppAccess']} */
                const file_content = {	
                                        Type:                'APP_ACCESS_EXTERNAL',
                                        IamUserAppId:        null,

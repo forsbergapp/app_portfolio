@@ -236,7 +236,7 @@ const iamAuthenticateUser = async parameters =>{
                                                             ip:                 parameters.ip, 
                                                             scope:              'USER'});
                     //Save access info in IAM_APP_ACCESS table
-                    /**@type{server['ORM']['Object']['IamAppAccess']} */
+                    /**@ts-ignore @type{server['ORM']['Object']['IamAppAccess']} */
                     const file_content = {	
                             AppId:                  parameters.app_id,
                             AppIdToken:             iamUtilTokenAppId(parameters.app_id),
@@ -281,7 +281,7 @@ const iamAuthenticateUser = async parameters =>{
         }
         else{
             //save log for all login attempts  
-            /**@type{server['ORM']['Object']['IamAppAccess']} */
+            /**@ts-ignore @type{server['ORM']['Object']['IamAppAccess']} */
             const file_content = {	
                         AppId:              parameters.app_id,
                         AppIdToken:         null,
@@ -303,7 +303,7 @@ const iamAuthenticateUser = async parameters =>{
                 ).length > (server.ORM.UtilNumberValue(server.ORM?.OpenApiComponentParameters.config?.IAM_USER_MAX_FAILED_LOGIN_ATTEMPTS?.default)??0)){
                 //Create observe record in IamControlObserve since max failed login attempts reached
                 //and for any user attempted
-                /**@type{server['ORM']['Object']['IamControlObserve']} */
+                /**@ts-ignore @type{server['ORM']['Object']['IamControlObserve']} */
                 const record = {    IamUserId:      user?.Id,
                                     AppId:          parameters.app_id,
                                     Ip:             parameters.ip, 
@@ -329,6 +329,7 @@ const iamAuthenticateUser = async parameters =>{
     if(parameters.authorization){       
         //if admin app create user if first time
         if (parameters.app_id == admin_app_id && server.ORM.db.IamUser.get(parameters.app_id, null).result.length==0)
+            /**@ts-ignore */
             return server.ORM.db.IamUser.post(parameters.app_id,{
                             Username:           username, 
                             Password:           password, 
@@ -338,7 +339,9 @@ const iamAuthenticateUser = async parameters =>{
                             Private:            1, 
                             Active:             1, 
                             Avatar:             null})
-                    .then((/**@type{server['server']['response']}*/result)=>result.http?result:check_user(1, {
+                    .then((/**@type{server['server']['response']}*/result)=>result.http?result:check_user(1, 
+                                                                    /**@ts-ignore */
+                                                                    {
                                                                     Id:         result.result.InsertId,
                                                                     Username:   username,
                                                                     Password:   password,
@@ -400,7 +403,7 @@ const iamAuthenticateUser = async parameters =>{
  *                                              iam_user_id:number} }>}
  */
 const iamAuthenticateUserSignup = async parameters =>{
-
+    /**@ts-ignore */
     const new_user = await server.ORM.db.IamUser.post(parameters.app_id, { Username:parameters.data.username,
                                                             Password:parameters.data.password,
                                                             PasswordReminder:parameters.data.password_reminder,
@@ -420,7 +423,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                                                 iam_user_username:      parameters.data.username, 
                                                 ip:                     parameters.ip, 
                                                 scope:                  'USER'});
-        /**@type{server['ORM']['Object']['IamAppAccess']} */
+        /**@ts-ignore @type{server['ORM']['Object']['IamAppAccess']} */
         const data_body = { 
             AppId:                parameters.app_id,
             AppIdToken:           iamUtilTokenAppId(parameters.app_id),
@@ -482,7 +485,7 @@ const iamAuthenticateUserActivate = async parameters =>{
             //set user active = 1
             server.ORM.db.IamUser.updateAdmin({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{active:1}});
 
-            /**@type{server['ORM']['Object']['IamUserEvent']}*/
+            /**@ts-ignore @type{server['ORM']['Object']['IamUserEvent']}*/
             const eventData = {
                 /**@ts-ignore */
                 IamUserId:      iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
@@ -549,7 +552,7 @@ const iamAuthenticateUserUpdate = async parameters => {
                                                                     server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey);
     if (result_totp){
 
-        /**@type{server['ORM']['Object']['IamUser']} */
+        /**@ts-ignore @type{server['ORM']['Object']['IamUser'] & {PasswordNew: string|null}} */
         const data_update = {   Type:               server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0].Type,
                                 Bio:                parameters.data.bio,
                                 Private:            parameters.data.private,
@@ -559,7 +562,7 @@ const iamAuthenticateUserUpdate = async parameters => {
                                 PasswordReminder:  (parameters.data.password_reminder && parameters.data.password_reminder!='')==true?parameters.data.password_reminder:null,
                                 Avatar:             parameters.data.avatar
                             };
-        /**@type{server['ORM']['Object']['IamUserEvent']}*/
+        /**@ts-ignore @type{server['ORM']['Object']['IamUserEvent']}*/
         const eventData = {
             IamUserId: parameters.resource_id,
             Event: 'USER_UPDATE'
@@ -980,7 +983,7 @@ const iamObserveLimitReached = ip =>{
             statusMessage= '';
         }
         else{
-            /**@type{server['ORM']['Object']['IamControlObserve']} */
+            /**@ts-ignore @type{server['ORM']['Object']['IamControlObserve']} */
             const record = {    IamUserId:null,
                                 AppId:parameters.common_app_id,
                                 Ip:ip_v4, 
@@ -1203,7 +1206,8 @@ const iamAuthenticateMicroservice = async parameters =>{
                 iat:server.security.jwt.decode(token, { complete: true }).payload.iat};
     
         return server.ORM.db.IamMicroserviceToken.post(
-                parameters.app_id, 
+                parameters.app_id,
+                /**@ts-ignore */ 
                 {	AppId:     parameters.app_id,
                     /**@ts-ignore */
                     ServiceRegistryId:service[0].Id,
@@ -1246,7 +1250,7 @@ const iamAuthenticateMicroservice = async parameters =>{
                                                             ip:ip ?? '', 
                                                             scope:scope});
 
-    /**@type{server['ORM']['Object']['IamAppIdToken']} */
+    /**@ts-ignore @type{server['ORM']['Object']['IamAppIdToken']} */
     const file_content = {	AppId:     app_id,
                             AppIdToken: AppIdToken, 
                             Res:		1,
@@ -1623,7 +1627,9 @@ const iamUserLoginApp = async parameters => {
     const record = iamuserapp(null)
     if (record.result){
         return record.result.length==0?
-                    iamuserapp((await server.ORM.db.IamUserApp.post(parameters.app_id, {  
+                    iamuserapp((await server.ORM.db.IamUserApp.post(parameters.app_id, 
+                                                                            /**@ts-ignore */
+                                                                            {
                                                                             AppId:parameters.app_id, 
                                                                             IamUserId:parameters.data.iam_user_id, 
                                                                             Document:{

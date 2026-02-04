@@ -36,7 +36,8 @@ const post = async parameters => {
                             Start:parameters.data.Start,
                             Finished:parameters.data.Finished,
                             Result:parameters.data.Result,
-                            Created: new Date().toISOString()
+                            Created: new Date().toISOString(),
+                            Modified:null
                         };
         return server.ORM.Execute({app_id:parameters.app_id, 
                             dml:'POST', 

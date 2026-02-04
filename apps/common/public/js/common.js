@@ -2727,6 +2727,7 @@ const commonAppSwitch = async (app_id, spinner_id=null) =>{
                 '\n'
                 +
                 (COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].CssReport?
+                    /**@ts-ignore */
                     await commonMiscResourceFetch(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].CssReport,null, 'text/css'):
                         '');
     if (css && css!='')

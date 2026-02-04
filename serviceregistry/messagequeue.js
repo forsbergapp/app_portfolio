@@ -33,7 +33,7 @@ const messageQueue = async parameters => {
             //message CONSUME
             return await server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id??null}).result
             .then((/**@type{server['ORM']['Object']['MessageQueuePublish'][]}*/message_queue)=>{
-                /**@type{server['ORM']['Object']['MessageQueueConsume']} */
+                /**@ts-ignore @type{server['ORM']['Object']['MessageQueueConsume']} */
                 const message_consume = {   MessageQueuePublishId: parameters.data.message_id??0,
                                             Message:    null,
                                             Start:      null,
@@ -50,6 +50,7 @@ const messageQueue = async parameters => {
                 return server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, data:message_consume})
                     .catch((/**@type{server['server']['error']}*/error)=>{
                         server.ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
+                                                /**@ts-ignore */
                                                 data:{  MessageQueuePublishId: parameters.data.message_id??0, 
                                                         Message:   error, 
                                                         Result:error}}).then(()=>{

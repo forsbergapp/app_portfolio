@@ -90,16 +90,16 @@ const post = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          resource_id:number,
- *          data:{  name:string,
- *                  path:string,
- *                  logo:string,
- *                  js:string,
- *                  css:string,
- *                  css_report:string,
- *                  text_edit:string,
- *                  copyright:string,
- *                  link_title:string,
- *                  link_url:string,
+ *          data:{  name:server['ORM']['Object']['App']['Name'],
+ *                  path:server['ORM']['Object']['App']['Path'],
+ *                  logo:server['ORM']['Object']['App']['Logo'],
+ *                  js:server['ORM']['Object']['App']['Js'],
+ *                  css:server['ORM']['Object']['App']['Css'],
+ *                  css_report:server['ORM']['Object']['App']['CssReport'],
+ *                  text_edit:server['ORM']['Object']['App']['TextEdit'],
+ *                  copyright:server['ORM']['Object']['App']['Copyright'],
+ *                  link_title:server['ORM']['Object']['App']['LinkTitle'],
+ *                  link_url:server['ORM']['Object']['App']['LinkUrl'],
  *                  status:'ONLINE'|'OFFLINE'}}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */

@@ -392,7 +392,7 @@ const bffDecryptRequest = async parameters =>{
      * @param {server['ORM']['Object']['IamControlObserve']['Type']} type 
      */
     const bffObserveRecord = async type => {
-            /**@type{server['ORM']['Object']['IamControlObserve']} */
+            /**@ts-ignore @type{server['ORM']['Object']['IamControlObserve']} */
             const recordObserve = { IamUserId:null,
                                     AppId:parameters.common_app_id,
                                     Ip:parameters.req.socket.remoteAddress.replace('::ffff:',''), 

@@ -16,7 +16,7 @@
 
 /**
  * @description APP server_apps_app_info
- * @typedef {object} server_apps_app_info   - app info
+ * @typedef  {object} server_apps_app_info   - app info
  * @property {number} app_id                - app id
  * @property {string} locale                - locale
  * @property {number} admin_only            - 0/1
@@ -31,44 +31,42 @@
 
 /**
  * @description APP server_apps_globals
- * @typedef {{  Parameters:{rest_resource_bff:string,
- *                          app_rest_api_version:string,
- *                          app_rest_api_basepath:string,
- *                          app_common_app_id:number,
- *                          app_admin_app_id:number,
- *                          app_start_app_id:number,
- *                          app_toolbar_button_start:number,
- *                          app_toolbar_button_framework:number,
- *                          app_framework:number,
- *                          app_framework_messages:number,
- *                          admin_only:number,
- *                          admin_first_time:number,
- *                          app_request_tries:number,
- *                          app_requesttimeout_seconds:number,
- *                          app_requesttimeout_admin_minutes:number,
- *                          app_content_type_json:string,
- *                          app_content_type_html:string,
- *                          app_content_type_sse:string,
- *                          app_font_timeout:number
- *                          },
- *              Data:{  Apps: ORM['View']['AppGetInfo'][],
- *                      AppData:[   ORM['Object']['AppData']['AppId'], 
- *                                  ORM['Object']['AppData']['Value'],
- *                                  ORM['Object']['AppData']['DisplayData']][],
- *                      cssCommon:string,
- *                      cssFontsArray:string[],
- *                      token_dt:string|null
- *                      client_latitude:string|null,
- *                      client_longitude:string|null,
- *                      client_place:string|null,
- *                      client_timezone:string|null
- *                  }
- *              }}  server_apps_globals
+ * @typedef  {object} server_apps_globals
+ * @property {object} Parameters
+ * @property {string} Parameters.rest_resource_bff
+ * @property {string} Parameters.app_rest_api_version
+ * @property {string} Parameters.app_rest_api_basepath
+ * @property {number} Parameters.app_common_app_id
+ * @property {number} Parameters.app_admin_app_id
+ * @property {number} Parameters.app_start_app_id
+ * @property {number} Parameters.app_toolbar_button_start
+ * @property {number} Parameters.app_toolbar_button_framework
+ * @property {number} Parameters.app_framework
+ * @property {number} Parameters.app_framework_messages
+ * @property {number} Parameters.admin_only
+ * @property {number} Parameters.admin_first_time
+ * @property {number} Parameters.app_request_tries
+ * @property {number} Parameters.app_requesttimeout_seconds
+ * @property {number} Parameters.app_requesttimeout_admin_minutes
+ * @property {string} Parameters.app_content_type_json
+ * @property {string} Parameters.app_content_type_html
+ * @property {string} Parameters.app_content_type_sse
+ * @property {number} Parameters.app_font_timeout
+ * @property {object} Data
+ * @property {ORM['View']['AppGetInfo'][]} Data.Apps
+ * @property {[ORM['Object']['AppData']['AppId'], ORM['Object']['AppData']['Value'], ORM['Object']['AppData']['DisplayData']][]} Data.AppData
+ * @property {string} Data.cssCommon
+ * @property {string[]} Data.cssFontsArray
+ * @property {string|null} Data.token_dt
+ * @property {string|null} Data.client_latitude
+ * @property {string|null} Data.client_longitude
+ * @property {string|null} Data.client_place
+ * @property {string|null} Data.client_timezone
  */
 
 /**
  * @description APP server_apps_report_query_parameters
- * @typedef {object} server_apps_report_query_parameters
+ * @typedef  {object} server_apps_report_query_parameters
  * @property {string} module
  * @property {number} uid_view
  * @property {string} url
@@ -79,38 +77,41 @@
 
 /**
  * @description APP server_apps_report_create_parameters
- * @typedef {object}        server_apps_report_create_parameters
+ * @typedef  {object}        server_apps_report_create_parameters
  * @property {number}       app_id
- * @property {Object}       [queue_parameters]
+ * @property {object}       [queue_parameters]
  * @property {string}       reportid
  * @property {string}       ip
  * @property {string}       user_agent
  */
 /**
  * @description APP server_apps_module_metadata
- * @typedef {{param:{name:string, text:string, default:string|number}}} server_apps_module_metadata
+ * @typedef  {object} server_apps_module_metadata
+ * @property {string} name
+ * @property {string} text
+ * @property {string|number} default
  */
 
 /**
  * @description APP server_config_apps_status
- * @typedef  {'ONLINE'|'OFFLINE'} server_config_apps_status
+ * @typedef {'ONLINE'|'OFFLINE'} server_config_apps_status
  */
 
 /**
  * @description APP serverComponentLifecycle
- * @typedef  {{ onBeforeMounted?:function|null,
- *              onMounted?:function|null, 
- *              onUnmounted?:function|null}|null} serverComponentLifecycle
+ * @typedef  {object} serverComponentLifecycle
+ * @property {function|null}  [onBeforeMounted]
+ * @property {function|null}  [onMounted]
+ * @property {function|null}  [onUnmounted]
  */
 
 /**
  * @description APP commonDocumentMenu
- * @typedef {{   id:number, 
- *              menu:string,
- *              type:'MENU'|'APP'|'GUIDE'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'|'MODULE_TEST',
- *              menu_sub:{  id:number,
- *                          menu:string,
- *                          doc:string}[]|null}} serverDocumentMenu
+ * @typedef  {object} serverDocumentMenu
+ * @property {number} id
+ * @property {string} menu
+ * @property {'MENU'|'APP'|'GUIDE'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'|'MODULE_TEST'} type
+ * @property {{id:number, menu:string,doc:string}[]|null} menu_sub
  */
 
 /**
@@ -194,688 +195,665 @@
 /**
  * @description DB TABLE App
  * @memberof ORM
- * @typedef {{
- *              Id?: number,
- *              Name: string,
- *              Path: string,
- *              Logo:string,
- *              Js:string,
- *              Css: string,
- *              CssReport: string,
- *              TextEdit:string,
- *              Copyright:string,
- *              LinkTitle:string,
- *              LinkUrl:string,
- *              Status:'ONLINE'|'OFFLINE'}} server_db_table_App
+ * @typedef {object} server_db_table_App
+ * @property {number} Id
+ * @property {string} Name
+ * @property {string} Path
+ * @property {string} Logo
+ * @property {string} Js
+ * @property {string} Css
+ * @property {string|null} CssReport
+ * @property {string} TextEdit
+ * @property {string|null} Copyright
+ * @property {string|null} LinkTitle
+ * @property {string|null} LinkUrl
+ * @property {'ONLINE'|'OFFLINE'} Status
  */
 /**
  * @description DB TABLE AppDataEntity
  * @memberof ORM
- * @typedef {{  Id?:number, 
- *              Document:{[key:string]:string}|null,
- *              Created?:string,
- *              Modified?:string|null,
- *              AppId?:number}} server_db_table_AppDataEntity
+ * @typedef  {object} server_db_table_AppDataEntity
+ * @property {number} Id
+ * @property {{[key:string]:string}|null} Document
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['App']['Id']} AppId
  */
 
 /**
  * @description DB TABLE AppDataEntityResource
  * @memberof ORM
- * @typedef {{  Id:number, 
- *              Document:{[key:string]:*}|null, 
- *              Created:string,
- *              Modified:string|null,
- *              AppDataEntityId:number, 
- *              AppDataId:number}} server_db_table_AppDataEntityResource
+ * @typedef  {object} server_db_table_AppDataEntityResource
+ * @property {number} Id
+ * @property {{[key:string]:*}|null} Document
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['AppDataEntity']['Id']} AppDataEntityId
+ * @property {ORM['Object']['AppData']['Id']} AppDataId
  */
 
 /**
  * @description DB TABLE AppDataResourceMaster
  * @memberof ORM
- * @typedef {{  Id?:number, 
- *              Document:{[key:string]:*}|null, 
- *              Created?:string,
- *              Modified?:string|null,
- *              IamUserAppId:number|null,
- *              AppDataEntityResourceId:number}} server_db_table_AppDataResourceMaster
+ * @typedef  {object} server_db_table_AppDataResourceMaster
+ * @property {number} Id
+ * @property {{[key:string]:*}|null} Document
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['IamUserApp']['Id']|null} IamUserAppId
+ * @property {ORM['Object']['AppDataEntityResource']['Id']} AppDataEntityResourceId
  */
 
 /**
  * @description DB TABLE AppDataResourceDetail
  * @memberof ORM
- * @typedef {{  Id?:number, 
- *              Document:{[key:string]:*}|null, 
- *              Created?:string,
- *              Modified?:string|null,
- *              AppDataResourceMasterId:number,
- *              AppDataEntityResourceId:number,
- *              AppDataResourceMasterAttributeId:number|null}} server_db_table_AppDataResourceDetail
+ * @typedef  {object} server_db_table_AppDataResourceDetail
+ * @property {number} Id
+ * @property {{[key:string]:*}|null} Document
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['AppDataResourceMaster']['Id']} AppDataResourceMasterId
+ * @property {ORM['Object']['AppDataEntityResource']['Id']} AppDataEntityResourceId
+ * @property {ORM['Object']['AppDataResourceMaster']['Id']|null} AppDataResourceMasterAttributeId
  */
 
 /**
  * @description DB TABLE AppDataResourceDetailData
  * @memberof ORM
- * @typedef {{  Id?:number, 
- *              Document:{[key:string]:*}|null, 
- *              Created?:string,
- *              Modified?:string|null,
- *              AppDataResourceDetailId:number,
- *              AppDataResourceMasterAttributeId:number|null}} server_db_table_AppDataResourceDetailData
+ * @typedef  {object} server_db_table_AppDataResourceDetailData
+ * @property {number} Id
+ * @property {{[key:string]:*}|null} Document
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['AppDataResourceDetail']['Id']} AppDataResourceDetailId
+ * @property {ORM['Object']['AppDataResourceMaster']['Id']|null} AppDataResourceMasterAttributeId
  */
 
 /**
  * @description DB TABLE AppModule
  * @memberof ORM
- * @typedef {{  Id:number,
- *              ModuleType: 'FUNCTION'|'ASSET'|'REPORT',
- *              ModuleName:string,
- *              ModuleRole:'APP_ID'|'APP_ACCESS'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'',
- *              ModulePath:string,
- *              ModuleDescription:string,
- *              AppId: number}} server_db_table_AppModule
+ * @typedef  {object} server_db_table_AppModule
+ * @property {number} Id
+ * @property {'FUNCTION'|'ASSET'|'REPORT'} ModuleType
+ * @property {string} ModuleName
+ * @property {'APP_ID'|'APP_ACCESS'|'APP_ACCESS_EXTERNAL'|'ADMIN'|''} ModuleRole
+ * @property {string} ModulePath
+ * @property {string} ModuleDescription
+ * @property {ORM['Object']['App']['Id']} AppId
  */
 /**
  * @description DB TABLE AppModuleQueue
  * @memberof ORM
- * @typedef {{  Id:number,
- *              Type:'REPORT',          //copied from app_module
- *              Name: string,           //copied from app_module
- *              Parameters:string,
- *              User:string,            //copied from iam_user
- *              Start:string|null,
- *              End:string|null,
- *              Progress:number|null,
- *              Status:'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL',
- *              Message:string|null,
- *              IamUserId:number,
- *              AppModuleId:number, 
- *              AppId: number         //copied from app
- *              }} server_db_table_AppModuleQueue
+ * @typedef  {object} server_db_table_AppModuleQueue
+ * @property {number} Id
+ * @property {Extract<ORM['Object']['AppModule']['ModuleType'],'REPORT'>} Type
+ * @property {ORM['Object']['AppModule']['ModuleName']} Name
+ * @property {string} Parameters
+ * @property {ORM['Object']['IamUser']['Username']} User
+ * @property {string|null} Start
+ * @property {string|null} End
+ * @property {number|null} Progress
+ * @property {'PENDING'|'RUNNING'|'COMPLETED'|'SUCCESS'|'FAIL'} Status
+ * @property {string|null} Message
+ * @property {ORM['Object']['IamUser']['Id']} IamUserId
+ * @property {ORM['Object']['AppModule']['Id']} AppModuleId
+ * @property {ORM['Object']['App']['Id']} AppId
  */
 
 /**
  * @description DB TABLE AppTranslation
  * @memberof ORM
- * @typedef {{Id: number,
- *			  Locale: string,
- *			  Document: {   ScreenshotStart:string,
- *                          Description:string,
- *                          Pattern:string,
- *                          Technology:string,
- *                          Reference:string,
- *                          Security:string,
- *                          Comparison:[string,string][][],
- *                          ScreenshotEnd:string[]
- *                      }|null,       //complex text
- *			  Text: string|null,	            //simple text
- *            AppId: number
- *          }} server_db_table_AppTranslation	
+ * @typedef  {object} server_db_table_AppTranslation
+ * @property {number} Id
+ * @property {string} Locale
+ * @property {{ScreenshotStart:string,Description:string,Pattern:string,Technology:string,Reference:string,Security:string,Comparison:[string,string][][],ScreenshotEnd:string[]}|null} Document
+ * @property {string|null} Text
+ * @property {ORM['Object']['App']['Id']} AppId
  */
 
 /**
  * @description DB TABLE AppData
  * @memberof ORM
- * @typedef {{  Id:number,
- *              Name: string,
- *              Value:string,
- *              DisplayData:string,
- *              Data2:string|number|null,
- *              Data3:string|number|null,
- *              Data4:string|number|null,
- *              Data5:string|number|null,
- *              AppId: number}} server_db_table_AppData
+ * @typedef  {object} server_db_table_AppData
+ * @property {number} Id
+ * @property {string} Name
+ * @property {string} Value
+ * @property {string} DisplayData
+ * @property {string|number|null} Data2
+ * @property {string|number|null} Data3
+ * @property {string|number|null} Data4
+ * @property {string|number|null} Data5
+ * @property {ORM['Object']['App']['Id']} AppId
  */
 
 /**
  * @description DB TABLE IamControlIp
  * @memberof ORM
- * @typedef {{  Id:number,
- *              From:string, 
- *              To:string, 
- *              HourFrom:number|null, 
- *              HourTo:number|null, 
- *              DateFrom:string|null, 
- *              DateTo:string|null, 
- *              Action:string|null,
- *              AppId:number|null}} server_db_table_IamControlIp
+ * @typedef  {object} server_db_table_IamControlIp
+ * @property {number} Id
+ * @property {string} From
+ * @property {string} To
+ * @property {number|null} HourFrom
+ * @property {number|null} HourTo
+ * @property {string|null} DateFrom
+ * @property {string|null} DateTo
+ * @property {string|null} Action
+ * @property {ORM['Object']['App']['Id']|null} AppId 
  */
 /**
  * @description DB TABLE IamControlObserve
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Ip:string, 
- *              UserAgent:string 
- *              Host:string, 
- *              AcceptLanguage:string, 
- *              Method:string,
- *              Url:string,
- *              Status?:1|0,
- *              Type?:'INVALID_PATH'|'HOST'|'USER_AGENT'|'URI_DECODE'|'BLOCK_IP'|'DECRYPTION_FAIL'|'REQUEST_KEY'|'TOO_MANY_FAILED_LOGIN',
- *              Created?:string,
- *              Modified?:string|null,
- *              IamUserId:number|null,
- *              AppId:number|null}} server_db_table_IamControlObserve
+ * @typedef  {object} server_db_table_IamControlObserve
+ * @property {number} Id
+ * @property {string} Ip
+ * @property {string} UserAgent
+ * @property {string} Host
+ * @property {string} AcceptLanguage
+ * @property {string} Method
+ * @property {string} Url
+ * @property {1|0} Status
+ * @property {'INVALID_PATH'|'HOST'|'USER_AGENT'|'URI_DECODE'|'BLOCK_IP'|'DECRYPTION_FAIL'|'REQUEST_KEY'|'TOO_MANY_FAILED_LOGIN'} Type
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['IamUser']['Id']|null} IamUserId
+ * @property {ORM['Object']['App']['Id']|null} AppId
  */
 /**
  * @description DB TABLE IamControlUserAgent
  * @memberof ORM
- * @typedef {{  Id:number,
- *              Name:string, 
- *              UserAgent:string}} server_db_table_IamControlUserAgent
+ * @typedef  {object} server_db_table_IamControlUserAgent
+ * @property {number} Id
+ * @property {string} Name
+ * @property {string} UserAgent
  */
 /**
  * @description DB TABLE IamEncryption
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Uuid:string, 
- *              Secret:string,
- *              Url?:string|null,
- *              Type:'BFE'|'APP'|'FONT',
- *              Created?:string,
- *              AppId:number,
- *              IamAppIdTokenId:number|null}} server_db_table_IamEncryption
+ * @typedef  {object} server_db_table_IamEncryption
+ * @property {number} Id
+ * @property {string} Uuid
+ * @property {string} Secret
+ * @property {string|null} Url
+ * @property {'BFE'|'APP'|'FONT'} Type
+ * @property {string} Created
+ * @property {ORM['Object']['App']['Id']} AppId
+ * @property {ORM['Object']['IamAppIdToken']['Id']|null} IamAppIdTokenId
  */
 
 /** 
  * @description DB TABLE IamMicroserviceToken
  * @memberof ORM
- * @typedef {{Id?:                  number,
- *            ServiceRegistryName:  string,
- *		        Res:	                0|1,
- *   	        Token:                string,
- *		        Ip:                   string,
- *		        Ua:                   string|null,
- *            Host:                 string|null,
- *		        Created?:             string,
- *            AppId:                number,
- *            ServiceRegistryId:    number}} server_db_table_IamMicroserviceToken
+ * @typedef  {object} server_db_table_IamMicroserviceToken
+ * @property {number} Id
+ * @property {string} ServiceRegistryName
+ * @property {0|1} Res
+ * @property {string} Token
+ * @property {string} Ip
+ * @property {string|null} Ua
+ * @property {string|null} Host
+ * @property {string} Created
+ * @property {ORM['Object']['App']['Id']} AppId
+ * @property {ORM['Object']['ServiceRegistry']['Id']} ServiceRegistryId
  */
 
 /**
  * @description DB TABLE IamUser
  * @memberof ORM
- * @typedef {{  Id?:number, 
- *              Username:string, 
- *              Password:string, 
- *              PasswordNew?:string|null, 
- *              PasswordReminder:string|null, 
- *              Bio:string|null, 
- *              Private:number|null,
- *              Avatar:string|null,
- *              OtpKey?:string|null,
- *              Type?: 'ADMIN'|'USER', 
- *              UserLevel?:number|null, 
- *              Status?:number|null, 
- *              Active?:number,
- *              Created?:string, 
- *              Modified?:string}} server_db_table_IamUser
+ * @typedef  {object} server_db_table_IamUser
+ * @property {number} Id
+ * @property {string} Username
+ * @property {string} Password
+ * @property {string|null} PasswordReminder
+ * @property {string|null} Bio
+ * @property {number|null} Private
+ * @property {string|null} Avatar
+ * @property {string|null} OtpKey
+ * @property {'ADMIN'|'USER'} Type
+ * @property {number|null} UserLevel
+ * @property {number|null} Status
+ * @property {number} Active
+ * @property {string} Created
+ * @property {string|null} Modified
  */
 
 /**
  * @description DB TABLE IamUserFollow
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Created?:string,
- *              IamUserId:number,
- *              IamUserIdFollow:number}} server_db_table_IamUserFollow
+ * @typedef  {object} server_db_table_IamUserFollow
+ * @property {number} Id
+ * @property {string} Created
+ * @property {ORM['Object']['IamUser']['Id']} IamUserId
+ * @property {ORM['Object']['IamUser']['Id']} IamUserIdFollow
  */
+
 /**
  * @description DB TABLE IamUserLike
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Created?:string,
- *              IamUserId:number,
- *              IamUserIdLike:number}} server_db_table_IamUserLike
+ * @typedef  {object} server_db_table_IamUserLike
+ * @property {number} Id
+ * @property {string} Created
+ * @property {ORM['Object']['IamUser']['Id']} IamUserId
+ * @property {ORM['Object']['IamUserLike']['Id']} IamUserIdLike
  */
+
 /**
  * @description DB TABLE IamUserView
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              ClientIp:string|null,
- *              ClientUserAgent:string|null,
- *              Created?:string,
- *              IamUserId:number|null,
- *              IamUserIdView:number}} server_db_table_IamUserView
+ * @typedef  {object} server_db_table_IamUserView
+ * @property {number} Id
+ * @property {string|null} ClientIp
+ * @property {string|null} ClientUserAgent
+ * @property {string} Created
+ * @property {ORM['Object']['IamUser']['Id']|null} IamUserId
+ * @property {ORM['Object']['IamUser']['Id']} IamUserIdView
  */
 
 /**
  * @description DB TABLE IamUserApp
  * @memberof ORM
- * @typedef {{  Id?:number, 
- *              Document:{
- *                          PreferenceTheme?:string|null,
- *                          PreferenceLocale?:string|null,
- *                          PreferenceTimezone?:string|null,
- *                          PreferenceDirection?:string|null,
- *                          PreferenceArabicScript?:string|null,
- *                          Custom?:{
- *                              [key:string]:string
- *                          }|null
- *                      },
- *              Created?:string, 
- *              Modified?:string|null,
- *              IamUserId: number, 
- *              AppId:number}} server_db_table_IamUserApp
+ * @typedef  {object} server_db_table_IamUserApp
+ * @property {number} Id
+ * @property {object} Document
+ * @property {string|null} Document.PreferenceTheme
+ * @property {string|null} Document.PreferenceLocale
+ * @property {string|null} Document.PreferenceTimezone
+ * @property {string|null} Document.PreferenceDirection
+ * @property {string|null} Document.PreferenceArabicScript
+ * @property {{[key:string]:string}|null} Document.Custom
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['IamUser']['Id']} IamUserId
+ * @property {ORM['Object']['App']['Id']} AppId
  */
 /**
  * @description DB TABLE IamUserAppDataPost
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Document:{[key:string]:string}|null,
- *              Created?:string,
- *              Modified?:string|null,
- *              IamUserAppId:number}} server_db_table_IamUserAppDataPost
+ * @typedef  {object} server_db_table_IamUserAppDataPost
+ * @property {number} Id
+ * @property {{[key:string]:string}|null} Document
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['IamUserApp']['Id']} IamUserAppId
  */
 
 /**
  * @description DB TABLE IamUserAppDataPostLike
  * @memberof ORM
- * @typedef {{  Id:number,
- *              Created:string,
- *              IamUserAppDataPostId:number,
- *              IamUserAppId:number}} server_db_table_IamUserAppDataPostLike
+ * @typedef  {object} server_db_table_IamUserAppDataPostLike
+ * @property {number} Id
+ * @property {string} Created
+ * @property {ORM['Object']['IamUserAppDataPost']['Id']} IamUserAppDataPostId
+ * @property {ORM['Object']['IamUserApp']['Id']} IamUserAppId
  */
 /**
  * @description DB TABLE IamUserAppDataPostView
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Document:{client_ip:string|null,
- *                        client_user_agent:string|null},
- *              Created?:string,
- *              IamUserAppId:number|null, 
- *              IamUserAppDataPostId:number}} server_db_table_IamUserAppDataPostView
+ * @typedef {object} server_db_table_IamUserAppDataPostView
+ * @property {number} Id
+ * @property {object} Document
+ * @property {string|null} Document.client_ip
+ * @property {string|null} Document.client_user_agent
+ * @property {string} Created
+ * @property {ORM['Object']['IamUserApp']['Id']|null} IamUserAppId
+ * @property {ORM['Object']['IamUserAppDataPost']['Id']} IamUserAppDataPostId
  */
     
 /**
  * @description DB TABLE IamUserEvent
  * @memberof ORM
- * @typedef {{  Id?:number, 
- *              Event:'OTP_LOGIN'|'OTP_SIGNUP'|'OTP_2FA'|'USER_UPDATE', 
- *              EventStatus?:'INPROGRESS'|'SUCCESSFUL'|'FAIL',
- *              Created?:string,
- *              IamUserId:number}} server_db_table_IamUserEvent
+ * @typedef  {object} server_db_table_IamUserEvent
+ * @property {number} Id
+ * @property {'OTP_LOGIN'|'OTP_SIGNUP'|'OTP_2FA'|'USER_UPDATE'} Event
+ * @property {'INPROGRESS'|'SUCCESSFUL'|'FAIL'} EventStatus
+ * @property {string} Created
+ * @property {ORM['Object']['IamUser']['Id']} IamUserId
  */
 
 /** 
  * @description DB TABLE IamAppIdToken
  * @memberof ORM
- * @typedef {{  Id?:          number,
- *		          Res:		      0|1,
- *   	          Token:        string,
- *		          Ip:           string,
- *		          Ua:           string|null,
- *		          Created?:     string,
- *              AppId:        number,
- *              AppIdToken:   number|null}} server_db_table_IamAppIdToken
+ * @typedef  {object} server_db_table_IamAppIdToken
+ * @property {number} Id
+ * @property {0|1} Res
+ * @property {string} Token
+ * @property {string} Ip
+ * @property {string|null} Ua
+ * @property {string} Created
+ * @property {ORM['Object']['App']['Id']} AppId
+ * @property {ORM['Object']['App']['Id']|null} AppIdToken
  */
 
  /**
  * @description DB TABLE IamAppAccess
  * @memberof ORM
- * @typedef {{	Id?:              number,
- *              Type:             'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN',
- *              Res:	            0|1|2,          //0=fail, 1=success, 2=invalidated
- *		          Ip:               string,
- *              IamUserUsername:  string|null,    
- *              AppCustomId:      number|string|null,
- *              Token:            string|null,
- *		          Ua:               string|null,
- *		          Created?:         string,
- *              Modified?:        string|null,
- *              AppId:            number,
- *              AppIdToken:       number|null,
- *              IamUserAppId:     number|null,
- *              IamUserId:        number|null}} server_db_table_IamAppAccess
+ * @typedef  {object} server_db_table_IamAppAccess
+ * @property {number} Id
+ * @property {'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN'} Type
+ * @property {0|1|2} Res                - 0=fail, 1=success, 2=invalidated
+ * @property {string} Ip
+ * @property {ORM['Object']['IamUser']['Username']|null} IamUserUsername
+ * @property {number|string|null} AppCustomId
+ * @property {string|null} Token
+ * @property {string|null} Ua
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {ORM['Object']['App']['Id']} AppId
+ * @property {ORM['Object']['App']['Id']|null} AppIdToken
+ * @property {ORM['Object']['IamUserApp']['Id']|null} IamUserAppId
+ * @property {ORM['Object']['IamUser']['Id']|null} IamUserId
  */
 
 /**
  * @description DB TABLE_LOG LogAppInfo
  * @memberof ORM
- * @typedef {{   Id?:number,
- *               AppId:number|null,
- *               AppFilename:string,
- *               AppFunctionName:string,
- *               AppAppLine:number,
- *               Logtext:string,
- *               Created?:string}} server_db_table_LogAppInfo
+ * @typedef  {object} server_db_table_LogAppInfo
+ * @property {number} Id
+ * @property {ORM['Object']['App']['Id']|null} AppId
+ * @property {string} AppFilename
+ * @property {string} AppFunctionName
+ * @property {number} AppAppLine
+ * @property {string} Logtext
+ * @property {string} Created
  */
 
 /**
  * @description DB TABLE_LOG LogDbInfo
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              AppId:number|null,
- *              Object:string,
- *              Dml:string,
- *              Parameters:{},
- *              Logtext:string,
- *              Created?:string}} server_db_table_LogDbInfo
+ * @typedef  {object} server_db_table_LogDbInfo
+ * @property {number} Id
+ * @property {ORM['Object']['App']['Id']|null} AppId
+ * @property {string} Object
+ * @property {string} Dml
+ * @property {{}} Parameters
+ * @property {string} Logtext
+ * @property {string} Created
  */
 
 /**
  * @description DB TABLE_LOG LogBffInfo
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              AppId:number|null,
- *              Service:string,
- *              Method:string,
- *              Url:string,
- *              Operation:string|null
- *              Parameters:string,
- *              Logtext:string,
- *              Created?:string}} server_db_table_LogBffInfo
+ * @typedef  {object} server_db_table_LogBffInfo
+ * @property {number} Id
+ * @property {ORM['Object']['App']['Id']|null} AppId
+ * @property {string} Service
+ * @property {string} Method
+ * @property {string} Url
+ * @property {string|null} Operation
+ * @property {string} Parameters
+ * @property {string} Logtext
+ * @property {string} Created
  */
          
 /**
  * @description DB TABLE_LOG LogRequestInfo
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Host:string,
- *              AppId:number|null,
- *              AppIdAuth:1|0|null,
- *              Ip:string,
- *              RequestId:string,
- *              CorrelationId:string,
- *              Url:string,
- *              XUrl:string|null,
- *              HttpInfo:string,
- *              Method:string,
- *              XMethod:string|null,
- *              StatusCode:number,
- *              StatusMessage:string,
- *              UserAgent:string,
- *              AcceptLanguage:string,
- *              Referer:string,
- *              SizeReceived:number,
- *              SizeSent:number,
- *              ResponseTime:number,
- *              Logtext:string,
- *              Created?:string}} server_db_table_LogRequestInfo
+ * @typedef  {object} server_db_table_LogRequestInfo
+ * @property {number} Id
+ * @property {string} Host
+ * @property {ORM['Object']['App']['Id']|null} AppId
+ * @property {1|0|null} AppIdAuth
+ * @property {string} Ip
+ * @property {string} RequestId
+ * @property {string} CorrelationId
+ * @property {string} Url
+ * @property {string|null} XUrl
+ * @property {string} HttpInfo
+ * @property {string} Method
+ * @property {string|null} XMethod
+ * @property {number} StatusCode
+ * @property {string} StatusMessage
+ * @property {string} UserAgent
+ * @property {string} AcceptLanguage
+ * @property {string} Referer
+ * @property {number} SizeReceived
+ * @property {number} SizeSent
+ * @property {number} ResponseTime
+ * @property {string} Logtext
+ * @property {string} Created
  */
 
 /**
  * @description DB TABLE_LOG LogServerInfo
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              LogText:string,
- *              Created?:string}} server_db_table_LogServerInfo
+ * @typedef  {object} server_db_table_LogServerInfo
+ * @property {number} Id
+ * @property {string} LogText
+ * @property {string} Created
  */
 
 /** 
  * @description DB DOCUMENT ServiceRegistry
  * @memberof ORM
- * @typedef {{  Id?:                number,
- *              Name:               string,
- *              ServerProtocol:     'http',
- *              ServerHost:         string,
- *              ServerPort:         number,
- *              MetricsUrl:         string|null, 
- *              HealthUrl:          string|null, 
- *              RestApiVersion:     number,
- *              Uuid:               string,
- *              Secret:             string,
- *              Status:             string,
- *              Created?:           string,
- *              Modified?:          string|null}} server_db_table_ServiceRegistry
+ * @typedef  {object} server_db_table_ServiceRegistry
+ * @property {number} Id
+ * @property {string} Name
+ * @property {'http'} ServerProtocol
+ * @property {string} ServerHost
+ * @property {number} ServerPort
+ * @property {string|null} MetricsUrl
+ * @property {string|null} HealthUrl
+ * @property {number} RestApiVersion
+ * @property {string} Uuid
+ * @property {string} Secret
+ * @property {string} Status
+ * @property {string} Created
+ * @property {string|null} Modified
  */
 
 /**
  * @description DB DOCUMENT OpenApi
  *              Follows Open API syntax
  * @memberof ORM
- * @typedef  {{ info: {
- *                      title: string,
- *                      version: string,
- *                      description: string,
- *                      'x-created':string,
- *                      'x-modified':string
- *              },
- *              servers: {
- *                          "url": string,
- *                          "description": string,
- *                          "variables": {
- *    			                "protocol": {
- *				                    "default": string
- *        	                    },
- *			                    "host": {
- *				                    "default": string
- *		                        },
- *		                        "port": {
- *				                    "default": number
- *		                        },
- *		                        "basePath": {
- *				                    "default": string
- *		                        },
- *                              "config"?:[key:{default:*, description:string}]
- *  		                },
- *                          "x-type": {
- *				                "$ref": string,
- *          		            "default": "APP"|"ADMIN"|"NOHANGING_HTTPS"|"REST_API"
- *		                    },
- *              }[],
- *              paths: {[key:string]: 
- *                          {[key in 'get'|'post'|'delete'|'patch'|'put']:
- *                              {
- *                                  summary: string,
- *                                  operationId: string,
- *                                  parameters: [
- *                                      {[key:string]:boolean|string|{}}
- *                                  ],
- *                                  requestBody: {
- *                                      "description":string,
- *                                      "required":boolean,
- *                                      "content":{
- *                                          [key:string]: {
- *                                              [key:string]: string|boolean
- *                                          }
- *                                      }
- *                                  },
- *                                  responses: {
- *                                       [key:string]: {
- *                                          [key:string]: string
- *                                      }
- *                                  }
- *                              }
- *                          }
- *                  },
- *              components:{
- *                  "securitySchemes":{
- *                      [key:string]: {}
- *                  },
- *                  "parameters":{
- *                      "config": Object<string,{default:*, description:string}>,
- *                      "paths": [key:*]
- *                  },
- *                  "responses":{
- *                      [key:string]: {
- *                          description: string,
- *                          content: {
- *                              'application/json': {
- *                                  schema: {
- *                                      "$ref": string
- *                                  }
- *                              }
- *                          }
- *                      }
- *                  },
- *              }
- *          }} server_db_document_OpenApi
+ * @typedef  {object} server_db_document_OpenApi
+ * @property {{title: string,version: string,description: string,'x-created':string,'x-modified':string}} info
+ * @property {{url: string,description: string,variables: {protocol: {default: string},host: {default: string},port: {default: number},basePath: {default: string},config?:[key:{default:*, description:string}]},"x-type": {"$ref": string,default: "APP"|"ADMIN"|"NOHANGING_HTTPS"|"REST_API"},}[]} servers
+ * @property {{[key:string]: {[key in 'get'|'post'|'delete'|'patch'|'put']:{summary: string,operationId: string,parameters: [{[key:string]:boolean|string|{}}],requestBody: {description:string,required:boolean,content:{[key:string]: {[key:string]: string|boolean}}},responses: {[key:string]: {[key:string]: string}}}}}} paths
+ * @property {object}               components
+ * @property {{[key:string]: {}}}   components.securitySchemes
+ * @property {object}               components.parameters
+ * @property {Object<string,{default:*, description:string}>} components.parameters.config
+ * @property {[key:*]}              components.parameters.paths
+ * @property {{[key:string]: {description: string,content: {'application/json': {schema: {"$ref": string}}}}}}  components.responses
  */
 
 /**
  * @description DB TABLE MessageQueuePublish
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Service:'MESSAGE'|'BATCH',
- *              Message:{ Id?:number,
- *                        Type?:'MICROSERVICE_ERROR'|'MICROSERVICE_LOG',
- *                        Sender?:string|null,
- *                        ReceiverId?:number|null,
- *                        Host?:string,
- *                        ClientIp?:string,
- *                        Subject?:string,
- *                        Message:string,
- *                        Created?:string
- *              },
- *              Created?:string}} server_db_table_MessageQueuePublish
+ * @typedef  {object} server_db_table_MessageQueuePublish
+ * @property {number} [Id]
+ * @property {'MESSAGE'|'BATCH'} Service
+ * @property {object}       Message
+ * @property {number}       [Message.Id]
+ * @property {'MICROSERVICE_ERROR'|'MICROSERVICE_LOG'} [Message.Type]
+ * @property {string|null}  [Message.Sender]
+ * @property {number|null}  [Message.ReceiverId]
+ * @property {string}       [Message.Host]
+ * @property {string}       [Message.ClientIp]
+ * @property {string}       [Message.Subject]
+ * @property {string}       Message.Message
+ * @property {string}       [Message.Created]
+ * @property {string}       [Created]
  */
 
 /**
  * @description DB TABLE MessageQueueConsume
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Message:*,
- *              Start:string|null,
- *              Finished:string|null,
- *              Result:*,
- *              Created?:string,
- *              Modified?:string,
- *              MessageQueuePublishId:number}} server_db_table_MessageQueueConsume
+ * @typedef  {object} server_db_table_MessageQueueConsume
+ * @property {number} Id
+ * @property {*} Message
+ * @property {string|null} Start
+ * @property {string|null} Finished
+ * @property {*} Result
+ * @property {string} Created
+ * @property {string|null} Modified
+ * @property {number} MessageQueuePublishId
  */
 
 /**
  * @description DB TABLE MessageQueueError
  * @memberof ORM
- * @typedef {{  Id?:number,
- *              Message:*,
- *              Result:*,
- *              Created?:string,
- *              MessageQueuePublishId:number}} server_db_table_MessageQueueError
+ * @typedef  {object} server_db_table_MessageQueueError
+ * @property {number} Id
+ * @property {*} Message
+ * @property {*} Result
+ * @property {string} Created
+ * @property {number} MessageQueuePublishId
  */
-
 
 /**
  * @description DB VIEW ViewLogGetStat
- * @typedef {{Chart:1|2|null,
- *            StatValue:string|number|null,
- *            Year:number,
- *            Month:number,
- *            Day:number|null,
- *            Amount:number|null}} ViewLogGetStat
+ * @memberof ORM
+ * @typedef  {object} ViewLogGetStat
+ * @property {1|2|null} Chart
+ * @property {string|number|null} StatValue
+ * @property {number} Year
+ * @property {number} Month
+ * @property {number|null} Day
+ * @property {number|null} Amount
  */
 /**
  * @description DB VIEW ViewAppGetInfo
  * @memberof ORM
- * @typedef {{
- *              Id: server_db_table_App['Id'],
- *              Name: server_db_table_App['Name'],
- *              Logo:server_db_table_App['Logo'],
- *              Js: server_db_table_App['Js'],
- *              Css: server_db_table_App['Css'],
- *              CssReport: server_db_table_App['CssReport'],
- *              TextEdit:server_db_table_App['TextEdit'],
- *              Copyright:server_db_table_App['Copyright'],
- *              LinkTitle:server_db_table_App['LinkTitle'],
- *              LinkUrl:server_db_table_App['LinkUrl']}} ViewAppGetInfo
+ * @typedef  {object} ViewAppGetInfo
+ * @property {server_db_table_App['Id']} Id
+ * @property {server_db_table_App['Name']} Name
+ * @property {server_db_table_App['Logo']} Logo
+ * @property {server_db_table_App['Js']} Js
+ * @property {server_db_table_App['Css']} Css
+ * @property {server_db_table_App['CssReport']} CssReport
+ * @property {server_db_table_App['TextEdit']} TextEdit
+ * @property {server_db_table_App['Copyright']} Copyright
+ * @property {server_db_table_App['LinkTitle']} LinkTitle
+ * @property {server_db_table_App['LinkUrl']} LinkUrl
  */
 /**
  * @descriptin DB VIEW ViewIamUsetGetProfile
- * @typedef {{  Id:             ORM['Object']['IamUser']['Id'],
- *              Active:         ORM['Object']['IamUser']['Active'],
- *              Username:       ORM['Object']['IamUser']['Username'],
- *              Bio:            ORM['Object']['IamUser']['Bio'],
- *              Private:        number|null,
- *              UserLevel:      ORM['Object']['IamUser']['UserLevel'],
- *              Avatar:         ORM['Object']['IamUser']['Avatar'],
- *              Friends:        number|null,
- *              Created:        string,
- *              CountFollowing: number,
- *              CountFollowed:  number,
- *              CountLikes:     number,
- *              CountLiked:     number,
- *              CountViews:     number,
- *              FollowedId:     number,
- *              LikedId:        number}} ViewIamUsetGetProfile
+ * @memberof ORM
+ * @typedef  {object} ViewIamUsetGetProfile
+ * @property {ORM['Object']['IamUser']['Id']} Id
+ * @property {ORM['Object']['IamUser']['Active']} Active
+ * @property {ORM['Object']['IamUser']['Username']} Username
+ * @property {ORM['Object']['IamUser']['Bio']} Bio
+ * @property {ORM['Object']['IamUser']['Private']} Private
+ * @property {ORM['Object']['IamUser']['UserLevel']} UserLevel
+ * @property {ORM['Object']['IamUser']['Avatar']} Avatar
+ * @property {number|null} Friends
+ * @property {string} Created
+ * @property {number} CountFollowing
+ * @property {number} CountFollowed
+ * @property {number} CountLikes
+ * @property {number} CountLiked
+ * @property {number} CountViews
+ * @property {ORM['Object']['IamUserFollow']['Id']|null} FollowedId
+ * @property {ORM['Object']['IamUserLike']['Id']|null} LikedId
  */
 /**
  * @description DB VIEW ViewIamUserGetProfileDetail
  * @memberof ORM
- * @typedef {{Detail:'FOLLOWING'|'FOLLOWED'|'LIKE_USER'|'LIKED_USER',
- *                               IamUserId:ORM['Object']['IamUserFollow']['IamUserId'],
- *                               Avatar:ORM['Object']['IamUser']['Avatar'],
- *                               Username:ORM['Object']['IamUser']['Username']}} ViewIamUserGetProfileDetail
+ * @typedef  {object} ViewIamUserGetProfileDetail
+ * @property {'FOLLOWING'|'FOLLOWED'|'LIKE_USER'|'LIKED_USER'} Detail
+ * @property {ORM['Object']['IamUserFollow']['IamUserId']|ORM['Object']['IamUserLike']['IamUserId']} IamUserId
+ * @property {ORM['Object']['IamUser']['Avatar']} Avatar
+ * @property {ORM['Object']['IamUser']['Username']} Username
  */
 /**
  * @description DB VIEW ViewIamUserGetProfileStat
  * @memberof ORM
- * @typedef {{Top:'VISITED|FOLLOWING|LIKE_USER', 
- *            Id:ORM['Object']['IamUser']['Id'], 
- *            Avatar:ORM['Object']['IamUser']['Avatar'],
- *            Username:ORM['Object']['IamUser']['Username'],
- *            Count:number}} ViewIamUserGetProfileStat
+ * @typedef  {object} ViewIamUserGetProfileStat
+ * @property {'VISITED|FOLLOWING|LIKE_USER'} Top
+ * @property {ORM['Object']['IamUser']['Id']} Id
+ * @property {ORM['Object']['IamUser']['Avatar']} Avatar
+ * @property {ORM['Object']['IamUser']['Username']} Username
+ * @property {number} Count
  */
 /**
  * @description DB VIEW ViewIamUserGetStatCountAdmin
- * @typedef {{CountUsers:number}} ViewIamUserGetStatCountAdmin
+ * @memberof ORM
+ * @typedef  {object} ViewIamUserGetStatCountAdmin
+ * @property {number} CountUsers
  */
 /**
  * @description DB VIEW ViewIamUserAppDataPostgetProfileUserPosts
- * @typedef { {Id:ORM['Object']['IamUserAppDataPost']['Id'],
- *             Description:string,
- *             IamUserId:ORM['Object']['IamUserApp']['IamUserId'],
- *             Document:ORM['Object']['IamUserAppDataPost']['Document'],
- *             CountLikes:number,
- *             CountViews:number,
- *             Liked:number}} ViewIamUserAppDataPostgetProfileUserPosts
+ * @memberof ORM
+ * @typedef  {object} ViewIamUserAppDataPostgetProfileUserPosts
+ * @property {ORM['Object']['IamUserAppDataPost']['Id']} Id
+ * @property {string} Description
+ * @property {ORM['Object']['IamUserApp']['IamUserId']} IamUserId
+ * @property {ORM['Object']['IamUserAppDataPost']['Document']} Document
+ * @property {number} CountLikes
+ * @property {number} CountViews
+ * @property {number} Liked
  */
 
 /**
  * @description DB VIEW ViewIamUserAppDataPostGetProfileStatLike
- * @typedef {{CountUserPostLikes:number, CountUserPostLiked:number}} ViewIamUserAppDataPostGetProfileStatLike
+ * @memberof ORM
+ * @typedef  {object} ViewIamUserAppDataPostGetProfileStatLike
+ * @property {number} CountUserPostLikes
+ * @property {number} CountUserPostLiked
  */
 /**
  * @description DB VIEW ViewIamUserAppDataPostGetProfileStatPost
- * @typedef {{Top:'LIKED_POST'|'VIEWED_POST',
-  *           Id:ORM['View']['IamUserGetProfileStat']['Id'],
-  *           Avatar:ORM['View']['IamUserGetProfileStat']['Avatar'],
-  *           Username:ORM['View']['IamUserGetProfileStat']['Username'],
-  *           Count:ORM['View']['IamUserGetProfileStat']['Count']}}  ViewIamUserAppDataPostGetProfileStatPost
+ * @memberof ORM
+ * @typedef  {object} ViewIamUserAppDataPostGetProfileStatPost
+ * @property {'LIKED_POST'|'VIEWED_POST'} Top
+ * @property {ORM['View']['IamUserGetProfileStat']['Id']} Id
+ * @property {ORM['View']['IamUserGetProfileStat']['Avatar']} Avatar
+ * @property {ORM['View']['IamUserGetProfileStat']['Username']} Username
+ * @property {ORM['View']['IamUserGetProfileStat']['Count']} Count
  */
 /**
  * @description DB VIEW ViewIamUserAppdataPostGetProfileUserPostDetail
- * @typedef {{Detail:'LIKE_POST'|'LIKED_POST',
- *            IamUserId:ORM['Object']['IamUserApp']['IamUserId'],
- *            Avatar:ORM['Object']['IamUser']['Avatar'],
- *            Username:ORM['Object']['IamUser']['Username']}} ViewIamUserAppdataPostGetProfileUserPostDetail
+ * @memberof ORM
+ * @typedef  {object} ViewIamUserAppdataPostGetProfileUserPostDetail
+ * @property {'LIKE_POST'|'LIKED_POST'} Detail
+ * @property {ORM['Object']['IamUserApp']['IamUserId']} IamUserId
+ * @property {ORM['Object']['IamUser']['Avatar']} Avatar
+ * @property {ORM['Object']['IamUser']['Username']} Username
  */
 /**
  * @description DB VIEW ViewORMGetInfo
- * @typedef {{DatabaseName:string, 
- *            Version:number,
- *            Hostname:string,
- *            Connections:Number,
- *            Started:number}} ViewORMGetInfo
+ * @memberof ORM
+ * @typedef  {object} ViewORMGetInfo
+ * @property {string} DatabaseName
+ * @property {number} Version
+ * @property {string} Hostname
+ * @property {number} Connections
+ * @property {number} Started
  */
 /**
  * @description DB VIEW ViewORMGetObjects
- * @typedef {{Name:ORM['MetaData']['Object']['Name'],
- *            Type:ORM['MetaData']['Object']['Type'],
- *            InMemory:ORM['MetaData']['Object']['InMemory'],
- *            Lock:ORM['MetaData']['Object']['Lock'],
- *            TransactionId:ORM['MetaData']['Object']['TransactionId'],
- *            Rows:number|null,
- *            Size:number|null,
- *            Pk:ORM['MetaData']['Object']['Pk'],
- *            Uk:ORM['MetaData']['Object']['Uk'],
- *            Fk:ORM['MetaData']['Object']['Fk'],
- *            Description:ORM['MetaData']['Object']['Description']}} ViewORMGetObjects
+ * @memberof ORM
+ * @typedef {object} ViewORMGetObjects
+ * @property {ORM['MetaData']['Object']['Name']} Name
+ * @property {ORM['MetaData']['Object']['Type']} Type
+ * @property {ORM['MetaData']['Object']['InMemory']} InMemory
+ * @property {ORM['MetaData']['Object']['Lock']} Lock
+ * @property {ORM['MetaData']['Object']['TransactionId']} TransactionId
+ * @property {number|null} Rows
+ * @property {number|null} Size
+ * @property {ORM['MetaData']['Object']['Pk']} Pk
+ * @property {ORM['MetaData']['Object']['Uk']} Uk
+ * @property {ORM['MetaData']['Object']['Fk']} Fk
+ * @property {ORM['MetaData']['Object']['Description']} Description
  */
 
 /** 
  * @description DB object record
  * @namespace ORM
- * @typedef {{  Name:keyof ORM['Object'], 
- *              Type:'DOCUMENT'|'TABLE'|'TABLE_KEY_VALUE'|'TABLE_LOG'|'TABLE_LOG_DATE',
- *              InMemory:boolean,
- *              Content:*,
- *              Lock:number, 
- *              TransactionId:number|null, 
- *              TransactionContent: object|[]|null, 
- *              CacheContent?:* ,
- *              Pk:string|null,
- *              Uk:string[]|null,
- *              Fk:[string,string, keyof ORM['Object']][]|null,
- *              Description:string}} server_db_ORM
+ * @typedef {object} server_db_ORM
+ * @property {keyof ORM['Object']} Name
+ * @property {'DOCUMENT'|'TABLE'|'TABLE_KEY_VALUE'|'TABLE_LOG'|'TABLE_LOG_DATE'} Type
+ * @property {boolean} InMemory
+ * @property {*} Content
+ * @property {number} Lock
+ * @property {number|null} TransactionId
+ * @property {object|[]|null} TransactionContent
+ * @property {*} CacheContent
+ * @property {string|null} Pk
+ * @property {string[]|null} Uk
+ * @property {[string,string, keyof ORM['Object']][]|null} Fk
+ * @property {string} Description
  */
 
 /** 
@@ -1302,7 +1280,7 @@
 
 
 /**
- * @description ORM Objects
+ * @description ORM
  * @typedef {{Object:{
  *                    App:server_db_table_App,
  *                    AppData:server_db_table_AppData,
@@ -1369,7 +1347,7 @@
  *              },
  *            MetaData:{
  *                Object:server_db_ORM,
- *                AllObjects: server_db_ORM['Name']|'ORM'
+ *                AllObjects: server_db_ORM['Name']|'ORM',
  *                result_fileFsRead:server_db_result_fileFsRead,
  *                common_result:server_db_common_result,
  *                common_result_select:server_db_common_result_select,

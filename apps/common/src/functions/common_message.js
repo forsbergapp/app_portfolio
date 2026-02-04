@@ -177,7 +177,7 @@ const appFunction = async parameters =>{
                     //authenticate message id
                     if (result.result
                             .filter((/**@type{server['ORM']['Object']['MessageQueuePublish']}*/message)=>message.Id == parameters.data.message_id).length==1){
-                        /**@type{server['ORM']['Object']['MessageQueueConsume']}*/
+                        /**@ts-ignore @type{server['ORM']['Object']['MessageQueueConsume']}*/
                         const message_queue_message = {
                             MessageQueuePublishId:parameters.data.message_id,
                             Message:    null,
@@ -196,6 +196,7 @@ const appFunction = async parameters =>{
                                         .catch((/**@type{*}*/error)=>
                                             server.ORM.db.MessageQueueError.post({  
                                                 app_id:parameters.app_id,
+                                                /**@ts-ignore */
                                                 data:{
                                                     MessageQueuePublishId:parameters.data.message_id,
                                                     Message:error, 

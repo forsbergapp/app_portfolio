@@ -161,6 +161,7 @@ const component = async props =>{
                             .toString('base64');
 
         return  server.ORM.db.IamEncryption.post(data_app_id,
+                /**@ts-ignore */
                 {AppId:common_app_id, Uuid:uuid, Secret:secret, IamAppIdTokenId:idToken.id??0, Type:'APP'})
             .then(result=>{
                 return {
