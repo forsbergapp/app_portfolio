@@ -380,7 +380,7 @@
  * @property {ORM['Object']['IamAppIdToken']['Id']|null} IamAppIdTokenId
  */
 
-/** 
+/**
  * @description DB TABLE IamMicroserviceToken
  * @memberof ORM
  * @typedef  {object} server_db_table_IamMicroserviceToken
@@ -509,7 +509,7 @@
  * @property {ORM['Object']['IamUser']['Id']} IamUserId
  */
 
-/** 
+/**
  * @description DB TABLE IamAppIdToken
  * @memberof ORM
  * @typedef  {object} server_db_table_IamAppIdToken
@@ -525,11 +525,12 @@
 
  /**
  * @description DB TABLE IamAppAccess
+ *              Res: 0=fail, 1=success, 2=invalidated
  * @memberof ORM
  * @typedef  {object} server_db_table_IamAppAccess
  * @property {number} Id
  * @property {'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN'} Type
- * @property {0|1|2} Res                - 0=fail, 1=success, 2=invalidated
+ * @property {0|1|2} Res
  * @property {string} Ip
  * @property {ORM['Object']['IamUser']['Username']|null} IamUserUsername
  * @property {number|string|null} AppCustomId
@@ -621,7 +622,7 @@
  * @property {string} Created
  */
 
-/** 
+/**
  * @description DB DOCUMENT ServiceRegistry
  * @memberof ORM
  * @typedef  {object} server_db_table_ServiceRegistry
@@ -715,19 +716,19 @@
  * @description DB VIEW ViewAppGetInfo
  * @memberof ORM
  * @typedef  {object} ViewAppGetInfo
- * @property {server_db_table_App['Id']} Id
- * @property {server_db_table_App['Name']} Name
- * @property {server_db_table_App['Logo']} Logo
- * @property {server_db_table_App['Js']} Js
- * @property {server_db_table_App['Css']} Css
- * @property {server_db_table_App['CssReport']} CssReport
- * @property {server_db_table_App['TextEdit']} TextEdit
- * @property {server_db_table_App['Copyright']} Copyright
- * @property {server_db_table_App['LinkTitle']} LinkTitle
- * @property {server_db_table_App['LinkUrl']} LinkUrl
+ * @property {ORM['Object']['App']['Id']} Id
+ * @property {ORM['Object']['App']['Name']} Name
+ * @property {ORM['Object']['App']['Logo']} Logo
+ * @property {ORM['Object']['App']['Js']} Js
+ * @property {ORM['Object']['App']['Css']} Css
+ * @property {ORM['Object']['App']['CssReport']} CssReport
+ * @property {ORM['Object']['App']['TextEdit']} TextEdit
+ * @property {ORM['Object']['App']['Copyright']} Copyright
+ * @property {ORM['Object']['App']['LinkTitle']} LinkTitle
+ * @property {ORM['Object']['App']['LinkUrl']} LinkUrl
  */
 /**
- * @descriptin DB VIEW ViewIamUsetGetProfile
+ * @description DB VIEW ViewIamUsetGetProfile
  * @memberof ORM
  * @typedef  {object} ViewIamUsetGetProfile
  * @property {ORM['Object']['IamUser']['Id']} Id

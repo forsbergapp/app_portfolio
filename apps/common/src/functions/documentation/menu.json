@@ -26,43 +26,43 @@
                 },
                 {   "id":6,
                     "menu":"",
-                    "doc":"4.installationAbout"
+                    "doc":"2.installationAbout"
                 },
                 {   "id":7,
                     "menu":"",
-                    "doc":"4.installationLocalhost"
+                    "doc":"2.installationLocalhost"
                 },
                 {   "id":8,
                     "menu":"",
-                    "doc":"4.installationServerTerraform"
+                    "doc":"2.installationServerTerraform"
                 },
                 {   "id":9,
                     "menu":"",
-                    "doc":"4.installationServerNoTerraform"
+                    "doc":"2.installationServerNoTerraform"
                 },
                 {   "id":10,
                     "menu":"",
-                    "doc":"4.installationPMMicroservices"
+                    "doc":"2.installationPMMicroservices"
                 },
                 {   "id":11,
                     "menu":"",
-                    "doc":"4.configurationServer"
+                    "doc":"2.configurationServer"
                 },
                 {   "id":12,
                     "menu":"",
-                    "doc":"4.configurationApp"
+                    "doc":"2.configurationApp"
                 },
                 {   "id":13,
                     "menu":"",
-                    "doc":"5.development_repository"
+                    "doc":"3.development_repository"
                 },
                 {   "id":14,
                     "menu":"",
-                    "doc":"5.development"
+                    "doc":"3.development"
                 },
                 {   "id":15,
                     "menu":"",
-                    "doc":"3.database"
+                    "doc":"4.database"
                 }
                 ]
     },
@@ -93,6 +93,10 @@
                 {   "id":4,
                     "menu":"",
                     "doc":"templateOpenApiRestApiFunctions"
+                },
+                {   "id":5,
+                    "menu":"",
+                    "doc":"templateORM"
                 }]
     },
     {

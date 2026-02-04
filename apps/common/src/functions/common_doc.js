@@ -16,6 +16,7 @@ const MD_TEMPLATE_OPENAPI_RESTAPI_FUNCTIONS =   'templateOpenApiRestApiFunctions
 const MD_TEMPLATE_OPENAPI_APP_FUNCTIONS =       'templateOpenApiAppFunctions';
 const MD_TEMPLATE_MODULE =                      'templateModule';
 const MD_TEMPLATE_RELEASE_INFO =                'templateReleaseInfo'
+const MD_TEMPLATE_ORM =                         'templateORM'
 
 /**
  * @name getFile
@@ -473,6 +474,58 @@ const markdownRender = async parameters =>{
                                 resolve(rendered);
                             })
             )
+        }
+        case parameters.doc==MD_TEMPLATE_ORM:{
+            // ORM
+            const ROW_HEADER            = '|@{OBJECT}           |@{DESCRIPTION}                         |';
+                                          
+            const ROW_ALIGNMENT         = '|:-------------------|:--------------------------------------|';
+            const ROW_HEADER_PROPERTY   = '|**PROPERTY**        |**TYPE**                               |';
+            const ROW_PROPERTY          = '|@{PROPERTY}         |@{DATATYPE}                            |';
+            const ROW_HEADER_CONSTRAINT = '|- **Constraints**   |                                       |';
+            const ROW_CONSTRAINT        = '|- @{NAME}           |@{CONSTRAINT}                          |';
+            const template = await getFile(`${server.info.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_ORM + MD_SUFFIX}`, true)
+            const content = Object.entries(server.ORM.JSONSchema.ORM).map(object=>{   
+                                                return ROW_HEADER
+                                                        .replace('@{OBJECT}',object[0])
+                                                        .replace('@{DESCRIPTION}',object[1].description??'') +
+                                                        '\n' +
+                                                        ROW_ALIGNMENT + 
+                                                        '\n' +
+                                                        ROW_HEADER_PROPERTY +
+                                                        '\n' +
+                                                        Object.entries(object[1]?.properties??[]).map(property=>
+                                                            ROW_PROPERTY
+                                                            .replace('@{PROPERTY}',
+                                                                        //Add bold for constraints
+                                                                        (Object.entries(object[1]?.constraints??[]).filter(constraints=>(constraints[1]==null ||constraints[1].constructor.name == 'String')?
+                                                                                                                                                constraints[1]==property[0]:
+                                                                                                                                                    constraints[1].filter((/**@type{string}*/col)=>col[0]==property[0]).length>0).length>0?'**':'') +
+                                                                        HTMLEntities(property[0]) + 
+                                                                        (Object.entries(object[1]?.constraints??[]).filter(constraints=>(constraints[1]==null ||constraints[1].constructor.name == 'String')?
+                                                                                                                                                constraints[1]==property[0]:
+                                                                                                                                                    constraints[1].filter((/**@type{string}*/col)=>col[0]==property[0]).length>0).length>0?'**':'') 
+                                                                        )
+                                                            .replace('@{DATATYPE}',HTMLEntities(property[1].type))
+                                                            +
+                                                            '\n'
+                                                        ).join('') +
+                                                        (object[0].startsWith('View')?
+                                                            '':
+                                                                ROW_HEADER_CONSTRAINT +
+                                                                '\n' +
+                                                                Object.entries(object[1]?.constraints??[]).map(constraint=>
+                                                                    ROW_CONSTRAINT
+                                                                    .replace('@{NAME}',constraint[0])
+                                                                    .replace('@{CONSTRAINT}',constraint[1]==null?
+                                                                                                '':
+                                                                                                    JSON.stringify(constraint[1]).replaceAll('"','')) +
+                                                                    '\n'
+                                                                ).join(''))
+                                            })
+                                            .join('\n');
+            return template.replace('@{ORM}',content)
+                                            
         }
         case parameters.type.toUpperCase()=='GUIDE':{
             return await getFile(`${server.info.serverProcess.cwd()}${MD_PATH + parameters.doc + MD_SUFFIX}`, true);

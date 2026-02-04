@@ -129,6 +129,8 @@ class ORM_class {
         this.OpenApiPaths;
         /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']} */
         this.OpenApiComponentParameters;
+        /**@type{*} */
+        this.JSONSchema;
     }
     /**
      * @name InitAsync
@@ -197,6 +199,83 @@ class ORM_class {
             }
             //cache frequent used OpenConfig 
             this.setOpenApiCache();
+            //load types.js
+            const file = await fs.promises.readFile(`${server.info.serverProcess.cwd()}/server/types.js`, 'utf8').then(file=>file.toString().replaceAll('\r\n','\n'));
+            //get all types for ORM objects
+            const regexp_comments = /\/\*\*([\s\S]*?)\*\//g;
+            /**@type {[string,string][][]} */
+            const types = [...file.matchAll(regexp_comments)]
+                            .map(row=>row[1].substring(row.indexOf('*')+1))
+                            .filter(row=>
+                                row.indexOf('memberof ORM')>-1
+                            )
+                            .map(row=>row.split('@'))
+                            .map(row=>row.filter(rowsub=>
+                                    !rowsub.toLowerCase().startsWith('\n') &&
+                                    rowsub.toLowerCase().indexOf('description db')==-1 &&
+                                    rowsub.toLowerCase().indexOf('memberof')==-1
+                                    )
+                                    .map(row=>
+                                        row
+                                            .replace('typedef','')
+                                            .replace('property','')
+                                            .replace('server_db_table_','Table ')
+                                            .replace('server_db_document_','Document ')
+                                            .replace(row.substring(row.indexOf('\n')),'')
+                                            .trimStart()
+                                            .trimEnd()
+                                            .split(' ').reverse()
+                                    )
+                                    .map(row=>[row[0],row.slice(1).reverse().join('').substring(1,row.slice(1).reverse().join('').length-1)])
+                            )
+            //convert types array to OpenApi structure
+            /**@type{{ ORM:{[key in server['ORM']['MetaData']['Object']['Name']]:{
+             *                  constraints:{Pk:server['ORM']['MetaData']['Object']['Pk'],
+             *                               Fk:server['ORM']['MetaData']['Object']['Fk'],
+             *                               Uk: server['ORM']['MetaData']['Object']['Uk']}, 
+             *                  description:string, 
+             *                  properties:{[key:string]:{
+             *                                  required:boolean,
+             *                                  type:string
+             *                              }
+             *                  }
+             *          } }}} */
+            this.JSONSchema = {
+                                ORM: {
+                                        ...types.reduce((orm,row)=>{
+                                                /**@ts-ignore */
+                                                orm[row[0][0]] = {
+                                                    properties: {
+                                                        ...{
+                                                            ...row.splice(1).reduce((row,column)=>{
+                                                                /**@ts-ignore */
+                                                                row[column[0]]={
+                                                                    type: column[1],
+                                                                    //if not required then string should end with '|null'
+                                                                    required: column[1].endsWith('|null')?false:true
+                                                                }
+                                                                return row
+                                                            },{})
+                                                        }
+                                                    },
+                                                    ...DB.data
+                                                        .filter(object=>object.Name==row[0][0])
+                                                        .map(row=>{
+                                                            return {
+                                                                description:row.Description,
+                                                                constraints:{
+                                                                    Pk:row.Pk,
+                                                                    Uk:row.Uk,
+                                                                    Fk:row.Fk
+                                                                }
+                                                            }
+                                                        })[0]
+                                                }
+                                            return orm;
+                                        },{})
+                                }
+                            };
+
             DB.external = {
                         COUNTRY:		    await this.postExternal('COUNTRY'),
                         LOCALE: 		    await this.postExternal('LOCALE'),
