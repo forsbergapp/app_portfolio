@@ -2,7 +2,22 @@
 
 ![App Portfolio](apps/common/public/documents/screenshot_app2.webp)
 
-An app portfolio created as a reference platform with refactored and simplified solutions of common used third party solutions and support for any language and regional settings.
+An app portfolio created as an open source reference platform with refactored and simplified solutions of common used third party solutions and showing secure solution without HTTPS and TLS.
+
+A refactored and simplified devop solution following OWASP.
+
+|Devop      |Comment|
+|:----------|:------|
+|PLAN	    |Follows directives OWASP, ISO20022, OpenApi, single source of truth, stateless and Scrum agile project management framework|
+|CODE 	    |Javascript, CSS, HTML, Git, documentation using markdown, Terraform for Infrastructure as Code, Git and microservice batch for CI/CD|
+|BUILD      |A build free solution, no compiling, no third parties in production, the git repository is the the deployable artifact using git tags, exact same code in development as deployed following OWASP|
+|TEST       |Behaviour Driven Development (BDD) including spy, unit, integration and performance tests and dedicated performance test using print queue and data analysis pattern|
+|RELEASE    |Uses Git release and environment tags and TEST and PRODUCTION environments|
+|DEPLOY     |TEST and PRODUCTION environments are automatically updated by simple git tag command |
+|MONITOR    |Admin app|
+|OPERATE    |Admin app|
+|DOCUMENT   |Documentation app with about, installation, development, app and server management, diagrams, comparisons with third party solutions, both static documentation including details of OWASP implementation and live documentation of release information, apps, server, OpenApi and ORM type declarations|
+
 
 Comparison tables with solutions are presented in the Documentation app and Apps and Server menus that includes:
 - OWASP
@@ -30,7 +45,7 @@ Comparison tables with solutions are presented in the Documentation app and Apps
 
 All apps use pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS without any build steps
 All apps use Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt.
-All apps use pure div elements in HTML without any semantic HTML and without any specific user agent CSS.
+All apps use pure div elements in HTML, pure CSS without any specific user agent CSS and pure HTML without any Javascript and Css links.
 All apps use mostly logographic UI compared to traditional phonemic UI
 
 Apps and server use encrypted REST API and app resource transport including fonts without the need of HTTPS.
@@ -71,16 +86,13 @@ Databases used as reference to implement database patterns are MongoDB, MariaDB,
 Any regional setting supported including direction right to left. More than 500 locales with language and
 country translations. Support for different Arabic scripts and different font heights (Nastaliq). Logographic UI chosen is implemented to minimize text usage and to provide simpler and better explanation to a global audience.
 
-Developed in VSCodium with integration with Github following 
-Scrum agile project management framework and deployed on Oracle Cloud and Linux server.
-
 # Installation
 
-Full documentation in /apps/common/src/functions/documentation or in the Documentation app when installed
+Full documentation in the Documentation app when installed.
+Project focuses on open source directive and supports Linux only.
 
 ## DEVELOPMENT
 
-Project focuses on open source directive and supports Linux development only
 
 ```
 sudo apt install git
@@ -109,29 +121,19 @@ http://localhost:3000
 	
 ## LINUX SERVER
 
-Use Linux server that supports apt
-
-see full documentation how to install on a cloud service using Terraform
-
 ```
 cd $HOME
 git clone [repository .git url] app_portfolio
 sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install nodejs
 
-node server/init.js
-
-#or run as service:
 sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio.service
 sudo systemctl daemon-reload
 sudo systemctl start app_portfolio.service
 ```
-	optional (batch and git are used for CI/CD solution):
+
+optional (batch and git are used for CI/CD solution):
 ```	
-node /serviceregistry/microservice/batch/server.js 
-
-#or run as service:
-
 sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
 sudo systemctl daemon-reload
 sudo systemctl start app_portfolio_microservice_batch.service
@@ -146,3 +148,41 @@ all data and configuration files are in /data directory that is created when sta
 
 enter main server        
 http://localhost:3000
+
+
+# Providers
+
+**Oracle Cloud**
+www.oracle.com/cloud
+**Terraform**
+www.hashicorp.com
+**Node.js**
+www.nodejs.org
+**pgModeler**
+github.com/pgmodeler
+**Git**
+git-scm.com
+**Vue**
+www.vuejs.org
+**React**
+www.react.dev
+**Geolocation by DB-IP**
+db-ip.com
+**Openstreet Map Tiles**
+tile.openstreetmap.org
+**Esri.WorldImagery Map Tiles**
+server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer
+**Country Translations**
+www.github.com/umpirsky/country-list
+**Locale Translations**
+www.github.com/umpirsky/locale-list
+**JSDoc**
+www.jsdoc.app
+**Typescript**
+www.typescriptlang.org
+**Cube, Kociemba method**
+github.com/torjusti/cubesolver
+**Cube, Thistlewaite method**
+github.com/stringham/rubiks-solver
+**Cubem CFOP/Fridrich method**
+github.com/slammayjammay/rubiks-cube-solver

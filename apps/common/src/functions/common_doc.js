@@ -17,6 +17,10 @@ const MD_TEMPLATE_OPENAPI_APP_FUNCTIONS =       'templateOpenApiAppFunctions';
 const MD_TEMPLATE_MODULE =                      'templateModule';
 const MD_TEMPLATE_RELEASE_INFO =                'templateReleaseInfo'
 const MD_TEMPLATE_ORM =                         'templateORM'
+const MD_START =                                'START';
+const MD_START_PATH =                           '/README';
+const MD_START_IMAGE_URL_REPOSITORY =           '![App Portfolio](apps/common/public/documents/screenshot_app2.webp)';
+const MD_START_IMAGE_URL_SERVER =               '[![App Portfolio](/common/documents/screenshot_app2_small.webp)](/common/documents/screenshot_app2.webp)';
 
 /**
  * @name getFile
@@ -213,6 +217,11 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
 const markdownRender = async parameters =>{
     
     switch (true){
+        case parameters.type=='GUIDE' &&  parameters.doc==MD_START:{
+            //replace repository path image url with app server url
+            return await getFile(`${server.info.serverProcess.cwd()}${MD_START_PATH + MD_SUFFIX}`, true)
+            .then(file=>file.replace(MD_START_IMAGE_URL_REPOSITORY, MD_START_IMAGE_URL_SERVER));
+        }
         case parameters.type.toUpperCase()=='APP':{
             //replace variables for APP template
             /**@type{server['ORM']['Object']['AppTranslation']} */
@@ -565,15 +574,16 @@ const menuRender = async parameters =>{
             case menu.type=='GUIDE':{
                 //return menu with updated first title from the documents
                 for (const menu_sub of menu.menu_sub??[]){
-                    await getFile(`${server.info.serverProcess.cwd()}${MD_PATH + menu_sub.doc + MD_SUFFIX}`, true)
-                            .then(result=>{
-                                try {
-                                    menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
-                                } catch (error) {
-                                    menu_sub.menu = '';
-                                }
-                            })
-                            .catch(()=>menu_sub.menu = '');
+                    if (menu_sub.menu=='')
+                        await getFile(`${server.info.serverProcess.cwd()}${MD_PATH + menu_sub.doc + MD_SUFFIX}`, true)
+                                .then(result=>{
+                                    try {
+                                        menu_sub.menu =  result.replaceAll('\r\n', '\n').split('\n').filter(row=>row.indexOf('#')==0)[0].split('#')[1];
+                                    } catch (error) {
+                                        menu_sub.menu = '';
+                                    }
+                                })
+                                .catch(()=>menu_sub.menu = '');
                 }
                 break;
             }
