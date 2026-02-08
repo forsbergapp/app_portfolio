@@ -149,37 +149,23 @@ http://localhost:3000
 
 # Providers
 
-**Oracle Cloud**
-www.oracle.com/cloud
-**Terraform**
-www.hashicorp.com
-**Node.js**
-www.nodejs.org
-**pgModeler**
-github.com/pgmodeler
-**Git**
-git-scm.com
-**Vue**
-www.vuejs.org
-**React**
-www.react.dev
-**Geolocation by DB-IP**
-db-ip.com
-**Openstreet Map Tiles**
-tile.openstreetmap.org
-**Esri.WorldImagery Map Tiles**
-server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer
-**Country Translations**
-www.github.com/umpirsky/country-list
-**Locale Translations**
-www.github.com/umpirsky/locale-list
-**JSDoc**
-www.jsdoc.app
-**Typescript**
-www.typescriptlang.org
-**Cube, Kociemba method**
-github.com/torjusti/cubesolver
-**Cube, Thistlewaite method**
-github.com/stringham/rubiks-solver
-**Cubem CFOP/Fridrich method**
-github.com/slammayjammay/rubiks-cube-solver
+|Provider                           |Url                    |
+|:----------------------------------|:----------------------|
+|Oracle Cloud                       |www.oracle.com/cloud|
+|Terraform                          |www.hashicorp.com|
+|Node.js                            |www.nodejs.org|
+|pgModeler                          |github.com/pgmodeler|
+|Git                                |git-scm.com|
+|Vue                                |www.vuejs.org|
+|React                              |www.react.dev|
+|Geolocation by DB-IP               |db-ip.com|
+|Openstreet Map Tiles               |tile.openstreetmap.org|
+|Esri.WorldImagery Map Tiles        |server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer|
+|Esri.WorldStreetMap Map Tiles      |server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer|
+|Country Translations               |www.github.com/umpirsky/country-list|
+|Locale Translations                |www.github.com/umpirsky/locale-list|
+|JSDoc                              |www.jsdoc.app|
+|Typescript                         |www.typescriptlang.org|
+|Cube, Kociemba method              |github.com/torjusti/cubesolver|
+|Cube, Thistlewaite method          |github.com/stringham/rubiks-solver|
+|Cube, CFOP/Fridrich method         |github.com/slammayjammay/rubiks-cube-solver|
