@@ -2,38 +2,32 @@
 
 ![App Portfolio](apps/common/public/documents/screenshot_app2.webp)
 
-An app portfolio created as an open source reference platform with refactored and simplified solutions of common used third party solutions and showing secure solution without HTTPS and TLS.
+An open source project with refactored and simplified solutions of common used third party solutions and a DevOps workflow solution following OWASP.
 
-A refactored and simplified devop solution following OWASP.
+The DevOps workflow activities implemented:
 
-|Devop      |Comment|
+|Stage|Comment|
 |:----------|:------|
-|PLAN	    |Follows directives OWASP, ISO20022, OpenApi, single source of truth, stateless and Scrum agile project management framework|
+|PLAN	    |Follows directives OWASP Application Security Verification Standard (ASVS) v 5.0.0, ISO20022, OpenApi, single source of truth, stateless and Scrum agile project management framework|
 |CODE 	    |Javascript, CSS, HTML, Git, documentation using markdown, Terraform for Infrastructure as Code, Git and microservice batch for CI/CD|
-|BUILD      |A build free solution, no compiling, no third parties in production, the git repository is the the deployable artifact using git tags, exact same code in development as deployed following OWASP|
+|BUILD      |A build free solution, no compiling, no third parties in production, the git repository is the deployable artifact using git tags, exact same code in development as deployed following OWASP|
 |TEST       |Behaviour Driven Development (BDD) including spy, unit, integration and performance tests and dedicated performance test using print queue and data analysis pattern|
-|RELEASE    |Uses Git release and environment tags and TEST and PRODUCTION environments|
+|RELEASE    |Uses Git release and environment tags that deploy to TEST and PRODUCTION environments|
 |DEPLOY     |TEST and PRODUCTION environments are automatically updated by simple git tag command |
 |MONITOR    |Admin app|
 |OPERATE    |Admin app|
 |DOCUMENT   |Documentation app with about, installation, development, app and server management, diagrams, comparisons with third party solutions, both static documentation including details of OWASP implementation and live documentation of release information, apps, server, OpenApi and ORM type declarations|
 
-
-Comparison tables with solutions are presented in the Documentation app and Apps and Server menus that includes:
+Comparison tables with solutions are presented in the Documentation app that includes:
 - OWASP
+- Web Crypto API secure transport without HTTPS, SSL and TLS
 - Vue/React
 - Transpiler/build step
 - Polyfill
 - Jasmine/Jest
 - JSON Web token
-- Web Crypto API
-- HTTPS
-- SSL
-- SQL databases
-- MongoDB
-- Redis
-- Microsoft Azure Cosmos DB
-- GraphQL
+- SQL databases MariaDB, MySQL, Oracle, PostgreSQL and SQLite
+- Non SQL databases MongoDB, Redis, Microsoft Azure Cosmos DB and GraphQL
 - Express
 - Swish payment UI
 - Stripe payment process
@@ -43,53 +37,56 @@ Comparison tables with solutions are presented in the Documentation app and Apps
 - ReadtheDocs
 - Markdown
 
-All apps use pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS without any build steps
-All apps use Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt.
-All apps use pure div elements in HTML, pure CSS without any specific user agent CSS and pure HTML without any Javascript and Css links.
-All apps use mostly logographic UI compared to traditional phonemic UI
+All apps features
+- Multi app single page application (SPA)
+- Pure Javascript (ES6+), Typescript, Vue, React, HTML and CSS without any build steps or transpilers
+- Vue SFC pattern and realtime switchable framework between Vue, React and Javascipt
+- Pure div elements in HTML, pure CSS without any specific user agent CSS and pure HTML without any Javascript and Css links
+- Mostly logographic UI compared to traditional phonemic UI to provide simpler and better explanation to a global audience
+- Event delegation
+- Progressive data and code cache using closure pattern for optimal performance replacing browser cache functionality completely with OWASP secure and stateless solution
 
-Apps and server use encrypted REST API and app resource transport including fonts without the need of HTTPS.
-Server uses Node.js and does not use any third party modules in production.
-Server renders apps using Vue SFC pattern.
-Server uses secure REST API with openAPI documentation used as documentation and business logic.
-Server uses ORM Database and noSQL pattern.
+Server features
+- Node.js without third party modules in production
+- Renders apps using Vue SFC pattern
+- Secure REST API using custom Web Crypto API including all app resources
+- OpenAPI documentation used as documentation and business logic
+- ORM database
 
 Implemented with many examples of patterns
-- Web crypto API without browser or protocol restrictions
+- Web Crypto API without browser or protocol restrictions
 - Software as a Service (SaaS)
 - Infrastructure As Code (IaC)
 - Frontend For Backend (FFB)
 - Backend For Frontend (BFF)
 - Backend For External (BFE)
 - ISO20022
-- openAPI
+- OpenAPI
 - Continuos Integration and Continous Delivery/Deployment (CI/CD)
 - Identity and Access Management (IAM)
-- microservice architecture using service registry, message queue and IAM pattern
-- object relational mapping (ORM) database with PK, UK and FK table constraints including cascade delete for tables and support for non tables like key value and documents
-- circuitbreaker
-- message queue
-- email message pattern using message queue pattern
-- factory
-- race condition
-- file transaction management
-- entity/resource data model using hybrid JSON storage concept with flexible and minimal data model design
-- role based and secure app server functions (simplified version of Function as a Service and serverless functions model)
-- batch cron pattern
+- Microservice architecture using service registry, message queue and IAM pattern
+- Object relational mapping (ORM) database with PK, UK and FK table constraints including cascade delete for tables and support for non tables like key value and documents
+- Circuitbreaker
+- Message queue
+- Email message pattern using message queue pattern
+- Race condition
+- File transaction management
+- Dependency Injection for maximum performance of server and ORM database
+- Entity/resource data model using hybrid JSON storage concept with flexible and minimal data model design
+- Role based and secure app server functions (simplified version of Function as a Service and serverless functions model)
+- Batch cron pattern
+- GEOJson
+- Map tile and layer management
 
 CI/CD implemented using batch server with scheduled git commands using Linux systemctl managed services on server
-Runs in Node.js.
-	
-pgModeler designed ORM data model.
-Databases used as reference to implement database patterns are MongoDB, MariaDB, MySQL, Oracle, PostgreSQL and SQLite.
 
 Any regional setting supported including direction right to left. More than 500 locales with language and
-country translations. Support for different Arabic scripts and different font heights (Nastaliq). Logographic UI chosen is implemented to minimize text usage and to provide simpler and better explanation to a global audience.
+country translations. Support for different Arabic scripts and different font heights (Nastaliq).
 
 # Installation
 
 Full documentation in the Documentation app when installed.
-Project focuses on open source directive and supports Linux only.
+Project supports Linux only.
 
 ## DEVELOPMENT
 

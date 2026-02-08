@@ -311,12 +311,14 @@ class serverClass {
                                         })[0]);
         //if BFE then save encryption record
         parameters.encryption_type=='BFE'?
-            await this.ORM.db.IamEncryption.post(0, { AppId:parameters['app-id'], 
-                                                        IamAppIdTokenId: null,
-                                                        Url:url_unencrypted,
-                                                        Uuid: uuid,
-                                                        Type:parameters.encryption_type,
-                                                        Secret: secret}):
+            await this.ORM.db.IamEncryption.post(0, 
+                /**@ts-ignore*/
+                {   AppId:parameters['app-id'], 
+                    IamAppIdTokenId: null,
+                    Url:url_unencrypted,
+                    Uuid: uuid,
+                    Type:parameters.encryption_type,
+                    Secret: secret}):
                 null;
         const basePathRESTAPI = server.ORM.db.OpenApi.get({app_id:0}).result.servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/server)=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
         const url = (parameters.url?
