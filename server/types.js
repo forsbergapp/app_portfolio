@@ -87,9 +87,10 @@
 /**
  * @description APP server_apps_module_metadata
  * @typedef  {object} server_apps_module_metadata
- * @property {string} name
- * @property {string} text
- * @property {string|number} default
+ * @property {object} param
+ * @property {string} param.name
+ * @property {string} param.text
+ * @property {string|number} param.default
  */
 
 /**

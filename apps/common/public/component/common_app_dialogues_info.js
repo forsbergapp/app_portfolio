@@ -11,9 +11,9 @@
  * @name template
  * @description Template
  * @function
- * @param {{app_copyright:string,
-*          app_link_url:string,
-*          app_link_title:string,
+ * @param {{app_copyright:common['server']['ORM']['Object']['App']['Copyright'],
+*          app_link_url:common['server']['ORM']['Object']['App']['LinkUrl'],
+*          app_link_title:common['server']['ORM']['Object']['App']['LinkTitle'],
 *          info_link_policy_name:string,
 *          info_link_disclaimer_name:string,
 *          info_link_terms_name:string,

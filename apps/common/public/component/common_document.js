@@ -11,9 +11,9 @@
  * @name template
  * @description Template
  * @function
- * @param {{app_logo:string,
- *          app_copyright:string,
- *          app_name:string,
+ * @param {{app_logo:common['server']['ORM']['Object']['App']['Logo'],
+ *          app_copyright:common['server']['ORM']['Object']['App']['Copyright'],
+ *          app_name:common['server']['ORM']['Object']['App']['Name'],
  *          document :string,
  *          documentType:common['commonDocumentType'],
  *          document_href:string,
