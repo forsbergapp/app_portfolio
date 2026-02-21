@@ -95,10 +95,14 @@ Project supports Linux only.
 sudo apt install git
 sudo apt install curl
 sudo apt install codium
-
+cd $HOME
+mkdir node
+wget https://nodejs.org/dist/v20.20.0/node-v20.20.0-linux-x64.tar.xz
+tar -xJf node-v20.20.0-linux-x64.tar.xz -C node --strip-components=1
+echo 'export PATH="$PATH:$HOME/node/bin"' >> ~/.bashrc	
+source ~/.bashrc
 git clone [repository .git url] app_portfolio
-sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install nodejs
+cd app_portfolio
 npm install
 ``` 
 open repository folder in VSCodium
@@ -120,10 +124,12 @@ http://localhost:3000
 
 ```
 cd $HOME
+mkdir node
+wget https://nodejs.org/dist/v20.20.0/node-v20.20.0-linux-x64.tar.xz
+tar -xJf node-v20.20.0-linux-x64.tar.xz -C node --strip-components=1
+echo 'export PATH="$PATH:$HOME/node/bin"' >> ~/.bashrc	
+source ~/.bashrc
 git clone [repository .git url] app_portfolio
-sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install nodejs
-
 sudo systemctl enable $HOME/app_portfolio/server/scripts/app_portfolio.service
 sudo systemctl daemon-reload
 sudo systemctl start app_portfolio.service

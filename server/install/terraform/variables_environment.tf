@@ -9,6 +9,16 @@ variable "environment_admin_port" {
     type = number
     default = 3333
 }
+variable "environment_node_release_url" {
+    description = "Environment Node.Js"
+    type        = string
+    default     = "https://nodejs.org/dist/v20.20.0/node-v20.20.0-linux-x64.tar.xz"
+}
+variable "environment_node_release_file" {
+    description = "Environment Node.Js"
+    type        = string
+    default     = "node-v20.20.0-linux-x64.tar.xz"
+}
 #Network
 variable "vcn_cidr_block" {
     description = "ENVIRONMENT vcn CIDR block"

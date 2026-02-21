@@ -144,9 +144,7 @@ resource "oci_core_instance" "instance" {
                               #!/bin/bash
                               sudo apt update -y
                               sudo apt upgrade -y
-                              sudo curl -sL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-                              sudo apt install -y git vim inetutils-ping net-tools ufw nodejs
-                              sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/bin/node
+                              sudo apt install -y git vim inetutils-ping net-tools ufw
                               sudo ufw allow 22/tcp
                               sudo ufw allow ${var.environment_app_port}/tcp
                               sudo ufw allow 443/tcp
@@ -164,6 +162,11 @@ resource "oci_core_instance" "instance" {
                               sudo apt remove --purge -y nano
                               sudo apt remove --purge -y rsyslog
                               sudo apt -y autoremove --purge
+                              sudo -i -u ubuntu mkdir node
+                              sudo -i -u ubuntu wget ${var.environment_node_release_url}
+                              sudo -i -u ubuntu tar -xJf ${var.environment_node_release_file} -C node --strip-components=1
+                              sudo -i -u ubuntu echo 'export PATH="$PATH:$HOME/node/bin"' >> ~/.bashrc
+                              sudo setcap CAP_NET_BIND_SERVICE=+eip /home/ubuntu/node/bin/node
                               sudo -i -u ubuntu git clone ${var.git_repository_url} app_portfolio
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio.service
                               sudo systemctl enable /home/ubuntu/app_portfolio/server/scripts/app_portfolio_microservice_batch.service
