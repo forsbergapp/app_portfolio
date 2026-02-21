@@ -1,7 +1,3 @@
-#Installs server shape VM.Standard.E2.1.Micro and Ubuntu version 20.4 with minimum required network configuration
-#Runs script on server to install app portfolio
-#Enter  http://[host] to set admin username and password after installation finished
-
 terraform {
   required_providers {
     oci = {
