@@ -160,7 +160,6 @@ http://localhost:3000
 |Oracle Cloud                       |www.oracle.com/cloud|
 |Terraform                          |www.hashicorp.com|
 |Node.js                            |www.nodejs.org|
-|pgModeler                          |github.com/pgmodeler|
 |Git                                |git-scm.com|
 |Vue                                |www.vuejs.org|
 |React                              |www.react.dev|
