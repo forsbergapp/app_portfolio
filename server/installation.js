@@ -49,7 +49,7 @@ const getDefaultObject = async object =>
  * @param {{app_id:number,
 *          idToken:string,
 *          data:{  demo_password?:string|null}}} parameters
-* @returns {Promise.<server['server']['response'] & {result?:{info: {}[]} }>}
+* @returns {Promise.<server['server']['response'] & {result:{info: {}[]} }>}
 */
 const postDemo = async parameters=> {
 
@@ -99,9 +99,8 @@ const postDemo = async parameters=> {
                                             Type:               'USER'
                                         };
                     //create iam user then database user
-                    /**@ts-ignore */
                     return await server.ORM.db.IamUser.postAdmin(parameters.app_id,data_create)
-                                .then((/**@type{server['server']['response']}*/result)=>{
+                                .then(result=>{
                                     if (result.result)
                                         return result;
                                     else
@@ -109,7 +108,7 @@ const postDemo = async parameters=> {
                                 });
                 };
                 for (const demo_user of demo_users){
-                    demo_user.Id = await create_update_id(demo_user).then(user=>user.result.InsertId);
+                    demo_user.Id = await create_update_id(demo_user).then(user=>user.result?.InsertId);
                     records_iam_user++;
                 }
         };
@@ -131,7 +130,7 @@ const postDemo = async parameters=> {
                                         PreferenceArabicScript: null,
                                         Custom: null}, IamUserId:iam_user_id
                                         })
-                .then((/**@type{server['server']['response']}*/result)=>{
+                .then(result=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)
                             records_iam_user_app++;
@@ -152,9 +151,9 @@ const postDemo = async parameters=> {
                 server.ORM.db.IamUserAppDataPost.post({ app_id:parameters.app_id, 
                                                         data:{  iam_user_app_id:data.IamUserAppId,
                                                                 document:data.Document}})
-                .then((/**@type{server['server']['response']}*/result)=>{
+                .then(result=>{
                     if(result.result){
-                        if (result.result.data?.AffectedRows == 1)
+                        if (result.result.AffectedRows == 1)
                             records_iam_user_app_data_post++;
                         resolve(null);
                     }
@@ -172,11 +171,11 @@ const postDemo = async parameters=> {
         const create_app_data_resource_master = async data => {
             return new Promise((resolve, reject) => {
                 server.ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:data})
-                .then((/**@type{server['server']['response']}*/result)=>{
+                .then(result=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)
                             records_app_data_resource_master++;
-                        resolve(result.result.InsertId);
+                        resolve(result.result.InsertId??0);
                     }
                     else
                         reject(result);
@@ -191,11 +190,11 @@ const postDemo = async parameters=> {
         const create_app_data_resource_detail = async data => {
             return new Promise((resolve, reject) => {
                 server.ORM.db.AppDataResourceDetail.post({app_id:parameters.app_id, data:data})
-                .then((/**@type{server['server']['response']}*/result)=>{
+                .then(result=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)
                             records_app_data_resource_detail++;
-                        resolve(result.result.InsertId);
+                        resolve(result.result.InsertId??0);
                     }
                     else
                         reject(result);
@@ -216,6 +215,7 @@ const postDemo = async parameters=> {
             if(result_get.result){
                 const update_Document = result_get.result[0].Document;
                 for (const key of Object.entries(data?.Document??{}))
+                    /**@ts-ignore */
                     update_Document[key[0]] = key[1];
                 const result_update = await server.ORM.db.AppDataEntity.update({   app_id:user_account_post_app_id, 
                                                                             /**@ts-ignore */
@@ -243,11 +243,11 @@ const postDemo = async parameters=> {
         const create_app_data_resource_detail_data = async (user_account_post_app_id, data) => {
             return new Promise((resolve, reject) => {
                 server.ORM.db.AppDataResourceDetailData.post({app_id:user_account_post_app_id, data:data})
-                .then((/**@type{server['server']['response']}*/result)=>{
+                .then(result=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)
                             records_app_data_resource_detail_data++;
-                        resolve(result.result.InsertId);
+                        resolve(result.result.InsertId??0);
                     }
                     else
                         reject(result);
@@ -452,7 +452,7 @@ const postDemo = async parameters=> {
         const create_iam_user_like = async (app_id, id, id_like ) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserLike.post({app_id:app_id, data:{iam_user_id:id,iam_user_id_like:id_like}})
-                .then((/**@type{server['server']['response']}*/result) => {
+                .then(result => {
                     if(result.result){
                         if (result.result.AffectedRows == 1)
                             records_iam_user_like++;
@@ -472,7 +472,7 @@ const postDemo = async parameters=> {
         const create_iam_user_view = async (app_id, data ) =>{
             return new Promise((resolve, reject) => {
                 server.ORM.db.IamUserView.post(app_id, data)
-                .then((/**@type{server['server']['response']}*/result) => {
+                .then(result => {
                     if(result.result){
                         if (result.result.AffectedRows == 1)
                                 records_iam_user_view++;
@@ -495,7 +495,7 @@ const postDemo = async parameters=> {
                 server.ORM.db.IamUserFollow.post({app_id:app_id, 
                                     
                                     data:{iam_user_id:id, iam_user_id_follow:id_follow}})
-                .then((/**@type{server['server']['response']}*/result)=>{
+                .then(result=>{
                     if(result.result){
                         if (result.result.AffectedRows == 1)
                             records_iam_user_follow++;
@@ -515,7 +515,6 @@ const postDemo = async parameters=> {
         */
         const create_iam_user_app_data_post_like = async (app_id, user1, user2 ) =>{
             return new Promise((resolve, reject) => {
-                /**@type{server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceDetailData'][]}} */
                 const result_posts = server.ORM.db.IamUserAppDataPost.get({app_id:parameters.app_id, resource_id:null, data:{iam_user_id:user1,data_app_id:app_id}});
                 if (result_posts.result){
                     const random_posts_index = Math.floor(1 + Math.random() * result_posts.result.length - 1 );
@@ -523,7 +522,7 @@ const postDemo = async parameters=> {
                                                             data:{  iam_user_id:user2,
                                                                     data_app_id:app_id,
                                                                     iam_user_app_data_post_id:result_posts.result[random_posts_index].Id}})
-                    .then((/**@type{server['server']['response']}*/result) => {
+                    .then(result => {
                         if (result.result){
                             if (result.result.AffectedRows == 1)
                                 records_iam_user_app_data_post_like++;
@@ -563,15 +562,15 @@ const postDemo = async parameters=> {
                                                                         Document: { client_ip: null,
                                                                                     client_user_agent: null},
                                                                         IamUserAppId: iam_user_id?
-                                                                                            server.ORM.db.IamUserApp
+                                                                                            (server.ORM.db.IamUserApp
                                                                                                 .get({  app_id:app_id, 
                                                                                                         resource_id:null, 
                                                                                                         data:{  iam_user_id:user2, 
-                                                                                                                data_app_id:app_id}}).result[0].Id:
+                                                                                                                data_app_id:app_id}}).result??[])[0].Id:
                                                                                                 null,
                                                                         IamUserAppDataPostId: result_posts.result[random_index].Id
                                                                     })
-                    .then((/**@type{server['server']['response']}*/result)=>{
+                    .then(result=>{
                         if (result.result){
                             if (result.result.AffectedRows == 1)
                                 records_iam_user_app_data_post_view++;
@@ -714,7 +713,7 @@ const postDemo = async parameters=> {
 * @memberof ROUTE_REST_API
 * @param {{app_id:number,
 *          idToken:string}} parameters
-* @returns {Promise.<server['server']['response'] & {result?:{info: {}[]} }>}
+* @returns {Promise.<server['server']['response'] & {result:{info: {}[]} }>}
 */
 const deleteDemo = async parameters => {
     /**@type{(server['ORM']['Object']['IamUser'] & {Id:number})[]} */
@@ -734,7 +733,7 @@ const deleteDemo = async parameters => {
                                                             message_type:'PROGRESS'}});
                     //delete iam user
                     await server.ORM.db.IamUser.deleteRecordAdmin(parameters.app_id,user.Id)
-                    .then((/**@type{server['server']['response']}*/result)=>{
+                    .then(result=>{
                         if (result.result )
                             deleted_user++;
                     });
@@ -762,6 +761,7 @@ const deleteDemo = async parameters => {
                             key[0]=='MerchantVpa' ||
                             key[0]=='IamUserIdAnonymous' 
                         )
+                            /**@ts-ignore */
                             row.Document[key[0]] = null;
                     }
                     await server.ORM.db.AppDataEntity.update({ app_id:parameters.app_id,

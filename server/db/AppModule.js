@@ -14,7 +14,7 @@ const {server} = await import ('../server.js');
  * @param {{app_id:Number,
  *          resource_id:number|null,
  *          data:{data_app_id?:string|number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppModule'][] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['AppModule'][] }}
  */
 const get = parameters => server.ORM.getObject(parameters.app_id, 'AppModule',parameters.resource_id, server.ORM.UtilNumberValue(parameters.data.data_app_id));
 

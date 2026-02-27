@@ -32,7 +32,7 @@ const {STATUS_CODES} = await import('node:http');
 *                   year:string,
 *                   month:string,
 *                   day:string|null}}} parameters
-* @returns{Promise.<server['server']['response'] & {result?:[]}>}
+* @returns{Promise.<server['server']['response'] & {result:[]}>}
 */
 const get = async parameters => {
     /** 
@@ -161,7 +161,7 @@ const get = async parameters => {
 *                  same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 * @function
 * @memberof ROUTE_REST_API
-* @returns {Promise.<server['server']['response'] & {result?:object}>}
+* @returns {Promise.<server['server']['response'] & {result:object}>}
 */
 const getStatusCodes = async () =>{
    return {result:{status_codes: STATUS_CODES}, type:'JSON'};
@@ -178,7 +178,7 @@ const getStatusCodes = async () =>{
 *                  statValue?:string|null,
 *                  year?:string|null,
 *                  month?:string|null}}} parameters
-* @returns{Promise.<server['server']['response'] & {result?:string}>}
+* @returns{Promise.<server['server']['response'] & {result:string}>}
 */
 const getStat = async parameters => {
     /** 
@@ -306,7 +306,7 @@ const getStat = async parameters => {
 * @description Get log files
 * @function
 * @memberof ROUTE_REST_API
-* @returns{Promise.<server['server']['response'] & {result?:{Id:number, Filename:string}[]|[]}>}
+* @returns{Promise.<server['server']['response'] & {result:{Id:number, Filename:string}[]|[]}>}
 */
 const getFiles = async () => {
     return {result:await server.ORM.getFsDir()
@@ -372,7 +372,7 @@ const getFiles = async () => {
  *                  log:        *
  *              }
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
     let log;

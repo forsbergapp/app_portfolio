@@ -55,7 +55,7 @@ const socketClientAdd = (newClient) => {
  *          token_admin:string|null,
  *          ip:string,
  *          headers_user_agent:string}} parameters
- * @returns {Promise.<server['server']['response']>}
+ * @returns {Promise.<server['server']['response'] & {result?:null}>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.IdToken == parameters.idToken).length==0){
@@ -118,7 +118,7 @@ const socketClientAdd = (newClient) => {
  *                  client_id:number|null,
  *                  broadcast_type: Extract<server['socket']['broadcast_type'],'CHAT'|'ALERT'|'MAINTENANCE'>,
  *                  broadcast_message:string}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{sent:number} }>}
+ * @returns {Promise.<server['server']['response'] & {result:{sent:number} }>}
  */
  const socketAdminSend = async parameters => {
     parameters.data.client_id = server.ORM.UtilNumberValue(parameters.data.client_id);
@@ -178,7 +178,7 @@ const socketClientAdd = (newClient) => {
  *                  order_by?:string|null,
  *                  sort?:*}
  *          }} parameters
- * @returns{Promise.<server['server']['response'] & {result?:server['socket']['SocketConnectedClient'][]}>}
+ * @returns{Promise.<server['server']['response'] & {result:server['socket']['SocketConnectedClient'][]}>}
  */
  const socketConnectedList = async parameters => {
     const app_id_select = server.ORM.UtilNumberValue(parameters.data.data_app_id);
@@ -252,7 +252,7 @@ const socketClientAdd = (newClient) => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{data:{  logged_in?:string|null}}} parameters
- * @returns {server['server']['response'] & {result?:{count_connected:number} }}
+ * @returns {server['server']['response'] & {result:{count_connected:number} }}
  */
  const socketConnectedCount = parameters => {
     if (server.ORM.UtilNumberValue(parameters.data.logged_in) == 1)
@@ -271,7 +271,7 @@ const socketClientAdd = (newClient) => {
  *          ip:string
  *          response:server['server']['res']
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const socketPost = async parameters =>{
     const client_id = Date.now();

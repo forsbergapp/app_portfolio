@@ -19,7 +19,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{Stock:{KeyName:string, KeyValue:string, KeyType:string}[][]}[] }>}
+ * @returns {Promise.<server['server']['response'] & {result:{Stock:{KeyName:string, KeyValue:string, KeyType:string}[][]}[] }>}
  */
 const productLocationGet = async parameters =>{
 
@@ -30,7 +30,7 @@ const productLocationGet = async parameters =>{
                                                         data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
         const stock = [];
-        /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:product_variant_location})[]}} */
+        /**@type{server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:product_variant_location})[]}} */
         const product_variant_location = server.ORM.db.AppDataResourceDetailData.get({ 
                                                                                 app_id:parameters.app_id, 
                                                                                 resource_id:null, 
@@ -42,7 +42,7 @@ const productLocationGet = async parameters =>{
                                                                                         resource_name_data_master_attribute:'LOCATION',
                                                                                         app_data_entity_id:Entity.Id
                                                                                 }});
-        /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_product_variant_location})[]}} */
+        /**@type{server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_product_variant_location})[]}} */
         const product_variant_location_metadata = server.ORM.db.AppDataResourceMaster.get({
                                                                                 app_id:parameters.app_id, 
                                                                                 resource_id:null, 

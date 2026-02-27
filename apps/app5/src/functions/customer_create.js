@@ -26,7 +26,7 @@ const {default:createBankAccount} = await import('./account_create.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const customerCreate = async parameters =>{
 
@@ -34,7 +34,7 @@ const customerCreate = async parameters =>{
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    /**@type{server['server']['response'] & {result?:server['ORM']['Object']['AppDataEntityResource']}} */
+    /**@type{server['server']['response'] & {result:server['ORM']['Object']['AppDataEntityResource']}} */
     const resource_customer = server.ORM.db.AppDataEntityResource.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  app_data_entity_id:Entity.Id,
@@ -56,7 +56,7 @@ const customerCreate = async parameters =>{
         //create CUSTOMER    
         const Customer = await server.ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:post_data});
         if (Customer.result){
-            /**@type{server['server']['response'] & {result?:server['ORM']['Object']['AppDataEntityResource']}} */
+            /**@type{server['server']['response'] & {result:server['ORM']['Object']['AppDataEntityResource']}} */
             const resource_account = server.ORM.db.AppDataEntityResource.get({app_id:parameters.app_id, 
                                                                 resource_id:null, 
                                                                 data:{  app_data_entity_id:Entity.Id, 

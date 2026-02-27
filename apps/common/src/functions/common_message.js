@@ -27,7 +27,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:Object.<string,*>[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:*}>}
  */
 const appFunction = async parameters =>{
    
@@ -45,7 +45,7 @@ const appFunction = async parameters =>{
     };
     /**
      * @description get MessageQueuPublish record and authenticate message and user
-     * @returns {server['server']['response']}
+     * @returns {server['server']['response'] & {result?:server['ORM']['Object']['MessageQueuePublish'][]}}
      */
     const messagePublishGet = () =>{
         const result = server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:null});
@@ -70,7 +70,7 @@ const appFunction = async parameters =>{
     /**
      * @description posts MessageQueuPublish record and sends SSE to the receiver
      * @param {*} message
-     * @returns {Promise.<server['server']['response']>}
+     * @returns {Promise.<server['server']['response'] & {result?:{sent:number}[]}>}
      */
     const messagePublishPost = async message =>{
         /**@type{server['ORM']['Object']['MessageQueuePublish']} */
@@ -78,7 +78,7 @@ const appFunction = async parameters =>{
         const messagePost = (await server.ORM.db.MessageQueuePublish.post({app_id:parameters.app_id, 
                                                             data:message_queue_message})).result;
         return {result:[ await (async ()=>{
-                                if(messagePost.AffectedRows){
+                                if(messagePost?.AffectedRows){
                                     /**@type{(server['ORM']['Object']['IamUser'] & {Id:number})[]} */
                                     const users = server.ORM.db.IamUser.get(parameters.app_id, message.receiver_id).result;                               
                                     for (const user of users.filter(user=>  user.Type == (( message.receiver_id && 
@@ -140,7 +140,7 @@ const appFunction = async parameters =>{
             if (result.http)
                 return result;
             else  
-                return {result: [messagesStat(result.result)],
+                return {result: [messagesStat(result.result??[])],
                         type:'JSON'};
         }
         case 'COMMON_MESSAGE_GET':{
@@ -148,7 +148,7 @@ const appFunction = async parameters =>{
             if (result.http)
                 return result;
             else  
-                return {result:result.result 
+                return {result:(result.result??[])
                                             // add message read info
                                             .map((/**@type{server['ORM']['Object']['MessageQueuePublish']}*/message)=>{
                                                 return (server.ORM.db.MessageQueueConsume.get({app_id:parameters.app_id, resource_id:null}).result ??[])
@@ -175,7 +175,7 @@ const appFunction = async parameters =>{
                     return result;
                 else
                     //authenticate message id
-                    if (result.result
+                    if ((result.result??[])
                             .filter((/**@type{server['ORM']['Object']['MessageQueuePublish']}*/message)=>message.Id == parameters.data.message_id).length==1){
                         /**@ts-ignore @type{server['ORM']['Object']['MessageQueueConsume']}*/
                         const message_queue_message = {
@@ -187,7 +187,7 @@ const appFunction = async parameters =>{
                         //send MessageQueueConsume message
                         return {result:[await server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, 
                                                                         data:message_queue_message})
-                                        .then((/**@type{server['server']['response']}*/result)=>{
+                                        .then(result=>{
                                             if(result.result?.AffectedRows)
                                                 return {sent:result.result.AffectedRows};
                                             else

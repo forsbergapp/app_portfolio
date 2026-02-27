@@ -38,7 +38,7 @@ const getViewUser = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).result??[])
                     .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostView']}*/row)=>
                         row.IamUserAppDataPostId == (parameters.data.iam_user_app_data_post_id ?? row.IamUserAppDataPostId) && 
-                        IamUserApp_records
+                        (IamUserApp_records??[])
                         .filter((/**@type{server['ORM']['Object']['IamUserApp']}*/rowIamUserApp)=>
                             row.IamUserAppId == rowIamUserApp.Id
                         )

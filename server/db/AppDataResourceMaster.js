@@ -20,17 +20,17 @@ const {server} = await import ('../server.js');
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceMaster'][] }}
  */
 const get = parameters =>{ 
-    const iam_user_app = parameters.data.iam_user_id==null?null:server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
+    const iam_user_app = parameters.data.iam_user_id==null?null:(server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  data_app_id:parameters.data.data_app_id??null,
-                                                                                        iam_user_id:parameters.data.iam_user_id}}).result[0];
+                                                                                        iam_user_id:parameters.data.iam_user_id}}).result??[])[0];
 
     const result_AppDataEntityResource = server.ORM.db.AppDataEntityResource.get({ app_id:parameters.app_id, 
                                                                     resource_id:null,
                                                                     data:{  app_data_entity_id:parameters.data?.app_data_entity_id?? 
-                                                                                                server.ORM.db.AppDataEntity.get({ app_id:parameters.app_id, 
+                                                                                                (server.ORM.db.AppDataEntity.get({ app_id:parameters.app_id, 
                                                                                                                     resource_id:null,
-                                                                                                                    data:{data_app_id:parameters.app_id}}).result[0].Id,
+                                                                                                                    data:{data_app_id:parameters.app_id}}).result??[])[0].Id,
                                                                             resource_name:parameters.data.resource_name
                                                                     }}).result;
 
@@ -39,7 +39,7 @@ const get = parameters =>{
                             (parameters.all_users ||
                                 ((parameters.data.iam_user_id==null && row.IamUserAppId==null)|| 
                                  (parameters.data.iam_user_id!=null && row.IamUserAppId == iam_user_app?.Id && row.IamUserAppId !=null))) &&
-                            result_AppDataEntityResource
+                            (result_AppDataEntityResource??[])
                             .filter((/**@type{server['ORM']['Object']['AppDataEntityResource']}*/row_AppDataEntityResource)=>
                                 row_AppDataEntityResource.Id == row.AppDataEntityResourceId
                             ).length>0

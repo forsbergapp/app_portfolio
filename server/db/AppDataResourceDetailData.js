@@ -24,9 +24,9 @@ const {server} = await import ('../server.js');
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceDetailData'] & {adrm_attribute_master_Document:{}}[]|*}}
  */
 const get = parameters =>{ 
-    const entity_id = parameters.data?.app_data_entity_id?? server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
+    const entity_id = parameters.data?.app_data_entity_id?? (server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                         resource_id:null,
-                                        data:{data_app_id:parameters.app_id}}).result[0].Id;
+                                        data:{data_app_id:parameters.app_id}}).result??[])[0].Id;
     const restult_AppDataResourceMasterAttributeDetail = server.ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
                                                                     join:true,
                                                                     resource_id: null,
@@ -52,30 +52,30 @@ const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'AppDataResourceDetailData',parameters.resource_id, null).result ?? [])
                     .filter((/**@type{server['ORM']['Object']['AppDataResourceDetailData']}*/row)=>
                         row.AppDataResourceDetailId == (parameters.data.app_data_resource_detail_id??row.AppDataResourceDetailId) && 
-                        result_AppDataResourceDetail
+                        (result_AppDataResourceDetail??[])
                         .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/row_detail)=>
                             row_detail.Id == row.AppDataResourceDetailId && 
                             //detail master attribute
-                            restult_AppDataResourceMasterAttributeDetail
+                            (restult_AppDataResourceMasterAttributeDetail??[])
                             .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/row_master)=>
                                 row_master.Id == row_detail.AppDataResourceMasterId
                             ).length>0
                         ).length>0 &&
                         //detail data master attribute
-                        result_AppDataResourceMasterAttributeDetailData
+                        (result_AppDataResourceMasterAttributeDetailData??[])
                         .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/row_master)=>
                             row_master.Id == (row.AppDataResourceMasterAttributeId ?? row_master.Id)
                         ).length>0
                         
                     )
-                    .map((/**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {adrm_attribute_master_Document:{}}}*/row)=>{     
-                            row.adrm_attribute_master_Document = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
+                    .map((/**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {adrm_attribute_master_Document:{}|null}}*/row)=>{     
+                            row.adrm_attribute_master_Document = (server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                                                 join:true,
                                                                                                 resource_id:row.AppDataResourceMasterAttributeId,
                                                                                                 data:{  data_app_id:null,
                                                                                                         iam_user_id:null,
                                                                                                         resource_name:null,
-                                                                                                        app_data_entity_id:parameters.data.app_data_entity_id}}).result[0].Document;
+                                                                                                        app_data_entity_id:parameters.data.app_data_entity_id}}).result??[])[0].Document;
                         return row;
                     });
     if (result.length>0 || parameters.resource_id==null||parameters.join)

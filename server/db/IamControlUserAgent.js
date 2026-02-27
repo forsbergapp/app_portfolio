@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamControlUserAgent'][] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamControlUserAgent'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlUserAgent',resource_id, null);
 

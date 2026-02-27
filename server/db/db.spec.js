@@ -61,25 +61,25 @@ const test = async t =>
                                     link_url:app_data.LinkUrl,
                                     status:app_data.Status};
             const result_update = await server.ORM.db.App.update({app_id:0, 
-                                                    resource_id:result_post.result.InsertId, 
+                                                    resource_id:result_post.result?.InsertId??0, 
                                                     data:data_update});
             //test get from cache, get updated value
-            const result_get = server.ORM.db.App.get({app_id:0,  resource_id:result_post.result.InsertId});
+            const result_get = server.ORM.db.App.get({app_id:0,  resource_id:result_post.result?.InsertId??0});
             //test delete, delete record
-            const result_delete = await server.ORM.db.App.deleteRecord(0, result_post.result.InsertId);
+            const result_delete = await server.ORM.db.App.deleteRecord(0, result_post.result?.InsertId??0);
 
                     
             return [
                     //expect one inserted record
-                    t.expect('insert affectedRows',  result_post.result.AffectedRows).toBe(1),
+                    t.expect('insert affectedRows',  result_post.result?.AffectedRows).toBe(1),
                     //expect id to be returned
-                    t.expect('insertid',             result_post.result.InsertId)['not.toBeUndefined'](),
+                    t.expect('insertid',             result_post.result?.InsertId)['not.toBeUndefined'](),
                     //expect one updated record
-                    t.expect('update affectedRows',  result_update.result.AffectedRows).toBe(1),
+                    t.expect('update affectedRows',  result_update.result?.AffectedRows).toBe(1),
                     //expect updated record to have the correct updated value
                     t.expect('name',                 result_get.result[0].Name).toBe('THE ORM'),
                     //expect one deleted record
-                    t.expect('delete affectedRows',  result_delete.result.AffectedRows).toBe(1)
+                    t.expect('delete affectedRows',  result_delete.result?.AffectedRows).toBe(1)
             ];
         }).then(result=>resolve(result)));
     })];

@@ -22,7 +22,7 @@ const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPostLike',parameters.resource_id, null).result ??[])
                         .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row)=>
                             row.IamUserAppDataPostId == (parameters.data.iam_user_app_data_post_id ?? row.IamUserAppDataPostId) &&
-                            IamUserApp_records
+                            (IamUserApp_records??[])
                             .filter((/**@type{server['ORM']['Object']['IamUserApp']}*/rowIamUserApp)=>
                                 row.IamUserAppId == rowIamUserApp.Id
                             )
@@ -52,8 +52,8 @@ const post = async parameters =>{
     }
     else{
         /**@type{server['ORM']['Object']['IamUserApp']} */
-        const result = server.ORM.db.IamUserApp.get({app_id:parameters.app_id, resource_id:null, data:{   iam_user_id:parameters.data.iam_user_id, 
-                                                                                            data_app_id:parameters.data.data_app_id}}).result[0];
+        const result = (server.ORM.db.IamUserApp.get({app_id:parameters.app_id, resource_id:null, data:{   iam_user_id:parameters.data.iam_user_id, 
+                                                                                            data_app_id:parameters.data.data_app_id}}).result??[])[0];
         /**@type{server['ORM']['Object']['IamUserAppDataPostLike']} */
         const data_new =     {
                                 Id:Date.now(),
@@ -86,9 +86,9 @@ const post = async parameters =>{
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{
-    const result = get({app_id:parameters.app_id, resource_id:null, data:{  iam_user_id:parameters.data.iam_user_id, 
+    const result = (get({app_id:parameters.app_id, resource_id:null, data:{  iam_user_id:parameters.data.iam_user_id, 
                                                                             data_app_id:parameters.data.data_app_id,
-                                                                            iam_user_app_data_post_id:parameters.data.iam_user_app_data_post_id}}).result[0];
+                                                                            iam_user_app_data_post_id:parameters.data.iam_user_app_data_post_id}}).result??[])[0];
     return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPostLike', 

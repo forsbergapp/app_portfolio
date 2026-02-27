@@ -21,7 +21,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonWorldCitiesCity'][]|{data:string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result:server['app']['commonWorldCitiesCity']|server['app']['commonWorldCitiesCity'][]|{data?:string}[]}>}
  */
 const appFunction = async parameters =>{
     /**@type {[key:string]}*/
@@ -33,7 +33,7 @@ const appFunction = async parameters =>{
      * 
      * @description format result
      * @param {string|null} row
-     * @returns {server['server']['response'] & {result?:server['app']['commonWorldCitiesCity'],type:'JSON'}}
+     * @returns {server['server']['response'] & {result:server['app']['commonWorldCitiesCity']|server['app']['commonWorldCitiesCity'][]|{data?:string}[],type:'JSON'}}
      */
     const formatReturn = row =>{
         return row?
@@ -81,6 +81,7 @@ const appFunction = async parameters =>{
         case 'SEARCH':{
             if ((parameters.data.searchString??'').length>2){
                 const searchFormat = (parameters.data.searchString??'').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+                /**@ts-ignore */
                 return {result: [...new Map(Object.values(server.ORM.getExternal('GEOLOCATION_PLACE'))
                                 .map(arr=>[...arr.filter((/**@type{string}*/place)=>
                                                     /**@ts-ignore */

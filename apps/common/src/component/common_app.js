@@ -146,7 +146,7 @@ const component = async props =>{
     const start_app_id =                    data_app_id==admin_app_id?admin_app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_START_APP_ID.default)??1;
     /**
      * @description post data and return created values
-     * @returns {Promise.<{  idToken:{id:number, token:string},
+     * @returns {Promise.<{  idToken:{id:number|null, token:string},
      *                      uuid:   string,
      *                      secret: string
      *                      }>}

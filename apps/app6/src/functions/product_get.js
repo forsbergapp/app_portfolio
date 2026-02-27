@@ -19,7 +19,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceMaster'][]}>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['Object']['AppDataResourceMaster'][]}>}
  */
 const productGet = async parameters =>{
         
@@ -27,7 +27,7 @@ const productGet = async parameters =>{
     const Entity            = server.ORM.db.AppDataEntity.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:product})[]}} */
+    /**@type{server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:product})[]}} */
     const products = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:parameters.data.resource_id, 
                                                         data:{  iam_user_id:null,
@@ -45,7 +45,7 @@ const productGet = async parameters =>{
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result[0];
     
-    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_product_variant})[]}} */
+    /**@type{server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_product_variant})[]}} */
     const product_variant_metadatas = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,

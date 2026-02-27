@@ -31,33 +31,30 @@ const messageQueue = async parameters => {
         }
         case 'CONSUME': {
             //message CONSUME
-            return await server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id??null}).result
-            .then((/**@type{server['ORM']['Object']['MessageQueuePublish'][]}*/message_queue)=>{
-                /**@ts-ignore @type{server['ORM']['Object']['MessageQueueConsume']} */
-                const message_consume = {   MessageQueuePublishId: parameters.data.message_id??0,
-                                            Message:    null,
-                                            Start:      null,
-                                            Finished:   null,
-                                            Result:     null};
-                for (const row of message_queue){
-                    if (row.Id == parameters.data.message_id){
-                        message_consume.Message = row.Message;
-                        break;
-                    }
+            /**@ts-ignore @type{server['ORM']['Object']['MessageQueueConsume']} */
+            const message_consume = {   MessageQueuePublishId: parameters.data.message_id??0,
+                                        Message:    null,
+                                        Start:      null,
+                                        Finished:   null,
+                                        Result:     null};
+            for (const row of server.ORM.db.MessageQueuePublish.get({app_id:parameters.app_id, resource_id:parameters.data.message_id??null}).result){
+                if (row.Id == parameters.data.message_id){
+                    message_consume.Message = row.Message;
+                    break;
                 }
-                message_consume.Start = new Date().toISOString();
-                //write to message_queue_consume.json
-                return server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, data:message_consume})
-                    .catch((/**@type{server['server']['error']}*/error)=>{
-                        server.ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
-                                                /**@ts-ignore */
-                                                data:{  MessageQueuePublishId: parameters.data.message_id??0, 
-                                                        Message:   error, 
-                                                        Result:error}}).then(()=>{
-                            throw error;
-                        });
+            }
+            message_consume.Start = new Date().toISOString();
+            //write to message_queue_consume.json
+            return server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, data:message_consume})
+                .catch((/**@type{server['server']['error']}*/error)=>{
+                    return server.ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
+                                            /**@ts-ignore */
+                                            data:{  MessageQueuePublishId: parameters.data.message_id??0, 
+                                                    Message:   error, 
+                                                    Result:error}}).then(()=>{
+                        throw error;
                     });
-            });
+                });
         }
         default: {
             throw {http:400,

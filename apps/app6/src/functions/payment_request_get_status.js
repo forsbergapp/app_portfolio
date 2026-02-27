@@ -21,7 +21,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{ status:string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result:{ status:string}[]}>}
  */
 const paymentRequestGetStatus = async parameters =>{
    

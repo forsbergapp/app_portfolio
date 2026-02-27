@@ -15,7 +15,7 @@ const { getTimezone } = await import ('../../public/modules/regional/regional.js
  *          longitude?:string,
  *          latitude?:string,
  *          place:string|null}} parameters
- * @returns {server['server']['response'] & {result?:server['server']['geolocation_place']}}
+ * @returns {server['server']['response'] & {result:server['server']['geolocation_place']}}
  */
 const returnPlace = parameters =>{
     if (parameters.place)
@@ -63,7 +63,7 @@ const returnPlace = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{  ip:string, locale:string}}} parameters
- * @returns {server['server']['response'] & {result?:server['server']['geolocation_place']|null}}
+ * @returns {server['server']['response'] & {result:server['server']['geolocation_place']|null}}
  */
 const getIP = parameters =>{
     /**
@@ -125,7 +125,7 @@ const getIP = parameters =>{
  *                  longitude:string},
  *          ip:string,
  *          locale:string}} parameters
- * @returns {server['server']['response'] & {result?:server['server']['geolocation_place']}}
+ * @returns {server['server']['response'] & {result:server['server']['geolocation_place']}}
  */
 const getPlace = parameters =>{
    /**

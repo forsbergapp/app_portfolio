@@ -27,7 +27,7 @@ const {formatLocale} = await import('./common_locale.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{data:string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result:{data:string}[]}>}
  */
 const appFunction = async parameters =>{
 

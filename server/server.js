@@ -300,9 +300,9 @@ class serverClass {
                                         secret: await this.security.securityTransportCreateSecrets()
                                                     .then(result=>Buffer.from(JSON.stringify(result),'utf-8').toString('base64'))
                                     }:
-                                        this.ORM.db.ServiceRegistry.get({ app_id:parameters['app-id'], 
+                                        (this.ORM.db.ServiceRegistry.get({ app_id:parameters['app-id'], 
                                                                             resource_id:null, 
-                                                                            data:{name:parameters.service}}).result
+                                                                            data:{name:parameters.service}}).result??[])
                                         .map((/**@type{server['ORM']['Object']['ServiceRegistry']}*/row)=>{
                                             return {
                                                 uuid:row.Uuid,

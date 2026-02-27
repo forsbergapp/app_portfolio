@@ -22,9 +22,9 @@ const {server} = await import ('../server.js');
  * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppDataResourceDetail'][] }}
  */
 const get = parameters =>{ 
-    const entity_id = parameters.data?.app_data_entity_id??server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
+    const entity_id = parameters.data?.app_data_entity_id??(server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                         resource_id:null,
-                                        data:{data_app_id:parameters.data.data_app_id}}).result[0].Id;
+                                        data:{data_app_id:parameters.data.data_app_id}}).result??[])[0].Id;
     const result_AppDataEntityResource =    server.ORM.db.AppDataEntityResource.get({ app_id:parameters.app_id, 
                                                                         resource_id:null,
                                                                         data:{  app_data_entity_id:entity_id,
@@ -41,11 +41,11 @@ const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'AppDataResourceDetail',parameters.resource_id, null).result ?? [])
                     .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail']}*/row)=>
                             row.AppDataResourceMasterId == (parameters.data.app_data_resource_master_id ?? row.AppDataResourceMasterId) &&
-                            result_AppDataEntityResource
-                            .filter((/**@type{server['ORM']['Object']['AppDataEntityResource']}*/row_AppDataEntityResource)=>
+                            (result_AppDataEntityResource??[])
+                            .filter(row_AppDataEntityResource=>
                                 row_AppDataEntityResource.Id == row.AppDataEntityResourceId
                             ).length>0 &&
-                            result_AppDataResourceMaster
+                            (result_AppDataResourceMaster??[])
                             .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/row_master)=>
                                 parameters.all_users || row_master.Id == row.AppDataResourceMasterId
                             ).length>0

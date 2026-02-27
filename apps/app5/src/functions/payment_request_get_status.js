@@ -23,7 +23,7 @@ const {getToken} = await import('./payment_request_create.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{message:string}}>}
+ * @returns {Promise.<server['server']['response'] & {result:{message:string}}>}
  */
 const paymentRequestGetStatus = async parameters =>{
      

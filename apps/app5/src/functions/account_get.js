@@ -20,7 +20,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account})[]}>}
+ * @returns {Promise.<server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account})[]}>}
  */
 const accountGet = async parameters =>{
 

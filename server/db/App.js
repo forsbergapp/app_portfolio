@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['App'][] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['App'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameters.resource_id, null);
 
@@ -22,7 +22,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameter
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
 *          resource_id:number|null}} parameters
-* @returns {server['server']['response'] & {result?:server['ORM']['View']['AppGetInfo'][] }}
+* @returns {server['server']['response'] & {result:server['ORM']['View']['AppGetInfo'][] }}
 */
 const getViewInfo = parameters =>{
     return {result:get({app_id:parameters.app_id, resource_id:null}).result
@@ -50,7 +50,7 @@ const getViewInfo = parameters =>{
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<server['server']['response'] & {result?:{id:number} }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const post = async (app_id, data) => {
     //check required attributes

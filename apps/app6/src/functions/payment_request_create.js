@@ -26,7 +26,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{Token:string,
+ * @returns {Promise.<server['server']['response'] & {result:{Token:string,
  *                                                      Exp:number,
  *                                                      Iat:number,
  *                                                      PaymentRequestId:string,

@@ -22,7 +22,7 @@ const fs = await import('node:fs');
  * @function
  * @param {string} content_type
  * @param {string} path
- * @returns {Promise.<server['server']['response']>}
+ * @returns {Promise.<server['server']['response'] & {result:{resource:string}}>}
  */
 const commonConvertBinary = async (content_type, path) =>
     fs.promises.readFile(`${server.info.serverProcess.cwd()}${path}`)
@@ -720,7 +720,7 @@ const commonModuleRun = async parameters => {
 *          user_agent:string, 
 *          ip:string,
 *          endpoint:server['bff']['parameters']['endpoint']|''}} parameters
-* @returns {Promise.<server['server']['response']>}
+* @returns {Promise.<server['server']['response'] & {result?:*}>}
 */
 const commonAppReport = async parameters => {
     if (parameters.data?.type =='REPORT'){
@@ -837,7 +837,7 @@ const commonAppReport = async parameters => {
  *          ip:string,
  *          endpoint:server['bff']['parameters']['endpoint']|'',
  *          res:server['server']['res']}} parameters
- * @returns {Promise.<server['server']['response']|void>}
+ * @returns {Promise.<server['server']['response'] & {result?:null}|void>}
  */
 const commonAppReportQueue = async parameters =>{
 
@@ -862,7 +862,7 @@ const commonAppReportQueue = async parameters =>{
                                                             user:user.Username
                                                             });
         if (result_post.result){
-            server.ORM.db.AppModuleQueue.update(parameters.app_id, result_post.result.InsertId, { start:new Date().toISOString(),
+            server.ORM.db.AppModuleQueue.update(parameters.app_id, result_post.result.InsertId??0, { start:new Date().toISOString(),
                                                                     progress:0, 
                                                                     status:'RUNNING'})
             .then(()=>{
@@ -873,7 +873,7 @@ const commonAppReportQueue = async parameters =>{
                                     resource_id:        report.result[0].ModuleName,
                                     data:               {type:'REPORT', 
                                                             ...{ps:parameters.data.ps}, 
-                                                            ...{queue_parameters:{appModuleQueueId:result_post.result.InsertId,
+                                                            ...{queue_parameters:{appModuleQueueId:result_post.result?.InsertId??0,
                                                                                     ...Object.fromEntries(Array.from(new URLSearchParams(parameters.data.report_parameters)).map(param=>[param[0],param[1]]))}
                                                                 }
                                                         },
@@ -884,6 +884,7 @@ const commonAppReportQueue = async parameters =>{
             return {result:null, type:'JSON'};
         }
         else
+            /**@ts-ignore */
             return result_post;
     }
     else
@@ -921,7 +922,7 @@ const commonModuleMetaDataGet = async parameters =>{
     if (parameters.data.type=='REPORT'||parameters.data.type=='MODULE'||parameters.data.type=='FUNCTION'){
         const modules = server.ORM.db.AppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id,data:{data_app_id:parameters.app_id}});
         if (modules.result){
-            /**@type{(server['ORM']['Object']['AppModule'] & {ModuleMetadata:server['app']['commonModuleMetadata']})[]}*/
+            /**@ts-ignore @type{(server['ORM']['Object']['AppModule'] & {ModuleMetadata:server['app']['commonModuleMetadata']})[]}*/
             const module_reports = modules.result.filter((/**@type{server['ORM']['Object']['AppModule']}*/row)=>row.ModuleType==parameters.data.type);
             if (module_reports){
                 for (const row of module_reports){
@@ -951,6 +952,7 @@ const commonModuleMetaDataGet = async parameters =>{
                     });
         }
         else
+            /**@ts-ignore */
             return modules;
     }
     else{
@@ -1059,7 +1061,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   *          user_agent:string
   *          idToken:string, 
   *          data:{ iam_user_id:server['ORM']['Object']['IamUser']['Id']} } } parameters
-  * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppSwitch']}>}
+  * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppSwitch']|null}>}
   */
 const commonAppSwitch = async parameters =>{
     if (parameters.resource_id == server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default))
@@ -1072,8 +1074,8 @@ const commonAppSwitch = async parameters =>{
     else{
         /**@type{server['ORM']['Object']['App']} */
         const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
-        if (app)
-            return {result:{...(await server.socket.socketConnectedUpdate(parameters.app_id, 
+        if (app){
+            const socket = (await server.socket.socketConnectedUpdate(parameters.app_id, 
                                                             {idToken:parameters.idToken, 
                                                              app_only:true,
                                                              iam_user_id:null,
@@ -1082,15 +1084,19 @@ const commonAppSwitch = async parameters =>{
                                                              token_access:null,
                                                              token_admin:null,
                                                              ip:parameters.ip,
-                                                             headers_user_agent:parameters.user_agent})).result,
-                            IamUserApp: parameters.data?.iam_user_id !=null?
-                                            (await server.iam.iamUserLoginApp({ app_id:parameters.app_id, 
+                                                             headers_user_agent:parameters.user_agent}))
+            if ('result' in socket)
+                return {result:{IamUserApp: parameters.data?.iam_user_id !=null?
+                                            ((await server.iam.iamUserLoginApp({ app_id:parameters.app_id, 
                                                                                 data:{  iam_user_id:parameters.data.iam_user_id,
                                                                                         data_app_id:parameters.resource_id
-                                                                                }})).result[0]:
+                                                                                }})).result??[])[0]:
                                                 null
                             }, 
                     type:'JSON'};
+            else
+                return socket
+        }
         else
             return {http:404,
                 code:null,
@@ -1112,7 +1118,7 @@ const commonAppSwitch = async parameters =>{
  *          uuid:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{ jsCommon:string, 
+ * @returns {Promise.<server['server']['response'] & {result:{ jsCommon:string, 
  *                                                              commonComponent:string, 
  *                                                              globals:server['app']['commonGlobals']}}>}
  */
@@ -1141,13 +1147,13 @@ const getAppStart = async parameters =>{
                                                             app_id:DATA_APP_ID, 
                                                             resource_id:'/common/js/common.js',
                                                             content_type:'text/javascript', 
-                                                            data_app_id:COMMON_APP_ID})).result.resource,
+                                                            data_app_id:COMMON_APP_ID})).result?.resource??'',
             /**@type{string} */
             commonComponent:(await server.app_common.commonResourceFile({ 
                                                             app_id:DATA_APP_ID, 
                                                             resource_id:server.ORM.db.App.get({app_id:COMMON_APP_ID, resource_id:null}).result.filter((/**@type{server['ORM']['Object']['App']}*/app)=>app.Id == COMMON_APP_ID)[0].Js,
                                                             content_type:'text/javascript', 
-                                                            data_app_id:COMMON_APP_ID})).result.resource,
+                                                            data_app_id:COMMON_APP_ID})).result?.resource??'',
             /**@type{server['app']['commonGlobals']} */
             globals:        {
                                 //update COMMON_GLOBAL keys:
@@ -1182,12 +1188,12 @@ const getAppStart = async parameters =>{
                                                                                                 app_id:DATA_APP_ID, 
                                                                                                 resource_id:'/common/css/common.css',
                                                                                                 content_type:'text/css', 
-                                                                                                data_app_id:COMMON_APP_ID})).result.resource,
-                                                cssFontsArray:  (await server.app_common.commonResourceFile({ 
+                                                                                                data_app_id:COMMON_APP_ID})).result?.resource??'',
+                                                cssFontsArray:  ((await server.app_common.commonResourceFile({ 
                                                                         app_id:DATA_APP_ID, 
                                                                         resource_id:'/common/css/common_fonts.css',
                                                                         content_type:'text/css', 
-                                                                        data_app_id:COMMON_APP_ID})).result.resource
+                                                                        data_app_id:COMMON_APP_ID})).result?.resource??'')
                                                                 .split('url(')
                                                                 .map((/**@type{string}*/row)=>{
                                                                     if (row.startsWith(BASE_PATH_REST_API))
@@ -1222,7 +1228,7 @@ const getAppStart = async parameters =>{
  *          host:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response']>}
+ * @returns {Promise.<server['server']['response'] & {result?:string}>}
  */
 const getAppInit = async parameters =>{
 
@@ -1241,7 +1247,7 @@ const getAppInit = async parameters =>{
             server.socket.socketConnectedCount({data:{logged_in:'0'}})
                 .result.count_connected
             ) >= (server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.IAM_MAX_CONNECTED_CLIENTS.default)??0 ))
-            return {result: commonAppError(server.iam.iamUtilMessageNotAuthorized()),
+            return {result: await commonAppError(server.iam.iamUtilMessageNotAuthorized()),
                     type:'HTML'};
         else
             if  ((await commonAppIam(parameters.host, 'APP')).admin == false && 
@@ -1398,8 +1404,11 @@ const commonGeodata = async parameters =>{
                                                 accept_language:parameters.accept_language})
                                     .then(result=>{if (result.http) throw result; else return result.result;})
                                     .catch((/**@type{server['server']['error']}*/error)=>{throw error;});
+                                    /**@ts-ignore */
         result_geodata.latitude =   result_city.lat;
+                                    /**@ts-ignore */
         result_geodata.longitude=   result_city.lng;
+                                    /**@ts-ignore */
         result_geodata.place    =   result_city.city + ', ' + result_city.admin_name + ', ' + result_city.country;
         result_geodata.timezone =   null;
     }

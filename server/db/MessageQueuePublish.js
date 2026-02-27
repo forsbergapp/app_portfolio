@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['MessageQueuePublish'][]}}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['MessageQueuePublish'][]}}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueuePublish',null, null);
     

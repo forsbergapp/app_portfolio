@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @description Get
  * @function
  * @param {{app_id:number}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi'] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['OpenApi'] }}
  */
 const get = parameters => {
     return {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null), 
@@ -24,7 +24,7 @@ const get = parameters => {
  * @function
  * @param {{app_id:number,
  *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default']|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi']['servers'] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['OpenApi']['servers'] }}
  */
 const getViewServers = parameters =>{
     return {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).servers
@@ -52,7 +52,7 @@ const getViewServers = parameters =>{
  * @description OpenApi get without #/components/parameters/config
  * @function
  * @param {{app_id:number}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['OpenApi'] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['OpenApi'] }}
  */
 const getViewWithoutConfig = parameters => {
     const openApi = server.ORM.getObject(parameters.app_id, 'OpenApi',null, null);

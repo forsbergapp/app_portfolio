@@ -87,7 +87,7 @@ const IBAN_validate = iban => {
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{ TitleSub	        :string,
+ * @returns {Promise.<server['server']['response'] & {result:{ TitleSub	        :string,
  *                                                              Title	            :string,
  *                                                              BankAccountIban	    :string,
  *                                                              BankAccountNumber   :string,
@@ -101,7 +101,7 @@ const getStatement = async parameters =>{
     const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction})[]}} */
+    /**@type{server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction})[]}} */
     const transactions = server.ORM.db.AppDataResourceDetailData.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:parameters.data.iam_user_id,

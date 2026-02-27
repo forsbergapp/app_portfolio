@@ -20,7 +20,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer})[]}>}
+ * @returns {Promise.<server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer})[]}>}
  */
 const customerGet = async parameters =>{
     

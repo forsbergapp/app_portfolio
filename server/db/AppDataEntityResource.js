@@ -12,7 +12,7 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  app_data_entity_id?:number|null,
  *                  resource_name?:string|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppDataEntityResource'] & {app_data_name:string, app_data_value:string, app_data_display_data:string}[] }}
+ * @returns {server['server']['response'] & {result?:(server['ORM']['Object']['AppDataEntityResource'] & {app_data_name:string, app_data_value:string, app_data_display_data:string})[] }}
  */
 const get = parameters =>{ 
     const result = (server.ORM.getObject(parameters.app_id, 'AppDataEntityResource',parameters.resource_id, null).result ?? [])

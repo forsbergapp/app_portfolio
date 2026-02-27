@@ -1317,7 +1317,7 @@ class ORM_class {
      * @description Database info
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetInfo'][]}>}
+     * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['ORMGetInfo'][]}>}
      */
     getViewInfo = async parameters =>{
         return {result: [{
@@ -1334,7 +1334,7 @@ class ORM_class {
      * @description Get all objects in ORM
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}>}
+     * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['ORMGetObjects'][]}>}
      */
     getViewObjects = async parameters =>{
         parameters;
@@ -1373,7 +1373,7 @@ class ORM_class {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetInfo'][]}>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['ORMGetInfo'][]}>}
  */
 const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
 /**
@@ -1382,7 +1382,7 @@ const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['ORMGetObjects'][]}>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['ORMGetObjects'][]}>}
  */
 const getViewObjects = async parameters =>ORM.getViewObjects(parameters);
 

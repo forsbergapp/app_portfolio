@@ -25,10 +25,10 @@ const {server} = await import('../../../../server/server.js');
 const appDataMetadata = async parameters =>{
 
     /**@type{server['ORM']['Object']['AppDataEntity'] & {Id:number}} */
-    const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
+    const Entity    = (server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                            resource_id:null, 
-                                           data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'])}} */
+                                           data:{data_app_id:parameters.data.data_app_id}}).result??[])[0];
+    /**@type{server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceMaster'])}} */
     return server.ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
                                        resource_id:parameters.data.resource_id, 
                                        data:{  iam_user_id:null,

@@ -114,7 +114,7 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
  * @param {number} app_id
  * @param {string} authorization
  * @param {string} ip
- * @returns {Promise.<server['server']['response']>}
+ * @returns {Promise.<server['server']['response'] & {result?: server["ORM"]["MetaData"]["common_result_update"]}>}
  */
 const iamUtilTokenExpiredSet = async (app_id, authorization, ip) =>{
     const token = authorization?.split(' ')[1] ?? '';
@@ -178,14 +178,16 @@ const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
  *          user_agent:string,
  *          accept_language:string}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:{
- *                                              iam_user_id:        number,
- *                                              iam_user_username:  string,
- *                                              bio?:               string | null,
- *                                              avatar?:            string | null,
+ *                                              iam_user_id:server['ORM']['Object']['IamUser']['Id'],
+ *                                              iam_user_app_id:server['ORM']['Object']['IamUserApp']['AppId'],
+ *                                              iam_user_username?:server['ORM']['Object']['IamUser']['Username'],
+ *                                              bio?:server['ORM']['Object']['IamUser']['Bio'],
+ *                                              avatar?:server['ORM']['Object']['IamUser']['Avatar'],
  *                                              IamUserApp?: server['ORM']['Object']['IamUserApp'],
- *                                              token_at:           string,
- *                                              exp:                number,
- *                                              iat:                number} }>}
+ *                                              token_at:string,
+ *                                              exp:number,
+ *                                              iat:number,
+ *                                              active:server['ORM']['Object']['IamUser']['Active']}|null}>}
  */
 const iamAuthenticateUser = async parameters =>{
     const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default);
@@ -198,14 +200,16 @@ const iamAuthenticateUser = async parameters =>{
      * @param {server['ORM']['Object']['IamUser'] & {Id:number, Type:string}} user
      * @param {server['ORM']['Object']['IamAppAccess']['Type']} token_type
      * @returns {Promise.<server['server']['response'] & {result?:{
-     *                                              iam_user_id:number,
-     *                                              iam_user_username?:string,
-     *                                              bio?:string | null,
-     *                                              avatar?:string |null,
+     *                                              iam_user_id:server['ORM']['Object']['IamUser']['Id'],
+     *                                              iam_user_app_id:server['ORM']['Object']['IamUserApp']['AppId'],
+     *                                              iam_user_username?:server['ORM']['Object']['IamUser']['Username'],
+     *                                              bio?:server['ORM']['Object']['IamUser']['Bio'],
+     *                                              avatar?:server['ORM']['Object']['IamUser']['Avatar'],
      *                                              IamUserApp?: server['ORM']['Object']['IamUserApp'],
      *                                              token_at:string,
      *                                              exp:number,
-     *                                              iat:number} }>}
+     *                                              iat:number,
+     *                                              active:server['ORM']['Object']['IamUser']['Active']}|null }>}
      */
     const check_user = async (result, user, token_type) => {     
         if (result == 1){
@@ -223,14 +227,14 @@ const iamAuthenticateUser = async parameters =>{
                                                         data:{  data_app_id:parameters.app_id,
                                                                 iam_user_id:user.Id
                                                                 }});
-                if (recordIamUserApp.result){
+                if ('result' in recordIamUserApp){
                     //authorize access token ADMIN or APP_ACCESS for active account or APP_ACCESS_VERFICATION
                     const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                                         user.Active==1?token_type:'APP_ACCESS_VERIFICATION', 
                                                         {   app_id:             parameters.app_id,
                                                             app_id_token:       iamUtilTokenAppId(parameters.app_id),
                                                             app_custom_id:      null,
-                                                            iam_user_app_id:    recordIamUserApp.result[0].Id??null,
+                                                            iam_user_app_id:    (recordIamUserApp.result??[])[0].Id??null,
                                                             iam_user_id:        user.Id, 
                                                             iam_user_username:  user.Username,
                                                             ip:                 parameters.ip, 
@@ -244,14 +248,14 @@ const iamAuthenticateUser = async parameters =>{
                             Res:		            result,
                             Ip:                     parameters.ip,
                             AppCustomId:            null,
-                            IamUserAppId:           recordIamUserApp.result[0].Id??null,
+                            IamUserAppId:           (recordIamUserApp.result??[])[0].Id??null,
                             IamUserId:              user.Id,
                             IamUserUsername:        user.Username,
                             Token:                  jwt_data?jwt_data.token:null,
                             Ua:                     parameters.user_agent};
                     await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
                     //update info in connected list and then return login result
-                    return await server.socket.socketConnectedUpdate(parameters.app_id, 
+                    const socket = await server.socket.socketConnectedUpdate(parameters.app_id, 
                         {   idToken:                parameters.idToken,
                             iam_user_id:            user.Id,
                             iam_user_username:      user.Username,
@@ -259,23 +263,25 @@ const iamAuthenticateUser = async parameters =>{
                             token_access:           token_type=='ADMIN'?null:jwt_data?jwt_data.token:null,
                             token_admin:            token_type=='ADMIN'?jwt_data?jwt_data.token:null:null,
                             ip:                     parameters.ip,
-                            headers_user_agent:     parameters.user_agent})
-                    .then((result_socket)=>{
-                        return  result_socket.http?result_socket:{result:{  iam_user_id:    user.Id,
-                                                                            iam_user_app_id: recordIamUserApp.result[0].Id,
-                                                                            //return only if account is active:
-                                                                            ...(user.Active==1 && {iam_user_username:  user.Username}),
-                                                                            ...(user.Active==1 && {bio:  user.Bio}),
-                                                                            ...(user.Active==1 && {avatar:  user.Avatar}),
-                                                                            ...(user.Active==1 && {IamUserApp: recordIamUserApp.result[0]}),
-                                                                            token_at:       jwt_data?jwt_data.token:null,
-                                                                            exp:            jwt_data?jwt_data.exp:null,
-                                                                            iat:            jwt_data?jwt_data.iat:null,
-                                                                            active:         user.Active}, 
-                                                                        type:'JSON'};
-                    });
+                            headers_user_agent:     parameters.user_agent});
+                    if ('result' in socket)
+                        return  {result:{  iam_user_id:    user.Id,
+                                            iam_user_app_id: (recordIamUserApp.result??[])[0].Id,
+                                            //return only if account is active:
+                                            ...(user.Active==1 && {iam_user_username:  user.Username}),
+                                            ...(user.Active==1 && {bio:  user.Bio}),
+                                            ...(user.Active==1 && {avatar:  user.Avatar}),
+                                            ...(user.Active==1 && {IamUserApp: (recordIamUserApp.result??[])[0]}),
+                                            token_at:       jwt_data?jwt_data.token:'',
+                                            exp:            jwt_data?jwt_data.exp:0,
+                                            iat:            jwt_data?jwt_data.iat:0,
+                                            active:         user.Active}, 
+                                type:'JSON'};
+                    else
+                        return socket;
                 }
                 else
+                    /**@ts-ignore */
                     return recordIamUserApp;
             }
         }
@@ -329,8 +335,10 @@ const iamAuthenticateUser = async parameters =>{
     if(parameters.authorization){       
         //if admin app create user if first time
         if (parameters.app_id == admin_app_id && server.ORM.db.IamUser.get(parameters.app_id, null).result.length==0)
-            /**@ts-ignore */
-            return server.ORM.db.IamUser.post(parameters.app_id,{
+            
+            return server.ORM.db.IamUser.post(parameters.app_id,
+                            /**@ts-ignore */
+                            {
                             Username:           username, 
                             Password:           password, 
                             PasswordReminder:   null, 
@@ -339,9 +347,11 @@ const iamAuthenticateUser = async parameters =>{
                             Private:            1, 
                             Active:             1, 
                             Avatar:             null})
-                    .then((/**@type{server['server']['response']}*/result)=>result.http?result:check_user(1, 
+                    /**@ts-ignore */
+                    .then(result=>result.http?result:check_user(1, 
                                                                     /**@ts-ignore */
                                                                     {
+                                                                    /**@ts-ignore */
                                                                     Id:         result.result.InsertId,
                                                                     Username:   username,
                                                                     Password:   password,
@@ -400,11 +410,13 @@ const iamAuthenticateUser = async parameters =>{
  *                                              exp:number,
  *                                              iat:number,
  *                                              iam_user_app_id: number|null,
- *                                              iam_user_id:number} }>}
+ *                                              iam_user_id:number} |null}>}
  */
 const iamAuthenticateUserSignup = async parameters =>{
-    /**@ts-ignore */
-    const new_user = await server.ORM.db.IamUser.post(parameters.app_id, { Username:parameters.data.username,
+    
+    const new_user = await server.ORM.db.IamUser.post(parameters.app_id, 
+                                                            /**@ts-ignore */
+                                                            { Username:parameters.data.username,
                                                             Password:parameters.data.password,
                                                             PasswordReminder:parameters.data.password_reminder,
                                                             Bio:null,
@@ -412,14 +424,14 @@ const iamAuthenticateUserSignup = async parameters =>{
                                                             Avatar:null,
                                                             Active:0,
                                                             Type:'USER'});
-    if (new_user.result){
+    if ('result' in new_user){
         const jwt_data = iamAuthorizeToken( parameters.app_id, 
                                             'APP_ACCESS_VERIFICATION', 
                                             {   app_id:                 parameters.app_id, 
                                                 app_id_token:           iamUtilTokenAppId(parameters.app_id), 
                                                 app_custom_id:          null,
                                                 iam_user_app_id:        null,
-                                                iam_user_id:            new_user.result.InsertId, 
+                                                iam_user_id:            new_user.result?.InsertId??null, 
                                                 iam_user_username:      parameters.data.username, 
                                                 ip:                     parameters.ip, 
                                                 scope:                  'USER'});
@@ -432,32 +444,37 @@ const iamAuthenticateUserSignup = async parameters =>{
             Ip:                   parameters.ip,
             AppCustomId:          null,
             IamUserAppId:         null,
-            IamUserId:            new_user.result.InsertId,
+            IamUserId:            new_user.result?.InsertId??null,
             IamUserUsername:      parameters.data.username,
             Token:                  jwt_data.token,
             Ua:                     parameters.user_agent};
         await server.ORM.db.IamAppAccess.post(parameters.app_id, data_body);
         //updated info in connected list and then return signup result
-        return await server.socket.socketConnectedUpdate(parameters.app_id, 
+        const socket = await server.socket.socketConnectedUpdate(parameters.app_id, 
             {   idToken:                parameters.idToken,
-                iam_user_id:            new_user.result.InsertId,
+                iam_user_id:            new_user.result?.InsertId??null,
                 iam_user_username:      parameters.data.username,
                 iam_user_type:          'USER',
                 token_access:           jwt_data?jwt_data.token:null,
                 token_admin:            null,
                 ip:                     parameters.ip,
-                headers_user_agent:     parameters.user_agent})
-        .then(result_socket=>result_socket.http?result_socket:
-                                {result:{
-                                                otp_key:        server.ORM.db.IamUser.get(parameters.app_id, new_user.result.InsertId).result[0]?.otp_key,
-                                                token_at:       jwt_data.token,
-                                                exp:            jwt_data.exp,
-                                                iat:            jwt_data.iat,
-                                                iam_user_app_id: null,
-                                                iam_user_id:    new_user.result.InsertId},
-                                        type:'JSON'});            
+                headers_user_agent:     parameters.user_agent});
+        if (socket.result)
+            return {result:{
+                            /**@ts-ignore */
+                            otp_key:        server.ORM.db.IamUser.get(parameters.app_id, new_user.result.InsertId??null).result[0].OtpKey,
+                            token_at:       jwt_data.token,
+                            exp:            jwt_data.exp,
+                            iat:            jwt_data.iat,
+                            iam_user_app_id: null,
+                            /**@ts-ignore */
+                            iam_user_id:    new_user.result.InsertId},
+                    type:'JSON'};
+        else
+            return socket;
     }
     else
+        /**@ts-ignore */
         return new_user;
 };
 
@@ -480,7 +497,7 @@ const iamAuthenticateUserSignup = async parameters =>{
  */
 const iamAuthenticateUserActivate = async parameters =>{
     if (server.ORM.UtilNumberValue(parameters.data.verification_type)==1 || server.ORM.UtilNumberValue(parameters.data.verification_type)==2){
-        const result_activate =  await server.security.securityTOTPValidate(parameters.data.verification_code, server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey);
+        const result_activate =  await server.security.securityTOTPValidate(parameters.data.verification_code, server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey??'');
         if (result_activate){
             //set user active = 1
             server.ORM.db.IamUser.updateAdmin({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{active:1}});
@@ -549,7 +566,7 @@ const iamAuthenticateUserActivate = async parameters =>{
  */
 const iamAuthenticateUserUpdate = async parameters => {
     const result_totp =  await server.security.securityTOTPValidate(parameters.data.totp, 
-                                                                    server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey);
+                                                                    server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey??'');
     if (result_totp){
 
         /**@ts-ignore @type{server['ORM']['Object']['IamUser'] & {PasswordNew: string|null}} */
@@ -568,7 +585,7 @@ const iamAuthenticateUserUpdate = async parameters => {
             Event: 'USER_UPDATE'
         };
         return server.ORM.db.IamUser.update(parameters.app_id, parameters.resource_id, data_update)
-            .then((/**@type{server['server']['response']}}*/result_update)=>{
+            .then(result_update=>{
             if (result_update.result){
                 eventData.EventStatus='SUCCESSFUL';
                 return  server.ORM.db.IamUserEvent.post(parameters.app_id, eventData)
@@ -656,6 +673,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                         type:'JSON'
                     };
         else
+            /**@ts-ignore} */
             return user;
     }
     return {http:400,
@@ -701,9 +719,9 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                     microservice_token.replace('Bearer ','').replace('Basic ',''),
                                                     server.ORM.OpenApiComponentParameters.config.IAM_MICROSERVICE_TOKEN_SECRET.default);
             /**@type{server['ORM']['Object']['ServiceRegistry']}*/
-            const service = server.ORM.db.ServiceRegistry.get({   app_id:appIam.app_id??0,
+            const service = (server.ORM.db.ServiceRegistry.get({   app_id:appIam.app_id??0,
                                                     resource_id:null, 
-                                                    data:{name:microservice_token_decoded.service_registry_name}}).result[0];
+                                                    data:{name:microservice_token_decoded.service_registry_name}}).result??[])[0];
             /**@type{server['ORM']['Object']['IamMicroserviceToken'][]}*/
             if (microservice_token_decoded.app_id == appIam.app_id && 
                 microservice_token_decoded.service_registry_id == service.Id &&
@@ -787,7 +805,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                             .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
                                                                                     //Authenticate IAM user
                                                                                     //iam_user_app_id is also saved in token but used as info
-                                                                                    iamuserApp.includes(access_token_decoded.iam_user_app_id) &&
+                                                                                    access_token_decoded.iam_user_app_id !=null && iamuserApp.includes(access_token_decoded.iam_user_app_id) &&
                                                                                     row.IamUserId             == access_token_decoded.iam_user_id && 
                                                                                     row.IamUserUsername       == access_token_decoded.iam_user_username && 
                                                                                     //Authenticate app id
@@ -1182,11 +1200,11 @@ const iamAuthenticateResource = parameters =>  {
  *           ip:string,
  *           host:string,
  *           user_agent:string}} parameters
- * @returns {Promise.<server['server']['response']>}
+ * @returns {Promise.<server['server']['response'] & {result?:{token: string,exp: *,iat: *}}>}
  */
 const iamAuthenticateMicroservice = async parameters =>{
     /**@type{server['ORM']['Object']['ServiceRegistry'][]} */
-    const service = server.ORM.db.ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result;
+    const service = server.ORM.db.ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result??[];
     
     if (service.length==1 && service[0].ServerHost == parameters.host.split(':')[0]){
         const token = server.security.jwt.sign ({
@@ -1237,7 +1255,7 @@ const iamAuthenticateMicroservice = async parameters =>{
  * @param {number} app_id
  * @param {string|null} ip
  * @param {server['iam']['iam_access_token_claim']['scope']} scope
- * @returns {Promise.<{id:Number, token:string}>}
+ * @returns {Promise.<{id:Number|null, token:string}>}
  */
  const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
     const AppIdToken = iamUtilTokenAppId(app_id);
@@ -1258,8 +1276,8 @@ const iamAuthenticateMicroservice = async parameters =>{
                             Ip:         ip ?? '',
                             Ua:         null};
     return await server.ORM.db.IamAppIdToken.post(app_id, file_content)
-                .then((/**@type{server['server']['response']}}*/result)=>{
-                    return {   id:result.result.InsertId,
+                .then(result=>{
+                    return {   id:result.result?.InsertId??null,
                                 token:jwt_data.token};
                     });
  };
@@ -1328,7 +1346,7 @@ const iamAuthenticateMicroservice = async parameters =>{
  * @param {{app_id:Number,
  *          data:{  iam_user_id?:string|null,
  *                  data_app_id?:string|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamAppAccess'][] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamAppAccess'][] }}
  */
 const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
                                                                 .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
@@ -1454,11 +1472,11 @@ const IamUserAppDataPostGet = parameters =>{
         const data_ViewStat = { Document:{	client_ip:          		parameters.ip,
                                             client_user_agent:  		parameters.user_agent},
                                 IamUserAppId:    		server['socket'].socketConnectedGetAppIdTokenRecord(parameters.idToken)[0].IamUserid!=null?
-                                                            (server.ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
+                                                            ((server.ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
                                                                                         resource_id:null, 
                                                                                         data:{  data_app_id:parameters.data.data_app_id, 
                                                                                                 iam_user_id:server['socket'].socketConnectedGetAppIdTokenRecord(parameters.idToken)[0].IamUserid}})
-                                                            .result[0]?.Id??null):
+                                                            .result??[])[0]?.Id??null):
                                                                 null,
                                 /**@ts-ignore */
                                 IamUserAppDataPostId: 	server.ORM.UtilNumberValue(parameters.data.id_view)};
@@ -1481,9 +1499,10 @@ const IamUserAppDataPostGet = parameters =>{
  * @returns {Promise.<server['server']['response'] & {result?:server['iam']['iam_user']}>}
  */
 const iamUserGet = async parameters =>{
-    
+
     const result = server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id);
     return result.http?
+                /**@ts-ignore */
                 result:
                     {result:result.result.map((/**@type{server['ORM']['Object']['IamUser']} */row)=>{
                         return {Id: row.Id,
@@ -1498,7 +1517,7 @@ const iamUserGet = async parameters =>{
                                 Status: row.Status,
                                 Created: row.Created,
                                 Modified: row.Modified,
-                                LastLoginTime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)};})[0],
+                                LastLoginTime:iamUserGetLastLogin(parameters.app_id, parameters.resource_id)??''};})[0],
                     type:'JSON'};
 };
 /**
@@ -1512,7 +1531,7 @@ const iamUserGet = async parameters =>{
  *                  order_by?:string|null,
  *                  search?:string|null,
  *                  offset?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['IamUser'][]}>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['Object']['IamUser'][]}>}
  */
 const iamUserGetAdmin = async parameters => {
 
@@ -1614,11 +1633,12 @@ const iamUserLogout = async parameters =>{
  * @param {{app_id:number,
  *          data:{data_app_id: server['ORM']['Object']['IamUserApp']['AppId'], 
  *                iam_user_id: server['ORM']['Object']['IamUserApp']['IamUserId']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['IamUserApp']}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['IamUserApp'][]}>}
  */
 const iamUserLoginApp = async parameters => {
     /**
      * @param{number|null} id 
+     * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserApp'][]}}
      */
     const iamuserapp = id => server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                 resource_id: id, 
@@ -1639,7 +1659,7 @@ const iamUserLoginApp = async parameters => {
                                                                                 PreferenceDirection: null, 
                                                                                 PreferenceArabicScript: null,
                                                                                 Custom: null}
-                                                                            })).result.InsertId):
+                                                                            })).result?.InsertId??null):
                         record;
     }
     else

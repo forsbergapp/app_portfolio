@@ -27,6 +27,7 @@ const get = parameters => {
                         }], 
                 type:'JSON'};
     else
+        /**@ts-ignore */
         return result;
 };
 
@@ -40,7 +41,7 @@ const get = parameters => {
  *          data:{  name?:string,
  *                  value?:string,
  *                  data_app_id?:string|number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppData'][]}}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['AppData'][]}}
  */
 const getServer = parameters => {
    const result = server.ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, server.ORM.UtilNumberValue(parameters.data.data_app_id));

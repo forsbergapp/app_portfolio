@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUser'][] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamUser'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUser',resource_id, null);
 
@@ -30,7 +30,7 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUser',resou
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUsetGetProfile'][]}>}
  */
 const getViewProfile = async parameters =>{
- 
+  /**@type{server['ORM']['View']['IamUsetGetProfile'][]} */
   const result_getProfileUser = get(parameters.app_id, parameters.resource_id).result
                                 .filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>   
                                     row.Active==1 && 
@@ -39,14 +39,14 @@ const getViewProfile = async parameters =>{
                                     server.ORM.UtilSearchMatch(row.Username, parameters.data.name??''))
                                 .map((/**@type{server['ORM']['Object']['IamUser']}*/row)=>{
                                     // check if friends
-                                    const friends =  server.ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
+                                    const friends =  (server.ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:server.ORM.UtilNumberValue(parameters.data?.id),
-                                                                            iam_user_id_follow:row.Id??null}}).result[0] ??
-                                                    server.ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
+                                                                            iam_user_id_follow:row.Id??null}}).result??[])[0] ??
+                                                    (server.ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:row.Id??null,
-                                                                            iam_user_id_follow:server.ORM.UtilNumberValue(parameters.data?.id)}}).result[0];
+                                                                            iam_user_id_follow:server.ORM.UtilNumberValue(parameters.data?.id)}}).result??[])[0];
                                     return {Id:             row.Id,
                                             Active:         row.Active,
                                             Username:       row.Username, 
@@ -58,40 +58,40 @@ const getViewProfile = async parameters =>{
                                             Created:        row.Created,
                                             CountFollowing:((row.Private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                    (server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                         resource_id:null, 
                                                                                         data:{  iam_user_id:row.Id??null,
-                                                                                                iam_user_id_follow:null}}).result.length,
+                                                                                                iam_user_id_follow:null}}).result??[]).length,
                                             CountFollowed: ((row.Private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                    (server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                         resource_id:null, 
                                                                                         data:{  iam_user_id:null,
-                                                                                                iam_user_id_follow:row.Id??null}}).result.length,
+                                                                                                iam_user_id_follow:row.Id??null}}).result??[]).length,
                                             CountLikes:    ((row.Private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                                                                    (server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:row.Id??null,
-                                                                                        iam_user_id_like:null}}).result.length,
+                                                                                        iam_user_id_like:null}}).result??[]).length,
                                             CountLiked:    ((row.Private==1 && friends==null) || parameters.data.search!=null)?
                                                                 null:
-                                                                    server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                                                                    (server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
-                                                                                        iam_user_id_like:row.Id??null}}).result.length,
-                                            CountViews:    server.ORM.db.IamUserView.get({   app_id:parameters.app_id, 
+                                                                                        iam_user_id_like:row.Id??null}}).result??[]).length,
+                                            CountViews:    (server.ORM.db.IamUserView.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
-                                                                                        iam_user_id_view:row.Id??null}}).result.length,
-                                            FollowedId:    (parameters.data?.id==null ||parameters.data?.id=='')?null:server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                                                                                        iam_user_id_view:row.Id??null}}).result??[]).length,
+                                            FollowedId:    (parameters.data?.id==null ||parameters.data?.id=='')?null:(server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:server.ORM.UtilNumberValue(parameters.data?.id),
-                                                                                        iam_user_id_follow:row.Id??null}}).result[0]?.Id??null,
-                                            LikedId:       (parameters.data?.id==null ||parameters.data?.id=='')?null:server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                                                                                        iam_user_id_follow:row.Id??null}}).result??[])[0]?.Id??null,
+                                            LikedId:       (parameters.data?.id==null ||parameters.data?.id=='')?null:(server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:server.ORM.UtilNumberValue(parameters.data?.id),
-                                                                                        iam_user_id_like:row.Id??null}}).result[0]?.Id??null};
+                                                                                        iam_user_id_like:row.Id??null}}).result??[])[0]?.Id??null};
                                 });
   if (parameters.data.search){
       return {result:result_getProfileUser, type:'JSON'};
@@ -108,7 +108,7 @@ const getViewProfile = async parameters =>{
                             .then(()=>{return {result:result_getProfileUser, type:'JSON'};});
       }
       else
-          return result_getProfileUser.http?result_getProfileUser:server.ORM.getError(parameters.app_id, 404);
+          return server.ORM.getError(parameters.app_id, 404);
 };
 
 /**
@@ -118,20 +118,20 @@ const getViewProfile = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{statchoice?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserGetProfileStat'][] }>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['IamUserGetProfileStat'][] }>}
  */
 const getViewProfileStat = async parameters =>{
-    
-    return {result:get(parameters.app_id, null).result
+    /**@ts-ignore */
+    return {result: get(parameters.app_id, null).result
                             .filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>
                                     row.Active==1 && row.Private !=1 &&
                                     //user should have a record in current app
-                                    server.ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
+                                    (server.ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
                                                                 resource_id:null,
                                                                 data: {
                                                                     iam_user_id: row.Id??null,
                                                                     data_app_id: parameters.app_id}
-                                                                }).result[0]
+                                                                }).result??[])[0]
                             )              
                             .map((/**@type{server['ORM']['Object']['IamUser']}*/row)=>{
                                 return {
@@ -142,23 +142,24 @@ const getViewProfileStat = async parameters =>{
                                     Avatar: row.Avatar,
                                     Username:row.Username,
                                     Count:  server.ORM.UtilNumberValue(parameters.data?.statchoice)==1?
-                                                server.ORM.db.IamUserView.get({   app_id:parameters.app_id, 
+                                                (server.ORM.db.IamUserView.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
-                                                                            iam_user_id_view:row.Id??null}}).result.length:
+                                                                            iam_user_id_view:row.Id??null}}).result??[]).length:
                                             server.ORM.UtilNumberValue(parameters.data?.statchoice)==2?
-                                                server.ORM.db.IamUserFollow.get({   app_id:parameters.app_id, 
+                                                (server.ORM.db.IamUserFollow.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
-                                                                            iam_user_id_follow:row.Id??null}}).result.length:
+                                                                            iam_user_id_follow:row.Id??null}}).result??[]).length:
                                             server.ORM.UtilNumberValue(parameters.data?.statchoice)==3?
-                                                server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                                                (server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                                                     resource_id:null, 
                                                                     data:{  iam_user_id:null,
-                                                                            iam_user_id_like:row.Id??null}}).result.length:
+                                                                            iam_user_id_like:row.Id??null}}).result??[]).length:
                                             null
                                 };
                             })
+                            /**@ts-ignore */
                             .sort(( /**@type{server['ORM']['View']['IamUserGetProfileStat']}*/a,
                                     /**@type{server['ORM']['View']['IamUserGetProfileStat']}*/b)=>a.Count>b.Count?-1:1),
             type:'JSON'};
@@ -175,12 +176,13 @@ const getViewProfileStat = async parameters =>{
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserGetProfileDetail'][] }>}
  */
 const getViewProfileDetail = async parameters =>{
+    /**@ts-ignore */
    return {result:( //following
                     server.ORM.UtilNumberValue(parameters.data?.detailchoice)==1?
-                        server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
+                        (server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
-                                                    iam_user_id_follow:null}}).result
+                                                    iam_user_id_follow:null}}).result??[])
                             .map((/**@type{server['ORM']['Object']['IamUserFollow']}*/row)=>{return {iam_user_id:row.IamUserIdFollow};}):
                     //followed
                     server.ORM.UtilNumberValue(parameters.data?.detailchoice)==2?
@@ -190,10 +192,10 @@ const getViewProfileDetail = async parameters =>{
                                                     iam_user_id_follow:parameters.resource_id}}).result:
                     //like user
                     server.ORM.UtilNumberValue(parameters.data?.detailchoice)==3?
-                        server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
+                        (server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
-                                                    iam_user_id_like:null}}).result
+                                                    iam_user_id_like:null}}).result??[])
                             .map((/**@type{server['ORM']['Object']['IamUserLike']}*/row)=>{return {iam_user_id:row.IamUserIdLike};}):
                     //liked user
                     server.ORM.UtilNumberValue(parameters.data?.detailchoice)==4?
@@ -202,11 +204,13 @@ const getViewProfileDetail = async parameters =>{
                                             data:{  iam_user_id:null,
                                                     iam_user_id_like:parameters.resource_id}}).result:
                     [])
+                    /**@ts-ignore */
                     .filter((/**@type{server['ORM']['View']['IamUserGetProfileDetail']}*/row)=>{
                         /**@type{server['ORM']['Object']['IamUser']}*/
                         const user = get(parameters.app_id,row.IamUserId).result[0];
                         return user?.Active == 1 && user?.Private != 1;
                     })              
+                    /**@ts-ignore */
                     .map((/**@type{server['ORM']['View']['IamUserGetProfileDetail']}*/row)=>{
                         return {
                             Detail: server.ORM.UtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
@@ -218,6 +222,7 @@ const getViewProfileDetail = async parameters =>{
                             Username:get(parameters.app_id,row.IamUserId).result[0]?.Username
                         };
                     })
+                    /**@ts-ignore */
                     .sort(( /**@type{server['ORM']['View']['IamUserGetProfileDetail']}*/a,
                             /**@type{server['ORM']['View']['IamUserGetProfileDetail']}*/b)=>a.Username<b.Username?-1:1),
            type:'JSON'};
@@ -229,7 +234,7 @@ const getViewProfileDetail = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['View']['IamUserGetStatCountAdmin'][]}}
+ * @returns {server['server']['response'] & {result:server['ORM']['View']['IamUserGetStatCountAdmin'][]}}
  */
 const getViewStatCountAdmin = parameters => {return {result: [{CountUsers:get(parameters.app_id,null).result?.length}],
                                                     type:'JSON'};};

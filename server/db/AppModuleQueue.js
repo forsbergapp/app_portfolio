@@ -13,7 +13,7 @@ const fs = await import('node:fs');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppModuleQueue'][] }}
+ * @returns {server['server']['response'] & {result:server['ORM']['Object']['AppModuleQueue'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppModuleQueue',parameters.resource_id, parameters.app_id);
 
@@ -25,7 +25,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppModuleQueue
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{resource:string}}>}
+ * @returns {Promise.<server['server']['response'] & {result:{resource:string}}>}
  */
 const getResult = async parameters => {
     return {result:{resource:(await fs.promises.readFile(server.info.serverProcess.cwd() + `/data/${server.ORM.OpenApiComponentParameters.config.SERVER_PATH_JOBS.default}/${parameters.resource_id}.html`)).toString()}, 
@@ -81,7 +81,7 @@ const post = async (app_id, data) => {
  * @param {number} app_id
  * @param {number} id
  * @param {string} result
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @returns {Promise.<server['server']['response'] & {result:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const postResult = async (app_id, id, result) =>{
     await fs.promises.writeFile(server.info.serverProcess.cwd() + `/data/${server.ORM.OpenApiComponentParameters.config.SERVER_PATH_JOBS.default}/${id}.html`, result,  'utf8');

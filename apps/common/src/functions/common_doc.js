@@ -225,8 +225,8 @@ const markdownRender = async parameters =>{
         case parameters.type.toUpperCase()=='APP':{
             //replace variables for APP template
             /**@type{server['ORM']['Object']['AppTranslation']} */
-            const app_translation = server.ORM.db.AppTranslation.get(parameters.app_id,null, parameters.locale, 
-                                                                server.ORM.UtilNumberValue(parameters.doc)??0).result[0];
+            const app_translation = (server.ORM.db.AppTranslation.get(parameters.app_id,null, parameters.locale, 
+                                                                server.ORM.UtilNumberValue(parameters.doc)??0).result??[])[0];
             /**@type{server['ORM']['Object']['App']} */
             const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:server.ORM.UtilNumberValue(parameters.doc)}).result[0];
 
@@ -275,7 +275,7 @@ const markdownRender = async parameters =>{
                                 .replaceAll('@{SOURCE_LINK}',       parameters.module ??'')
                                 //metadata tags                            
                                 .replaceAll('@{SERVER_HOST}',       server.ORM.OpenApiServers.filter(row=>row['x-type'].default=='APP')[0].variables.host.default??'')
-                                .replaceAll('@{APP_COPYRIGHT}',     server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result[0].Copyright)
+                                .replaceAll('@{APP_COPYRIGHT}',     (server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.app_id}).result??[])[0]?.Copyright??'')
                         );
             
             //replace all found JSDoc comments with markdown formatted module functions

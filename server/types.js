@@ -54,7 +54,7 @@
  * @property {number} Parameters.app_font_timeout
  * @property {object} Data
  * @property {ORM['View']['AppGetInfo'][]} Data.Apps
- * @property {[ORM['Object']['AppData']['AppId'], ORM['Object']['AppData']['Value'], ORM['Object']['AppData']['DisplayData']][]} Data.AppData
+ * @property {[ORM['Object']['AppData']['AppId'], ORM['Object']['AppData']['Name'], ORM['Object']['AppData']['Value'], ORM['Object']['AppData']['DisplayData']][]} Data.AppData
  * @property {string} Data.cssCommon
  * @property {string[]} Data.cssFontsArray
  * @property {string|null} Data.token_dt
@@ -141,7 +141,7 @@
 
  /**
   * @description APP commonAppSwitch
-  * @typedef {{IamUserApp:ORM['Object']['IamUserApp']}} commonAppSwitch
+  * @typedef {{IamUserApp:ORM['Object']['IamUserApp']|null}} commonAppSwitch
   */
 
 /**
@@ -741,11 +741,11 @@
  * @property {ORM['Object']['IamUser']['Avatar']} Avatar
  * @property {number|null} Friends
  * @property {string} Created
- * @property {number} CountFollowing
- * @property {number} CountFollowed
- * @property {number} CountLikes
- * @property {number} CountLiked
- * @property {number} CountViews
+ * @property {number|null} CountFollowing
+ * @property {number|null} CountFollowed
+ * @property {number|null} CountLikes
+ * @property {number|null} CountLiked
+ * @property {number|null} CountViews
  * @property {ORM['Object']['IamUserFollow']['Id']|null} FollowedId
  * @property {ORM['Object']['IamUserLike']['Id']|null} LikedId
  */
@@ -762,7 +762,7 @@
  * @description DB VIEW ViewIamUserGetProfileStat
  * @memberof ORM
  * @typedef  {object} ViewIamUserGetProfileStat
- * @property {'VISITED|FOLLOWING|LIKE_USER'} Top
+ * @property {'VISITED|FOLLOWING|LIKE_USER'|string|null} Top
  * @property {ORM['Object']['IamUser']['Id']} Id
  * @property {ORM['Object']['IamUser']['Avatar']} Avatar
  * @property {ORM['Object']['IamUser']['Username']} Username
@@ -781,7 +781,6 @@
  * @property {ORM['Object']['IamUserAppDataPost']['Id']} Id
  * @property {string} Description
  * @property {ORM['Object']['IamUserApp']['IamUserId']} IamUserId
- * @property {ORM['Object']['IamUserAppDataPost']['Document']} Document
  * @property {number} CountLikes
  * @property {number} CountViews
  * @property {number} Liked
@@ -1151,7 +1150,6 @@
  *              text?:string|null,
  *              developerText?:string|null,
  *              moreInfo?:string|null,
- *              result?:*,
  *              sendcontent?:string,
  *              type:'JSON'|'HTML'}} server_server_response
  */
