@@ -48,14 +48,7 @@ const post = async (app_id, data) =>{
             data_new.Ua =                   data.Ua;
             //required server value
             data_new.Created =              new Date().toISOString();
-            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppAccess',post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-                if (result.AffectedRows>0){
-                    result.InsertId=data_new.Id;
-                    return {result:result,type:'JSON'};
-                }
-                else
-                    return server.ORM.getError(app_id, 404);
-            });
+            return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppAccess',post:{data:data_new}});
         }
         else{
             //token already used, user can not login
@@ -84,14 +77,8 @@ const update = async (app_id, resource_id, data) =>{
         if (data.res!=null)
             data_update.Res = data.res;
         data_update.Modified = data.modified;
-        if (Object.entries(data_update).length>1){
-            /**@type{server['ORM']['MetaData']['common_result_update']}*/
-            const result = await server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamAppAccess', update:{resource_id:resource_id, data_app_id:null, data:data}});
-            if (result.AffectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return server.ORM.getError(app_id, 404);
-        }
+        if (Object.entries(data_update).length>1)
+            return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamAppAccess', update:{resource_id:resource_id, data_app_id:null, data:data}});
         else
             return server.ORM.getError(app_id, 400);
     }
@@ -107,12 +94,6 @@ const update = async (app_id, resource_id, data) =>{
  * @param {number} resource_id
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
-const deleteRecord = async (app_id, resource_id) => {
-    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamAppAccess', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
-        if (result.AffectedRows>0)
-            return {result:result, type:'JSON'};
-        else
-            return server.ORM.getError(app_id, 404);
-    });
-};
+const deleteRecord = async (app_id, resource_id) =>
+    server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamAppAccess', delete:{resource_id:resource_id, data_app_id:null}});
 export {get, post, update, deleteRecord};

@@ -79,7 +79,7 @@ const get = async parameters => {
            if (!data.logobject.startsWith('LogApp') && !data.logobject.startsWith('LogBff') && !data.logobject.startsWith('LogDb'))
                data.data_app_id = null;
            //filter records
-           log_rows_array_obj.rows = log_rows_array_obj.rows.filter((/**@type{*}*/record) => {
+           log_rows_array_obj.result.rows = log_rows_array_obj.result.rows.filter((/**@type{*}*/record) => {
                    return (
                            (record.AppId == data.data_app_id ||data.data_app_id ==null)
                                &&
@@ -95,7 +95,7 @@ const get = async parameters => {
                order_by_num = 1;
            else   
                order_by_num = -1;
-           log_rows_array_obj.rows = log_rows_array_obj.rows.sort((/**@type{[object]}*/first, /**@type{[object]}*/second)=>{
+           log_rows_array_obj.result.rows = log_rows_array_obj.result.rows.sort((/**@type{[object]}*/first, /**@type{[object]}*/second)=>{
                let first_sort, second_sort;
                //sort default is connection_date if sort missing as argument
                /**@ts-ignore */
@@ -135,13 +135,11 @@ const get = async parameters => {
                        return 0;
                }
            });
-           /**@ts-ignore */
-           resolve({result:log_rows_array_obj.rows,
+           resolve({result:log_rows_array_obj.result.rows,
                    type:'JSON'});
            
        })
        //return empty and not error
-       /**@ts-ignore */
        .catch(()=> resolve({  result:[],
                                type:'JSON'}));
    });
@@ -228,7 +226,7 @@ const getStat = async parameters => {
                sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
            await server.ORM.Execute({app_id:parameters.app_id, dml:'GET', object:file.name.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', get:{resource_id:null, partition:sample}})
            .then((logs)=>{
-               logs.rows.forEach((/**@type{server['ORM']['Object']['LogRequestInfo']|''}*/record) => {
+               logs.result.rows.forEach((/**@type{server['ORM']['Object']['LogRequestInfo']|''}*/record) => {
                    if (record != ''){
                        if (data.statGroup != null){
                            if (data.app_id == null || data.app_id == record?.AppId){
@@ -372,7 +370,7 @@ const getFiles = async () => {
  *                  log:        *
  *              }
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
     let log;
@@ -513,15 +511,8 @@ const post = async parameters => {
                             ...log, 
                             ...{Created:new Date().toISOString()}
                         };
-        /**@ts-ignore */
-        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:log_object, post:{data:data_new}}).then((/**@type{server['ORMMetaData']['common_result_insert']}*/result)=>{
-            if (result.AffectedRows>0){
-                result.InsertId=data_new.Id;
-                return {result:result, type:'JSON'};
-            }
-            else
-                return server.ORM.getError(parameters.app_id, 404);
-        })
+        
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:log_object, post:{data:data_new}})
         .catch((/**@type{server['server']['error']}*/error)=>{
             console.log(error);
             console.log(parameters.data.log);

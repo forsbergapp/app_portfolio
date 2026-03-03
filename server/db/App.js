@@ -53,35 +53,23 @@ const getViewInfo = parameters =>{
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const post = async (app_id, data) => {
-    //check required attributes
-    if (app_id!=null){
-        /**@type{server['ORM']['Object']['App']} */
-        const app =     {
-            //fetch max app id + 1
-            Id:Math.max(...server.ORM.getObject(app_id, 'App',null, null).result.map((/**@type{server['ORM']['Object']['App']}*/app)=>app.Id)) +1,
-            Name: data.name,
-            Path: data.path,
-            Logo: data.logo,
-            Js: data.js,
-            Css: data.css,
-            CssReport: data.css_report,
-            TextEdit:data.app_text_edit,
-            Copyright:data.app_copyright,
-            LinkTitle:data.app_link_title,
-            LinkUrl:data.app_link_url,
-            Status: 'ONLINE'
-        };
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'App', post:{data:app}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-            if (result.AffectedRows>0){
-                result.InsertId = app.Id;
-                return {result:result, type:'JSON'};
-            }
-            else
-                return server.ORM.getError(app_id, 404);
-        });
-    }
-    else
-        return server.ORM.getError(app_id, 401);
+    /**@type{server['ORM']['Object']['App']} */
+    const app =     {
+        //fetch max app id + 1
+        Id:Math.max(...server.ORM.getObject(app_id, 'App',null, null).result.map((/**@type{server['ORM']['Object']['App']}*/app)=>app.Id)) +1,
+        Name: data.name,
+        Path: data.path,
+        Logo: data.logo,
+        Js: data.js,
+        Css: data.css,
+        CssReport: data.css_report,
+        TextEdit:data.app_text_edit,
+        Copyright:data.app_copyright,
+        LinkTitle:data.app_link_title,
+        LinkUrl:data.app_link_url,
+        Status: 'ONLINE'
+    };
+    return server.ORM.Execute({app_id:app_id, dml:'POST', object:'App', post:{data:app}});
 };
 /**
  * @name update
@@ -104,43 +92,34 @@ const post = async (app_id, data) => {
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
-    if (parameters.app_id!=null){
-        /**@type{server['ORM']['Object']['App']} */
-        const data_update = {};
-        //allowed parameters to update:
-        if (parameters.data.name!=null)
-            data_update.Name = parameters.data.name;
-        if (parameters.data.path!=null)
-            data_update.Path = parameters.data.path;
-        if (parameters.data.logo!=null)
-            data_update.Logo = parameters.data.logo;
-        if (parameters.data.js!=null)
-            data_update.Js = parameters.data.js;
-        if (parameters.data.css!=null)
-            data_update.Css = parameters.data.css;
-        if (parameters.data.css_report!=null)
-            data_update.CssReport = parameters.data.css_report;
-        if (parameters.data.text_edit!=null)
-            data_update.TextEdit = parameters.data.text_edit;
-        if (parameters.data.copyright!=null)
-            data_update.Copyright = parameters.data.copyright;
-        if (parameters.data.link_title!=null)
-            data_update.LinkTitle = parameters.data.link_title;
-        if (parameters.data.link_url!=null)
-            data_update.LinkUrl = parameters.data.link_url;
+    /**@type{server['ORM']['Object']['App']} */
+    const data_update = {};
+    //allowed parameters to update:
+    if (parameters.data.name!=null)
+        data_update.Name = parameters.data.name;
+    if (parameters.data.path!=null)
+        data_update.Path = parameters.data.path;
+    if (parameters.data.logo!=null)
+        data_update.Logo = parameters.data.logo;
+    if (parameters.data.js!=null)
+        data_update.Js = parameters.data.js;
+    if (parameters.data.css!=null)
+        data_update.Css = parameters.data.css;
+    if (parameters.data.css_report!=null)
+        data_update.CssReport = parameters.data.css_report;
+    if (parameters.data.text_edit!=null)
+        data_update.TextEdit = parameters.data.text_edit;
+    if (parameters.data.copyright!=null)
+        data_update.Copyright = parameters.data.copyright;
+    if (parameters.data.link_title!=null)
+        data_update.LinkTitle = parameters.data.link_title;
+    if (parameters.data.link_url!=null)
+        data_update.LinkUrl = parameters.data.link_url;
 
-        if (parameters.data.status!=null)
-            data_update.Status = parameters.data.status;
-        if (Object.entries(data_update).length>0)
-            return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
-                if (result.AffectedRows>0)
-                    return {result:result, type:'JSON'};
-                else
-                    return server.ORM.getError(parameters.app_id, 404);
-            });
-        else
-            return server.ORM.getError(parameters.app_id, 400);
-    }
+    if (parameters.data.status!=null)
+        data_update.Status = parameters.data.status;
+    if (Object.entries(data_update).length>0)
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'App', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
     else
         return server.ORM.getError(parameters.app_id, 400);
 };
@@ -153,13 +132,7 @@ const update = async parameters => {
  * @param {number} resource_id
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
-const deleteRecord = async (app_id, resource_id) => {
-    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
-        if (result.AffectedRows>0)
-            return {result:result, type:'JSON'};
-        else
-            return server.ORM.getError(app_id, 404);
-    });
-};
+const deleteRecord = async (app_id, resource_id) =>
+    server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}});
                    
 export {get, getViewInfo, post, update, deleteRecord};

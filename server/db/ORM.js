@@ -873,7 +873,9 @@ class ORM_class {
                                         /*@ts-ignore*/
                                         file.TransactionId,
                                         record.Type=='TABLE'?update_data:null))
-                            return {AffectedRows:1};
+
+                            return {AffectedRows:1,
+                                    InsertId:data.Id};
                         else{
                             throw server.iam.iamUtilMessageNotAuthorized();
                         }
@@ -882,16 +884,18 @@ class ORM_class {
                     this.rollback(object, 
                         /*@ts-ignore*/
                         file.TransactionId);
-                    return {AffectedRows:0};
+                    //constraint error
+                    throw this.getError(app_id, 400);
                 }
             }
             else{
                 //no post on documents
-                return {AffectedRows:0};
+                throw this.getError(app_id, 400);
             }
         }
         else{
-            return {AffectedRows:0};
+            //must provide app_id
+            throw this.getError(app_id, 400);
         }
     };
     /**
@@ -1026,7 +1030,7 @@ class ORM_class {
             const object_type = this.getObjectRecord(object).Type;
             if (object_type == 'TABLE_LOG' || object_type == 'TABLE_LOG_DATE'){
                 //no update of log tables
-                return {AffectedRows:0};
+                throw this.getError(app_id, 400);
             }
             else{
                 /**@type{server['ORM']['MetaData']['result_fileFsRead']} */
@@ -1061,13 +1065,15 @@ class ORM_class {
                             }
                         }
                         else
-                            return {AffectedRows:0};
+                            //nothing to update
+                            throw this.getError(app_id, 404);
                     }
                     else{
                         this.rollback(object,
                                                 /*@ts-ignore*/
                                                 file.TransactionId);
-                        return {AffectedRows:0};
+                        //constraint error
+                        throw this.getError(app_id, 400);
                     }
                 }
                 else{
@@ -1089,7 +1095,8 @@ class ORM_class {
             }
         }
         else
-            return {AffectedRows:0};
+            //must provide app_id
+            throw this.getError(app_id, 400);
     };
     /**
      * @name deleteObject
@@ -1184,7 +1191,8 @@ class ORM_class {
             
         }
         else
-            return {AffectedRows:0};    
+            //nothing to delete
+            throw this.getError(app_id, 404);
     };
     /**
      * @name Execute
@@ -1200,7 +1208,7 @@ class ORM_class {
      *          post?:   {data:*},
      *          delete?: {resource_id:number|null, data_app_id:number|null}
      *          }} parameters
-     * @returns {Promise<*>}
+     * @returns {Promise<server['server']['response'] & {result?:*}>}
      */
     Execute = async parameters =>{
         return new Promise((resolve, reject)=>{
@@ -1227,7 +1235,7 @@ class ORM_class {
                                                                 parameters.delete?.data_app_id??null))
                 .then(result=>{
                     if (parameters.object.toString().startsWith('Log'))
-                        resolve(result);
+                        resolve({result:result, type:'JSON'});
                     else
                         this.db.Log.post({  app_id:parameters.app_id, 
                                             data:{  object:'LogDbInfo', 
@@ -1237,24 +1245,26 @@ class ORM_class {
                                                         }, 
                                                     log:result
                                                 }
-                                            }).then(()=>resolve(result));
+                                            }).then(()=>resolve({result:result, type:'JSON'}));
                     })
                 .catch(error=>{
-                    if (parameters.object.toString().startsWith('Log'))
-                        reject(error);
-                    else
-                        this.db.Log.post({
-                        app_id:parameters.app_id, 
-                        data:{  object:'LogDbError', 
-                                db:{Object:parameters.object,
-                                    Dml:parameters.dml, 
-                                    Parameters:parameters.update ?? parameters.post ?? parameters.delete
-                                    }, 
-                                log:error
-                            }
-                        }).then(()=>{
-                            reject(error);
-                        });
+                    parameters.object.toString().startsWith('Log')?async ()=>null:
+                    this.db.Log.post({
+                    app_id:parameters.app_id, 
+                    data:{  object:'LogDbError', 
+                            db:{Object:parameters.object,
+                                Dml:parameters.dml, 
+                                Parameters:parameters.update ?? parameters.post ?? parameters.delete
+                                }, 
+                            log:error
+                        }
+                    }).then(()=>{
+                        if ('http' in error)
+                            //manage known errors with resolve
+                            resolve(error)
+                        else
+                            reject(this.getError(parameters.app_id, 500, error));
+                    });
                 })
             }
         }) 

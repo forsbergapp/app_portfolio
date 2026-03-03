@@ -48,11 +48,7 @@ const post = async parameters => {
             Message:message, 
             Created:new Date().toISOString()
         };
-        return {
-            result:await server.ORM.Execute({ app_id:parameters.app_id, 
-            dml:'POST',
-            object:'MessageQueuePublish', 
-            post:{data:data_new}}), type:'JSON'};
+        return await server.ORM.Execute({ app_id:parameters.app_id, dml:'POST',object:'MessageQueuePublish', post:{data:data_new}});
     }
     else
         if( parameters.data.Service == 'BATCH' &&
@@ -70,16 +66,10 @@ const post = async parameters => {
                 Message:message, 
                 Created: new Date().toISOString()
             };
-            return {
-                result:await server.ORM.Execute({ app_id:parameters.app_id, 
-                dml:'POST',
-                object:'MessageQueuePublish', 
-                post:{data:data_new}}), type:'JSON'};
+            return await server.ORM.Execute({ app_id:parameters.app_id, dml:'POST',object:'MessageQueuePublish', post:{data:data_new}});
         }
         else
             return server.ORM.getError(null, 400);
-            
-    
 };
 /**
  * @name deleteRecord
@@ -89,12 +79,6 @@ const post = async parameters => {
 *          resource_id:number}} parameters
 * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
 */
-const deleteRecord = async parameters =>{
-   return server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'MessageQueuePublish', delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
-       if (result.AffectedRows>0)
-           return {result:result, type:'JSON'};
-       else
-           return server.ORM.getError(parameters.app_id, 404);
-   });
-};
+const deleteRecord = async parameters =>
+   server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'MessageQueuePublish', delete:{resource_id:parameters.resource_id, data_app_id:null}})
 export {get, post, deleteRecord};

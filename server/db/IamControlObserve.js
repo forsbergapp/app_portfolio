@@ -39,15 +39,7 @@ const post = async (app_id, data) => {
                             Type:data.Type,
                             Created:new Date().toISOString(),
                             Modified:null};
-        return server.ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', 
-                                    post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-            if (result.AffectedRows>0){
-                result.InsertId = result.InsertId;
-                return {result:result,type:'JSON'};
-            }
-            else
-                return server.ORM.getError(app_id, 404);
-        });
+        return server.ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', post:{data:data_new}});
     }
     else
         return server.ORM.getError(app_id, 400);
@@ -83,12 +75,7 @@ const update = async (app_id, resource_id, data) => {
         data_update.Modified = new Date().toISOString();
         //id and type not allowed to update
         if (Object.entries(data_update).length>0)
-            return server.ORM.Execute({app_id:app_id, dml:'UPDATE',object:'IamControlObserve', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
-                if (result.AffectedRows>0)
-                    return {result:result,type:'JSON'};
-                else
-                    return server.ORM.getError(app_id, 404);
-            });
+            return server.ORM.Execute({app_id:app_id, dml:'UPDATE',object:'IamControlObserve', update:{resource_id:resource_id, data_app_id:null, data:data_update}});
         else
             return server.ORM.getError(app_id, 400);
     }
@@ -104,13 +91,7 @@ const update = async (app_id, resource_id, data) => {
  * @param {number} resource_id
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
-const deleteRecord = async (app_id, resource_id) => {
-    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlObserve', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
-        if (result.AffectedRows>0)
-            return {result:result, type:'JSON'};
-        else
-            return server.ORM.getError(app_id, 404);
-    });
-};
+const deleteRecord = async (app_id, resource_id) =>
+    server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlObserve', delete:{resource_id:resource_id, data_app_id:null}});
                    
 export {get, post, update, deleteRecord};

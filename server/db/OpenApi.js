@@ -84,14 +84,17 @@ const update = async parameters => {
                                 update:{resource_id:null, 
                                         data_app_id:null, 
                                         data:OpenApi}})
-            .then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
-                    if (result.AffectedRows>0){
-                        //Update OpenApi cache
-                        server.ORM.setOpenApiCache();
-                        return {result:result, type:'JSON'};
-                    }
+            .then((/**@type{server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update']}}*/result)=>{
+                    if('result' in result)
+                        if (result.result?.AffectedRows??0>0){
+                            //Update OpenApi cache
+                            server.ORM.setOpenApiCache();
+                            return {result:result.result, type:'JSON'};
+                        }
+                        else
+                            return server.ORM.getError(parameters.app_id, 404);
                     else
-                        return server.ORM.getError(parameters.app_id, 404);
+                        return result;
                 });
 };
 /**

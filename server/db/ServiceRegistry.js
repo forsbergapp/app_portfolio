@@ -55,13 +55,7 @@ const update = async parameters => {
        return server.ORM.Execute({ app_id:parameters.app_id, 
                             dml:'UPDATE', 
                             object:'ServiceRegistry', 
-                            update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}})
-                .then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
-                    if (result.AffectedRows>0)
-                        return {result:result, type:'JSON'};
-                    else
-                        return server.ORM.getError(parameters.app_id, 404);
-                });
+                            update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
    else
        return server.ORM.getError(parameters.app_id, 400);
 };

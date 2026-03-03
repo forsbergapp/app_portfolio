@@ -62,14 +62,7 @@ const post = async parameters =>{
                                 IamUserAppDataPostId:parameters.data.iam_user_app_data_post_id,
                                 Created:new Date().toISOString()
                         };
-        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPostLike', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-            if (result.AffectedRows>0){
-                result.InsertId=data_new.Id;
-                return {result:result, type:'JSON'};
-            }
-            else
-                return server.ORM.getError(parameters.app_id, 404);
-        });
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPostLike', post:{data:data_new}});
     }
 };
 
@@ -92,12 +85,7 @@ const deleteRecord = async parameters =>{
     return server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPostLike', 
-                                delete:{resource_id:parameters.resource_id ?? result.Id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
-        if (result.AffectedRows>0)
-            return {result:result, type:'JSON'};
-        else
-            return server.ORM.getError(parameters.app_id, 404);
-    });
+                                delete:{resource_id:parameters.resource_id ?? result.Id, data_app_id:null}});
 };
 
 export {get, post, deleteRecord};

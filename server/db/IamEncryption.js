@@ -39,12 +39,7 @@ const post = async (app_id, data) => {
         data_new.Type = data.Type;
         data_new.Url = data.Url;
         data_new.Created = new Date().toISOString();
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-            if (result.AffectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return server.ORM.getError(app_id, 404);
-        });
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}});
     }
     else
         return server.ORM.getError(app_id, 400);

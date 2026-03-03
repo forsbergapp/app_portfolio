@@ -300,14 +300,7 @@ const post = async (app_id, data) => {
                                 Created:            new Date().toISOString(), 
                                 Modified:           new Date().toISOString()
                         };
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-            if (result.AffectedRows>0){
-                result.InsertId=data_new.Id;
-                return {result:result, type:'JSON'};
-            }
-            else
-                return server.ORM.getError(app_id, 404);
-        });
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}});
     }
     else
         return server.ORM.getError(app_id, 400);
@@ -339,14 +332,7 @@ const postAdmin = async (app_id, data) => {
                             Created:new Date().toISOString(), 
                             Modified:new Date().toISOString()
                     };
-    return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-        if (result.AffectedRows>0){
-            result.InsertId=data_new.Id;
-            return {result:result, type:'JSON'};
-        }
-        else
-            return server.ORM.getError(app_id, 404);
-    });
+    return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}});
 };
 
 /**
@@ -388,12 +374,7 @@ const update = async (app_id, resource_id, data) => {
                 data_update.Avatar = data.Avatar;
             data_update.Modified = new Date().toISOString();
             if (Object.entries(data_update).length>0)
-                return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
-                    if (result.AffectedRows>0)
-                        return {result:result, type:'JSON'};
-                    else
-                        return server.ORM.getError(app_id, 404);
-                });
+                return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}});
             else
                 return server.ORM.getError(app_id, 400);
         }
@@ -490,12 +471,7 @@ const updateAdmin = async parameters => {
                 return server.ORM.Execute({  app_id:parameters.app_id, 
                                             dml:'UPDATE', 
                                             object:'IamUser', 
-                                            update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((/**@type{server['ORM']['MetaData']['common_result_update']}*/result)=>{
-                    if (result.AffectedRows>0)
-                        return {result:result, type:'JSON'};
-                    else
-                        return server.ORM.getError(parameters.app_id, 404);
-                });
+                                            update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
             else
                 return server.ORM.getError(parameters.app_id, 400);
     }
@@ -517,15 +493,10 @@ const deleteRecord = async (app_id, resource_id, data) => {
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (data.password && await server.security.securityPasswordCompare(app_id, data.password, user.Password))
-            return server.ORM.Execute({app_id:app_id, 
-                                dml:'DELETE', 
-                                object:'IamUser', 
-                                delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
-                if (result.AffectedRows>0)
-                    return {result:result, type:'JSON'};
-                else
-                    return server.ORM.getError(app_id, 404);
-            });
+            return server.ORM.Execute({ app_id:app_id, 
+                                        dml:'DELETE', 
+                                        object:'IamUser', 
+                                        delete:{resource_id:resource_id, data_app_id:null}});
         else
             return server.ORM.getError(app_id, 400);
     }
@@ -543,15 +514,8 @@ const deleteRecord = async (app_id, resource_id, data) => {
 const deleteRecordAdmin = async (app_id, resource_id) => {
     /**@type{server['ORM']['Object']['IamUser']}*/
     const user = get(app_id, resource_id).result[0];
-    if (user){
-        return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}})
-                .then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
-                    if (result.AffectedRows>0)
-                        return {result:result, type:'JSON'};
-                    else
-                        return server.ORM.getError(app_id, 404);
-                    });
-    }
+    if (user)
+        return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}});
     else
         return user;
 };

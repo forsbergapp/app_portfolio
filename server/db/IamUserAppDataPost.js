@@ -303,14 +303,7 @@ const post = async parameters => {
                                 Created:new Date().toISOString(),
                                 Modified:null
                         };
-        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPost', post:{data:data_new}}).then((result)=>{
-            if (result.AffectedRows>0){
-                result.InsertId=data_new.Id;
-                return {result:result, type:'JSON'};
-            }
-            else
-                return server.ORM.getError(parameters.app_id, 404);
-        });
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'IamUserAppDataPost', post:{data:data_new}});
     }
 };
 /**
@@ -334,12 +327,7 @@ const update = async parameters =>{
         return server.ORM.Execute({ app_id:parameters.app_id, 
                                     dml:'UPDATE', 
                                     object: 'IamUserAppDataPost', 
-                                    update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}}).then((result)=>{
-            if (result.AffectedRows>0)
-                return {result:result, type:'JSON'};
-            else
-                return server.ORM.getError(parameters.app_id, 404);
-        });
+                                    update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
     else
         return server.ORM.getError(parameters.app_id, 400);
 };
@@ -352,15 +340,9 @@ const update = async parameters =>{
  *          resource_id:number}} parameters
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
-const deleteRecord = async parameters =>{
-    return server.ORM.Execute({  app_id:parameters.app_id, 
+const deleteRecord = async parameters =>
+    server.ORM.Execute({  app_id:parameters.app_id, 
                                 dml:'DELETE', 
                                 object:'IamUserAppDataPost', 
-                                delete:{resource_id:parameters.resource_id, data_app_id:null}}).then((result)=>{
-        if (result.AffectedRows>0)
-            return {result:result, type:'JSON'};
-        else
-            return server.ORM.getError(parameters.app_id, 404);
-    });
-};
+                                delete:{resource_id:parameters.resource_id, data_app_id:null}});
 export {get, getViewProfileUserPosts, getViewProfileStatLike, getViewProfileStatPost, getViewProfileUserPostDetail, post, update, deleteRecord};

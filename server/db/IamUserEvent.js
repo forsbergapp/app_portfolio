@@ -39,14 +39,7 @@ const post = async (app_id, data) => {
                                 EventStatus:data.EventStatus,
                                 Created:new Date().toISOString()
                         };
-        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserEvent', post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-            if (result.AffectedRows>0){
-                result.InsertId=data_new.Id;
-                return {result:result, type:'JSON'};
-            }
-            else
-                return server.ORM.getError(app_id, 404);
-        });
+        return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUserEvent', post:{data:data_new}});
     }
 };
 /**
@@ -57,13 +50,7 @@ const post = async (app_id, data) => {
  * @param {number} resource_id
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
  */
-const deleteRecord = async (app_id, resource_id) => {
-    return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}}).then((/**@type{server['ORM']['MetaData']['common_result_delete']}*/result)=>{
-        if (result.AffectedRows>0)
-            return {result:result, type:'JSON'};
-        else
-            return server.ORM.getError(app_id, 404);
-    });
-};
+const deleteRecord = async (app_id, resource_id) =>
+    server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}});
 
 export {get, post, deleteRecord };

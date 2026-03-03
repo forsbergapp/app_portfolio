@@ -39,17 +39,7 @@ const post = async parameters => {
                             Created: new Date().toISOString(),
                             Modified:null
                         };
-        return server.ORM.Execute({app_id:parameters.app_id, 
-                            dml:'POST', 
-                            object:'MessageQueueConsume', 
-                            post:{data:data_new}}).then((/**@type{server['ORM']['MetaData']['common_result_insert']}*/result)=>{
-            if (result.AffectedRows>0){
-                result.InsertId=data_new.Id;
-                return {result:result, type:'JSON'};
-            }
-            else
-                return server.ORM.getError(parameters.app_id, 404);
-        });
+        return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'MessageQueueConsume', post:{data:data_new}});
     }
     else
         return server.ORM.getError(null, 400);
