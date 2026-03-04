@@ -26,7 +26,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:{Token:string,
+ * @returns {Promise.<server['server']['response'] & {result?:{Token:string,
  *                                                      Exp:number,
  *                                                      Iat:number,
  *                                                      PaymentRequestId:string,
@@ -39,19 +39,19 @@ const {server} = await import('../../../../server/server.js');
  */
 const paymentRequestCreate = async parameters =>{
    
-   /**@type{server['ORM']['Object']['AppDataEntity'] & {Id:number, Document:AppDataEntityDocument}} */
-   const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
+   /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity'] & {Document:AppDataEntityDocument}} */
+   const Entity            = (server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                    resource_id:null, 
-                                                   data:{data_app_id:parameters.data.data_app_id}}).result[0];
+                                                   data:{data_app_id:parameters.data.data_app_id}}).result??[])[0];
 
-   /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency}} */
-   const currency = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
+   /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency}} */
+   const currency = (server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                                 resource_id:null, 
                                                                 data:{  iam_user_id:null,
                                                                        data_app_id:parameters.data.data_app_id,
                                                                        resource_name:'CURRENCY',
                                                                        app_data_entity_id:Entity.Id
-                                                                }}).result[0];
+                                                                }}).result??[])[0];
    //validate
    if (parameters.data.currency_code==currency.Document?.CurrencyCode && parameters.data.payerid !='' && parameters.data.payerid !=null){
        /** 

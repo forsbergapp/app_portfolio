@@ -773,6 +773,9 @@ class ORM_class {
     /**
      * @name constraintsValidate
      * @description Validates:
+     *              count key > 0
+     *              column required has value
+     *              column is not missing for POST (no checking of content in Document)
      *              PK constraint that can have one primary key column
      *              UK constraint that can have several columns
      *              FK constraint that should have a value in referref column and object, checked for TABLE and TABLE_KEY_VALUE
@@ -787,55 +790,80 @@ class ORM_class {
      */
     constraintsValidate = (table, table_rows, data, dml, resource_id) =>{
         const filerecord = this.getObjectRecord(table);
-        //check PK for POST
-        //update of PK not alllowed
-        if (dml=='POST' && filerecord.Pk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
-            /**@ts-ignore */
-            record[filerecord.Pk]==data[filerecord.Pk]))
-                return false;
-        else{
-            //check UK for POST
-            //no record can exist having given values for POST
-            if (dml=='POST' && filerecord.Uk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
-                //ignore empty value
+        //check count key > 0
+        //check column required has value
+        //check column is not missing for POST
+        if (    Object.entries(data).length>0 && 
+                Object.entries(ORM.JSONSchema.ORM)
+                .filter(object=>object[0]== 
+                        table &&
+                        //column not missing for POST
+                        ((dml=='POST' &&
+                        Object.entries(object[1].properties)
+                        .filter(col=>
+                            !(col[0] in data)).length==0) ||dml !='POST') &&
+                        //check required values
+			            Object.entries(object[1].properties)
+                        .filter(col=>
+                            //column
+                            col[0] in data && 
+                            //required and null
+                            col[1].required && data[col[0]] == null && 
+                            //not Id, Created columns
+                            ['Id', 'Created'].includes(col[0])==false).length==0)){
+            //check PK for POST
+            //update of PK not alllowed
+            if (dml=='POST' && filerecord.Pk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
                 /**@ts-ignore */
-                filerecord.Uk?.filter(column=>record[column] && record[column]==data[column]).length==filerecord.Uk?.length))
+                record[filerecord.Pk]==data[filerecord.Pk]))
                     return false;
-            else
-                //check UK for UPDATE
-                //max one record can exist having given values for UPDATE
-                if (dml=='UPDATE' && filerecord.Uk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
-                    //check value is the same, ignore empty UK
+            else{
+                //check UK for POST
+                //no record can exist having given values for POST
+                if (dml=='POST' && filerecord.Uk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
+                    //ignore empty value
                     /**@ts-ignore */
-                    filerecord.Uk.filter(column=>record[column] && record[column]==data[column]).length==filerecord.Uk.length &&
-                    //check it is NOT the same user
-                    /**@ts-ignore */
-                    record[filerecord.Pk]!=resource_id))
+                    filerecord.Uk?.filter(column=>record[column] && record[column]==data[column]).length==filerecord.Uk?.length))
                         return false;
                 else
-                    //check FK for POST and UPDATE
-                    //for TABLE and TABLE_KEY_VALUE objects for data that should be updated
-                    //check if there is a key that does not exists in the referred object in a row in cache_content
-                    //ignore empty fk
-                    if (	(filerecord.Type=='TABLE'|| filerecord.Type=='TABLE_KEY_VALUE') &&
-                            (filerecord.Fk??[])
-                                .filter(fk=>
-                                    fk[0] in data && data[fk[0]]
-                                )
-                                .filter(fk=>
-                                    DB.data
-                                    .filter(object=>
-                                        object.Name == fk[2]
-                                    )[0].CacheContent
-                                    .some((/**@type{*}*/row)=> 
-                                        data[fk[0]] && row[fk[1]]==data[fk[0]]
-                                    )
-                                ).length!=(filerecord.Fk??[]).filter(fk=>fk[0] in data && data[fk[0]]).length
-                            )
-                        return false;
+                    //check UK for UPDATE
+                    //max one record can exist having given values for UPDATE
+                    if (dml=='UPDATE' && filerecord.Uk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
+                        //check value is the same, ignore empty UK
+                        /**@ts-ignore */
+                        filerecord.Uk.filter(column=>record[column] && record[column]==data[column]).length==filerecord.Uk.length &&
+                        //check it is NOT the same user
+                        /**@ts-ignore */
+                        record[filerecord.Pk]!=resource_id))
+                            return false;
                     else
-                        return true;
+                        //check FK for POST and UPDATE
+                        //for TABLE and TABLE_KEY_VALUE objects for data that should be updated
+                        //check if there is a key that does not exists in the referred object in a row in cache_content
+                        //ignore empty fk
+                        if (	(filerecord.Type=='TABLE'|| filerecord.Type=='TABLE_KEY_VALUE') &&
+                                (filerecord.Fk??[])
+                                    .filter(fk=>
+                                        fk[0] in data && data[fk[0]]
+                                    )
+                                    .filter(fk=>
+                                        DB.data
+                                        .filter(object=>
+                                            object.Name == fk[2]
+                                        )[0].CacheContent
+                                        .some((/**@type{*}*/row)=> 
+                                            data[fk[0]] && row[fk[1]]==data[fk[0]]
+                                        )
+                                    ).length!=(filerecord.Fk??[]).filter(fk=>fk[0] in data && data[fk[0]]).length
+                                )
+                            return false;
+                        else
+                            return true;
+            }
         }
+        else
+            return false;
+        
     };
     /**
      * @name postObject

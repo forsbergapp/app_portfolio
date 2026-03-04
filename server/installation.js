@@ -716,7 +716,7 @@ const postDemo = async parameters=> {
 * @returns {Promise.<server['server']['response'] & {result:{info: {}[]} }>}
 */
 const deleteDemo = async parameters => {
-    /**@type{(server['ORM']['Object']['IamUser'] & {Id:number})[]} */
+    /**@type{(server['ORM']['Object']['IamUser'])[]} */
     const result_demo_users = server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>row.UserLevel==2);
     if (result_demo_users){
         let deleted_user = 0;

@@ -26,21 +26,21 @@ const {default:createBankAccount} = await import('./account_create.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['MetaData']['common_result_insert']}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
  */
 const customerCreate = async parameters =>{
 
-    /**@type{server['ORM']['Object']['AppDataEntity']} */
+    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    /**@type{server['server']['response'] & {result:server['ORM']['Object']['AppDataEntityResource']}} */
-    const resource_customer = server.ORM.db.AppDataEntityResource.get({   app_id:parameters.app_id, 
+    /**@type{server['ORM']['Object']['AppDataEntityResource']} */
+    const resource_customer = (server.ORM.db.AppDataEntityResource.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  app_data_entity_id:Entity.Id,
                                                                     resource_name:'CUSTOMER'
-                                                            }});
-    if (resource_customer.result){
+                                                            }}).result??[])[0];
+    if (resource_customer){
         /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer}} */
         const post_data = {
             Document                    :{
@@ -51,19 +51,19 @@ const customerCreate = async parameters =>{
                                             Country         :parameters.data.country
                                         },
             IamUserAppId                : parameters.data.iam_user_app_id,
-            AppDataEntityResourceId     : resource_customer.result[0].Id,
+            AppDataEntityResourceId     : resource_customer.Id,
             };
         //create CUSTOMER    
         const Customer = await server.ORM.db.AppDataResourceMaster.post({app_id:parameters.app_id, data:post_data});
         if (Customer.result){
-            /**@type{server['server']['response'] & {result:server['ORM']['Object']['AppDataEntityResource']}} */
-            const resource_account = server.ORM.db.AppDataEntityResource.get({app_id:parameters.app_id, 
+            /**@type{server['ORM']['Object']['AppDataEntityResource']} */
+            const resource_account = (server.ORM.db.AppDataEntityResource.get({app_id:parameters.app_id, 
                                                                 resource_id:null, 
                                                                 data:{  app_data_entity_id:Entity.Id, 
-                                                                        resource_name:'ACCOUNT'}});
-            if (resource_account.result){
-                const post_data_account = { app_data_resource_master_id                 : Customer.result.InsertId, //CUSTOMER
-                                            app_data_entity_resource_id                 : resource_account.result[0].Id,
+                                                                        resource_name:'ACCOUNT'}}).result??[])[0];
+            if (resource_account){
+                const post_data_account = { app_data_resource_master_id                 : Customer.result.InsertId??0, //CUSTOMER
+                                            app_data_entity_resource_id                 : resource_account.Id,
                                             app_data_resource_master_attribute_id       : null
                                             };
                 //create ACCOUNT and return CUSTOMER

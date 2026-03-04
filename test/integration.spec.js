@@ -34,7 +34,7 @@ const test = async t =>
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
 
-            /**@type{(server['ORM']['Object']['App'] & {Id:number})[]}*/
+            /**@type{(server['ORM']['Object']['App'])[]}*/
             const apps = server.ORM.db.App.get({app_id:0, resource_id:null}).result;
             
             for (const app of apps){ 

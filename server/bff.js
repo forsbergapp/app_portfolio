@@ -45,7 +45,7 @@ const bffConnect = async parameters =>{
 *          'app-id': number,
 *          authorization:string|null,
 *          accept_language:string}} parameters
-* @returns {Promise.<server['server']['response']>}
+* @returns {Promise.<server['server']['response'] & {result?:*}>}
 */
 const bffExternal = async parameters =>{
    if (parameters.url.toLowerCase().startsWith('http://')){

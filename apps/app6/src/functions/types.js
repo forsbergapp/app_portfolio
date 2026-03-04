@@ -23,6 +23,14 @@
  *                          {Key:"Material",Value:"Cotton"}]}} product
  */
 /**
+ * @description product_return
+ * @typedef {product & {Sku:{KeyName:string, KeyValue:string|number, KeyType:'TEXT'}[][],
+ *                      Stock:[{KeyName:'Location', KeyValue:string|number, KeyType:'TEXT'},
+ *                             {KeyName:'StockText', KeyValue:string|number, KeyType:'TEXT'},
+ *                             {KeyName:'Stock', KeyValue:string|number, KeyType:'TEXT'}][]
+ *                      }} product_return
+ */
+/**
  * @description product_variant
  * @typedef {{  Sku:string, 
  *              Name:string, 

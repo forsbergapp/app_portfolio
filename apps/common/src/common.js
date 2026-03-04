@@ -843,7 +843,7 @@ const commonAppReportQueue = async parameters =>{
 
     const report = server.ORM.db.AppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{data_app_id:null}});
     if (report.result){
-        /**@type{server['ORM']['Object']['IamUser'] & {Id:number}} */
+        /**@type{server['ORM']['Object']['IamUser']} */
         const user = server.ORM.db.IamUser.get(  parameters.app_id, 
                                             server.ORM.UtilNumberValue(server.iam.iamUtilTokenGet(  parameters.app_id, 
                                                                                         parameters.authorization, 

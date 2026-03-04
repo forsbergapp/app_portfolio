@@ -24,37 +24,38 @@ const {getToken} = await import('./payment_request_create.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:{status:string}[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:{status:string}[]}>}
  */
 const paymentRequestUpdate = async parameters =>{
 
-    /**@type{server['ORM']['Object']['AppDataEntity'] & {Id:number}} */
+    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
-    /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Id:number, Document:customer}} */
-    const customer = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
+    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer}} */
+    const customer = (server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                 resource_id:null, 
                                                 data:{  iam_user_id:parameters.data.iam_user_id,
                                                         data_app_id:parameters.data.data_app_id,
                                                         resource_name:'CUSTOMER',
                                                         app_data_entity_id:Entity.Id
-                                                }}).result[0];
+                                                }}).result??[])[0];
 
     const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip});
 
     //get payment request using app_custom_id that should be the payment request id
-    /**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Id:number, Document:payment_request}}}*/
-    const payment_request = server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
+    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:payment_request}}}*/
+    const payment_request = (server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         all_users:true,
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
                                                                 data_app_id:parameters.data.data_app_id,
                                                                 resource_name:'PAYMENT_REQUEST',
                                                                 app_data_entity_id:Entity.Id
-                                                        }}).result
-                                    .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster']}*/payment_request)=>
+                                                        }}).result??[])
+                                    /**@ts-ignore */
+                                    .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:payment_request}}*/payment_request)=>
                                         payment_request.Document?.PaymentRequestId==token?.app_custom_id
                                     )[0];
 
@@ -62,15 +63,15 @@ const paymentRequestUpdate = async parameters =>{
         let status ='PENDING';
         if (server.ORM.UtilNumberValue(parameters.data.status)==1)
             try {
-                /**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Id:number, Document:bank_account}}}*/
-                const account_payer         =  server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
+                /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}}*/
+                const account_payer         =  (server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                             resource_id:null, 
                                                                             data:{  iam_user_id:parameters.data.iam_user_id,
                                                                                     data_app_id:parameters.app_id,
                                                                                     resource_name:'ACCOUNT',
                                                                                     app_data_resource_master_id:customer.Id,
                                                                                     app_data_entity_id:Entity.Id
-                                                                            }}).result[0];
+                                                                            }}).result??[])[0];
                 /**@type{number} */
                 const account_payer_saldo   =  server.ORM.db.AppDataResourceDetailData.get({  app_id:parameters.app_id, 
                                                                                 resource_id:null, 
@@ -99,8 +100,8 @@ const paymentRequestUpdate = async parameters =>{
                                         };
                     //create DEBIT transaction PAYERID resource TRANSACTION
                     await server.ORM.db.AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
-                    /**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_account}} */
-                    const account_payee         =  server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
+                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_account}} */
+                    const account_payee         =  (server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                                 all_users:true,
                                                                                 resource_id:null, 
                                                                                 data:{  iam_user_id:null,
@@ -108,7 +109,8 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         resource_name:'ACCOUNT',
                                                                                         app_data_resource_master_id:null,
                                                                                         app_data_entity_id:Entity.Id
-                                                                                }}).result
+                                                                                }}).result??[])
+                                                            /**@ts-ignore */
                                                             .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/account)=>
                                                                 account.Document?.BankAccountVpa == payment_request.Document.PayeeId
                                                             )[0];

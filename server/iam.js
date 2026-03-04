@@ -197,7 +197,7 @@ const iamAuthenticateUser = async parameters =>{
 
     /**
      * @param {1|0} result
-     * @param {server['ORM']['Object']['IamUser'] & {Id:number, Type:string}} user
+     * @param {server['ORM']['Object']['IamUser'] & {Type:string}} user
      * @param {server['ORM']['Object']['IamAppAccess']['Type']} token_type
      * @returns {Promise.<server['server']['response'] & {result?:{
      *                                              iam_user_id:server['ORM']['Object']['IamUser']['Id'],
@@ -364,7 +364,7 @@ const iamAuthenticateUser = async parameters =>{
                                                                     Active:     1
                                                                     }, 'ADMIN'));
         else{
-            /**@type{server['ORM']['Object']['IamUser'] & {Id:number, Type:string}}*/
+            /**@type{server['ORM']['Object']['IamUser'] & {Type:string}}*/
             const user =  server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server['ORM']['Object']['IamUser']}*/user)=>user.Username == username)[0];
             if (user && await server.security.securityPasswordCompare(parameters.app_id, password, user.Password)){
                 if (parameters.app_id == admin_app_id){
@@ -1354,8 +1354,8 @@ const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.g
                                                                     row.AppId==(server.ORM.UtilNumberValue(parameters.data.data_app_id) ?? row.AppId));
                                                     
                                                     return {result:rows.length>0?
-                                                                rows.sort(( /**@type{server['ORM']['Object']['IamAppAccess'] & {Created:string}}*/a,
-                                                                            /**@type{server['ORM']['Object']['IamAppAccess'] & {Created:string}}*/b)=> 
+                                                                rows.sort(( /**@type{server['ORM']['Object']['IamAppAccess']}*/a,
+                                                                            /**@type{server['ORM']['Object']['IamAppAccess']}*/b)=> 
                                                                             //sort descending on created
                                                                             
                                                                             a.Created.localeCompare(b.Created)==1?-1:1):

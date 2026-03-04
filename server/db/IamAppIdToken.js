@@ -41,9 +41,7 @@ const post = async (app_id, data) => {
             data_new.Res = data.Res;
             data_new.Token = data.Token;
             data_new.Ip = data.Ip;
-            //optional
-            if (data.Ua!=null)
-                data_new.Ua = data.Ua;
+            data_new.Ua = data.Ua;
             data_new.Created = new Date().toISOString();
             return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamAppIdToken', post:{data:data_new}});
         }

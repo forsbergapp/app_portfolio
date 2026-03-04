@@ -19,11 +19,11 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:bank_transaction[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:bank_transaction[]}>}
  */
 const getTransacions = async parameters =>{
     
-    /**@type{server['ORM']['Object']['AppDataEntity'] & {Id:number}} */
+    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
     const Entity            = server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];

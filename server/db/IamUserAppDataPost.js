@@ -44,12 +44,12 @@ const get = parameters =>{
  * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppDataPostgetProfileUserPosts'][] }>}
  */
 const getViewProfileUserPosts = async parameters =>{
-    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['IamUserAppDataPost'] & {Id:number})[]}} */
+    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['IamUserAppDataPost'])[]}} */
     const result = get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id, iam_user_id:parameters.resource_id}});
     if (result.result)
         if (result.result.length>0)
             return {result:result.result
-                    .map((/**@type{(server['ORM']['Object']['IamUserAppDataPost'] & {Id:number})}*/row)=>{
+                    .map((/**@type{(server['ORM']['Object']['IamUserAppDataPost'])}*/row)=>{
                         return {
                             Id: row.Id,
                             Description:row.Document?.Description??'', 

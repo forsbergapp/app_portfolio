@@ -23,17 +23,17 @@ const {server} = await import('../../../../server/server.js');
  * @returns {Promise.<server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer})[]}>}
  */
 const customerGet = async parameters =>{
-    
-    /**@type{server['ORM']['Object']['AppDataEntity'] & {Id:number}} */
+    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
+    /**@ts-ignore */
     return server.ORM.db.AppDataResourceMaster.get({  app_id:parameters.app_id, 
-                                        resource_id:parameters.data.resource_id, 
-                                        data:{  iam_user_id:parameters.data.iam_user_id,
-                                                data_app_id:parameters.data.data_app_id,
-                                                resource_name:'CUSTOMER',
-                                                app_data_entity_id:Entity.Id
-                                        }});
+                                            resource_id:parameters.data.resource_id, 
+                                            data:{  iam_user_id:parameters.data.iam_user_id,
+                                                    data_app_id:parameters.data.data_app_id,
+                                                    resource_name:'CUSTOMER',
+                                                    app_data_entity_id:Entity.Id
+                                            }});
 };
 export default customerGet;

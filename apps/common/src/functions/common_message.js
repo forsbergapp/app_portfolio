@@ -79,7 +79,7 @@ const appFunction = async parameters =>{
                                                             data:message_queue_message})).result;
         return {result:[ await (async ()=>{
                                 if(messagePost?.AffectedRows){
-                                    /**@type{(server['ORM']['Object']['IamUser'] & {Id:number})[]} */
+                                    /**@type{(server['ORM']['Object']['IamUser'])[]} */
                                     const users = server.ORM.db.IamUser.get(parameters.app_id, message.receiver_id).result;                               
                                     for (const user of users.filter(user=>  user.Type == (( message.receiver_id && 
                                                                                             users.length == 1)?users[0].Type:'ADMIN') &&

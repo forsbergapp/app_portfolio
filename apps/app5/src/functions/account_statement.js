@@ -97,12 +97,12 @@ const IBAN_validate = iban => {
  */
 const getStatement = async parameters =>{
 
-    /**@type{server['ORM']['Object']['AppDataEntity'] & {Id:number}} */
+    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
     const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    /**@type{server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction})[]}} */
-    const transactions = server.ORM.db.AppDataResourceDetailData.get({app_id:parameters.app_id, 
+    /**@type{(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction})[]} */
+    const transactions = (server.ORM.db.AppDataResourceDetailData.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:parameters.data.iam_user_id,
                                                                 data_app_id:parameters.data.data_app_id,
@@ -111,16 +111,16 @@ const getStatement = async parameters =>{
                                                                 resource_name_data_master_attribute:null,
                                                                 app_data_resource_detail_id:null,
                                                                 app_data_entity_id:Entity.Id
-                                                        }});
-    /**@type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_account})[]}} */
-    const AccountMetaData   = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
+                                                        }}).result??[]);
+    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_account})[]}} */
+    const AccountMetaData   = (server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
                                                                     data_app_id:parameters.data.data_app_id,
                                                                     resource_name:'ACCOUNT',
                                                                     app_data_entity_id:Entity.Id
-                                                            }}).result;
-    /**@type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account})}} */
+                                                            }}).result??[]);
+    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account})}} */
     const CustomerAccount   = server.ORM.db.AppDataResourceDetail.get(   {app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
@@ -129,7 +129,7 @@ const getStatement = async parameters =>{
                                                                     app_data_resource_master_id:null,
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result[0];
-    /**@type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency})}} */
+    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency})}} */
     const currency          = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
@@ -138,20 +138,20 @@ const getStatement = async parameters =>{
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result[0];
     /**@type{number} */
-    const balance = transactions.result.reduce((/**@type{number}*/balance, /**@type{{Document:bank_transaction}}*/current_row)=>balance += 
+    const balance = transactions.reduce((/**@type{number}*/balance, /**@type{{Document:bank_transaction}}*/current_row)=>balance += 
                                                                     (current_row.Document.AmountDeposit ?? current_row.Document.AmountWithdrawal) ?? 0,0) ?? 0;
     return {result:[{
                     //ENTITY ACCOUNT resource
                     TitleSub	            :Entity.Document?.Name??'',
                     //ACCOUNT resource
-                    Title	                :AccountMetaData.filter((/**@type{*}*/row)=>'Title' in row.Document)[0].Document.Title.DefaultText,
+                    Title	                :AccountMetaData.filter((/**@type{*}*/row)=>'Title' in row.Document)[0].Document?.Title?.DefaultText,
                     BankAccountIban	        :IBAN_compose(  /**@ts-ignore */
                                                             Entity.Document?.CountryCode, 
                                                             Entity.Document?.BankId, 
-                                                            CustomerAccount.Document.BankAccountNumber, true),
-                    BankAccountNumber       :CustomerAccount.Document.BankAccountNumber,
-                    Currency                :currency.Document.CurrencySymbol,
-                    CurrencyName            :currency.Document.CurrencyName,
+                                                            CustomerAccount.Document?.BankAccountNumber, true),
+                    BankAccountNumber       :CustomerAccount.Document?.BankAccountNumber,
+                    Currency                :currency.Document?.CurrencySymbol,
+                    CurrencyName            :currency.Document?.CurrencyName,
                     BankAccountBalance      :Number(balance)
             }], type:'JSON'};
 }; 
