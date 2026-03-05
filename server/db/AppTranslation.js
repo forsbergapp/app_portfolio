@@ -45,7 +45,7 @@ const get = (app_id, resource_id, locale, data_app_id) =>{
                     return {result:result.filter((/**@type{server['ORM']['Object']['AppTranslation']}*/row)=>row.Locale == 'en'), type:'JSON'};
                 }
                 else
-                    return server.ORM.getError(app_id, 404);
+                    return server.getError({statusCode: 404});
 };
                    
 export {get};

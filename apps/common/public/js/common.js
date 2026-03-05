@@ -145,7 +145,7 @@ const COMMON_GLOBAL = {
         id_card:                '<svg $1 viewBox="0 0 576 512"><path $2 d="M0 96C0 60.7 28.7 32 64 32l448 0c35.3 0 64 28.7 64 64L0 96zm0 48l576 0 0 272c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 144zM247.3 416c20.2 0 35.3-19.4 22.4-35-14.7-17.7-36.9-29-61.7-29l-64 0c-24.8 0-47 11.3-61.7 29-12.9 15.6 2.2 35 22.4 35l142.5 0zM176 312a56 56 0 1 0 0-112 56 56 0 1 0 0 112zM360 208c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0zm0 96c-13.3 0-24 10.7-24 24s10.7 24 24 24l112 0c13.3 0 24-10.7 24-24s-10.7-24-24-24l-112 0z"/></svg>',
         user_profile:           '<svg $1 viewBox="0 0 576 512"><path $2 d="M64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l448 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32zm80 256l64 0c44.2 0 80 35.8 80 80 0 8.8-7.2 16-16 16L80 384c-8.8 0-16-7.2-16-16 0-44.2 35.8-80 80-80zm-24-96a56 56 0 1 1 112 0 56 56 0 1 1 -112 0zm240-48l112 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-112 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm0 96l112 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-112 0c-13.3 0-24-10.7-24-24s10.7-24 24-24z"/></svg>',
         user_profile_stat:      '<svg $1 viewBox="0 0 448 512"><path $2 d="M224.3 128L139.7-12.9c-6.5-10.8-20.1-14.7-31.3-9.1L21.8 21.3C9.9 27.2 5.1 41.6 11 53.5L80.6 192.6c-30.1 33.9-48.3 78.5-48.3 127.4 0 106 86 192 192 192s192-86 192-192c0-48.9-18.3-93.5-48.3-127.4L437.6 53.5c5.9-11.9 1.1-26.3-10.7-32.2L340.2-22.1c-11.2-5.6-24.9-1.6-31.3 9.1L224.3 128zm30.8 142.5c1.4 2.8 4 4.7 7 5.1l50.1 7.3c7.7 1.1 10.7 10.5 5.2 16l-36.3 35.4c-2.2 2.2-3.2 5.2-2.7 8.3l8.6 49.9c1.3 7.6-6.7 13.5-13.6 9.9l-44.8-23.6c-2.7-1.4-6-1.4-8.7 0l-44.8 23.6c-6.9 3.6-14.9-2.2-13.6-9.9l8.6-49.9c.5-3-.5-6.1-2.7-8.3l-36.3-35.4c-5.6-5.4-2.5-14.8 5.2-16l50.1-7.3c3-.4 5.7-2.4 7-5.1l22.4-45.4c3.4-7 13.3-7 16.8 0l22.4 45.4z"/></svg>',
-        user_session_expired:	'⛔',
+        user_session_expired:	'<svg $1 viewBox="0 0 640 640"><path $2 d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM232 296L408 296C421.3 296 432 306.7 432 320C432 333.3 421.3 344 408 344L232 344C218.7 344 208 333.3 208 320C208 306.7 218.7 296 232 296z"/></svg>',
         verification_code:      '<svg $1 viewBox="0 0 512 512"><path $2 d="M336 352c97.2 0 176-78.8 176-176S433.2 0 336 0 160 78.8 160 176c0 18.7 2.9 36.8 8.3 53.7L7 391c-4.5 4.5-7 10.6-7 17l0 80c0 13.3 10.7 24 24 24l80 0c13.3 0 24-10.7 24-24l0-40 40 0c13.3 0 24-10.7 24-24l0-40 40 0c6.4 0 12.5-2.5 17-7l33.3-33.3c16.9 5.4 35 8.3 53.7 8.3zM376 96a40 40 0 1 1 0 80 40 40 0 1 1 0-80z"/></svg>',
         provider_id:            'ID',
         pay:                    '<svg $1 viewBox="0 0 512 512"><path $2 d="M242.4 292.5c5.4-5.4 14.7-5.4 20.1 0l77 77c14.2 14.2 33.1 22 53.1 22l15.1 0-97.1 97.1c-30.3 29.5-79.5 29.5-109.8 0l-97.5-97.4 9.3 0c20 0 38.9-7.8 53.1-22l76.7-76.7zm20.1-73.6c-6.4 5.5-14.6 5.6-20.1 0l-76.7-76.7c-14.2-15.1-33.1-22-53.1-22l-9.3 0 97.4-97.4c30.4-30.3 79.6-30.3 109.9 0l97.2 97.1-15.2 0c-20 0-38.9 7.8-53.1 22l-77 77zM112.6 142.7c13.8 0 26.5 5.6 37.1 15.4l76.7 76.7c7.2 6.3 16.6 10.8 26.1 10.8 9.4 0 18.8-4.5 26-10.8l77-77c9.8-9.7 23.3-15.3 37.1-15.3l37.7 0 58.3 58.3c30.3 30.3 30.3 79.5 0 109.8l-58.3 58.3-37.7 0c-13.8 0-27.3-5.6-37.1-15.4l-77-77c-13.9-13.9-38.2-13.9-52.1 .1l-76.7 76.6c-10.6 9.8-23.3 15.4-37.1 15.4l-31.8 0-58-58c-30.3-30.3-30.3-79.5 0-109.8l58-58.1 31.8 0z"/></svg>',
@@ -1595,7 +1595,7 @@ const commonComponentRemove = div => {
  * @description Show common dialogue
  * @function
  * @param {string} dialogue 
- * @param {string|null} user_verification_type
+ * @param {'LOGIN'|'SIGNUP'|'UPDATE'|null} user_verification_type
  * @returns {Promise.<void>}
  */
 const commonDialogueShow = async (dialogue, user_verification_type=null) => {
@@ -1715,13 +1715,6 @@ const commonMessageShow = async (message_type, function_event, text_class=null, 
         COMMON_DOCUMENT.querySelector('#common_app_dialogues_message_close').focus();
     }
 };
-/**
- * @name commonMesssageNotAuthorized
- * @description Returns not authorized message
- * @function
- * @returns {string}
- */
-const commonMesssageNotAuthorized = () => '⛔';
 
 /**
  * @name commonProfileStat
@@ -1946,13 +1939,13 @@ const commonUserSessionClear = () => {
         } catch (error) {
             id = null;
         }
-        element = id?COMMON_DOCUMENT.querySelector(`${id} .${element.className.replaceAll(' ','.')}`):null;
+        element = id?COMMON_DOCUMENT.querySelector(`${id} .${element.className.replaceAll(' ','.') + (element.getAttribute('data-key')?`[data-key=${element.getAttribute('data-key')}]`:'')}`):null;
     }
         
     if (element){
         const time_left = ((token_exp ?? COMMON_GLOBAL.Data?.token_exp ??0) * 1000) - (Date.now());
         if (time_left < 0){
-            element.textContent =commonGlobalGet('ICONS')['user_session_expired'];
+            element.innerHTML =commonGlobalGet('ICONS')['user_session_expired'];
         }
         else{
             const days = Math.floor(time_left / (1000 * 60 * 60 * 24));
@@ -2825,7 +2818,6 @@ const commonGet = () =>{
         commonDialogueShow:commonDialogueShow, 
         /* MESSAGE*/
         commonMessageShow:commonMessageShow,
-        commonMesssageNotAuthorized:commonMesssageNotAuthorized,
         /* PROFILE */
         commonProfileDetail:commonProfileDetail, 
         commonProfileSearch:commonProfileSearch,
@@ -2902,7 +2894,6 @@ export{/* GLOBALS*/
        commonDialogueShow,
        /* MESSAGE*/
        commonMessageShow,
-       commonMesssageNotAuthorized,
        /* PROFILE */
        commonProfileDetail, 
        commonProfileSearch,

@@ -59,13 +59,12 @@ const paymentRequestGetStatus = async parameters =>{
                                                 accept_language:parameters.accept_language});
    if (result_bffExternal.result.error)
        //read external ISO20022 error format and return internal server format using camel case format
-       return {http:           result_bffExternal.result.error.http,
-               code:           result_bffExternal.result.error.code,
-               text:           result_bffExternal.result.error.text,
-               developerText:  result_bffExternal.result.error.developer_text,
-               moreInfo:       result_bffExternal.result.error.more_info,
-               type:           'JSON'
-   };
+        return server.getError({statusCode:     result_bffExternal.result.error.http,
+                                code:           result_bffExternal.result.error.code,
+                                text:           result_bffExternal.result.error.text,
+                                developerText:  result_bffExternal.result.error.developer_text,
+                                moreInfo:       result_bffExternal.result.error.more_info                 
+                                });
    else{
        /**
         * @type {{ status:string}}

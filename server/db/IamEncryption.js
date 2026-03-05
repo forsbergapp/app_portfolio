@@ -42,7 +42,7 @@ const post = async (app_id, data) => {
         return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamEncryption', post:{data:data_new}});
     }
     else
-        return server.ORM.getError(app_id, 400);
+        return server.getError({statusCode: 400});
 };
 
 export {get, post};

@@ -42,7 +42,7 @@ const post = async (app_id, data) => {
         return server.ORM.Execute({  app_id:app_id, dml:'POST', object:'IamControlObserve', post:{data:data_new}});
     }
     else
-        return server.ORM.getError(app_id, 400);
+        return server.getError({statusCode: 400});
 };
 /**
  * @name update
@@ -77,10 +77,10 @@ const update = async (app_id, resource_id, data) => {
         if (Object.entries(data_update).length>0)
             return server.ORM.Execute({app_id:app_id, dml:'UPDATE',object:'IamControlObserve', update:{resource_id:resource_id, data_app_id:null, data:data_update}});
         else
-            return server.ORM.getError(app_id, 400);
+            return server.getError({statusCode: 400});
     }
     else
-        return server.ORM.getError(app_id, 400);
+        return server.getError({statusCode: 400});
 };
 
 /**

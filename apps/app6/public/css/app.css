@@ -57,14 +57,14 @@ body {
     color: var(--common_app_color_gold);
 }
 
-.common_app_data_display_master_col2{
-		width:100% !important;
-		text-align: center !important;
+#app_page_start_shop .common_app_data_display_master_col2{
+    width:100% !important;
+    text-align: center !important;
 }
 .common_app_data_display_master{
 	margin-bottom: unset !important;
 }
-.app_page_start_shop .common_app_data_display_buttons.common_loading_spinner{
+#app_page_start_shop .common_app_data_display_buttons.common_loading_spinner{
 	justify-self: center;
 	margin-left: unset !important;
 	margin-right: unset !important;
@@ -85,75 +85,96 @@ body {
     top: unset !important;
 	position: fixed !important;
 }
-.common_app_data_display_master_col2[data-key=Image]{
+#app_page_start_shop .common_app_data_display_master_col2[data-key=Image]{
 	stroke-width: 4;
 }
-.common_app_data_display_master_col2[data-key=Image] svg:hover,
-.common_app_data_display_master_col2[data-key=Image] svg:active{
+#app_page_start_shop .common_app_data_display_master_col2[data-key=Image] svg:hover,
+#app_page_start_shop .common_app_data_display_master_col2[data-key=Image] svg:active{
 	
 	cursor: pointer;
 }
-.common_app_data_display_master_row{
+#app_page_start_shop .common_app_data_display_master_row{
 	display: block;
   	text-align: center;
 }
-.common_app_data_display_master_row .common_select_options{
+#app_page_start_shop .common_app_data_display_master_row .common_select_options{
 	margin-inline-start: 2px;
 	max-width: 400px;
 	z-index: 10;
 	max-height: 10em;
 }
-.common_app_data_display_master_row_list{
+#app_page_start_shop .common_app_data_display_master_row_list{
 	display: inline-block !important;
 	text-align: center !important;
 }
-.common_app_data_display_master_col2[data-key=Image],
+#app_page_start_shop .common_app_data_display_master_col2[data-key=Image],
 .common_select_dropdown_value.common_app_data_display_master_row_list,
 .common_select_options {
 	border-radius:2px;
 }
-.common_app_data_display_master_col_list[data-Sku]{
+#app_page_start_shop .common_app_data_display_master_col_list[data-Sku]{
 	width: 13em;
 }
-.common_app_data_display_master_col_list[data-ProductColor]{
+#app_page_start_shop .common_app_data_display_master_col_list[data-ProductColor]{
 	width: 1em;
 }
-.common_app_data_display_master_col_list[data-ProductSize],
-.common_app_data_display_master_col_list[data-Price]{
+#app_page_start_shop .common_app_data_display_master_col_list[data-ProductSize],
+#app_page_start_shop .common_app_data_display_master_col_list[data-Price]{
 	width: 2em;
 	text-align: end;
 	margin-inline-end: 0.2em;
 }
-.common_app_data_display_master_col_list[data-id]{
+#app_page_start_shop .common_app_data_display_master_col_list[data-id]{
 	display: none;
 }
-.common_app_data_display_master_col_list[data-Location]{
+#app_page_start_shop .common_app_data_display_master_col_list[data-Location]{
 	width: 10em !important;
 }
-.common_app_data_display_master_col_list[data-StockText]{
+#app_page_start_shop .common_app_data_display_master_col_list[data-StockText]{
 	width: 4em !important;
 }
-.common_app_data_display_master_col_list[data-Stock]{
+#app_page_start_shop .common_app_data_display_master_col_list[data-Stock]{
 	width: 2em !important;
 }
-.common_app_data_display_master_col_list[data-CurrencyCode]{
+#common_app_dialogues_app_data_display .common_app_data_display_master_col_list[data-CurrencyCode]{
 	display: none;
 }
-.common_app_data_display_master_col1[data-key=PaymentId],
-.common_app_data_display_master_col2[data-value=PaymentId]{
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=PaymentId],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-value=PaymentId]{
 	display: block;
 	width: 100%;
 }
-.common_app_data_display_master_col1[data-key=PaymentMethod],
-.common_app_data_display_master_col2[data-value=PaymentMethod],
-.common_app_data_display_master_col1[data-key=PaymentId],
-.common_app_data_display_master_col2[data-value=PaymentId]{
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=PaymentMethod],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-value=PaymentMethod],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=PaymentId],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-value=PaymentId]{
 	font-size: 0.8em;
 }
-.common_app_data_display_master_col2[data-value=PaymentMethod]{
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-value=PaymentMethod]{
 	width: unset !important;
 }
 
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=Token],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=Token],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=Exp],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=Exp],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=Iat],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=Iat],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=TokenTimestamp],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=TokenTimestamp],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=PaymentRequestId],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=PaymentRequestId],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=CurrencySymbol],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=CurrencySymbol],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=PaymentRequestMessage],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col1[data-key=Countdown]{
+	display:none;
+}
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=PaymentRequestMessage],
+#common_app_dialogues_app_data_display .common_app_data_display_master_col2[data-key=Countdown]{
+	width: 100% !important;
+	text-align: center;
+}
 /*APP THEME*/
 body {
 	color: var(--common_app_color_blue1);
@@ -170,26 +191,10 @@ body {
 	box-shadow: 0 0 1px var(--common_app_color_light);
 }
 /* APP THEME COMMON*/
-.common_app_data_display_master_col1[data-key=Token],
-.common_app_data_display_master_col2[data-key=Token],
-.common_app_data_display_master_col1[data-key=Exp],
-.common_app_data_display_master_col2[data-key=Exp],
-.common_app_data_display_master_col1[data-key=Iat],
-.common_app_data_display_master_col2[data-key=Iat],
-.common_app_data_display_master_col1[data-key=TokenTimestamp],
-.common_app_data_display_master_col2[data-key=TokenTimestamp],
-.common_app_data_display_master_col1[data-key=PaymentRequestId],
-.common_app_data_display_master_col2[data-key=PaymentRequestId],
-.common_app_data_display_master_col1[data-key=CurrencySymbol],
-.common_app_data_display_master_col2[data-key=CurrencySymbol],
-.common_app_data_display_master_col1[data-key=PaymentRequestMessage],
-.common_app_data_display_master_col1[data-key=Countdown]{
-	display:none;
-}
-.common_app_data_display_master_col2[data-key=PaymentRequestMessage],
-.common_app_data_display_master_col2[data-key=Countdown]{
-	width: 100% !important;
-	text-align: center;
+
+#app_page_start_shop .common_select{
+    border:none !important;
+    background-color: unset !important;
 }
 .common_input_error{
 	border: 0.2em solid var(--common_app_color_blue3) !important;
@@ -198,7 +203,7 @@ body {
 .common_select_dropdown_value.common_app_data_display_master_row_list{
 	background-color: var(--common_app_color_white);
 }
-.common_app_data_display_master_col2[data-key=Image]{
+#app_page_start_shop .common_app_data_display_master_col2[data-key=Image]{
 	background-color: var(--common_app_color_white);
 	fill:var(--common_app_color_blue3);
 	stroke: var(--common_app_color_black);

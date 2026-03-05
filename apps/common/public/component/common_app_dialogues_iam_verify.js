@@ -36,7 +36,7 @@ const template = props => `
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_verification_type:string},
+ *                      user_verification_type:'LOGIN'|'SIGNUP'|'UPDATE'|null},
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon'],
  *                      }}} props
@@ -54,7 +54,7 @@ const component = async props => {
      * @description Activate user
      * @function
      * @param {string} verification_code
-     * @param {string}verification_type
+     * @param {'LOGIN'|'SIGNUP'|'UPDATE'|null}verification_type
      * @returns {Promise.<boolean>}
      */
     const commonUserAuthenticateCode = async (verification_code, verification_type) => {
@@ -62,12 +62,7 @@ const component = async props => {
                     method:'PUT', 
                     authorization_type:'APP_ACCESS_VERIFICATION', 
                     body:{   verification_code:  verification_code,
-                            /**
-                            * Verification type
-                            * 1 LOGIN
-                            * 2 SIGNUP      
-                            */
-                            verification_type:  verification_type=='LOGIN'?1:verification_type=='SIGNUP'?2:3}, 
+                            verification_type:  verification_type}, 
                     spinner_id:'common_app_dialogues_iam_verify_cancel'})
         .then(result=>{
                 if (JSON.parse(result).activated == 1){
@@ -84,10 +79,10 @@ const component = async props => {
     /**
      * @name commonUserVerifyCheckInput
      * @description User verify check input, used by user events:
-     *              TYPE                        COMMENT                                                         BFF endpoint to use when activating
-     *              1 LOGIN                     after login, no data returned if active=0                       APP_ACCESS_VERIFICATION
-     *              2 SIGNUP                    not logged in                                                   APP_ACCESS_VERIFICATION
-     *              3 UPDATE USER               logged in                                                       APP_ACCESS
+     *              TYPE    COMMENT                                         BFF endpoint to use when activating
+     *              LOGIN   after login, no data returned if active=0       APP_ACCESS_VERIFICATION
+     *              SIGNUP  not logged in                                   APP_ACCESS_VERIFICATION
+     *              UPDATE  logged in                                       APP_ACCESS
      *              User will be required to login again after activation
      * @function
      * @param {HTMLElement} item 
@@ -116,10 +111,12 @@ const component = async props => {
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char4').classList.remove('common_input_error');
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char5').classList.remove('common_input_error');
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char6').classList.remove('common_input_error');
-
-                if ((props.data.user_verification_type== '3' &&       
-                    
-                    await props.methods.COMMON.commonGlobalGet('Functions').component[props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_app_dialogues_user_menu_iam_user']?.methods?.commonUserUpdate(verification_code)) ||
+                    //UPDATE
+                if ((props.data.user_verification_type== 'UPDATE' &&
+                    await props.methods.COMMON.commonGlobalGet('Functions')
+                        .component[props.methods.COMMON.commonGlobalGet('Parameters')
+                        .app_common_app_id + '_' + 'common_app_dialogues_user_menu_iam_user']?.methods?.commonUserUpdate(verification_code)) ||
+                    //LOGIN OR SIGNUP
                     await commonUserAuthenticateCode(verification_code, props.data.user_verification_type)){
                         props.methods.COMMON.commonComponentRemove('common_app_dialogues_iam_verify');
                         props.methods.COMMON.commonDialogueShow('LOGIN');
@@ -131,8 +128,6 @@ const component = async props => {
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char4').classList.add('common_input_error');
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char5').classList.add('common_input_error');
                     props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_iam_verify_verification_char6').classList.add('common_input_error');
-                    //code not valid
-                    props.methods.COMMON.commonMessageShow('INFO', null, 'message_text',props.methods.COMMON.commonMesssageNotAuthorized());
                 }                
             } 
             else{

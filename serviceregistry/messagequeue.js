@@ -57,13 +57,7 @@ const messageQueue = async parameters => {
                 });
         }
         default: {
-            throw {http:400,
-                code:'IAM',
-                text:server.iam.iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-            };
+            throw server.getError({statusCode:400})
         }
     }
 };

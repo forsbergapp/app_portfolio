@@ -78,7 +78,7 @@ const post = async (app_id, data) => {
         return server.ORM.Execute({app_id:app_id, dml:'POST', object:'AppData', post:{data:data_new}});
     }
     else
-        return server.ORM.getError(app_id, 400);
+        return server.getError({statusCode: 400});
 };
 /**
  * @name update
@@ -117,7 +117,7 @@ const update = async parameters => {
     if (Object.entries(data_update).length>0)
         return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE', object:'AppData', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
     else
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
 };
 
 /**

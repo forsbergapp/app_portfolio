@@ -630,13 +630,7 @@ const appFunction = async parameters =>{
     if (
         ((parameters.data.documentType.toUpperCase()=='GUIDE' ||parameters.data.documentType.toUpperCase()=='APP') && parameters.data?.doc == null) ||
         parameters.data?.doc && (parameters.data.doc.indexOf('\\')>-1||parameters.data.doc.indexOf('..')>-1 ||parameters.data.doc.indexOf(' ')>-1)){
-            return {http:400,
-                code:'DOC',
-                text:server.iam.iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-            };
+            return server.getError({statusCode:400,text:server.iam.iamUtilMessageNotAuthorized()})
     }
     else{
         switch (true){
@@ -660,13 +654,7 @@ const appFunction = async parameters =>{
                         type:'HTML'};
             }
             default:{
-                return {http:400,
-                    code:'DOC',
-                    text:server.iam.iamUtilMessageNotAuthorized(),
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };
+                return server.getError({statusCode:400,text:server.iam.iamUtilMessageNotAuthorized()})
             }
         }
     }

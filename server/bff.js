@@ -73,12 +73,7 @@ const bffExternal = async parameters =>{
                return result.http?result:{result:JSON.parse(result), type:'JSON'};
            })
            .catch((/**@type{*}*/error)=>{
-               return {http:500, 
-                   code:'bffExternal', 
-                   text:error, 
-                   developerText:null, 
-                   moreInfo:null,
-                   type:'JSON'};
+                return server.getError({statusCode:500,text:error})
            });
    }
    else{
@@ -136,12 +131,7 @@ const bffMicroservice = async parameters =>{
                     return result.http?result:{result:JSON.parse(result), type:'JSON'};
                 })
                 .catch((/**@type{*}*/error)=>{
-                    return {http:500, 
-                            code:'MICROSERVICE', 
-                            text:error, 
-                            developerText:null, 
-                            moreInfo:null,
-                            type:'JSON'};
+                    return server.getError({statusCode:500,text:error})
                 });
 }; 
 /**
@@ -678,12 +668,7 @@ const bffDecryptRequest = async parameters =>{
                         }
                     }).then(() => {
             bffResponse({
-                            result_request:{http:400, 
-                                            code:null, 
-                                            text:server.iam.iamUtilMessageNotAuthorized(), 
-                                            developerText:'',
-                                            moreInfo:'',
-                                            type:'JSON'},
+                            result_request:server.getError({statusCode:400}),
                             host:req.headers.host,
                             route:null,
                             res:res});
@@ -717,13 +702,7 @@ const bffDecryptRequest = async parameters =>{
                                                         req:req,
                                                         res:res})
                     .catch((/**@type{server['server']['error']}*/error)=>{
-                        return bffResponse({result_request:{
-                                                http:500, 
-                                                code:null,
-                                                text:error, 
-                                                developerText:'bff',
-                                                moreInfo:null, 
-                                                type:'JSON'},
+                        return bffResponse({result_request:server.getError({statusCode:500,text:error}),
                                             route:null,
                                             res:res})
                     })){
@@ -753,14 +732,7 @@ const bffDecryptRequest = async parameters =>{
                         });
                     }
                     else{
-                        return bffResponse({result_request:{http:401, 
-                                                            code:null,
-                                                            text:server.iam.iamUtilMessageNotAuthorized(), 
-                                                            developerText:'bff',
-                                                            moreInfo:null, 
-                                                            type:'JSON'},
-                                            route:null,
-                                            res:res});
+                        return bffResponse({result_request:server.getError({statusCode:401}),route:null,res:res});
                     }
                 } 
                 else  
@@ -898,7 +870,7 @@ const bffDecryptRequest = async parameters =>{
                                                     log:error
                                                 }
                                             }).then(() => 
-                                                bffResponse({result_request:{http:500, code:null,text:error, developerText:'bff',moreInfo:null, type:'JSON'},
+                                                bffResponse({result_request:server.getError({statusCode:500, text:error}),
                                                                 route:null,
                                                                 jwk:bff_parameters.jwk,
                                                                 iv:bff_parameters.iv,
@@ -908,12 +880,7 @@ const bffDecryptRequest = async parameters =>{
                     }
                     else
                         //too many requests
-                        return bffResponse({result_request:{http:429, 
-                                                            code:null,
-                                                            text:server.iam.iamUtilMessageNotAuthorized(), 
-                                                            developerText:'bff',
-                                                            moreInfo:null, 
-                                                            type:'JSON'},
+                        return bffResponse({result_request:server.getError({statusCode:429}),
                                                 route:null,
                                                 res:res});
             }
@@ -1195,29 +1162,14 @@ const bffRestApi = async parameters =>{
             }
             else{
                 //unknown appid
-                return 	{http:401,
-                    code:'SERVER',
-                    text:server.iam.iamUtilMessageNotAuthorized(),
-                    developerText:'bffRestApi',
-                    moreInfo:null,
-                    type:'JSON'};
+                return server.getError({statusCode:401})
             } 
         }
         else                
-            return 	{http:404,
-                    code:'SERVER',
-                    text:server.iam.iamUtilMessageNotAuthorized(),
-                    developerText:'bffRestApi',
-                    moreInfo:null,
-                    type:'JSON'};
+            return server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()})
     }
     else
-        return 	{http:404,
-                code:'SERVER',
-                text:server.iam.iamUtilMessageNotAuthorized(),
-                developerText:'bffRestApi',
-                moreInfo:null,
-                type:'JSON'};
+        return server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()})
 };
 
 export{bffConnect, bffExternal, bffMicroservice, bffResponse, bff};

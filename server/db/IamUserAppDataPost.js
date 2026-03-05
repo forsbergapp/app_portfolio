@@ -30,7 +30,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return server.ORM.getError(parameters.app_id, 404);
+        return server.getError({statusCode: 404});
 };
 
 /**
@@ -76,7 +76,7 @@ const getViewProfileUserPosts = async parameters =>{
                         })
                         ,type:'JSON'};
         else
-            return server.ORM.getError(parameters.app_id, 404);
+            return server.getError({statusCode: 404});
     else
         /**@ts-ignore */
         return result;
@@ -141,7 +141,7 @@ const getViewProfileUserPosts = async parameters =>{
  */
 const getViewProfileStatPost = async parameters =>{
     if (parameters.data.statchoice==null)
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
     else{
         const postRecords = server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
                                 (server.ORM.db.IamUserAppDataPostLike.get({
@@ -222,7 +222,7 @@ const getViewProfileStatPost = async parameters =>{
  */
 const getViewProfileUserPostDetail = async parameters =>{
     if (parameters.data.detailchoice==null)
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
     else{
         const result_IamUserAppDataPost = server.ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                                             null:
@@ -292,7 +292,7 @@ const getViewProfileUserPostDetail = async parameters =>{
 const post = async parameters => {
     //check required attributes
     if (parameters.data.iam_user_app_id==null){
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
     }
     else{
         /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
@@ -329,7 +329,7 @@ const update = async parameters =>{
                                     object: 'IamUserAppDataPost', 
                                     update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
     else
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
 };
 /**
  * @name deleteRecord

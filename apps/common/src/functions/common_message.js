@@ -35,13 +35,7 @@ const appFunction = async parameters =>{
      * @returns {server['server']['response']}
      */
     const messageError = () =>{
-        return {http:400,
-                code:'DOC',
-                text:server.iam.iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-            };
+        return server.getError({statusCode:400,text:server.iam.iamUtilMessageNotAuthorized()})
     };
     /**
      * @description get MessageQueuPublish record and authenticate message and user

@@ -53,7 +53,7 @@ const serverStart = async () =>{
             message_queue_url: Config.message_queue_url,
             message_queue_method: Config.message_queue_method,
             code: 401,
-            error: '⛔',
+            error: 'X',
             result: null,
             res:res});
 	}).listen(Config.server_port, async ()=>{

@@ -69,7 +69,7 @@ const post = async parameters => {
             return await server.ORM.Execute({ app_id:parameters.app_id, dml:'POST',object:'MessageQueuePublish', post:{data:data_new}});
         }
         else
-            return server.ORM.getError(null, 400);
+            return server.getError({statusCode: 400});
 };
 /**
  * @name deleteRecord

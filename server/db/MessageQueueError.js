@@ -38,7 +38,7 @@ const post = async parameters => {
         return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:'MessageQueueError', post:{data:data_new}});
     }
     else
-        return server.ORM.getError(null, 400);
+        return server.getError({statusCode: 400});
 };
 
 export {get, post};

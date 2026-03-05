@@ -196,16 +196,7 @@ const serverRequest = async parameters =>{
                                 },
                         };
         const request =  protocol.request(new URL(parameters.url), options, response);
-        request.on('error', error => {
-                    reject({   
-                                http:500,
-                                code:'',
-                                text:error,
-                                developerText:'',
-                                moreInfo:null,
-                                type:'JSON'
-                    })
-        });
+        request.on('error', error =>reject(server.getError({statusCode:500,text:error})));
         request.end();
     })
 }

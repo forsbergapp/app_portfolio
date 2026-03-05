@@ -87,22 +87,10 @@ const commonValidImagePixelSize = image =>{
                 height = 1 + ((imageBuffer[29] << 16 | imageBuffer[28] << 8 | imageBuffer[27]))
             }
             else
-                throw { http:400,
-                        code:null,
-                        text:'',
-                        developerText:null,
-                        moreInfo:null,
-                        type:'JSON'
-                    };
+                throw server.getError({statusCode:400});
         }
         default:{
-            throw { http:400,
-                    code:null,
-                    text:'',
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };
+            throw server.getError({statusCode:400});
         }
     }   
     return ((width??0) * (height??0)) <=(server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.IAM_MAX_IMAGE_PIXEL_SIZE.default)??0);
@@ -136,9 +124,8 @@ const commonValidImage = async image => {
      */
     const  controlImage = async (input,options = {}) => {
         /**
-         * @typedef {'H' | 'M' | 'L' | '⛔'} ConfidenceLevel
+         * @typedef {'H' | 'M' | 'L' | 'X'} ConfidenceLevel
          */
-
         /**
          * @name EXTENSION_MIME
          * @description Supported EXTENSION_MIME
@@ -274,16 +261,10 @@ const commonValidImage = async image => {
                     }
                 }
             }
-            return { mimeType: null, name: '?', confidence: '⛔' };
+            return { mimeType: null, name: '?', confidence: 'X' };
         }
-        if (input==null)    
-            throw {http:400,
-                    code:null,
-                    text:'',
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };
+        if (input==null)
+            throw server.getError({statusCode:400});    
         const bytes = input.length > (options.bytesToRead?options.bytesToRead:64*1024)?
                                                 input.slice(0, (options.bytesToRead?options.bytesToRead:64*1024)):
                                                     input;
@@ -410,17 +391,8 @@ const commonGetFile = async parameters =>{
                                                 log:`Resource ${parameters.path}, error:${error}`
                                             }
                                         })
-                                        /**@ts-ignore */
                                         .then(result=>{
-                                            return result.http?
-                                                    result:
-                                                        {   http:400,
-                                                            code:'APP',
-                                                            text:server.iam.iamUtilMessageNotAuthorized(),
-                                                            developerText:'commonGetFile',
-                                                            moreInfo:null,
-                                                            type:'JSON'
-                                                        };
+                                            return result.http?result:server.getError({statusCode:400});
                                                     
                                         });
             });
@@ -615,9 +587,7 @@ const commonResourceFile = async parameters =>{
                                                     log:`Invalid resource ${parameters.resource_id}`
                                                 }
                                             })
-            .then(()=>{
-                return {http:404, code:'APP', text:null, developerText:null, moreInfo:null, type:'JSON'};
-            });
+            .then(()=>server.getError({statusCode:404}));
         }
     }
 };
@@ -680,25 +650,13 @@ const commonModuleRun = async parameters => {
                                                         log:`Module ${parameters.resource_id} not found`
                                                     }
                                                 })
-                .then((/**@type{server['server']['response']}*/result)=>{          
-                    return result.http?result:{http:404,
-                        code:'APP',
-                        text:server.iam.iamUtilMessageNotAuthorized(),
-                        developerText:'commonModuleRun',
-                        moreInfo:null,
-                        type:'JSON'
-                    };
+                .then((/**@type{server['server']['response']}*/result)=>{
+                    return result.http?result:server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()})
                 });
             }
         }
         else
-            return {http:400,
-                code:'APP',
-                text:server.iam.iamUtilMessageNotAuthorized(),
-                developerText:'commonModuleRun',
-                moreInfo:null,
-                type:'JSON'
-            };
+            return server.getError({statusCode:400})
     }
     else
         return modules;
@@ -800,28 +758,14 @@ const commonAppReport = async parameters => {
                             log:`Module ${parameters.resource_id} not found`
                         }
                     })
-                .then((/**@type{server['server']['response']}*/result)=>{
-                    return result.http?result:{http:404,
-                        code:'APP',
-                        text:server.iam.iamUtilMessageNotAuthorized(),
-                        developerText:null,
-                        moreInfo:null,
-                        type:'JSON'
-                    };
-                });
+                .then((/**@type{server['server']['response']}*/result)=>server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()}));
             }
         }
         else
             return modules;
     }
     else
-        return {http:400,
-            code:'APP',
-            text:server.iam.iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
+        return server.getError({statusCode:400,text:server.iam.iamUtilMessageNotAuthorized()})
 };
 /**
  * @name commonAppReportQueue
@@ -898,13 +842,7 @@ const commonAppReportQueue = async parameters =>{
                                             }
                                         })
                 .then((/**@type{server['server']['response']}*/result)=>{
-                    return result.http?result:{http:404,
-                        code:'APP',
-                        text:server.iam.iamUtilMessageNotAuthorized(),
-                        developerText:'commonAppReportQueue',
-                        moreInfo:null,
-                        type:'JSON'
-                    };
+                    return result.http?result:server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()})
                 });
 };
 
@@ -942,13 +880,7 @@ const commonModuleMetaDataGet = async parameters =>{
                                                     }
                                                 })
                     .then((/**@type{server['server']['response']}*/result)=>{
-                        return result.http?result:{http:404,
-                            code:'APP',
-                            text:server.iam.iamUtilMessageNotAuthorized(),
-                            developerText:'commonModuleMetaDataGet',
-                            moreInfo:null,
-                            type:'JSON'
-                        };
+                        return result.http?result:server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()})
                     });
         }
         else
@@ -956,13 +888,7 @@ const commonModuleMetaDataGet = async parameters =>{
             return modules;
     }
     else{
-        return {http:400,
-            code:'APP',
-            text:server.iam.iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
+        return server.getError({statusCode:400,text:server.iam.iamUtilMessageNotAuthorized()})
     }
 }; 
 
@@ -1065,12 +991,7 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   */
 const commonAppSwitch = async parameters =>{
     if (parameters.resource_id == server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default))
-        return {http:400,
-            code:null,
-            text:null,
-            developerText:'commonAppSwitch',
-            moreInfo:null,
-            type:'JSON'};
+        return server.getError({statusCode:400})
     else{
         /**@type{server['ORM']['Object']['App']} */
         const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
@@ -1098,12 +1019,7 @@ const commonAppSwitch = async parameters =>{
                 return socket
         }
         else
-            return {http:404,
-                code:null,
-                text:null,
-                developerText:'commonAppSwitch',
-                moreInfo:null,
-                type:'JSON'};
+            return server.getError({statusCode:404})
     }
 };
 /**
@@ -1233,12 +1149,7 @@ const getAppStart = async parameters =>{
 const getAppInit = async parameters =>{
 
     if (parameters.app_id==null)
-        return {http:404,
-                code:null,
-                text:null,
-                developerText:'commonApp',
-                moreInfo:null,
-                type:'JSON'};
+        return server.getError({statusCode:404})
     else
         //check max allowed connections
         if( (
@@ -1318,12 +1229,7 @@ const commonAppError = async (message=null) =>serverError({data:{message:message
 const commonAppResource = async parameters =>{
     
     if (parameters.app_id==null)
-        return {http:404,
-                code:null,
-                text:null,
-                developerText:'commonApp',
-                moreInfo:null,
-                type:'JSON'};
+        return server.getError({statusCode:404})
     else
         switch (true){
             case (parameters.data.type == 'INFO' && parameters.resource_id.toLowerCase() == 'disclaimer'):
@@ -1349,7 +1255,7 @@ const commonAppResource = async parameters =>{
                                                     data_app_id: parameters.data.data_app_id});
             }
             default:{
-                return {http:401, code:null, text:null, developerText:'commonAppResource', moreInfo:null, type:'JSON'};
+                return server.getError({statusCode:401})
             }
         }
 };

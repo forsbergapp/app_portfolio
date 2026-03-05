@@ -293,7 +293,7 @@ const postDemo = async parameters=> {
                                             if (result)
                                                 return result.InsertId;
                                             else
-                                                throw server.ORM.getError(parameters.app_id, 500, '');
+                                                throw server.getError({statusCode: 500, error:''});
                                         });
             //create for others apps except common, admin and already created
             for (const app of server.ORM.db.App.get({app_id:parameters.app_id,resource_id:null}).result
@@ -743,7 +743,7 @@ const deleteDemo = async parameters => {
                 if (error.http)
                     throw error;
                 else
-                    throw server.ORM.getError(parameters.app_id, 500, error);
+                    throw server.getError({statusCode: 500, error:error});
             });
             //set demo key values to null
             const result_get = server.ORM.db.AppDataEntity.get({ app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}});

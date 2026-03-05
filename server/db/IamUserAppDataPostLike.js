@@ -31,7 +31,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return server.ORM.getError(parameters.app_id, 404);
+        return server.getError({statusCode: 404});
 };
 
 /**
@@ -48,7 +48,7 @@ const get = parameters =>{
 const post = async parameters =>{
     //check required attributes
     if (parameters.data.iam_user_id==null || parameters.data.data_app_id==null || parameters.data.iam_user_app_data_post_id==null){
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
     }
     else{
         /**@type{server['ORM']['Object']['IamUserApp']} */

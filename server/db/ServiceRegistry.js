@@ -20,7 +20,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return server.ORM.getError(parameters.app_id, 404);
+        return server.getError({statusCode: 404});
 };
 
 /**
@@ -57,7 +57,7 @@ const update = async parameters => {
                             object:'ServiceRegistry', 
                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
    else
-       return server.ORM.getError(parameters.app_id, 400);
+       return server.getError({statusCode: 400});
 };
 
 export {get, update};

@@ -254,6 +254,9 @@ const appCustomerCreate = async () => {
  * @returns {Promise.<void>}
  */
 const appPaymentRequestUpdate = async status => {
+    //remove the token since user answered the request
+    APP_GLOBAL.token=null;
+    common.commonComponentRemove('common_app_dialogues_app_data_display');
     await common.commonFFB({  path:'/app-common-module/PAYMENT_REQUEST_UPDATE', 
                         method:'POST', 
                         authorization_type:'APP_ACCESS', 
@@ -265,11 +268,7 @@ const appPaymentRequestUpdate = async status => {
                             status:             status
                         }})
     .then((result)=>status==1?common.commonMessageShow('INFO', null, null,JSON.parse(result).rows[0].status):null)
-    .finally(()=>{
-        //remove the token since user answered the request
-        APP_GLOBAL.token=null;
-        common.commonComponentRemove('common_app_dialogues_app_data_display');
-    });
+    .catch(()=>null);
 };
 /**
  * @name appPaymentRequestAccept

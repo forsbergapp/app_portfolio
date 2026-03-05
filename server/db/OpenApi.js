@@ -92,7 +92,7 @@ const update = async parameters => {
                             return {result:result.result, type:'JSON'};
                         }
                         else
-                            return server.ORM.getError(parameters.app_id, 404);
+                            return server.getError({statusCode: 404});
                     else
                         return result;
                 });
@@ -118,7 +118,7 @@ const updateConfig = async parameters =>{
                                 openApiValue: old.components}});
     }
     else
-        return server.ORM.getError(parameters.app_id, 404);
+        return server.getError({statusCode: 404});
 }
 
 /**
@@ -158,7 +158,7 @@ const updateServersVariables = async parameters =>{
                                 openApiValue: old.servers}})
     }
     else
-        return server.ORM.getError(parameters.app_id, 404);
+        return server.getError({statusCode: 404});
 }
 
 export{ get, getViewServers, getViewWithoutConfig, update, updateConfig, updateServersVariables};

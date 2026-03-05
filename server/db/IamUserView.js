@@ -22,7 +22,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return server.ORM.getError(parameters.app_id, 404);
+        return server.getError({statusCode: 404});
 };
 
 /**
@@ -37,7 +37,7 @@ const get = parameters =>{
 const post = async (app_id, data) =>{
     //check required attributes
     if (data.IamUserIdView==null){
-        return server.ORM.getError(app_id, 400);
+        return server.getError({statusCode: 400});
     }
     else{
         /**@type{server['ORM']['Object']['IamUserView']} */

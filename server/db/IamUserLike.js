@@ -22,7 +22,7 @@ const get = parameters =>{
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
-        return server.ORM.getError(parameters.app_id, 404);
+        return server.getError({statusCode: 404});
 };
 
 /**
@@ -39,7 +39,7 @@ const get = parameters =>{
 const post = async parameters =>{
     //check required attributes
     if (parameters.data.iam_user_id==null || parameters.data.iam_user_id_like==null){
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
     }
     else{
         /**@type{server['ORM']['Object']['IamUserLike']} */
@@ -65,7 +65,7 @@ const post = async parameters =>{
  */
 const deleteRecord = async parameters =>{
     if (parameters.resource_id==null){
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
     }
     else
         if (get({   app_id:parameters.app_id, 
@@ -77,7 +77,7 @@ const deleteRecord = async parameters =>{
                                         object:'IamUserLike', 
                                         delete:{resource_id:parameters.resource_id, data_app_id:null}});
         else
-            return server.ORM.getError(parameters.app_id, 401);
+            return server.getError({statusCode: 401});
 };
 
 export {get, post, deleteRecord};

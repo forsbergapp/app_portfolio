@@ -154,13 +154,7 @@ const cubeSolve = async parameters =>{
 					if (solution.solution_string.toUpperCase().indexOf('M')>-1 ||
 						solution.solution_string.toUpperCase().indexOf('E')>-1 ||
 						solution.solution_string.toUpperCase().indexOf('S')>-1)
-						return {http:400,
-								code:'CUBE_SOLVE',
-								text:'Not supported',
-								developerText:null,
-								moreInfo:null,
-								type:'JSON'
-							};
+                        return server.getError({statusCode:400, code:'CUBE_SOLVE',text:'Not supported'});
 					else
 						return {result:[{	
 										cube_solution:			solution.solution_string, 
@@ -177,13 +171,7 @@ const cubeSolve = async parameters =>{
 		if (parameters.data.cube_currentstate && parameters.data.cube_currentstate == '' )
 			return {result:[], type:'JSON'};
 		else{
-			return {http:400,
-				code:'CUBE_SOLVE',
-				text:server.iam.iamUtilMessageNotAuthorized(),
-				developerText:null,
-				moreInfo:null,
-				type:'JSON'
-			};
+            return server.getError({statusCode:400, code:'CUBE_SOLVE'});
 		}
 	}
 };

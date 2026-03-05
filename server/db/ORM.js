@@ -611,7 +611,7 @@ class ORM_class {
             record.Content = this.formatContent(record.Type,data);
         }
         else
-            throw this.getError(0, 401);    
+            throw server.getError({statusCode:401});
     };
 
     /**
@@ -692,12 +692,12 @@ class ORM_class {
                     if (records.length>0 || resource_id==null)
                         return {result:records, type:'JSON'};
                     else
-                        return ORM.getError(app_id, 404);
+                        return server.getError({statusCode:404});
                 }
                 case 'DOCUMENT':
                     return record.CacheContent;
                 default:
-                    return ORM.getError(app_id, 404);
+                    return server.getError({statusCode:404});
             }
         } catch (error) {
             return {result:[], type:'JSON'};
@@ -913,17 +913,17 @@ class ORM_class {
                         /*@ts-ignore*/
                         file.TransactionId);
                     //constraint error
-                    throw this.getError(app_id, 400);
+                    throw server.getError({statusCode:400});
                 }
             }
             else{
                 //no post on documents
-                throw this.getError(app_id, 400);
+                throw server.getError({statusCode:400});
             }
         }
         else{
             //must provide app_id
-            throw this.getError(app_id, 400);
+            throw server.getError({statusCode:400});
         }
     };
     /**
@@ -1058,7 +1058,7 @@ class ORM_class {
             const object_type = this.getObjectRecord(object).Type;
             if (object_type == 'TABLE_LOG' || object_type == 'TABLE_LOG_DATE'){
                 //no update of log tables
-                throw this.getError(app_id, 400);
+                throw server.getError({statusCode:400});
             }
             else{
                 /**@type{server['ORM']['MetaData']['result_fileFsRead']} */
@@ -1094,14 +1094,14 @@ class ORM_class {
                         }
                         else
                             //nothing to update
-                            throw this.getError(app_id, 404);
+                            throw server.getError({statusCode:404});
                     }
                     else{
                         this.rollback(object,
                                                 /*@ts-ignore*/
                                                 file.TransactionId);
                         //constraint error
-                        throw this.getError(app_id, 400);
+                        throw server.getError({statusCode:400});
                     }
                 }
                 else{
@@ -1124,7 +1124,7 @@ class ORM_class {
         }
         else
             //must provide app_id
-            throw this.getError(app_id, 400);
+            throw server.getError({statusCode:400});
     };
     /**
      * @name deleteObject
@@ -1220,7 +1220,7 @@ class ORM_class {
         }
         else
             //nothing to delete
-            throw this.getError(app_id, 404);
+            throw server.getError({statusCode:404});
     };
     /**
      * @name Execute
@@ -1291,40 +1291,13 @@ class ORM_class {
                             //manage known errors with resolve
                             resolve(error)
                         else
-                            reject(this.getError(parameters.app_id, 500, error));
+                            reject(server.getError({statusCode:500, error:error}))
                     });
                 })
             }
         }) 
     };
 
-    /**
-     * @name getError
-     * @description Returns error message in ISO20022 format
-     * @method
-     * @param {number|null} app_id
-     * @param {number} statusCode
-     * @param {*} error
-     * @returns {server['server']['response']}
-     */
-    getError = (app_id, statusCode, error=null) =>{
-        if (error){
-            return {http:statusCode,
-                    code:'DB',
-                    text:error,
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'};
-        }
-        else{
-            return {http:statusCode,
-                    code:'DB',
-                    text:error?error:statusCode==404?'?!':'⛔',
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'};
-        }
-    };
     /**
      * @name UtilNumberValue
      * @description Get number value from request key

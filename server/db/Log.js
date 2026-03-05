@@ -267,9 +267,7 @@ const getStat = async parameters => {
                    }
                });
            })
-           .catch((error)=>{
-               return server.ORM.getError(parameters.app_id, 500, `${file}: ${error}`);
-           });
+           .catch((error)=>server.getError({statusCode: 500, error:`${file}: ${error}`}));
        }
    }
 

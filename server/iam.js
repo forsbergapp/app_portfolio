@@ -20,7 +20,7 @@ const iamRequestRateLimiterCount = {};
  * @function
  * @returns {string}
  */
-const iamUtilMessageNotAuthorized = () => '⛔';
+const iamUtilMessageNotAuthorized = () => server.ERROR_NOT_AUTHORIZED;
 
 /**
  * @name iamUtilTokenAppId
@@ -125,42 +125,7 @@ const iamUtilTokenExpiredSet = async (app_id, authorization, ip) =>{
         return server.ORM.db.IamAppAccess.update(app_id, iam_app_access_row.Id??null, {res:2});
     }
     else
-        return {http:401,
-                code:'IAM',
-                text:iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-            };
-};
-
-/**
- * @name iamUtilResponseNotAuthorized
- * @description IAM util response not authorized
- * @function
- * @param {server['server']['res']} res
- * @param {number} status
- * @param {string} reason
- * @param {boolean} bff
- * @returns {Promise.<string|void>}
- */
-const iamUtilResponseNotAuthorized = async (res, status, reason, bff=false) => {
-    if (bff){
-        res.statusCode = status;
-        res.statusMessage = reason;
-        return iamUtilMessageNotAuthorized();
-    }
-    else{
-        server.bff.bffResponse({
-                    result_request:{http:status, 
-                                    code:'IAM',
-                                    text:iamUtilMessageNotAuthorized(), 
-                                    developerText:reason,
-                                    moreInfo:null, 
-                                    type:'JSON'},
-                                    route:null,
-                                    res:res});
-    }
+        return server.getError({statusCode:401})
 };
 
 /**
@@ -214,13 +179,7 @@ const iamAuthenticateUser = async parameters =>{
     const check_user = async (result, user, token_type) => {     
         if (result == 1){
             if (server.socket.socketConnectedUserGet(user.Id).length>=(server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.IAM_USER_MAX_LOGIN.default)??0))
-                return {http:401,
-                    code:'IAM',
-                    text:iamUtilMessageNotAuthorized(),
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                }
+                return server.getError({statusCode:401})
             else{
                 //user authorized access
                 const recordIamUserApp = await iamUserLoginApp({  app_id:parameters.app_id, 
@@ -323,13 +282,7 @@ const iamAuthenticateUser = async parameters =>{
                                                                 Status:0, 
                                                                 Type:'TOO_MANY_FAILED_LOGIN'});
             }
-            return {http:401,
-                code:'IAM',
-                text:iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-            };
+            return server.getError({statusCode:401})
         }
     };
     if(parameters.authorization){       
@@ -383,13 +336,7 @@ const iamAuthenticateUser = async parameters =>{
         }
     }
     else
-        return {http:401,
-            code:'IAM',
-            text:iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
+        return server.getError({statusCode:401})
 };
 
 /**
@@ -491,12 +438,12 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          ip:string,
  *          authorization:string,
  *          user_agent:string,
- *          data:{  verification_type:'1'|'2',   //1 LOGIN, 2 SIGNUP
+ *          data:{  verification_type:'LOGIN'|'SIGNUP'|'UPDATE',
  *                  verification_code:string}}} parameters
  * @returns {Promise.<server['server']['response'] & { result?:{activated:number} }>}
  */
 const iamAuthenticateUserActivate = async parameters =>{
-    if (server.ORM.UtilNumberValue(parameters.data.verification_type)==1 || server.ORM.UtilNumberValue(parameters.data.verification_type)==2){
+    if (['LOGIN','SIGNUP'].includes(parameters.data.verification_type)){
         const result_activate =  await server.security.securityTOTPValidate(parameters.data.verification_code, server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey??'');
         if (result_activate){
             //set user active = 1
@@ -524,22 +471,10 @@ const iamAuthenticateUserActivate = async parameters =>{
                             );
         }
         else
-            return {http:401,
-                code:'IAM',
-                text:iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-            };
+            return server.getError({statusCode:401,code:'IAM'})
     }
     else
-        return {http:400,
-            code:'IAM',
-            text:iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
+        return server.getError({statusCode:400,code:'IAM'})
 };
 
 
@@ -608,25 +543,13 @@ const iamAuthenticateUserUpdate = async parameters => {
                                         result:
                                             result_update.http?
                                                 result_update:
-                                                    {   http:404,
-                                                        code:'IAM',
-                                                        text:'?!',
-                                                        developerText:null,
-                                                        moreInfo:null,
-                                                        type:'JSON'
-                                                    }
+                                                    server.getError({statusCode:404,code:'IAM'})
                         );
             }
         });
     }
     else
-        return {   http:401,
-            code:'IAM',
-            text:iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
+        return server.getError({statusCode:401,code:'IAM'})
 };
 /**
  * @name iamAuthenticateUserDelete
@@ -665,24 +588,12 @@ const iamAuthenticateUserAppDelete = async parameters => {
                 return server.ORM.db.IamUserApp.deleteRecord({app_id:parameters.app_id, 
                                                 resource_id:parameters.resource_id});
             else
-                return {http:401,
-                        code:'IAM',
-                        text:iamUtilMessageNotAuthorized(),
-                        developerText:null,
-                        moreInfo:null,
-                        type:'JSON'
-                    };
+                return server.getError({statusCode:401,code:'IAM'})
         else
             /**@ts-ignore} */
             return user;
     }
-    return {http:400,
-            code:'IAM',
-            text:iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
+    return server.getError({statusCode:400,code:'IAM'})
 };
 
 /**
@@ -1240,13 +1151,7 @@ const iamAuthenticateMicroservice = async parameters =>{
                 });
     }
     else
-        return {http:401,
-            code:'IAM',
-            text:iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };    
+        return server.getError({statusCode:401,code:'IAM'})
 };
 /**
  * @name iamAuthorizeIdToken
@@ -1389,13 +1294,7 @@ const iamAdminServerConfigGet = parameters =>{
                         {result:server.ORM.db.OpenApi.get({app_id:parameters.app_id}).result.components.parameters.config,
                                 type:'JSON'};
         else
-            return {http:400,
-                    code:'IAM',
-                    text:iamUtilMessageNotAuthorized(),
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };
+            return server.getError({statusCode:400,code:'IAM'})
 }
 /**
  * @name iamAdminServerConfigUpdate
@@ -1442,13 +1341,7 @@ const iamAdminServerConfigUpdate = async parameters =>{
                         });
         }
         else
-            return {http:400,
-                    code:'IAM',
-                    text:iamUtilMessageNotAuthorized(),
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };
+            return server.getError({statusCode:400,code:'IAM'})
         
 }
 /**
@@ -1670,7 +1563,6 @@ export{ iamUtilMessageNotAuthorized,
         iamUtilTokenGet,
         iamUtilTokenExpired,
         iamUtilTokenExpiredSet,
-        iamUtilResponseNotAuthorized,
         iamAuthenticateUser,
         iamAuthenticateUserSignup,
         iamAuthenticateUserActivate,

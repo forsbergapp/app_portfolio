@@ -120,51 +120,21 @@ const paymentRequestGetStatus = async parameters =>{
                         return {result:{message:data_encrypted}, type:'JSON'};
                     }
                     else
-                        return {http:404,
-                                code:'PAYMENT_REQUEST_GET_STATUS',
-                                text:server.iam.iamUtilMessageNotAuthorized(),
-                                developerText:null,
-                                moreInfo:null,
-                                type:'JSON'
-                            };
+                        return server.getError({statusCode:404, code:'PAYMENT_REQUEST_GET_STATUS',text:server.iam.iamUtilMessageNotAuthorized()});
                 }
                 else
                     //wrong payer id in the token
-                    return {http:404,
-                            code:'PAYMENT_REQUEST_GET_STATUS',
-                            text:server.iam.iamUtilMessageNotAuthorized(),
-                            developerText:null,
-                            moreInfo:null,
-                            type:'JSON'
-                        };
+                    return server.getError({statusCode:404, code:'PAYMENT_REQUEST_GET_STATUS',text:server.iam.iamUtilMessageNotAuthorized()});
                     
             } catch (error) {
                 //token expired or other error
-                return {http:404,
-                    code:'PAYMENT_REQUEST_GET_STATUS',
-                    text:server.iam.iamUtilMessageNotAuthorized(),
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };    
+                return server.getError({statusCode:404, code:'PAYMENT_REQUEST_GET_STATUS',text:server.iam.iamUtilMessageNotAuthorized()});
             }
         }
         else
-            return {http:404,
-                    code:'PAYMENT_REQUEST_GET_STATUS',
-                    text:server.iam.iamUtilMessageNotAuthorized(),
-                    developerText:null,
-                    moreInfo:null,
-                    type:'JSON'
-                };
+            return server.getError({statusCode:404, code:'PAYMENT_REQUEST_GET_STATUS',text:server.iam.iamUtilMessageNotAuthorized()});
     }
     else
-        return {http:404,
-                code:'PAYMENT_REQUEST_GET_STATUS',
-                text:server.iam.iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-            };
+        return server.getError({statusCode:404, code:'PAYMENT_REQUEST_GET_STATUS',text:server.iam.iamUtilMessageNotAuthorized()});
 };
 export default paymentRequestGetStatus;

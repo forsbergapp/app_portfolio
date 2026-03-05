@@ -42,7 +42,7 @@ const paymentRequestUpdate = async parameters =>{
                                                         app_data_entity_id:Entity.Id
                                                 }}).result??[])[0];
 
-    const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip});
+    const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip}).catch(()=>null);
 
     //get payment request using app_custom_id that should be the payment request id
     /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:payment_request}}}*/
@@ -150,12 +150,6 @@ const paymentRequestUpdate = async parameters =>{
         return {result:[{status:status}], type:'JSON'};
    }
    else
-        return {http:404,
-            code:'PAYMENT_REQUEST_UPDATE',
-            text:server.iam.iamUtilMessageNotAuthorized(),
-            developerText:null,
-            moreInfo:null,
-            type:'JSON'
-        };
+        return server.getError({statusCode:404, code:'PAYMENT_REQUEST_UPDATE',text:server.iam.iamUtilMessageNotAuthorized()});
 };
 export default paymentRequestUpdate;

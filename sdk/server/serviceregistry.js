@@ -112,7 +112,8 @@ const commonAuth = async parameters =>{
     await new Promise ((resolve)=>{setTimeout(()=>resolve(null), 5000);});
     return await auth().then(result=>{
         if (result == null)
-            throw '⛔';
+            //not authorized
+            throw 'X';
         else
             return result;
     });

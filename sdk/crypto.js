@@ -949,7 +949,8 @@ Crypto.AES = {
             return btoa(m.toString());
         }
         else
-            throw '⛔';
+            //not authorized
+            throw 'X';
 	},
     /**
      * @param {{iv:string, key:string, ciphertext:string}} parameters
@@ -980,7 +981,8 @@ Crypto.AES = {
             return new TextDecoder().decode(c);
         }
         else
-            throw '⛔';
+            //not authorized
+            throw 'X';
 	},
 
 

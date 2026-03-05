@@ -137,7 +137,7 @@ const component = async props => {
                                 })==false)
                     return false;
         if (totp==null){
-            props.methods.COMMON.commonDialogueShow('VERIFY', '3');
+            props.methods.COMMON.commonDialogueShow('VERIFY', 'UPDATE');
             return false;
         }
         else
@@ -256,20 +256,14 @@ const component = async props => {
         * @returns {Promise.<void>}
         */
     const onMounted = async () => {
-        if (props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id == user.Id) {
+        if (Number(user.Private))
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.add('checked');
+        else
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.remove('checked');
 
-            if (Number(user.Private))
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.add('checked');
-            else
-                props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_user_menu_iam_user_checkbox_profile_private').classList.remove('checked');
-
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= user.Avatar?
-                                                                                                            `url('${user.Avatar}')`:
-                                                                                                            'url()';
-        } else {
-            //User not found
-            props.methods.COMMON.commonMessageShow('INFO', null, 'message_text',props.methods.COMMON.commonMesssageNotAuthorized());
-        }
+        props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_iam_user_menu_avatar_img').style.backgroundImage= user.Avatar?
+                                                                                                        `url('${user.Avatar}')`:
+                                                                                                        'url()';
     };
     return {
         lifecycle:  {onMounted:onMounted},

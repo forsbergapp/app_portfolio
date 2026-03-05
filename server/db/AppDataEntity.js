@@ -27,7 +27,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppDataEntity'
 const post = async parameters => {
     //check required attributes
     if (parameters.data.AppId==null){
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
     }
     else{
         /**@type{server['ORM']['Object']['AppDataEntity']} */
@@ -53,7 +53,7 @@ const post = async parameters => {
 const update = async parameters =>{
     //check required attributes
     if (parameters.resource_id==null){
-        return server.ORM.getError(parameters.app_id, 400);
+        return server.getError({statusCode: 400});
     }
     else{
         /**@type{server['ORM']['Object']['AppDataEntity']} */
@@ -65,7 +65,7 @@ const update = async parameters =>{
         if (Object.entries(data_update).length>0)
             return server.ORM.Execute({app_id:parameters.app_id, dml:'UPDATE',object:'AppDataEntity', update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
         else
-            return server.ORM.getError(parameters.app_id, 400);
+            return server.getError({statusCode: 400});
     }
 };
 /**

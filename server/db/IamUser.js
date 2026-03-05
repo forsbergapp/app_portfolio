@@ -108,7 +108,7 @@ const getViewProfile = async parameters =>{
                             .then(()=>{return {result:result_getProfileUser, type:'JSON'};});
       }
       else
-          return server.ORM.getError(parameters.app_id, 404);
+          return server.getError({statusCode: 404});
 };
 
 /**
@@ -303,7 +303,7 @@ const post = async (app_id, data) => {
         return server.ORM.Execute({app_id:app_id, dml:'POST', object:'IamUser', post:{data:data_new}});
     }
     else
-        return server.ORM.getError(app_id, 400);
+        return server.getError({statusCode: 400});
 };
 /**
  * @name postAdmin
@@ -376,13 +376,13 @@ const update = async (app_id, resource_id, data) => {
             if (Object.entries(data_update).length>0)
                 return server.ORM.Execute({app_id:app_id, dml:'UPDATE', object:'IamUser', update:{resource_id:resource_id, data_app_id:null, data:data_update}});
             else
-                return server.ORM.getError(app_id, 400);
+                return server.getError({statusCode: 400});
         }
         else
-            return server.ORM.getError(app_id, 400);
+            return server.getError({statusCode: 400});
     }
     else
-        return server.ORM.getError(app_id, 404);
+        return server.getError({statusCode: 404});
 };
 /**
  * @name updateAdmin
@@ -473,10 +473,10 @@ const updateAdmin = async parameters => {
                                             object:'IamUser', 
                                             update:{resource_id:parameters.resource_id, data_app_id:null, data:data_update}});
             else
-                return server.ORM.getError(parameters.app_id, 400);
+                return server.getError({statusCode: 400});
     }
     else
-        return server.ORM.getError(parameters.app_id, 404);
+        return server.getError({statusCode: 404});
 };
 
 /**
@@ -498,7 +498,7 @@ const deleteRecord = async (app_id, resource_id, data) => {
                                         object:'IamUser', 
                                         delete:{resource_id:resource_id, data_app_id:null}});
         else
-            return server.ORM.getError(app_id, 400);
+            return server.getError({statusCode: 400});
     }
     else
         return user;

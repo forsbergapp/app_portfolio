@@ -59,13 +59,7 @@ const socketClientAdd = (newClient) => {
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.IdToken == parameters.idToken).length==0){
-        return {http:401,
-                code:'IAM',
-                text:server.iam.iamUtilMessageNotAuthorized(),
-                developerText:null,
-                moreInfo:null,
-                type:'JSON'
-        };
+        return server.getError({statusCode:401})
     }
     else{
         for (const connected of SOCKET_CONNECTED_CLIENTS){

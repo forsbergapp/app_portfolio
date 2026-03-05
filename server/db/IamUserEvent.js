@@ -28,7 +28,7 @@ const post = async (app_id, data) => {
     if (data.IamUserId==null || data.Event==null || data.EventStatus==null||
         //check not allowed attributes when creating a user
         data.Id||data.Created){
-            return server.ORM.getError(app_id, 400);
+            return server.getError({statusCode: 400});
     }
     else{
         /**@type{server['ORM']['Object']['IamUserEvent']} */

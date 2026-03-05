@@ -19,6 +19,8 @@ class serverClass {
         this.CONTENT_TYPE_JSON = 'application/json; charset=utf-8';	
 		this.CONTENT_TYPE_HTML = 'text/html; charset=utf-8';	
 		this.CONTENT_TYPE_SSE = 'text/event-stream; charset=utf-8';
+        this.ERROR_NOT_FOUND = '?!';
+		this.ERROR_NOT_AUTHORIZED = 'X';
         /**@type{*} */
         this.server_app = {};
         /**@type{*} */
@@ -76,6 +78,32 @@ class serverClass {
         this.app_common = await import('../apps/common/src/common.js');
         //set timezone to UTC
         this.info.serverProcess.env.TZ = 'UTC';
+    };
+    /**
+     * @name getError
+     * @description Returns error message in ISO20022 format
+     * @method
+     * @param {{statusCode:number,
+     *          code?:string,
+     *          error?:*,
+     *          text?:*,
+     *          developerText?:string,
+     *          moreInfo?:string}} parameters
+     * @returns {server['server']['response']}
+     */
+    getError = parameters =>{
+        return {http:parameters.statusCode,
+                code:parameters.code==null?'SERVER':parameters.code,
+                text:parameters.error!=null?
+                        parameters.error:
+                            parameters.text!=null?
+                                parameters.text:
+                                    parameters.statusCode==404?
+                                        this.ERROR_NOT_FOUND:
+                                            this.ERROR_NOT_AUTHORIZED,
+                developerText:parameters.developerText==null?null:parameters.developerText,
+                moreInfo:parameters.moreInfo==null?null:parameters.moreInfo,
+                type:'JSON'};
     };
     /**
      * @name request
@@ -388,40 +416,17 @@ class serverClass {
                                         iv:         JSON.parse(Buffer.from(secret, 'base64').toString('utf-8')).iv
                                         }));
                     else
-                        reject({   
-                                http:res.statusCode,
-                                code:'SERVER',
-                                /**@ts-ignore */
-                                text:null,
-                                developerText:'serverRequest',
-                                moreInfo:null,
-                                type:'JSON'
-                        });
+                        reject(server.getError({statusCode:res.statusCode??500}))
                 });
             };
             const request = request_protocol.request(new URL(url), options, response);
             //only method POST used, write body always
             request.write(body);
             request.on('error', error => {
-                resolve({   
-                            http:500,
-                            code:'SERVER',
-                            /**@ts-ignore */
-                            text:error,
-                            developerText:'serverRequest',
-                            moreInfo:null,
-                            type:'JSON'
-                });
+                resolve(server.getError({statusCode:500,text:error}));
             });
             request.on('timeout', () => {
-                resolve({
-                    http:503,
-                    code:'SERVER',
-                    text:MESSAGE_TIMEOUT,
-                    developerText:'serverRequest',
-                    moreInfo:null,
-                    type:'JSON'
-                });
+                resolve(server.getError({statusCode:503,text:MESSAGE_TIMEOUT}));
             });
             request.end();
         });								
