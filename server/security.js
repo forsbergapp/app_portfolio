@@ -1,7 +1,7 @@
 /** @module server/security */
 
 /**
- * @import {server} from './types.d.ts'}
+ * @import types_server from './types.d.ts'}
  */
 const Crypto = await import('node:crypto');
 const {server} = await import('./server.js');
@@ -370,7 +370,7 @@ class Jwt {
      * @param {string} token
      * @param {string} secret
      * @param {{complete:boolean}|null} options
-     * @returns  {server['security']['jwt_complete']|server['security']['jwt_payload']}
+     * @returns  {types_server.security['jwt_complete']|types_server.security['jwt_payload']}
      */
     verify (token, secret, options=null) {
         const signature = token.split('.')[2];
@@ -449,7 +449,7 @@ class Jwt {
      * @method
      * @param {string} token
      * @param {{complete:boolean}|null} options
-     * @returns  {server['security']['jwt_complete']|server['security']['jwt_payload']}
+     * @returns  {types_server.security['jwt_complete']|types_server.security['jwt_payload']}
      */
     decode (token, options=null ) {
         return options?.complete==true?

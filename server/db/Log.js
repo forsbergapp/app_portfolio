@@ -1,7 +1,7 @@
 /** @module server/db/Log */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 const {STATUS_CODES} = await import('node:http');
@@ -12,7 +12,7 @@ const {STATUS_CODES} = await import('node:http');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
 *          data:{   data_app_id:string|null,
-*                   logobject:Extract<server['ORM']['MetaData']['Object'],
+*                   logobject:Extract<types_server.ORM['MetaData']['Object'],
 *                   'LogAppInfo'|
 *                   'LogAppError'|
 *                   'LogDbInfo'|
@@ -32,13 +32,13 @@ const {STATUS_CODES} = await import('node:http');
 *                   year:string,
 *                   month:string,
 *                   day:string|null}}} parameters
-* @returns{Promise.<server['server']['response'] & {result:[]}>}
+* @returns{Promise.<types_server.server['response'] & {result:[]}>}
 */
 const get = async parameters => {
     /** 
      * @type {{ app_id:number,
      *          data_app_id:number|null,
-     *          logobject:Extract<server['ORM']['MetaData']['Object']['Name'], 
+     *          logobject:Extract<types_server.ORM['MetaData']['Object']['Name'], 
      *             'LogAppInfo'|
      *             'LogAppError'|
      *             'LogDbInfo'|
@@ -159,14 +159,14 @@ const get = async parameters => {
 *                  same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
 * @function
 * @memberof ROUTE_REST_API
-* @returns {Promise.<server['server']['response'] & {result:object}>}
+* @returns {Promise.<types_server.server['response'] & {result:object}>}
 */
 const getStatusCodes = async () =>{
    return {result:{status_codes: STATUS_CODES}, type:'JSON'};
 };
 /**
 * @name getStat
-* @description Get Request log stat, returns base64 string with server['ORM']['View']['LogGetStat'][] to avoid record limit issue
+* @description Get Request log stat, returns base64 string with types_server.ORM['View']['LogGetStat'][] to avoid record limit issue
 * @function
 * @memberof ROUTE_REST_API
 * @param {{app_id:number,
@@ -176,12 +176,12 @@ const getStatusCodes = async () =>{
 *                  statValue?:string|null,
 *                  year?:string|null,
 *                  month?:string|null}}} parameters
-* @returns{Promise.<server['server']['response'] & {result:string}>}
+* @returns{Promise.<types_server.server['response'] & {result:string}>}
 */
 const getStat = async parameters => {
     /** 
      * @type {{ app_id:number|null,
-     *          statGroup:keyof server['ORM']['Object']['LogRequestInfo'],
+     *          statGroup:keyof types_server.ORM['Object']['LogRequestInfo'],
      *          unique:number|null,
      *          statValue:string|number|null,
      *          year:number,
@@ -195,9 +195,9 @@ const getStat = async parameters => {
                    year: 			server.ORM.UtilNumberValue(parameters.data.year) ?? new Date().getFullYear(),
                    month:			server.ORM.UtilNumberValue(parameters.data.month) ?? new Date().getMonth() +1
                    };
-   /**@type{server['ORM']['View']['LogGetStat'][]} */
+   /**@type{types_server.ORM['View']['LogGetStat'][]} */
    const logfiles = [];
-   /**@type{server['ORM']['View']['LogGetStat'][]} */
+   /**@type{types_server.ORM['View']['LogGetStat'][]} */
    const logstat = [];
    
    const files = await server.ORM.getFsDir().then(files=>files.filter(file=>file.isDirectory()==false));
@@ -226,7 +226,7 @@ const getStat = async parameters => {
                sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
            await server.ORM.Execute({app_id:parameters.app_id, dml:'GET', object:file.name.startsWith('LogRequestInfo')?'LogRequestInfo':'LogRequestVerbose', get:{resource_id:null, partition:sample}})
            .then((logs)=>{
-               logs.result.rows.forEach((/**@type{server['ORM']['Object']['LogRequestInfo']|''}*/record) => {
+               logs.result.rows.forEach((/**@type{types_server.ORM['Object']['LogRequestInfo']|''}*/record) => {
                    if (record != ''){
                        if (data.statGroup != null){
                            if (data.app_id == null || data.app_id == record?.AppId){
@@ -302,7 +302,7 @@ const getStat = async parameters => {
 * @description Get log files
 * @function
 * @memberof ROUTE_REST_API
-* @returns{Promise.<server['server']['response'] & {result:{Id:number, Filename:string}[]|[]}>}
+* @returns{Promise.<types_server.server['response'] & {result:{Id:number, Filename:string}[]|[]}>}
 */
 const getFiles = async () => {
     return {result:await server.ORM.getFsDir()
@@ -322,7 +322,7 @@ const getFiles = async () => {
  * @description Write log
  * @function
  * @param {{app_id:number,
- *          data:{  object:     Extract<server['ORM']['MetaData']['Object']['Name'],
+ *          data:{  object:     Extract<types_server.ORM['MetaData']['Object']['Name'],
  *                                  'LogAppInfo'|
  *                                  'LogAppError'|
  *                                  'LogDbInfo'|
@@ -334,32 +334,32 @@ const getFiles = async () => {
  *                                  'LogServerError'|
  *                                  'LogBffInfo'|
  *                                  'LogBffError'>,
- *                  request?:{  Host:       	server['server']['req']['headers']['host'],
- *                              Ip:		        server['server']['req']['socket']['remoteAddress'],
+ *                  request?:{  Host:       	types_server.server['req']['headers']['host'],
+ *                              Ip:		        types_server.server['req']['socket']['remoteAddress'],
  *                              RequestId:		string,
  *                              CorrelationId:	string,
- *                              Url:			server['server']['req']['url'],
- *                              HttpInfo:		server['server']['req']['httpVersion'],
- *                              Method:			server['server']['req']['method'],
- *                              StatusCode:		server['server']['res']['statusCode'],
- *                              StatusMessage:	server['server']['res']['statusMessage'],
- *                              UserAgent:		server['server']['req']['headers']['user-agent'], 
- *                              AcceptLanguage:	server['server']['req']['headers']['accept-language'], 
- *                              Referer:		server['server']['req']['headers']['referer'], 
- *                              SizeReceived:	server['server']['req']['socket']['bytesRead'],
- *                              SizeSent:		server['server']['req']['socket']['bytesWritten'],
+ *                              Url:			types_server.server['req']['url'],
+ *                              HttpInfo:		types_server.server['req']['httpVersion'],
+ *                              Method:			types_server.server['req']['method'],
+ *                              StatusCode:		types_server.server['res']['statusCode'],
+ *                              StatusMessage:	types_server.server['res']['statusMessage'],
+ *                              UserAgent:		types_server.server['req']['headers']['user-agent'], 
+ *                              AcceptLanguage:	types_server.server['req']['headers']['accept-language'], 
+ *                              Referer:		types_server.server['req']['headers']['referer'], 
+ *                              SizeReceived:	types_server.server['req']['socket']['bytesRead'],
+ *                              SizeSent:		types_server.server['req']['socket']['bytesWritten'],
  *                              ResponseTime:	number,
- *                              XAppId:			server['ORM']['Object']['App']['Id']|null,
- *                              XAppIdAuth:		server['ORM']['Object']['App']['Id']|null,
- *                              XUrl:			server['server']['req']['url']|null,
- *                              XMethod:		server['server']['req']['method']|null,
- *                              Req:            server['server']['req']|null},
+ *                              XAppId:			types_server.ORM['Object']['App']['Id']|null,
+ *                              XAppIdAuth:		types_server.ORM['Object']['App']['Id']|null,
+ *                              XUrl:			types_server.server['req']['url']|null,
+ *                              XMethod:		types_server.server['req']['method']|null,
+ *                              Req:            types_server.server['req']|null},
  *                  bff?:{      Service:string,
  *                              Method:string,
  *                              Url:string,
  *                              Operation:string|null,
  *                              Parameters:string},
- *                  db?:{       Object:server['ORM']['MetaData']['Object']['Name'],
+ *                  db?:{       Object:types_server.ORM['MetaData']['Object']['Name'],
  *                              Dml:string,
  *                              Parameters:*},
  *                  app?:{      AppFilename:string,
@@ -368,11 +368,11 @@ const getFiles = async () => {
  *                  log:        *
  *              }
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
     let log;
-    /**@type{Extract<server['ORM']['MetaData']['Object']['Name'],
+    /**@type{Extract<types_server.ORM['MetaData']['Object']['Name'],
      *              'LogAppInfo'|
      *              'LogAppError'|
      *              'LogDbInfo'|
@@ -389,7 +389,7 @@ const post = async parameters => {
     switch (parameters.data.object){
         case 'LogServerError':
         case 'LogServerInfo':{
-            /**@type{server['ORM']['Object']['LogServerInfo']} */
+            /**@type{types_server.ORM['Object']['LogServerInfo']} */
             log = {LogText:parameters.data.log};
             log_object = parameters.data.object;
             break;
@@ -397,7 +397,7 @@ const post = async parameters => {
         case 'LogBffError':
         case 'LogBffInfo':{
             const service_level = server.ORM.OpenApiComponentParameters.config.LOG_BFF_LEVEL.default;
-            /**@type{server['ORM']['Object']['LogBffInfo']}*/
+            /**@type{types_server.ORM['Object']['LogBffInfo']}*/
             log = (service_level=='1' ||service_level=='2')?
                     {AppId:     parameters.app_id,
                     Service:    parameters.data.bff?.Service,
@@ -414,7 +414,7 @@ const post = async parameters => {
         case 'LogAppInfo':{
             const app_level = server.ORM.OpenApiComponentParameters.config.LOG_APP_LEVEL.default;
             if (app_level=='1'||app_level=='2'){
-                /**@type{server['ORM']['Object']['LogAppInfo']} */
+                /**@type{types_server.ORM['Object']['LogAppInfo']} */
                 log ={
                     AppId:            parameters.app_id,
                     AppFilename:      parameters.data.app?.AppFilename,
@@ -433,7 +433,7 @@ const post = async parameters => {
             const db_level = server.ORM.OpenApiComponentParameters.config.LOG_DB_LEVEL.default;
             if (db_level=='1'||db_level=='2'){
                 log_object = parameters.data.object;
-                /**@type{server['ORM']['Object']['LogDbError']} */
+                /**@type{types_server.ORM['Object']['LogDbError']} */
                 log = {
                         AppId:         parameters.app_id,
                         Object:         parameters.data.db?.Object,
@@ -511,7 +511,7 @@ const post = async parameters => {
                         };
         
         return server.ORM.Execute({app_id:parameters.app_id, dml:'POST', object:log_object, post:{data:data_new}})
-        .catch((/**@type{server['server']['error']}*/error)=>{
+        .catch((/**@type{types_server.server['error']}*/error)=>{
             console.log(error);
             console.log(parameters.data.log);
             throw error;

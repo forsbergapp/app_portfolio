@@ -16,7 +16,7 @@
  * @module apps/app1/src/report/bdd_test
  */
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 const test_lib = await import('../../../../test/test.js');
@@ -27,7 +27,7 @@ const test_lib = await import('../../../../test/test.js');
  * @function
  * @param {{title:string, 
  *          date:string,
- *          specs:server['test']['spec_result'][]}} props
+ *          specs:types_server.test['spec_result'][]}} props
  */
 const template = props => ` <div id='report'>
                                 <div id='report_title'>${props.title}</div>
@@ -98,10 +98,10 @@ const component = async props => {
 
     const fs = await import('node:fs');
     let finished = 0;
-    /**@type{server['test']['spec_result'][]} */
+    /**@type{types_server.test['spec_result'][]} */
     const specs = [];
 
-    /**@type {server['test']['specrunner']} */
+    /**@type {types_server.test['specrunner']} */
     const specrunner = await fs.promises.readFile(`${server.info.serverProcess.cwd()}/test/specrunner.json`, 'utf8')
                         .then((/**@type{string}*/result)=>JSON.parse(result));
     //run in random order if RANDOM parameter = '1'
@@ -110,7 +110,7 @@ const component = async props => {
     for (const spec of specrunner.specFiles){
         try {
             const {default:testResult} = await import('../../../..' + spec.path);
-            /**@type{server['test']['spec_result']['detail']}*/
+            /**@type{types_server.test['spec_result']['detail']}*/
             const detail_result = await testResult(test_lib);
             //check if any test inside spec file has empty expect length
             const FAIL_SPEC_WITH_NO_EXPECTATIONS = 
@@ -138,7 +138,7 @@ const component = async props => {
     return template(report);
     
 };
-/**@type{server['app']['commonModuleMetadata'][]}*/
+/**@type{types_server.app['commonModuleMetadata'][]}*/
 const metadata = [{param:{name:'mode',text:'Mode', default:'REPORT'}}];
 export {metadata};
 export default component;

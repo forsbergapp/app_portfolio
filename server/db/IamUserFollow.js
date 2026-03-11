@@ -1,7 +1,7 @@
 /** @module server/db/IamUserFollow */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -12,11 +12,11 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  iam_user_id_follow:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserFollow'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserFollow'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserFollow',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['Object']['IamUserFollow']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['IamUserFollow']}*/row)=>
                         row.IamUserId == (parameters.data.iam_user_id ?? row.IamUserId) &&
                         row.IamUserIdFollow == (parameters.data.iam_user_id_follow ?? row.IamUserIdFollow) );
     if (result.length>0 || parameters.resource_id==null)
@@ -32,9 +32,9 @@ const get = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{iam_user_id:server['ORM']['Object']['IamUserFollow']['IamUserId'],
- *                iam_user_id_follow:server['ORM']['Object']['IamUserFollow']['IamUserIdFollow']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ *          data:{iam_user_id:types_server.ORM['Object']['IamUserFollow']['IamUserId'],
+ *                iam_user_id_follow:types_server.ORM['Object']['IamUserFollow']['IamUserIdFollow']}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters =>{
     //check required attributes
@@ -42,7 +42,7 @@ const post = async parameters =>{
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['IamUserFollow']} */
+        /**@type{types_server.ORM['Object']['IamUserFollow']} */
         const data_new =     {
                                 Id:Date.now(),
                                 IamUserId:parameters.data.iam_user_id, 
@@ -61,7 +61,7 @@ const post = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{iam_user_id:number}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{
     if (parameters.resource_id==null){

@@ -1,13 +1,13 @@
 /** @module server/socket */
 
 /**
- * @import {server} from './types.d.ts'
+ * @import types_server from './types.d.ts'
  */
 
 const {server} = await import('./server.js');
 const {commonGeodataUser} = await import('../apps/common/src/common.js')
 
-/**@type{server['socket']['SocketConnectedServer'][]} */
+/**@type{types_server.socket['SocketConnectedServer'][]} */
 let SOCKET_CONNECTED_CLIENTS = [];
 
 /**
@@ -15,8 +15,8 @@ let SOCKET_CONNECTED_CLIENTS = [];
  * @description Socket get conections for given user
  *              
  * @function
- * @param {server['socket']['SocketConnectedServer']['IdToken']} idToken
- * @returns {server['socket']['SocketConnectedServer'][]}
+ * @param {types_server.socket['SocketConnectedServer']['IdToken']} idToken
+ * @returns {types_server.socket['SocketConnectedServer'][]}
  */
 const socketConnectedGetAppIdTokenRecord = idToken => SOCKET_CONNECTED_CLIENTS.filter(client => client.IdToken == idToken);
 
@@ -25,8 +25,8 @@ const socketConnectedGetAppIdTokenRecord = idToken => SOCKET_CONNECTED_CLIENTS.f
  * @description Socket get conections for given user
  *              
  * @function
- * @param {server['ORM']['Object']['IamUser']['Id']} IamUserId
- * @returns {server['socket']['SocketConnectedServer'][]}
+ * @param {types_server.ORM['Object']['IamUser']['Id']} IamUserId
+ * @returns {types_server.socket['SocketConnectedServer'][]}
  */
 const socketConnectedUserGet = IamUserId => SOCKET_CONNECTED_CLIENTS.filter(client => client.IamUserid == IamUserId);
 
@@ -34,7 +34,7 @@ const socketConnectedUserGet = IamUserId => SOCKET_CONNECTED_CLIENTS.filter(clie
  * @name socketClientAdd
  * @description Socket client add
  * @function
- * @param {server['socket']['SocketConnectedServer']} newClient
+ * @param {types_server.socket['SocketConnectedServer']} newClient
  * @returns {void}
  */
 const socketClientAdd = (newClient) => {
@@ -55,7 +55,7 @@ const socketClientAdd = (newClient) => {
  *          token_admin:string|null,
  *          ip:string,
  *          headers_user_agent:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:null}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:null}>}
  */
  const socketConnectedUpdate = async (app_id, parameters) => {
     if (SOCKET_CONNECTED_CLIENTS.filter(row=>row.IdToken == parameters.idToken).length==0){
@@ -110,9 +110,9 @@ const socketClientAdd = (newClient) => {
  *          idToken:string,
  *          data:{  app_id:number|null,
  *                  client_id:number|null,
- *                  broadcast_type: Extract<server['socket']['broadcast_type'],'CHAT'|'ALERT'|'MAINTENANCE'>,
+ *                  broadcast_type: Extract<types_server.socket['broadcast_type'],'CHAT'|'ALERT'|'MAINTENANCE'>,
  *                  broadcast_message:string}}} parameters
- * @returns {Promise.<server['server']['response'] & {result:{sent:number} }>}
+ * @returns {Promise.<types_server.server['response'] & {result:{sent:number} }>}
  */
  const socketAdminSend = async parameters => {
     parameters.data.client_id = server.ORM.UtilNumberValue(parameters.data.client_id);
@@ -172,7 +172,7 @@ const socketClientAdd = (newClient) => {
  *                  order_by?:string|null,
  *                  sort?:*}
  *          }} parameters
- * @returns{Promise.<server['server']['response'] & {result:server['socket']['SocketConnectedClient'][]}>}
+ * @returns{Promise.<types_server.server['response'] & {result:types_server.socket['SocketConnectedClient'][]}>}
  */
  const socketConnectedList = async parameters => {
     const app_id_select = server.ORM.UtilNumberValue(parameters.data.data_app_id);
@@ -184,7 +184,7 @@ const socketClientAdd = (newClient) => {
     const day= server.ORM.UtilNumberValue(parameters.data.day);
     /**@type{string} */
     const order_by = parameters.data.order_by ?? '';
-    /**@type{keyof server['socket']['SocketConnectedClient']} */
+    /**@type{keyof types_server.socket['SocketConnectedClient']} */
     const sort = parameters.data.sort;
 
     const order_by_num = order_by =='asc'?1:-1;
@@ -251,7 +251,7 @@ const socketClientAdd = (newClient) => {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{data:{  logged_in?:string|null}}} parameters
- * @returns {server['server']['response'] & {result:{count_connected:number} }}
+ * @returns {types_server.server['response'] & {result:{count_connected:number} }}
  */
  const socketConnectedCount = parameters => {
     if (server.ORM.UtilNumberValue(parameters.data.logged_in) == 1)
@@ -268,9 +268,9 @@ const socketClientAdd = (newClient) => {
  *          uuid:string|null,
  *          user_agent:string,
  *          ip:string
- *          response:server['server']['res']
+ *          response:types_server.server['res']
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['MetaData']['common_result_insert']}>}
+ * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['MetaData']['common_result_insert']}>}
  */
 const socketPost = async parameters =>{
     const client_id = Date.now();
@@ -279,7 +279,7 @@ const socketPost = async parameters =>{
     parameters.response.setHeader('Content-Type', server.CONTENT_TYPE_SSE);
     parameters.response.setHeader('Cache-control', 'no-cache');
     parameters.response.setHeader('Connection', 'keep-alive');
-    /**@type{server['socket']['SocketConnectedServer']} */
+    /**@type{types_server.socket['SocketConnectedServer']} */
     const newClient = {
                         Id:                 client_id,
                         IdToken:            parameters.idToken,
@@ -372,7 +372,7 @@ const socketExpiredTokenSendSSE = async () =>{
                 //check if access token and not APP_ACCESS_VERIFICATION
                 if ((client.TokenAccess || client.TokenAdmin) &&  
                     server.ORM.db.IamAppAccess.get(0, null).result
-                        .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
+                        .filter((/**@type{types_server.ORM['Object']['IamAppAccess']}*/row)=>
                             row.Token ==(client.TokenAccess || client.TokenAdmin) &&
                             row.Type!='APP_ACCESS_VERIFICATION').length>0 &&
                     client.IamUserid && 
@@ -406,7 +406,7 @@ const socketExpiredTokenSendSSE = async () =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{resource_id :number|null}} parameters
- * @returns {server['server']['response'] & {result:{online:1|0} }}
+ * @returns {types_server.server['response'] & {result:{online:1|0} }}
  */
 const CheckOnline = parameters => { 
                                     /**@ts-ignore */
@@ -427,7 +427,7 @@ const CheckOnline = parameters => {
  *                  iam_user_id:number|null,
  *                  idToken:string|null,
  *                  message:String,
- *                  message_type:server['socket']['broadcast_type']}}} parameters
+ *                  message_type:types_server.socket['broadcast_type']}}} parameters
  */
 const socketClientPostMessage = async parameters => {
 
@@ -442,13 +442,13 @@ const socketClientPostMessage = async parameters => {
         const token_id = server.ORM.db.IamAppIdToken.get({  app_id:parameters.app_id, 
                                         resource_id:null, 
                                         data:{data_app_id:null}}).result
-                    .filter((/**@type{server['ORM']['Object']['IamAppIdToken']}*/row)=>row.Token == client.IdToken)?.[0].Id;
+                    .filter((/**@type{types_server.ORM['Object']['IamAppIdToken']}*/row)=>row.Token == client.IdToken)?.[0].Id;
         //get secrets from IamEncryption using uuid saved at record creation and token id
         const {jwk, iv} = server.ORM.db.IamEncryption.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:null}}). result
-                            .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/row)=>
+                            .filter((/**@type{types_server.ORM['Object']['IamEncryption']}*/row)=>
                                 row.Uuid == client.Uuid && 
                                 row.IamAppIdTokenId == token_id)
-                            .map((/**@type{server['ORM']['Object']['IamEncryption']}*/row)=>{
+                            .map((/**@type{types_server.ORM['Object']['IamEncryption']}*/row)=>{
                                 return {jwk:JSON.parse(atob(row.Secret)).jwk,
                                         iv:JSON.parse(atob(row.Secret)).iv
                                 };

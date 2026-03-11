@@ -1,7 +1,7 @@
 /** @module server/db/IamUserLike */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -12,11 +12,11 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  iam_user_id_like:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserLike'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserLike'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserLike',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['Object']['IamUserLike']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['IamUserLike']}*/row)=>
                         row.IamUserId == (parameters.data.iam_user_id ?? row.IamUserId) &&
                         row.IamUserIdLike == (parameters.data.iam_user_id_like ?? row.IamUserIdLike) );
     if (result.length>0 || parameters.resource_id==null)
@@ -32,9 +32,9 @@ const get = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{iam_user_id:server['ORM']['Object']['IamUserLike']['IamUserId'],
- *                iam_user_id_like:server['ORM']['Object']['IamUserLike']['IamUserIdLike']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ *          data:{iam_user_id:types_server.ORM['Object']['IamUserLike']['IamUserId'],
+ *                iam_user_id_like:types_server.ORM['Object']['IamUserLike']['IamUserIdLike']}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters =>{
     //check required attributes
@@ -42,7 +42,7 @@ const post = async parameters =>{
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['IamUserLike']} */
+        /**@type{types_server.ORM['Object']['IamUserLike']} */
         const data_new =     {
                                 Id:Date.now(),
                                 IamUserId:parameters.data.iam_user_id, 
@@ -61,7 +61,7 @@ const post = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{iam_user_id:number}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{
     if (parameters.resource_id==null){

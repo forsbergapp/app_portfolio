@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from './types.d.ts'
+ * @import types_server from './types.d.ts'
  */
 
 const http = await import('node:http');
@@ -41,7 +41,7 @@ class serverClass {
         this.socket;
         /**@type {import('../apps/common/src/common.js')}*/
         this.app_common;
-        /**@type{{css:string, db_records:server['ORM']['Object']['IamEncryption'][]}}*/
+        /**@type{{css:string, db_records:types_server.ORM['Object']['IamEncryption'][]}}*/
         this.commonCssFonts;
         /**@type{import('./db/ORM.js')['ORM']}*/
         this.ORM;
@@ -89,7 +89,7 @@ class serverClass {
      *          text?:*,
      *          developerText?:string,
      *          moreInfo?:string}} parameters
-     * @returns {server['server']['response']}
+     * @returns {types_server.server['response']}
      */
     getError = parameters =>{
         return {http:parameters.statusCode,
@@ -109,8 +109,8 @@ class serverClass {
      * @name request
      * @description Server app using Express pattern
      * @method
-     * @param {server['server']['req']} req
-     * @param {server['server']['res']} res
+     * @param {types_server.server['req']} req
+     * @param {types_server.server['res']} res
      * @returns {Promise.<*>}
      */
     request = async (req, res)=>{
@@ -186,10 +186,10 @@ class serverClass {
          * @type {{ Id:string,
          *          CorrelationId:string,
          *          RequestStart:number,
-         *          XAppId:server['ORM']['Object']['App']['Id']|null,
-         *          XAppIdAuth:server['ORM']['Object']['App']['Id']|null,
-         *          XUrl:server['server']['req']['url']|null,
-         *          XMethod:server['server']['req']['method']|null}}
+         *          XAppId:types_server.ORM['Object']['App']['Id']|null,
+         *          XAppIdAuth:types_server.ORM['Object']['App']['Id']|null,
+         *          XUrl:types_server.server['req']['url']|null,
+         *          XMethod:types_server.server['req']['method']|null}}
          */
         const RequestData = { 
                                 Id:             this.security.securityRequestIdCreate(),
@@ -222,20 +222,20 @@ class serverClass {
      * @name response
      * @description Returns response to client
      * @param {{app_id?:number|null,
-     *          type:server['server']['response']['type'],
+     *          type:types_server.server['response']['type'],
      *          result:string,
      *          route:'APP'|'REST_API'|null,
      *          statusMessage: string,
      *          statusCode: number,
      *          sse_message?:string,
-     *          res:server['server']['res']}} parameters
+     *          res:types_server.server['res']}} parameters
      * @method
      * @returns {Promise.<void>}
      */
     response = async parameters =>{
         /**
          * Sets response type
-         * @param {server['server']['response']['type']} type
+         * @param {types_server.server['response']['type']} type
          */
         const setType = async type => {
             const app_cache_control =  server.ORM.OpenApiComponentParameters.config.APP_CACHE_CONTROL.default;
@@ -331,7 +331,7 @@ class serverClass {
                                         (this.ORM.db.ServiceRegistry.get({ app_id:parameters['app-id'], 
                                                                             resource_id:null, 
                                                                             data:{name:parameters.service}}).result??[])
-                                        .map((/**@type{server['ORM']['Object']['ServiceRegistry']}*/row)=>{
+                                        .map((/**@type{types_server.ORM['Object']['ServiceRegistry']}*/row)=>{
                                             return {
                                                 uuid:row.Uuid,
                                                 secret:row.Secret
@@ -348,7 +348,7 @@ class serverClass {
                     Type:parameters.encryption_type,
                     Secret: secret}):
                 null;
-        const basePathRESTAPI = server.ORM.db.OpenApi.get({app_id:0}).result.servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/server)=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
+        const basePathRESTAPI = server.ORM.db.OpenApi.get({app_id:0}).result.servers.filter((/**@type{types_server.ORM['Object']['OpenApi']['servers'][0]}*/server)=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
         const url = (parameters.url?
                             //external url should be syntax [protocol]://[host + optional port]/[path]
                             //implements same path for external url
@@ -502,7 +502,7 @@ class serverClass {
      * @returns {number}
      */
     UtilAppLine = () =>{
-        /**@type {server['server']['error']} */
+        /**@type {types_server.server['error']} */
         const e = new Error() || '';
         const frame = e.stack.split('\n')[2];
         const lineNumber = frame.split(':').reverse()[1];
@@ -559,7 +559,7 @@ class serverCircuitBreakerClass {
      *          authorization:string|null,
      *          encryption_type:'BFE' | 'APP' | 'FONT'|'MICROSERVICE',
      *          'app-id':number,
-     *          endpoint:server['bff']['parameters']['endpoint']|null}} parameters
+     *          endpoint:types_server.bff['parameters']['endpoint']|null}} parameters
      * @returns {Promise.<string>}
      */
     async serverRequest(parameters){
@@ -712,7 +712,7 @@ const serverStart = async () =>{
         server.socket.socketIntervalCheck();
         server.postServer();
 
-    } catch (/**@type{server['server']['error']}*/error) {
+    } catch (/**@type{types_server.server['error']}*/error) {
         server.ORM.db.Log.post({app_id:0, 
                                 data:{  object:'LogServerError', 
                                         log:'serverStart: ' + error.stack

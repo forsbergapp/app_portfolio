@@ -1,7 +1,7 @@
 /** @module server/db/IamUserAppDataPostView */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPostView'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserAppDataPostView'][] }}
  */
 const get = parameters =>{
     const result = server.ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).result
@@ -29,17 +29,17 @@ const get = parameters =>{
  *          data:{  iam_user_app_data_post_id:number|null,
  *                  iam_user_id:number|null,
  *                  data_app_id:number}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPostView'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserAppDataPostView'][] }}
  */
 const getViewUser = parameters =>{
     const IamUserApp_records =  server.ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                                 resource_id:null, 
                                                 data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result;
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPostView',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostView']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPostView']}*/row)=>
                         row.IamUserAppDataPostId == (parameters.data.iam_user_app_data_post_id ?? row.IamUserAppDataPostId) && 
                         (IamUserApp_records??[])
-                        .filter((/**@type{server['ORM']['Object']['IamUserApp']}*/rowIamUserApp)=>
+                        .filter((/**@type{types_server.ORM['Object']['IamUserApp']}*/rowIamUserApp)=>
                             row.IamUserAppId == rowIamUserApp.Id
                         )
                         .length>0
@@ -55,8 +55,8 @@ const getViewUser = parameters =>{
  * @description Create record
  * @function
  * @param {number} app_id  
- * @param {server['ORM']['Object']['IamUserAppDataPostView']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamUserAppDataPostView']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) =>{
     //check required attributes
@@ -64,7 +64,7 @@ const post = async (app_id, data) =>{
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['IamUserAppDataPostView']} */
+        /**@type{types_server.ORM['Object']['IamUserAppDataPostView']} */
         const data_new =     {
                                 Id:Date.now(),
                                 Document:{  client_ip: data.Document.client_ip,
@@ -83,7 +83,7 @@ const post = async (app_id, data) =>{
  * @function
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>
     server.ORM.Execute({  app_id:parameters.app_id, 

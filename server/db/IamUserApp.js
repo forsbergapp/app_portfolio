@@ -1,7 +1,7 @@
 /** @module server/db/IamUserApp */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 
@@ -13,11 +13,11 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  data_app_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserApp'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserApp'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserApp',parameters.resource_id, parameters.data.data_app_id??null).result ??[])
-                    .filter((/**@type{server['ORM']['Object']['IamUserApp']}*/row)=>row.IamUserId == (parameters.data.iam_user_id ?? row.IamUserId) );
+                    .filter((/**@type{types_server.ORM['Object']['IamUserApp']}*/row)=>row.IamUserId == (parameters.data.iam_user_id ?? row.IamUserId) );
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
     else
@@ -29,8 +29,8 @@ const get = parameters =>{
  * @description Create record
  * @function
  * @param {number} app_id  
- * @param {server['ORM']['Object']['IamUserApp']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamUserApp']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) =>{
     //check required attributes
@@ -38,7 +38,7 @@ const post = async (app_id, data) =>{
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['IamUserApp']} */
+        /**@type{types_server.ORM['Object']['IamUserApp']} */
         const data_new =     {
                                 Id:Date.now(),
                                 AppId:data.AppId, 
@@ -68,17 +68,17 @@ const post = async (app_id, data) =>{
  *          data:{
  *                  data_app_id: number,
  *                  document :{
- *                      preference_theme?:Extract<server['ORM']['Object']['IamUserApp']['Document'], 'PreferenceTheme'>, 
- *                      preference_locale?: Extract<server['ORM']['Object']['IamUserApp']['Document'], 'PreferenceLocale'>, 
- *                      preference_timezone?: server['ORM']['Object']['IamUserApp']['Document']['PreferenceTimezone'], 
- *                      preference_direction?: server['ORM']['Object']['IamUserApp']['Document']['PreferenceDirection'], 
- *                      preference_arabic_script?: server['ORM']['Object']['IamUserApp']['Document']['PreferenceArabicScript'],
- *                      custom?: server['ORM']['Object']['IamUserApp']['Document']['Custom']}
+ *                      preference_theme?:Extract<types_server.ORM['Object']['IamUserApp']['Document'], 'PreferenceTheme'>, 
+ *                      preference_locale?: Extract<types_server.ORM['Object']['IamUserApp']['Document'], 'PreferenceLocale'>, 
+ *                      preference_timezone?: types_server.ORM['Object']['IamUserApp']['Document']['PreferenceTimezone'], 
+ *                      preference_direction?: types_server.ORM['Object']['IamUserApp']['Document']['PreferenceDirection'], 
+ *                      preference_arabic_script?: types_server.ORM['Object']['IamUserApp']['Document']['PreferenceArabicScript'],
+ *                      custom?: types_server.ORM['Object']['IamUserApp']['Document']['Custom']}
  *              }}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async parameters =>{
-    /**@type{server['ORM']['Object']['IamUserApp']} */
+    /**@type{types_server.ORM['Object']['IamUserApp']} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.document!=null)
@@ -105,7 +105,7 @@ const update = async parameters =>{
  * @function
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>
     server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'IamUserApp', delete:{resource_id:parameters.resource_id, data_app_id:null}});

@@ -1,7 +1,7 @@
 /** @module serviceregistry/microservice/messagequeue */
 
 /**
- * @import {server} from '../server/types.d.ts'
+ * @import types_server from '../server/types.d.ts'
  */
 const {server} = await import('../server/server.js');
 /**
@@ -11,18 +11,18 @@ const {server} = await import('../server/server.js');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          message_queue_type: 'CONSUME'|'PUBLISH',
- *          data: { service: server['ORM']['Object']['MessageQueuePublish']['Service'],
- *                  message_id?:server['ORM']['Object']['MessageQueueConsume']['MessageQueuePublishId'],
- *                  type?:server['ORM']['Object']['MessageQueuePublish']['Message']['Type']
- *                  message?:server['ORM']['Object']['MessageQueuePublish']['Message']['Message']},
+ *          data: { service: types_server.ORM['Object']['MessageQueuePublish']['Service'],
+ *                  message_id?:types_server.ORM['Object']['MessageQueueConsume']['MessageQueuePublishId'],
+ *                  type?:types_server.ORM['Object']['MessageQueuePublish']['Message']['Type']
+ *                  message?:types_server.ORM['Object']['MessageQueuePublish']['Message']['Message']},
  *          authorization:string,
- *          endpoint:server['bff']['parameters']['endpoint']}} parameters
- * @returns {Promise.<server['server']['response']>}
+ *          endpoint:types_server.bff['parameters']['endpoint']}} parameters
+ * @returns {Promise.<types_server.server['response']>}
  */
 const messageQueue = async parameters => {
     switch (parameters.message_queue_type) {
         case 'PUBLISH': {
-            /**@ts-ignore @type{server['ORM']['Object']['MessageQueuePublish']} */
+            /**@ts-ignore @type{types_server.ORM['Object']['MessageQueuePublish']} */
             const message_queue = { Service: parameters.data.service, 
                                     Message:   {Type:parameters.data.type,
                                                 Message:parameters.data.message??''}
@@ -31,7 +31,7 @@ const messageQueue = async parameters => {
         }
         case 'CONSUME': {
             //message CONSUME
-            /**@ts-ignore @type{server['ORM']['Object']['MessageQueueConsume']} */
+            /**@ts-ignore @type{types_server.ORM['Object']['MessageQueueConsume']} */
             const message_consume = {   MessageQueuePublishId: parameters.data.message_id??0,
                                         Message:    null,
                                         Start:      null,
@@ -46,7 +46,7 @@ const messageQueue = async parameters => {
             message_consume.Start = new Date().toISOString();
             //write to message_queue_consume.json
             return server.ORM.db.MessageQueueConsume.post({app_id:parameters.app_id, data:message_consume})
-                .catch((/**@type{server['server']['error']}*/error)=>{
+                .catch((/**@type{types_server.server['error']}*/error)=>{
                     return server.ORM.db.MessageQueueError.post({app_id:parameters.app_id, 
                                             /**@ts-ignore */
                                             data:{  MessageQueuePublishId: parameters.data.message_id??0, 

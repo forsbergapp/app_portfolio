@@ -1,15 +1,15 @@
 /** @module serviceregistry/microservice/registry */
 
 /**
- * @import {server} from '../server/types.d.ts'
+ * @import types_server from '../server/types.d.ts'
  */
 const {server} = await import('../server/server.js');
 /**
  * @name registryConfigServices
  * @description Reads config services
  * @function
- * @param {server['serviceregistry']['microservice_local_config']['name']} servicename
- * @returns {Promise.<server['ORM']['Object']['ServiceRegistry']>}
+ * @param {types_server.serviceregistry['microservice_local_config']['name']} servicename
+ * @returns {Promise.<types_server.ORM['Object']['ServiceRegistry']>}
  */
 const registryConfigServices = async servicename =>
         (server.ORM.db.ServiceRegistry.get({app_id:0,resource_id:null, data:{name:servicename}}).result??[])[0];

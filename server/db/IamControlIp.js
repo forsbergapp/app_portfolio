@@ -1,7 +1,7 @@
 /** @module server/db/IamControlIp */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamControlIp'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['IamControlIp'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlIp',resource_id, null);
 
@@ -19,13 +19,13 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlIp',
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamControlIp']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamControlIp']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (data.From!=null && data.To!=null){
-        /**@type{server['ORM']['Object']['IamControlIp']} */
+        /**@type{types_server.ORM['Object']['IamControlIp']} */
         const data_new = {};
         data_new.Id = Date.now();
         data_new.AppId = data.AppId;
@@ -48,12 +48,12 @@ const post = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server['ORM']['Object']['IamControlIp']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @param {types_server.ORM['Object']['IamControlIp']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async (app_id, resource_id, data) => {
     if (data.From!=null && data.To!=null){
-        /**@type{server['ORM']['Object']['IamControlIp']} */
+        /**@type{types_server.ORM['Object']['IamControlIp']} */
         const data_update = {};
         if (data.From!=null)
             data_update.From = data.From;
@@ -84,7 +84,7 @@ const update = async (app_id, resource_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) =>
     server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlIp', delete:{resource_id:resource_id, data_app_id:null}});

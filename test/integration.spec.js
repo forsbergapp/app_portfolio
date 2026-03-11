@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {server} from '../server/types.d.ts'
+ * @import types_server from '../server/types.d.ts'
  */
 const {server} = await import('../server/server.js');
 const {default:worldcities} = await import('../apps/common/src/functions/common_worldcities.js');
@@ -13,7 +13,7 @@ const {default:worldcities} = await import('../apps/common/src/functions/common_
  * @description Integration test multplie
  * @function
  * @param {import('./test.js')} t
- * @returns {Promise.<server['test']['spec_result']['detail']>}
+ * @returns {Promise.<types_server.test['spec_result']['detail']>}
  */
 const test = async t =>
     [await t.describe('Integration test, setting DB cache', async ()=> {
@@ -34,7 +34,7 @@ const test = async t =>
         return await new Promise(resolve=>
         t.it('should return values ', async () =>{
 
-            /**@type{(server['ORM']['Object']['App'])[]}*/
+            /**@type{(types_server.ORM['Object']['App'])[]}*/
             const apps = server.ORM.db.App.get({app_id:0, resource_id:null}).result;
             
             for (const app of apps){ 

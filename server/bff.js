@@ -1,7 +1,7 @@
 /** @module server/bff */
 
 /**
- * @import {server} from './types.d.ts'
+ * @import types_server from './types.d.ts'
  */
 const {server} = await import('./server.js');
 const {registryConfigServices} = await import('../serviceregistry/registry.js')
@@ -18,7 +18,7 @@ const {default:ComponentMaintenance} = await import('../apps/common/src/componen
  *          idToken:string,
  *          user_agent:string,
  *          accept_language:string,
- *          response:server['server']['res']}} parameters
+ *          response:types_server.server['res']}} parameters
  * @returns {Promise.<void>}
  */
 const bffConnect = async parameters =>{
@@ -45,7 +45,7 @@ const bffConnect = async parameters =>{
 *          'app-id': number,
 *          authorization:string|null,
 *          accept_language:string}} parameters
-* @returns {Promise.<server['server']['response'] & {result?:*}>}
+* @returns {Promise.<types_server.server['response'] & {result?:*}>}
 */
 const bffExternal = async parameters =>{
    if (parameters.url.toLowerCase().startsWith('http://')){
@@ -89,16 +89,16 @@ const bffExternal = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
-*          microservice:server['serviceregistry']['microservice_local_config']['name'], 
+*          microservice:types_server.serviceregistry['microservice_local_config']['name'], 
 *          service:string, 
-*          method:server['server']['req']['method'],
+*          method:types_server.server['req']['method'],
 *          data:*,
 *          ip:string,
 *          user_agent:string,
 *          accept_language:string,
-*          endpoint:server['bff']['parameters']['endpoint']
+*          endpoint:types_server.bff['parameters']['endpoint']
 *       }} parameters
-* @returns {Promise.<server['server']['response']>}
+* @returns {Promise.<types_server.server['response']>}
 */
 const bffMicroservice = async parameters =>{
                  
@@ -171,15 +171,15 @@ const bffMicroservice = async parameters =>{
  *                              developerText?:string|null,
  *                              moreInfo?:string|null,
  *                              result?:*,
- *                              type:server['server']['response']['type'],
+ *                              type:types_server.server['response']['type'],
  *                              singleResource?:boolean},
  *           host?:string|null,
  *           route:'APP'|'REST_API'|null,
- *           method?:server['server']['req']['method'],
+ *           method?:types_server.server['req']['method'],
  *           decodedquery?:string|null,
  *           jwk?:JsonWebKey|null,
  *           iv?:string|null,
- *           res:server['server']['res']}} parameters
+ *           res:types_server.server['res']}} parameters
  * @returns {Promise.<void>}
  */
 const bffResponse = async parameters =>{
@@ -372,17 +372,17 @@ const bffOpenApiPathMatch = parameters => {
  * @param {{common_app_id:number,
  *          URI_path:string,
  *          basePathRESTAPI:string,
- *          req:server['server']['req'],
- *          res:server['server']['res']}} parameters
- * @returns {Promise.<server['bff']['parameters']|null|1>}
+ *          req:types_server.server['req'],
+ *          res:types_server.server['res']}} parameters
+ * @returns {Promise.<types_server.bff['parameters']|null|1>}
  */
 const bffDecryptRequest = async parameters =>{
     /**
      * @description Adds observation record for given type
-     * @param {server['ORM']['Object']['IamControlObserve']['Type']} type 
+     * @param {types_server.ORM['Object']['IamControlObserve']['Type']} type 
      */
     const bffObserveRecord = async type => {
-            /**@ts-ignore @type{server['ORM']['Object']['IamControlObserve']} */
+            /**@ts-ignore @type{types_server.ORM['Object']['IamControlObserve']} */
             const recordObserve = { IamUserId:null,
                                     AppId:parameters.common_app_id,
                                     Ip:parameters.req.socket.remoteAddress.replace('::ffff:',''), 
@@ -401,7 +401,7 @@ const bffDecryptRequest = async parameters =>{
      *              Authenticates request headers keys for APP/ADMIN, font or browser CSS font url
      *              Values must be as specified in openApi config or request headers can be missing
      *              Creates observe record REQUEST_KEY if authentication fails
-     * @param {{headers:            server['server']['req']['headers'], 
+     * @param {{headers:            types_server.server['req']['headers'], 
      *          openApiConfigKey:  'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_APP'|
      *                              'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_FONT'|
      *                              'IAM_AUTHENTICATE_REQUEST_KEY_VALUES_REST_API'}} params
@@ -464,13 +464,13 @@ const bffDecryptRequest = async parameters =>{
     }
     else{
         //lookup uuid in IamEncryption or ServiceRegistry for microservice
-        /**@type{server['ORM']['Object']['IamEncryption']}*/
+        /**@type{types_server.ORM['Object']['IamEncryption']}*/
         const encryptionData = (server.ORM.db.IamEncryption.get({app_id:parameters.common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
-                                .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/encryption)=>
+                                .filter((/**@type{types_server.ORM['Object']['IamEncryption']}*/encryption)=>
                                         encryption.Uuid==(parameters.req.url.substring(parameters.basePathRESTAPI.length).split('~')[0])
                                 )[0] ?? (server.ORM.db.ServiceRegistry.get({app_id:parameters.common_app_id, resource_id:null, data:{name:null}}).result ?? [])
-                                .filter((/**@type{server['ORM']['Object']['ServiceRegistry']}*/service)=>service.Uuid==(parameters.req.url.substring(parameters.basePathRESTAPI.length).split('~')[0]))
-                                .map((/**@type{server['ORM']['Object']['ServiceRegistry']}*/service)=>{
+                                .filter((/**@type{types_server.ORM['Object']['ServiceRegistry']}*/service)=>service.Uuid==(parameters.req.url.substring(parameters.basePathRESTAPI.length).split('~')[0]))
+                                .map((/**@type{types_server.ORM['Object']['ServiceRegistry']}*/service)=>{
                                     return {
                                         Id:                 null,
                                         Uuid:               service.Uuid,
@@ -489,7 +489,7 @@ const bffDecryptRequest = async parameters =>{
                     //font request
                     const token = server.ORM.db.IamAppIdToken.get({ app_id:parameters.common_app_id, 
                                     resource_id:(server.ORM.db.IamEncryption.get({app_id:parameters.common_app_id, resource_id:null, data:{data_app_id:null}}).result ?? [])
-                                                    .filter((/**@type{server['ORM']['Object']['IamEncryption']}*/encryption)=>
+                                                    .filter((/**@type{types_server.ORM['Object']['IamEncryption']}*/encryption)=>
                                                             encryption.Uuid==(parameters.req.url.substring(parameters.basePathRESTAPI.length).split('~')[1])
                                                     )[0].IamAppIdTokenId, 
                                     data:{data_app_id:null}}).result[0].Token;
@@ -623,15 +623,15 @@ const bffDecryptRequest = async parameters =>{
  * @namespace ROUTE_APP
  * @description Backend for frontend (BFF) called from client
  * @function
- * @param {server['server']['req']} req
- * @param {server['server']['res']} res
+ * @param {types_server.server['req']} req
+ * @param {types_server.server['res']} res
  * @param {{Id:string,
  *          CorrelationId:string,
  *          RequestStart:number,
- *          XAppId:server['ORM']['Object']['App']['Id']|null,
- *          XAppIdAuth:server['ORM']['Object']['App']['Id']|null,
- *          XUrl:server['server']['req']['url']|null,
- *          XMethod:server['server']['req']['method']|null}} RequestData
+ *          XAppId:types_server.ORM['Object']['App']['Id']|null,
+ *          XAppIdAuth:types_server.ORM['Object']['App']['Id']|null,
+ *          XUrl:types_server.server['req']['url']|null,
+ *          XMethod:types_server.server['req']['method']|null}} RequestData
  * @returns {Promise<*>}
  */
  const bff = async (req, res, RequestData) =>{
@@ -701,13 +701,13 @@ const bffDecryptRequest = async parameters =>{
                                                         OpenApiPathsMatchPublic:bffOpenApiPathMatch({URI_path:URI_path.replace(basePathRESTAPI,'')}).paths,
                                                         req:req,
                                                         res:res})
-                    .catch((/**@type{server['server']['error']}*/error)=>{
+                    .catch((/**@type{types_server.server['error']}*/error)=>{
                         return bffResponse({result_request:server.getError({statusCode:500,text:error}),
                                             route:null,
                                             res:res})
                     })){
                 //decrypt request
-                /**@type{server['bff']['parameters']|null|1} */
+                /**@type{types_server.bff['parameters']|null|1} */
                 const bff_parameters = await bffDecryptRequest({common_app_id:common_app_id, 
                                                                 URI_path:URI_path,
                                                                 basePathRESTAPI:basePathRESTAPI,
@@ -857,7 +857,7 @@ const bffDecryptRequest = async parameters =>{
                                                                                     res:bff_parameters.res})
                                                                         );
                                     })
-                                    .catch((/**@type{server['server']['error']}*/error) => {
+                                    .catch((/**@type{types_server.server['error']}*/error) => {
                                         //log with app id 0 if app id still not authenticated
                                         return server.ORM.db.Log.post({  app_id:0, 
                                             data:{  object:'LogBffError', 
@@ -899,8 +899,8 @@ const bffDecryptRequest = async parameters =>{
  *              OperationId syntax: [path].[filename].[functioname] or [path]_[path].[filename].[functioname]
  *              Returns single resource result format or ISO20022 format with either list header or page header metadata
  * @function
- * @param {server['bff']['RestApi_parameters']} parameters
- * @returns {Promise.<server['server']['response'] & {singleResource?:boolean, operation?:string}>}
+ * @param {types_server.bff['RestApi_parameters']} parameters
+ * @returns {Promise.<types_server.server['response'] & {singleResource?:boolean, operation?:string}>}
  */
 const bffRestApi = async parameters =>{
     /**

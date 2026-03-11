@@ -1,7 +1,7 @@
 /** @module server/db/ServiceRegistry */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -11,11 +11,11 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{  name:string|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['ServiceRegistry'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['ServiceRegistry'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'ServiceRegistry',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['Object']['ServiceRegistry']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['ServiceRegistry']}*/row)=>
                         row.Name == (parameters.data.name ?? row.Name ));
     if (result.length>0 || parameters.resource_id==null)
         return {result:result, type:'JSON'};
@@ -29,11 +29,11 @@ const get = parameters =>{
  * @function
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['Object']['ServiceRegistry']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ *          data:types_server.ORM['Object']['ServiceRegistry']}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
-   /**@type{server['ORM']['Object']['ServiceRegistry']} */
+   /**@type{types_server.ORM['Object']['ServiceRegistry']} */
    const data_update = {};
    //allowed parameters to update:
    if (parameters.data.Name!=null)

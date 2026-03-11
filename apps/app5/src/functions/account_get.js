@@ -2,7 +2,7 @@
  * @module apps/app5/src/functions/account_get
  */
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
@@ -20,11 +20,11 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account})[]}>}
+ * @returns {Promise.<types_server.server['response'] & {result:(types_server.ORM['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account})[]}>}
  */
 const accountGet = async parameters =>{
 
-    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
+    /**@ts-ignore @type{types_server.ORM['Object']['AppDataEntity']} */
     const Entity            = server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];

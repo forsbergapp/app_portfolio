@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
@@ -22,7 +22,7 @@ const {getToken} = await import('./payment_request_create.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{
+ * @returns {Promise.<types_server.server['response'] & {result?:{
  *                                              PaymentRequestMessage:  string,
  *                                              Token:                  string,
  *                                              Exp:                    number|null,
@@ -36,7 +36,7 @@ const {getToken} = await import('./payment_request_create.js');
  */
 const paymentRequestGet = async parameters =>{
 
-    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
+    /**@ts-ignore @type{types_server.ORM['Object']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
@@ -44,7 +44,7 @@ const paymentRequestGet = async parameters =>{
     const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip});
 
     //get payment request using app_custom_id that should be the payment request id
-    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:payment_request}} */
+    /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:payment_request}} */
     const payment_request = (server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         all_users:true,
                                                         resource_id:null, 
@@ -54,11 +54,11 @@ const paymentRequestGet = async parameters =>{
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result??[])
                                     /**@ts-ignore*/
-                                    .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:payment_request}}*/payment_request)=>
+                                    .filter((/**@type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:payment_request}}*/payment_request)=>
                                         payment_request.Document?.PaymentRequestId==token?.app_custom_id
                                     )[0];
     if (payment_request){
-        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}} */
+        /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}} */
         const account_payer = (server.ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                             all_users:true,
                                                             resource_id:null, 
@@ -69,10 +69,10 @@ const paymentRequestGet = async parameters =>{
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result??[])
                                 /**@ts-ignore*/
-                                .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/result)=>
+                                .filter((/**@type{types_server.ORM['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/result)=>
                                     result.Document?.BankAccountVpa == payment_request.Document.PayerId
                                 )[0];
-        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:merchant}} */
+        /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:merchant}} */
         const merchant      = (server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             all_users:true,
                                                             resource_id:null, 
@@ -82,10 +82,10 @@ const paymentRequestGet = async parameters =>{
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result??[])
                                 /**@ts-ignore*/
-                                .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:merchant}}*/merchant)=>
+                                .filter((/**@type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:merchant}}*/merchant)=>
                                     merchant.Document?.MerchantId==payment_request.Document.MerchantId
                                 )[0];
-        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency}} */
+        /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:currency}} */
         const currency      = server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,

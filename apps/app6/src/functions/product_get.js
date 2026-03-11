@@ -2,7 +2,7 @@
  * @module apps/app6/src/functions/product_get
  */
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
@@ -19,15 +19,15 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.product_return})[]}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:(types_server.ORM['Object']['AppDataResourceMaster'] & {Document:types_app.product_return})[]}>}
  */
 const productGet = async parameters =>{
         
-    /**@type{server['ORM']['Object']['AppDataEntity']} */
+    /**@type{types_server.ORM['Object']['AppDataEntity']} */
     const Entity            = (server.ORM.db.AppDataEntity.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{data_app_id:parameters.data.data_app_id}}).result??[])[0];
-    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.product_return})[]} */
+    /**@ts-ignore @type{(types_server.ORM['Object']['AppDataResourceMaster'] & {Document:types_app.product_return})[]} */
     const products = (server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:parameters.data.resource_id, 
                                                         data:{  iam_user_id:null,
@@ -36,7 +36,7 @@ const productGet = async parameters =>{
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result??[]);
     
-    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity'] & {Document:currency}} */
+    /**@ts-ignore @type{types_server.ORM['Object']['AppDataEntity'] & {Document:currency}} */
     const currency = (server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:null,
@@ -45,7 +45,7 @@ const productGet = async parameters =>{
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result??[])[0];
     
-    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.metadata_product_variant})[]} */
+    /**@ts-ignore @type{(types_server.ORM['Object']['AppDataResourceMaster'] & {Document:types_app.metadata_product_variant})[]} */
     const product_variant_metadatas = (server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,
@@ -56,7 +56,7 @@ const productGet = async parameters =>{
     for (const product of products){
         /**@type{types_app.product_return['Sku'][]} */
         product.Document.Sku = [];
-        /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.product_variant})[]}} */
+        /**@ts-ignore @type{(types_server.ORM['Object']['AppDataResourceDetail'] & {Document:types_app.product_variant})[]}} */
         const product_variants = (server.ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                                 resource_id:null, 
                                                                 data:{  iam_user_id:null,

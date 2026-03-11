@@ -1,7 +1,7 @@
 /** @module server/db/IamControlUserAgent */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamControlUserAgent'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['IamControlUserAgent'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlUserAgent',resource_id, null);
 
@@ -19,8 +19,8 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamControlUser
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamControlUserAgent']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamControlUserAgent']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -37,8 +37,8 @@ const post = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server['ORM']['Object']['IamControlUserAgent']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @param {types_server.ORM['Object']['IamControlUserAgent']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async (app_id, resource_id, data) => {
     if (data.Name!=null && data.UserAgent!=null){
@@ -60,7 +60,7 @@ const update = async (app_id, resource_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) =>
     server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamControlUserAgent', delete:{resource_id:resource_id, data_app_id:null}})

@@ -1,7 +1,7 @@
 /** @module server/db/App */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['App'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['App'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameters.resource_id, null);
 
@@ -22,12 +22,12 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'App',parameter
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
 *          resource_id:number|null}} parameters
-* @returns {server['server']['response'] & {result:server['ORM']['View']['AppGetInfo'][] }}
+* @returns {types_server.server['response'] & {result:types_server.ORM['View']['AppGetInfo'][] }}
 */
 const getViewInfo = parameters =>{
     return {result:get({app_id:parameters.app_id, resource_id:null}).result
-                    .filter((/**@type{server['ORM']['Object']['App']}*/app)=>app.Id == (parameters.resource_id ?? app.Id))
-                    .map((/**@type{server['ORM']['Object']['App']}*/app)=>{
+                    .filter((/**@type{types_server.ORM['Object']['App']}*/app)=>app.Id == (parameters.resource_id ?? app.Id))
+                    .map((/**@type{types_server.ORM['Object']['App']}*/app)=>{
                         return {
                                     Id:app.Id,
                                     Name:app.Name,
@@ -50,13 +50,13 @@ const getViewInfo = parameters =>{
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert']}>}
  */
 const post = async (app_id, data) => {
-    /**@type{server['ORM']['Object']['App']} */
+    /**@type{types_server.ORM['Object']['App']} */
     const app =     {
         //fetch max app id + 1
-        Id:Math.max(...server.ORM.getObject(app_id, 'App',null, null).result.map((/**@type{server['ORM']['Object']['App']}*/app)=>app.Id)) +1,
+        Id:Math.max(...server.ORM.getObject(app_id, 'App',null, null).result.map((/**@type{types_server.ORM['Object']['App']}*/app)=>app.Id)) +1,
         Name: data.name,
         Path: data.path,
         Logo: data.logo,
@@ -78,21 +78,21 @@ const post = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:Number,
  *          resource_id:number,
- *          data:{  name:server['ORM']['Object']['App']['Name'],
- *                  path:server['ORM']['Object']['App']['Path'],
- *                  logo:server['ORM']['Object']['App']['Logo'],
- *                  js:server['ORM']['Object']['App']['Js'],
- *                  css:server['ORM']['Object']['App']['Css'],
- *                  css_report:server['ORM']['Object']['App']['CssReport'],
- *                  text_edit:server['ORM']['Object']['App']['TextEdit'],
- *                  copyright:server['ORM']['Object']['App']['Copyright'],
- *                  link_title:server['ORM']['Object']['App']['LinkTitle'],
- *                  link_url:server['ORM']['Object']['App']['LinkUrl'],
+ *          data:{  name:types_server.ORM['Object']['App']['Name'],
+ *                  path:types_server.ORM['Object']['App']['Path'],
+ *                  logo:types_server.ORM['Object']['App']['Logo'],
+ *                  js:types_server.ORM['Object']['App']['Js'],
+ *                  css:types_server.ORM['Object']['App']['Css'],
+ *                  css_report:types_server.ORM['Object']['App']['CssReport'],
+ *                  text_edit:types_server.ORM['Object']['App']['TextEdit'],
+ *                  copyright:types_server.ORM['Object']['App']['Copyright'],
+ *                  link_title:types_server.ORM['Object']['App']['LinkTitle'],
+ *                  link_url:types_server.ORM['Object']['App']['LinkUrl'],
  *                  status:'ONLINE'|'OFFLINE'}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
-    /**@type{server['ORM']['Object']['App']} */
+    /**@type{types_server.ORM['Object']['App']} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.name!=null)
@@ -130,7 +130,7 @@ const update = async parameters => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) =>
     server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'App', delete:{resource_id:resource_id, data_app_id:null}});

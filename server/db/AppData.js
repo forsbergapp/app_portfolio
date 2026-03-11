@@ -1,7 +1,7 @@
 /** @module server/db/AppData */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -9,7 +9,7 @@ const {server} = await import ('../server.js');
  * @description Get record
  *              Returns records in base64 format to avoid records limit
  *              Data key contains:
- *              server['ORM']['Object']['AppData'][]
+ *              types_server.ORM['Object']['AppData'][]
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
@@ -17,7 +17,7 @@ const {server} = await import ('../server.js');
  *          data:{  name?:string,
  *                  value?:string,
  *                  data_app_id?:string|number|null}}} parameters
- * @returns {server['server']['response'] & {result?:{data:string}[]}}
+ * @returns {types_server.server['response'] & {result?:{data:string}[]}}
  */
 const get = parameters => {
     const result = getServer({app_id:parameters.app_id, resource_id:parameters.resource_id, data:parameters.data})
@@ -41,12 +41,12 @@ const get = parameters => {
  *          data:{  name?:string,
  *                  value?:string,
  *                  data_app_id?:string|number|null}}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['AppData'][]}}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['AppData'][]}}
  */
 const getServer = parameters => {
    const result = server.ORM.getObject(parameters.app_id, 'AppData',parameters.resource_id, server.ORM.UtilNumberValue(parameters.data.data_app_id));
    if (result.result)
-       return {result:result.result.filter((/**@type{server['ORM']['Object']['AppData']}*/row)=>row.Name==(parameters.data?.name ?? row.Name) && row.Value==(parameters.data?.value ?? row.Value)), 
+       return {result:result.result.filter((/**@type{types_server.ORM['Object']['AppData']}*/row)=>row.Name==(parameters.data?.name ?? row.Name) && row.Value==(parameters.data?.value ?? row.Value)), 
                type:'JSON'};
    else
        return result;
@@ -58,12 +58,12 @@ const getServer = parameters => {
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.app_id!=null){
-        /**@type{server['ORM']['Object']['AppData']} */
+        /**@type{types_server.ORM['Object']['AppData']} */
         const data_new ={
             Id:                 Date.now(),
             AppId:              data.app_id,
@@ -87,17 +87,17 @@ const post = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:{  name: server['ORM']['Object']['AppData']['Name'],
- *                  value: server['ORM']['Object']['AppData']['Value'],
- *                  display_data: server['ORM']['Object']['AppData']['DisplayData'],
- *                  data2: server['ORM']['Object']['AppData']['Data2'],
- *                  data3: server['ORM']['Object']['AppData']['Data3'],
- *                  data4: server['ORM']['Object']['AppData']['Data4'],
- *                  data5: server['ORM']['Object']['AppData']['Data5']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ *          data:{  name: types_server.ORM['Object']['AppData']['Name'],
+ *                  value: types_server.ORM['Object']['AppData']['Value'],
+ *                  display_data: types_server.ORM['Object']['AppData']['DisplayData'],
+ *                  data2: types_server.ORM['Object']['AppData']['Data2'],
+ *                  data3: types_server.ORM['Object']['AppData']['Data3'],
+ *                  data4: types_server.ORM['Object']['AppData']['Data4'],
+ *                  data5: types_server.ORM['Object']['AppData']['Data5']}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
-    /**@type{server['ORM']['Object']['AppData']} */
+    /**@type{types_server.ORM['Object']['AppData']} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.name!=null)
@@ -126,7 +126,7 @@ const update = async parameters => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) =>
     server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppData', delete:{resource_id:resource_id, data_app_id:null}});

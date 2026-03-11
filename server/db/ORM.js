@@ -32,7 +32,7 @@
  */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  * @import {Dirent} from 'node:fs'
  */
 
@@ -43,7 +43,7 @@ const fs = await import('node:fs');
  * @name #DB
  * @description File database using ORM pattern, is loaded from external file at server start
  * @constant
- * @type{{  data:server['ORM']['MetaData']['Object'][], 
+ * @type{{  data:types_server.ORM['MetaData']['Object'][], 
  *          external:{  COUNTRY:*, 
  *                      LOCALE:*, 
  *                      GEOLOCATION_IP:*, 
@@ -123,11 +123,11 @@ class ORM_class {
          */
         this.db;
         this.init = this.InitAsync;
-        /**@type{server['ORM']['Object']['OpenApi']['servers']} */
+        /**@type{types_server.ORM['Object']['OpenApi']['servers']} */
         this.OpenApiServers;
-        /**@type{server['ORM']['Object']['OpenApi']['paths']} */
+        /**@type{types_server.ORM['Object']['OpenApi']['paths']} */
         this.OpenApiPaths;
-        /**@type{server['ORM']['Object']['OpenApi']['components']['parameters']} */
+        /**@type{types_server.ORM['Object']['OpenApi']['components']['parameters']} */
         this.OpenApiComponentParameters;
         /**@type{*} */
         this.JSONSchema;
@@ -300,10 +300,10 @@ class ORM_class {
                             
             /**
              * @description convert types array to OpenApi structure
-             * @type{{ ORM:{[key in server['ORM']['MetaData']['Object']['Name']]:{
-             *                  constraints:{Pk:server['ORM']['MetaData']['Object']['Pk'],
-             *                               Fk:server['ORM']['MetaData']['Object']['Fk'],
-             *                               Uk: server['ORM']['MetaData']['Object']['Uk']}, 
+             * @type{{ ORM:{[key in types_server.ORM['MetaData']['Object']['Name']]:{
+             *                  constraints:{Pk:types_server.ORM['MetaData']['Object']['Pk'],
+             *                               Fk:types_server.ORM['MetaData']['Object']['Fk'],
+             *                               Uk: types_server.ORM['MetaData']['Object']['Uk']}, 
              *                  description:string, 
              *                  properties:{[key:string]:{
              *                                  required:boolean,
@@ -374,7 +374,7 @@ class ORM_class {
      * @name formatContent
      * @description Formats content
      * @method
-     * @param {server['ORM']['MetaData']['Object']['Type']} object_type
+     * @param {types_server.ORM['MetaData']['Object']['Type']} object_type
      * @param {*} content
      * @returns {string}
      */
@@ -392,9 +392,9 @@ class ORM_class {
      * @description Get file record from file db, uses default not immutable
      *              if record can be updated or no update in calling function using local variable for performance.
      * @method
-     * @param {server['ORM']['MetaData']['Object']['Name']} object 
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object 
      * @param {boolean}  immutable
-     * @returns {server['ORM']['MetaData']['Object']}
+     * @returns {types_server.ORM['MetaData']['Object']}
      */
     getObjectRecord = (object, immutable=false) =>immutable?
                                                         JSON.parse(JSON.stringify(DB.data.filter(file_db=>file_db.Name == object)[0])):
@@ -408,7 +408,7 @@ class ORM_class {
      *              Reads and sets `transaction_id`, `transaction_content` and `lock` key in DB 
      *              `transaction_content` is used to rollback info if something goes wrong and can also be used for debugging purpose
      * @method
-     * @param {server['ORM']['MetaData']['Object']['Name']} object 
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object 
      * @param {string} filepath
      * @returns {Promise.<{transaction_id:number, transaction_content:*}>}
      */
@@ -458,7 +458,7 @@ class ORM_class {
      * @description Transaction commit
      *              Empties `transaction_id` and `TransactionContent`, sets `Lock =0` and updates CacheContent if used
      * @method
-     * @param {server['ORM']['MetaData']['Object']['Name']} object 
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object 
      * @param {number} transaction_id 
      * @param {*} [cache_content]
      * @returns {boolean}
@@ -481,7 +481,7 @@ class ORM_class {
      * @description Transaction rollback
      *              Empties `transaction_id` and `TransactionContent`, sets `Lock =0` and updates CacheContent if used
      * @method
-     * @param {server['ORM']['MetaData']['Object']['Name']} object 
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object 
      * @param {number} transaction_id 
      * @returns {boolean}
      */
@@ -542,7 +542,7 @@ class ORM_class {
      * @description Get parsed file for given filepath
      * @method
      * @param {string} filepath
-     * @param {server['ORM']['MetaData']['Object']['Type']|null} [object_type]
+     * @param {types_server.ORM['MetaData']['Object']['Type']|null} [object_type]
      * @returns {Promise.<*>}
      */
     getFsFile = async (filepath, object_type=null) => fs.promises.readFile(server.info.serverProcess.cwd() + filepath, 'utf8')
@@ -575,7 +575,7 @@ class ORM_class {
      * @name getFsORM
      * @description Get ORM.json file content
      * @method
-     * @returns {Promise.<server['ORM']['MetaData']['Object'][]>}
+     * @returns {Promise.<types_server.ORM['MetaData']['Object'][]>}
      */
     getFsORM = async () => this.getFsFile(DB_DIR.db + 'ORM.json');
 
@@ -585,7 +585,7 @@ class ORM_class {
      *              Must specify valid transaction id to be able to update a file
      *              Backup of old file will be written to journal directory
      * @method
-     * @param {server['ORM']['MetaData']['Object']['Name']} object
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object
      * @param {number|null} transaction_id 
      * @param {[]} file_content 
      * @param {string|null} filepath
@@ -615,7 +615,7 @@ class ORM_class {
      * @method
      * @param {string} path
      * @param {*} content
-     * @param {server['ORM']['MetaData']['Object']['Type']} object_type
+     * @param {types_server.ORM['MetaData']['Object']['Type']} object_type
      * @returns{Promise.<void>}
      */
     postFsFile = async (path, content, object_type) => {
@@ -661,9 +661,9 @@ class ORM_class {
      * @name postFsAdmin
      * @description Write to a file in database used in first time installation
      * @method
-     * @param {server['ORM']['MetaData']['AllObjects']} object
+     * @param {types_server.ORM['MetaData']['AllObjects']} object
      * @param {{}} file_content 
-     * @param {server['ORM']['MetaData']['Object']['Type']} object_type
+     * @param {types_server.ORM['MetaData']['Object']['Type']} object_type
      * @returns {Promise.<void>}
      */
     postFsAdmin = async (object, file_content, object_type) =>{
@@ -674,7 +674,7 @@ class ORM_class {
      * @name postAdmin
      * @description Add table content for memory only table used at server start
      * @method
-     * @param {server['ORM']['MetaData']['Object']['Name']} object
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object
      * @param {{}} data
      * @returns {Promise.<void>}
      */
@@ -693,9 +693,9 @@ class ORM_class {
      * @description Locks object in DB
      * @method
      * @param {number} app_id
-     * @param {server['ORM']['MetaData']['Object']['Name']} object
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object
      * @param {string |null} filepath_partition
-     * @returns {Promise.<server['ORM']['MetaData']['result_fileFsRead']>}
+     * @returns {Promise.<types_server.ORM['MetaData']['result_fileFsRead']>}
      */
     lockObject = async (app_id, object, filepath_partition=null) =>{
         const filepath = filepath_partition ?? (DB_DIR.db + object + '.json');
@@ -708,8 +708,8 @@ class ORM_class {
     /**
      * @name getObjectRowSum
      * @description Get sum of all records in files for given object 
-     * @param {server['ORM']['MetaData']['Object']['Name']} object
-     * @param {server['ORM']['MetaData']['Object']['Type']} type
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object
+     * @param {types_server.ORM['MetaData']['Object']['Type']} type
      * @returns {Promise.<{}[][]>}
      */
     getObjectRowSum = async (object, type) =>{
@@ -728,7 +728,7 @@ class ORM_class {
      *              
      * @method
      * @param {number} app_id
-     * @param {server['ORM']['MetaData']['Object']['Name']} object
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object
      * @param {number|null} [resource_id]
      * @param {number|null} [data_app_id]
      * @returns {*}
@@ -786,7 +786,7 @@ class ORM_class {
      *              else returns document
      * @method
      * @param {number} app_id
-     * @param {server['ORM']['MetaData']['Object']['Name']} object
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object
      * @param {number|null} resource_id
      * @param {string|null} partition
      * @returns {Promise.<{rows:*[]|{}}>}
@@ -855,7 +855,7 @@ class ORM_class {
      *              FK constraint that should have a value in referref column and object, checked for TABLE and TABLE_KEY_VALUE
      *              Implements contraints pattern using some() function for best performane to check if value already exist
      * @method
-     * @param {server['ORM']['MetaData']['Object']['Name']} table
+     * @param {types_server.ORM['MetaData']['Object']['Name']} table
      * @param {[]} table_rows
      * @param {*} data
      * @param {'UPDATE'|'POST'} dml
@@ -887,14 +887,14 @@ class ORM_class {
                             ['Id', 'Created'].includes(col[0])==false).length==0)){
             //check PK for POST
             //update of PK not alllowed
-            if (dml=='POST' && filerecord.Pk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
+            if (dml=='POST' && filerecord.Pk && table_rows.some((/**@type{types_server.ORM['MetaData']['Object']}*/record)=>
                 /**@ts-ignore */
                 record[filerecord.Pk]==data[filerecord.Pk]))
                     return false;
             else{
                 //check UK for POST
                 //no record can exist having given values for POST
-                if (dml=='POST' && filerecord.Uk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
+                if (dml=='POST' && filerecord.Uk && table_rows.some((/**@type{types_server.ORM['MetaData']['Object']}*/record)=>
                     //ignore empty value
                     /**@ts-ignore */
                     filerecord.Uk?.filter(column=>record[column] && record[column]==data[column]).length==filerecord.Uk?.length))
@@ -902,7 +902,7 @@ class ORM_class {
                 else
                     //check UK for UPDATE
                     //max one record can exist having given values for UPDATE
-                    if (dml=='UPDATE' && filerecord.Uk && table_rows.some((/**@type{server['ORM']['MetaData']['Object']}*/record)=>
+                    if (dml=='UPDATE' && filerecord.Uk && table_rows.some((/**@type{types_server.ORM['MetaData']['Object']}*/record)=>
                         //check value is the same, ignore empty UK
                         /**@ts-ignore */
                         filerecord.Uk.filter(column=>record[column] && record[column]==data[column]).length==filerecord.Uk.length &&
@@ -945,9 +945,9 @@ class ORM_class {
      *              and returns the record
      * @method
      * @param {number} app_id
-     * @param {server['ORM']['MetaData']['Object']['Name']} object
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object
      * @param {*} data
-     * @returns {Promise.<server['ORM']['MetaData']['common_result_insert']>}
+     * @returns {Promise.<types_server.ORM['MetaData']['common_result_insert']>}
      */
     postObject = async (app_id, object, data) =>{
         if (app_id!=null){
@@ -1121,11 +1121,11 @@ class ORM_class {
      *              TABLE should have column id as primary key using this function
      * @method
      * @param {number} app_id
-     * @param {server['ORM']['MetaData']['Object']['Name']} object
+     * @param {types_server.ORM['MetaData']['Object']['Name']} object
      * @param {number|null} resource_id
      * @param {number|null} data_app_id
      * @param {*} data
-     * @returns {Promise<server['ORM']['MetaData']['common_result_update']>}
+     * @returns {Promise<types_server.ORM['MetaData']['common_result_update']>}
      */
     updateObject = async (app_id, object, resource_id, data_app_id, data) =>{    
         if (app_id!=null){
@@ -1135,7 +1135,7 @@ class ORM_class {
                 throw server.getError({statusCode:400});
             }
             else{
-                /**@type{server['ORM']['MetaData']['result_fileFsRead']} */
+                /**@type{types_server.ORM['MetaData']['result_fileFsRead']} */
                 const file = await this.lockObject(app_id, object);
                 if (['TABLE','TABLE_KEY_VALUE'].includes(object_type)){
                     if (this.constraintsValidate(object, file.FileContent, data, 'UPDATE', resource_id)){
@@ -1207,15 +1207,15 @@ class ORM_class {
      *              TABLE should have column id as primary key using this function
      * @method
      * @param {number} app_id
-     * @param {server['ORM']['MetaData']['Object']['Name']} table
+     * @param {types_server.ORM['MetaData']['Object']['Name']} table
      * @param {number|null} resource_id
      * @param {number|null} data_app_id
-     * @returns {Promise<server['ORM']['MetaData']['common_result_delete']>}
+     * @returns {Promise<types_server.ORM['MetaData']['common_result_delete']>}
      */
     deleteObject = async (app_id, table, resource_id, data_app_id) =>{
         /**
-         * @param {server['ORM']['MetaData']['result_fileFsRead']} file
-         * @param {server['ORM']['MetaData']['Object']['Name']} name 
+         * @param {types_server.ORM['MetaData']['result_fileFsRead']} file
+         * @param {types_server.ORM['MetaData']['Object']['Name']} name 
          * @param {*} new_content 
          * @returns 
          */
@@ -1236,7 +1236,7 @@ class ORM_class {
         }
         /**
          * @param {{app_id:number,
-         *		    object:server['ORM']['MetaData']['Object']['Name'],
+         *		    object:types_server.ORM['MetaData']['Object']['Name'],
         *		    pk:number|null}} parameters
         */
         const cascadeDelete = async parameters =>{
@@ -1275,7 +1275,7 @@ class ORM_class {
             }
         };
 
-        /**@type{server['ORM']['MetaData']['result_fileFsRead']} */
+        /**@type{types_server.ORM['MetaData']['result_fileFsRead']} */
         const file = await this.lockObject(app_id, table);
         if (file.FileContent.filter((/**@type{*}*/row)=>(data_app_id==null && row.Id==resource_id && resource_id!=null)|| (resource_id==null && row.AppId == data_app_id && data_app_id != null)).length>0){
             await cascadeDelete({app_id:app_id, object:table, pk:resource_id??data_app_id})
@@ -1304,13 +1304,13 @@ class ORM_class {
      * @method
      * @param {{app_id:number,
      *          dml:'GET'|'UPDATE'|'POST'|'DELETE',
-     *          object:server['ORM']['MetaData']['Object']['Name'],
+     *          object:types_server.ORM['MetaData']['Object']['Name'],
      *          get?:{resource_id:number|null, partition:string|null},
      *          update?: {resource_id:number|null, data_app_id:number|null, data:*},
      *          post?:   {data:*},
      *          delete?: {resource_id:number|null, data_app_id:number|null}
      *          }} parameters
-     * @returns {Promise<server['server']['response'] & {result?:*}>}
+     * @returns {Promise<types_server.server['response'] & {result?:*}>}
      */
     Execute = async parameters =>{
         return new Promise((resolve, reject)=>{
@@ -1378,7 +1378,7 @@ class ORM_class {
      *              returns number or null for numbers
      *              so undefined and '' are avoided sending argument to service functions
      * @method
-     * @param {server['server']['req_id_number']} param
+     * @param {types_server.server['req_id_number']} param
      * @returns {number|null}
      */
     UtilNumberValue = param => (param==null||param===undefined||param==='undefined'||param==='')?null:Number(param);
@@ -1402,13 +1402,13 @@ class ORM_class {
      * @description Database info
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['ORMGetInfo'][]}>}
+     * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['View']['ORMGetInfo'][]}>}
      */
     getViewInfo = async parameters =>{
         return {result: [{
                             DatabaseName:  'ORM',
                             Version:        1,
-                            Hostname:       this.getObject(parameters.app_id,'OpenApi').servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/row)=>row['x-type'].default=='APP')[0].variables.host.default,
+                            Hostname:       this.getObject(parameters.app_id,'OpenApi').servers.filter((/**@type{types_server.ORM['Object']['OpenApi']['servers'][0]}*/row)=>row['x-type'].default=='APP')[0].variables.host.default,
                             Connections:    server.socket.socketConnectedCount({data:{logged_in:'1'}}).result.count_connected??0,
                             Started:        server.info.serverProcess.uptime()
                         }],
@@ -1419,11 +1419,11 @@ class ORM_class {
      * @description Get all objects in ORM
      * @method
      * @param {{app_id:number}}parameters
-     * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['ORMGetObjects'][]}>}
+     * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['View']['ORMGetObjects'][]}>}
      */
     getViewObjects = async parameters =>{
         parameters;
-        /**@type{server['ORM']['View']['ORMGetObjects'][]} */
+        /**@type{types_server.ORM['View']['ORMGetObjects'][]} */
         const records = [];
         for (const row of DB.data)
             records.push ({
@@ -1458,7 +1458,7 @@ class ORM_class {
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['ORMGetInfo'][]}>}
+ * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['View']['ORMGetInfo'][]}>}
  */
 const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
 /**
@@ -1467,7 +1467,7 @@ const getViewInfo = async parameters =>ORM.getViewInfo(parameters);
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['ORMGetObjects'][]}>}
+ * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['View']['ORMGetObjects'][]}>}
  */
 const getViewObjects = async parameters =>ORM.getViewObjects(parameters);
 

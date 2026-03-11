@@ -1,7 +1,7 @@
 /** @module server/db/MessageQueueError */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 
@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['MessageQueueError'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['MessageQueueError'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueError',null, null);
     
@@ -20,14 +20,14 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'MessageQueueEr
  * @description Add record
  * @function
  * @param {{app_id:number,
- *          data:server['ORM']['Object']['MessageQueueError']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ *          data:types_server.ORM['Object']['MessageQueueError']}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters => {
     if (parameters.data.MessageQueuePublishId && 
         'Message' in parameters.data &&
         'Result' in parameters.data){
-        /**@type{server['ORM']['Object']['MessageQueueError']}*/
+        /**@type{types_server.ORM['Object']['MessageQueueError']}*/
         const data_new = {
                             Id:Date.now(),
                             MessageQueuePublishId:parameters.data.MessageQueuePublishId,

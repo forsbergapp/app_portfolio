@@ -185,10 +185,10 @@ type server_bff_parameters = {
         jwk:JsonWebKey|null,
         iv:string|null,
         res:server_server_res,
-        XAppId:server['ORM']['Object']['App']['Id']|null,
-        XAppIdAuth:server['ORM']['Object']['App']['Id']|null,
-        XUrl:server['server']['req']['url']|null,
-        XMethod:server['server']['req']['method']|null
+        XAppId:ORM['Object']['App']['Id']|null,
+        XAppIdAuth:ORM['Object']['App']['Id']|null,
+        XUrl:server['req']['url']|null,
+        XMethod:server['req']['method']|null
 }
 /**
  * @name server_bff_RestApi_parameters
@@ -1299,7 +1299,7 @@ type server_db_ORM = {
         TransactionContent:object|[]|null,
         CacheContent:any,
         Pk:string|null,
-        Uk:string|null,
+        Uk:string[]|null,
         Fk:[string,string, keyof ORM['Object']][]|null,
         Description:string
 }
@@ -1485,18 +1485,18 @@ type server_iam_microservice_token_claim = {
  * @description IAM server_iam_user
  */
 type server_iam_user = {
-        Id: server['ORM']['Object']['IamUser']['Id'],
-        Username: server['ORM']['Object']['IamUser']['Username'],
-        Password:server['ORM']['Object']['IamUser']['Password'],
-        PasswordReminder:server['ORM']['Object']['IamUser']['PasswordReminder'],
-        Type:server['ORM']['Object']['IamUser']['Type'],
-        Bio:server['ORM']['Object']['IamUser']['Bio'],
-        Private:server['ORM']['Object']['IamUser']['Private'],
-        Avatar:server['ORM']['Object']['IamUser']['Avatar'],
-        UserLevel:server['ORM']['Object']['IamUser']['UserLevel'],
-        Status:server['ORM']['Object']['IamUser']['Status'],
-        Created:server['ORM']['Object']['IamUser']['Created'],
-        Modified:server['ORM']['Object']['IamUser']['Modified'],
+        Id: ORM['Object']['IamUser']['Id'],
+        Username: ORM['Object']['IamUser']['Username'],
+        Password:ORM['Object']['IamUser']['Password'],
+        PasswordReminder:ORM['Object']['IamUser']['PasswordReminder'],
+        Type:ORM['Object']['IamUser']['Type'],
+        Bio:ORM['Object']['IamUser']['Bio'],
+        Private:ORM['Object']['IamUser']['Private'],
+        Avatar:ORM['Object']['IamUser']['Avatar'],
+        UserLevel:ORM['Object']['IamUser']['UserLevel'],
+        Status:ORM['Object']['IamUser']['Status'],
+        Created:ORM['Object']['IamUser']['Created'],
+        Modified:ORM['Object']['IamUser']['Modified'],
         LastLoginTime:string
 }
 /**
@@ -1867,11 +1867,10 @@ type ORM = {
         }
 }
 /**
- * @name server
- * @description Server types
+ * @name app
+ * @description app
  */
-type server = {
-        app:{
+type app = {
                 commonInfo:server_apps_app_info,
                 commonGlobals:server_apps_globals,
                 commonReportQueryParameters:server_apps_report_query_parameters,
@@ -1883,45 +1882,86 @@ type server = {
                 commonDocumentMenu:serverDocumentMenu,
                 commonWorldCitiesCity:commonWorldCitiesCity
                 commonAppSwitch:commonAppSwitch
-                },
-        bff:{
+                }
+/**
+ * @name bff
+ * @description bff
+ */
+type bff = {
                 parameters:server_bff_parameters,
                 RestApi_parameters:server_bff_RestApi_parameters
-            },
-        iam:{
+            }
+/**
+ * @name iam
+ * @description iam
+ */
+type iam = {
                 iam_access_token_claim:server_iam_access_token_claim,
                 iam_microservice_token_claim:server_iam_microservice_token_claim,
                 iam_user: server_iam_user
-            },
-        info:{
+            }
+/**
+ * @name info
+ * @description info
+ */
+type info = {
                 result_Info:server_info_result_Info,
                 process:server_info_process,
-            },
-        server:{
+            }
+/**
+ * @name server
+ * @description server
+ */
+type server = {
                 req:server_server_req,
                 res:server_server_res,
                 response:server_server_response,
                 req_id_number:server_server_req_id_number,
                 error:server_server_error,
                 geolocation_place:server_geolocation_place
-            },
-        security:{
+            }
+/**
+ * @name security
+ * @description security
+ */
+type security = {
                 jwt_payload:server_security_jwt_payload,
                 jwt_complete:server_security_jwt_complete
-            },
-        socket:{
+            }
+/**
+ * @name socket
+ * @description socket
+ */
+type socket = {
                 SocketConnectedClient:ViewSocketConnectedClient,
                 SocketConnectedServer:ViewSocketConnectedServer
                 broadcast_type:server_socket_broadcast_type
-            },
-        test:{
+            }
+/**
+ * @name test
+ * @description test
+ */
+type test = {
                 spec_result:test_spec_result,
                 expect_result:test_expect_result,
                 specrunner:test_specrunner
             }
-        serviceregistry:{
+/**
+ * @name serviceregistry
+ * @description serviceregistry
+ */
+type serviceregistry = {
                 microservice_local_config:microservice_local_config
             }
-        ORM:ORM
+export  {
+        app,
+        bff,
+        iam,
+        info,
+        server,
+        security,
+        socket,
+        test,
+        serviceregistry,
+        ORM
 }
-export {server};

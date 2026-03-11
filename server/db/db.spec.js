@@ -4,7 +4,7 @@
  */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import('../server.js');
 /**
@@ -13,13 +13,13 @@ const {server} = await import('../server.js');
  *              should create a record, update the record, get correct value from updated record and delete the record
  * @function
  * @param {import('../../test/test.js')} t
- * @returns {Promise.<server['test']['spec_result']['detail']>}
+ * @returns {Promise.<types_server.test['spec_result']['detail']>}
  */
 const test = async t =>
     [await t.describe('Unit test, test ORM post, update, get and delete', async ()=> {
         return await new Promise(resolve=>
         t.it('should create a record, update the record, get correct value from updated record and delete the record', async () =>{
-            /**@ts-ignore @type{server['ORM']['Object']['App']} */
+            /**@ts-ignore @type{types_server.ORM['Object']['App']} */
             const app_data = {  Name:'ORM',
                                 Path:'/apps/orm/public',
                                 Logo:'<svg width=\"1em\" height=\"1em\" viewBox=\"0 0 24 24\"><path fill=\"rgb(81,171,255)\" d=\"M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z\"/></svg>',
@@ -37,17 +37,17 @@ const test = async t =>
             app_data.Name='THE ORM';
 
             /**
-             * @type {{ name:server['ORM']['Object']['App']['Name'],
-             *          path:server['ORM']['Object']['App']['Path'],
-             *          logo:server['ORM']['Object']['App']['Logo'],
-             *          js:server['ORM']['Object']['App']['Js'],
-             *          css:server['ORM']['Object']['App']['Css'],
-             *          css_report:server['ORM']['Object']['App']['CssReport'],
-             *          text_edit:server['ORM']['Object']['App']['TextEdit'],
-             *          copyright:server['ORM']['Object']['App']['Copyright'],
-             *          link_title:server['ORM']['Object']['App']['LinkTitle'],
-             *          link_url:server['ORM']['Object']['App']['LinkUrl'],
-             *          status:server['ORM']['Object']['App']['Status']}}
+             * @type {{ name:types_server.ORM['Object']['App']['Name'],
+             *          path:types_server.ORM['Object']['App']['Path'],
+             *          logo:types_server.ORM['Object']['App']['Logo'],
+             *          js:types_server.ORM['Object']['App']['Js'],
+             *          css:types_server.ORM['Object']['App']['Css'],
+             *          css_report:types_server.ORM['Object']['App']['CssReport'],
+             *          text_edit:types_server.ORM['Object']['App']['TextEdit'],
+             *          copyright:types_server.ORM['Object']['App']['Copyright'],
+             *          link_title:types_server.ORM['Object']['App']['LinkTitle'],
+             *          link_url:types_server.ORM['Object']['App']['LinkUrl'],
+             *          status:types_server.ORM['Object']['App']['Status']}}
              */
             const data_update = {   name:app_data.Name,
                                     path:app_data.Path,

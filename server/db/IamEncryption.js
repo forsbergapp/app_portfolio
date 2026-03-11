@@ -1,7 +1,7 @@
 /** @module server/db/IamEncryption */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{data_app_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamEncryption'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['IamEncryption'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamEncryption',parameters.resource_id, parameters.data.data_app_id);
     
@@ -20,8 +20,8 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamEncryption'
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamEncryption']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamEncryption']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -29,7 +29,7 @@ const post = async (app_id, data) => {
         data.AppId != null &&
         data.Uuid != null &&
         data.Secret != null){
-        /**@type{server['ORM']['Object']['IamEncryption']} */
+        /**@type{types_server.ORM['Object']['IamEncryption']} */
         const data_new = {};
         data_new.Id = Date.now();
         data_new.AppId = data.AppId;

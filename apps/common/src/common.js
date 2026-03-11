@@ -1,7 +1,7 @@
 /** @module apps/common/src/common */
 
 /**
- * @import {server} from '../../../server/types.d.ts'
+ * @import types_server from '../../../server/types.d.ts'
  * 
  */
 
@@ -22,7 +22,7 @@ const fs = await import('node:fs');
  * @function
  * @param {string} content_type
  * @param {string} path
- * @returns {Promise.<server['server']['response'] & {result:{resource:string}}>}
+ * @returns {Promise.<types_server.server['response'] & {result:{resource:string}}>}
  */
 const commonConvertBinary = async (content_type, path) =>
     fs.promises.readFile(`${server.info.serverProcess.cwd()}${path}`)
@@ -405,17 +405,17 @@ const commonGetFile = async parameters =>{
  *              secure url logic:
  *              replaces url with secure font url [basePath REST_API server][uuid]
  *              returns array with data to create records in IamEncryption with old url for all font url
- *              returns {css:string, db_records:server['ORM']['Object']['IamEncryption'][]}
+ *              returns {css:string, db_records:types_server.ORM['Object']['IamEncryption'][]}
  * @param {boolean} base64
- * @returns {Promise.<{css:string, db_records:server['ORM']['Object']['IamEncryption'][]}>}
+ * @returns {Promise.<{css:string, db_records:types_server.ORM['Object']['IamEncryption'][]}>}
  * @function
  */
 const commonCssFonts = async (base64=false)=>{
-    const basePathRESTAPI = server.ORM.db.OpenApi.get({app_id:0}).result.servers.filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/server)=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
+    const basePathRESTAPI = server.ORM.db.OpenApi.get({app_id:0}).result.servers.filter((/**@type{types_server.ORM['Object']['OpenApi']['servers'][0]}*/server)=>server['x-type'].default=='REST_API')[0].variables.basePath.default;
     const cssFontFace = [];
     /**@type {{uuid:string, url:string}[]}} */
     const url_record = [];
-    /**@type{server['ORM']['Object']['IamEncryption'][]} */
+    /**@type{types_server.ORM['Object']['IamEncryption'][]} */
     const db_records = [];
     const resource_directory = server.ORM.db.App.get({app_id:0, resource_id:0}).result[0].Path;
     for (const fontFace of (await fs.promises
@@ -445,7 +445,7 @@ const commonCssFonts = async (base64=false)=>{
                             if (url_record.filter(row=>row.url == url).length==0){
                                 const uuid  = server.security.securityUUIDCreate(); 
                                 url_record.push({uuid:uuid, url:url});
-                                /**@type{server['ORM']['Object']['IamEncryption']} */
+                                /**@type{types_server.ORM['Object']['IamEncryption']} */
                                 const data = {  Id:                Date.now(),
                                                 AppId:             0, 
                                                 IamAppIdTokenId:    null, 
@@ -512,7 +512,7 @@ const commonAppStart = async (app_id) =>{
  *          resource_id:string, 
  *          content_type:   string,
  *          data_app_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{resource:*}}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:{resource:*}}>}
  */
 const commonResourceFile = async parameters =>{
     const resource_directory = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.data_app_id}).result[0].Path;
@@ -602,7 +602,7 @@ const commonResourceFile = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:string,
- *          data: { type?:server['ORM']['Object']['AppModule']['ModuleType'],   //validation parameter, if not APP_EXTERNAL and APP_ACCESS_EXTERNAL
+ *          data: { type?:types_server.ORM['Object']['AppModule']['ModuleType'],   //validation parameter, if not APP_EXTERNAL and APP_ACCESS_EXTERNAL
  *                  module_app_id?:number|null,                                 //validation parameter, for APP_EXTERNAL and APP_ACCESS_EXTERNAL must be app_id
  *                  data_app_id?:number|null                                    //validation parameter, for APP_EXTERNAL and APP_ACCESS_EXTERNAL must be app_id
  *                  },                                                          //can accept more data parameters if defined
@@ -612,8 +612,8 @@ const commonResourceFile = async parameters =>{
  *          locale:string,
  *          idToken:string,
  *          authorization:string,
- *          endpoint:server['bff']['parameters']['endpoint']}} parameters
- * @returns {Promise.<server['server']['response']>}
+ *          endpoint:types_server.bff['parameters']['endpoint']}} parameters
+ * @returns {Promise.<types_server.server['response']>}
  */
 const commonModuleRun = async parameters => {
     //Module can be defined in module_app_id and can run data in data_app_id or be defined and run in same data_app_id
@@ -622,8 +622,8 @@ const commonModuleRun = async parameters => {
                                             data:{data_app_id:parameters.data.module_app_id ?? parameters.data.data_app_id}});
     if (modules.result){
         if (parameters.data?.type =='ASSET'|| parameters.data?.type =='FUNCTION'||parameters.endpoint=='APP_EXTERNAL'||parameters.endpoint=='APP_ACCESS_EXTERNAL'){
-            /**@type{server['ORM']['Object']['AppModule']}*/
-            const module = modules.result.filter((/**@type{server['ORM']['Object']['AppModule']}*/app)=>
+            /**@type{types_server.ORM['Object']['AppModule']}*/
+            const module = modules.result.filter((/**@type{types_server.ORM['Object']['AppModule']}*/app)=>
                                                                                                 //APP EXTERNAL only uses id and message keys, add function type
                                                                                                 app.ModuleType==((parameters.endpoint=='APP_EXTERNAL' ||parameters.endpoint=='APP_ACCESS_EXTERNAL')?'FUNCTION':parameters.data.type) && 
                                                                                                 app.ModuleName==parameters.resource_id && 
@@ -650,7 +650,7 @@ const commonModuleRun = async parameters => {
                                                         log:`Module ${parameters.resource_id} not found`
                                                     }
                                                 })
-                .then((/**@type{server['server']['response']}*/result)=>{
+                .then((/**@type{types_server.server['response']}*/result)=>{
                     return result.http?result:server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()})
                 });
             }
@@ -677,15 +677,15 @@ const commonModuleRun = async parameters => {
 *                  queue_parameters?:{appModuleQueueId:number}},
 *          user_agent:string, 
 *          ip:string,
-*          endpoint:server['bff']['parameters']['endpoint']|''}} parameters
-* @returns {Promise.<server['server']['response'] & {result?:*}>}
+*          endpoint:types_server.bff['parameters']['endpoint']|''}} parameters
+* @returns {Promise.<types_server.server['response'] & {result?:*}>}
 */
 const commonAppReport = async parameters => {
     if (parameters.data?.type =='REPORT'){
         const modules = server.ORM.db.AppModule.get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id}});
         if (modules.result){
-            /**@type{server['ORM']['Object']['AppModule']}*/
-            const module = modules.result.filter((/**@type{server['ORM']['Object']['AppModule']}*/app)=>
+            /**@type{types_server.ORM['Object']['AppModule']}*/
+            const module = modules.result.filter((/**@type{types_server.ORM['Object']['AppModule']}*/app)=>
                                                                                             app.ModuleType==parameters.data.type && 
                                                                                             app.ModuleName==parameters.resource_id && 
                                                                                             app.ModuleRole == parameters.endpoint)[0];
@@ -697,7 +697,7 @@ const commonAppReport = async parameters => {
                 const {default:RunReport} = await import('../../..' + module.ModulePath);
     
                 const pagesize = parameters.data.ps ?? new URLSearchParams(Buffer.from(parameters.data.reportid ?? '', 'base64').toString('utf-8')).get('ps');
-                /**@type{server['app']['commonReportCreateParameters']} */
+                /**@type{types_server.app['commonReportCreateParameters']} */
                 const data = {  app_id:         parameters.app_id,
                                 queue_parameters:parameters.data.queue_parameters,
                                 reportid:       parameters.data.reportid ?? '',
@@ -717,7 +717,7 @@ const commonAppReport = async parameters => {
                                             server.ORM.db.AppModuleQueue.postResult( parameters.app_id, 
                                                                                 parameters.data.queue_parameters?.appModuleQueueId??0, 
                                                                                 result_queue)
-                                            .then((/**@type{server['server']['response']}*/result_AppModuleQueue)=>
+                                            .then((/**@type{types_server.server['response']}*/result_AppModuleQueue)=>
                                                 result_AppModuleQueue.http?
                                                     result_AppModuleQueue:
                                                         server.ORM.db.AppModuleQueue.update( parameters.app_id, 
@@ -758,7 +758,7 @@ const commonAppReport = async parameters => {
                             log:`Module ${parameters.resource_id} not found`
                         }
                     })
-                .then((/**@type{server['server']['response']}*/result)=>server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()}));
+                .then((/**@type{types_server.server['response']}*/result)=>server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()}));
             }
         }
         else
@@ -779,15 +779,15 @@ const commonAppReport = async parameters => {
  *                  report_parameters:string},
  *          user_agent:string,
  *          ip:string,
- *          endpoint:server['bff']['parameters']['endpoint']|'',
- *          res:server['server']['res']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:null}|void>}
+ *          endpoint:types_server.bff['parameters']['endpoint']|'',
+ *          res:types_server.server['res']}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:null}|void>}
  */
 const commonAppReportQueue = async parameters =>{
 
     const report = server.ORM.db.AppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{data_app_id:null}});
     if (report.result){
-        /**@type{server['ORM']['Object']['IamUser']} */
+        /**@type{types_server.ORM['Object']['IamUser']} */
         const user = server.ORM.db.IamUser.get(  parameters.app_id, 
                                             server.ORM.UtilNumberValue(server.iam.iamUtilTokenGet(  parameters.app_id, 
                                                                                         parameters.authorization, 
@@ -841,7 +841,7 @@ const commonAppReportQueue = async parameters =>{
                                                 log:`Module ${parameters.resource_id} not found`
                                             }
                                         })
-                .then((/**@type{server['server']['response']}*/result)=>{
+                .then((/**@type{types_server.server['response']}*/result)=>{
                     return result.http?result:server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()})
                 });
 };
@@ -854,17 +854,17 @@ const commonAppReportQueue = async parameters =>{
  * @param {{app_id:Number,
  *          data:{type:'REPORT'|'MODULE'|'FUNCTION'},
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:(server['ORM']['Object']['AppModule'] & {ModuleMetadata:server['app']['commonModuleMetadata']})[] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:(types_server.ORM['Object']['AppModule'] & {ModuleMetadata:types_server.app['commonModuleMetadata']})[] }>}
  */
 const commonModuleMetaDataGet = async parameters =>{
     if (parameters.data.type=='REPORT'||parameters.data.type=='MODULE'||parameters.data.type=='FUNCTION'){
         const modules = server.ORM.db.AppModule.get({app_id:parameters.app_id, resource_id:parameters.resource_id,data:{data_app_id:parameters.app_id}});
         if (modules.result){
-            /**@ts-ignore @type{(server['ORM']['Object']['AppModule'] & {ModuleMetadata:server['app']['commonModuleMetadata']})[]}*/
-            const module_reports = modules.result.filter((/**@type{server['ORM']['Object']['AppModule']}*/row)=>row.ModuleType==parameters.data.type);
+            /**@ts-ignore @type{(types_server.ORM['Object']['AppModule'] & {ModuleMetadata:types_server.app['commonModuleMetadata']})[]}*/
+            const module_reports = modules.result.filter((/**@type{types_server.ORM['Object']['AppModule']}*/row)=>row.ModuleType==parameters.data.type);
             if (module_reports){
                 for (const row of module_reports){
-                    /**@type{server['ORM']['Object']['AppModule'] & {ModuleMetadata:server['app']['commonModuleMetadata']}}*/
+                    /**@type{types_server.ORM['Object']['AppModule'] & {ModuleMetadata:types_server.app['commonModuleMetadata']}}*/
                     row.ModuleMetadata = (await import('../../..' + row.ModulePath)).metadata;
                 }
                 return {result:module_reports, type:'JSON'};
@@ -879,7 +879,7 @@ const commonModuleMetaDataGet = async parameters =>{
                                                         log:`Module ${parameters.resource_id} not found`
                                                     }
                                                 })
-                    .then((/**@type{server['server']['response']}*/result)=>{
+                    .then((/**@type{types_server.server['response']}*/result)=>{
                         return result.http?result:server.getError({statusCode:404,text:server.iam.iamUtilMessageNotAuthorized()})
                     });
         }
@@ -896,9 +896,9 @@ const commonModuleMetaDataGet = async parameters =>{
  * @name commonAppIam
  * @description Returns authenticated app id 
  * @param {string} host 
- * @param {server['bff']['parameters']['endpoint']|null} endpoint
+ * @param {types_server.bff['parameters']['endpoint']|null} endpoint
  * @param {{
- *          IamEncryption:  server['ORM']['Object']['IamEncryption']|null,
+ *          IamEncryption:  types_server.ORM['Object']['IamEncryption']|null,
  *          idToken:        string|null,
  *          AppId:          number, 
  *          AppSignature:   string|null
@@ -906,7 +906,7 @@ const commonModuleMetaDataGet = async parameters =>{
  * @returns {Promise.<{ admin:boolean,
  *                      app_id:number|null,
  *                      app_id_token:number|null,
- *                      apps:server['ORM']['Object']['App']['Id'][]}>}
+ *                      apps:types_server.ORM['Object']['App']['Id'][]}>}
  */
 const commonAppIam = async (host, endpoint=null, security=null) =>{
     //authenticate:
@@ -936,9 +936,9 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
                         apps:[]};
     }
     else{
-        /**@type{server['ORM']['Object']['App']['Id'][]} */
+        /**@type{types_server.ORM['Object']['App']['Id'][]} */
         const apps = server.ORM.db.App.get({app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??0, resource_id:null})
-                    .result.map((/**@type{server['ORM']['Object']['App']}*/app)=>{return app.Id;});
+                    .result.map((/**@type{types_server.ORM['Object']['App']}*/app)=>{return app.Id;});
         if (endpoint !=null && ['MICROSERVICE', 'MICROSERVICE_AUTH'].includes(endpoint))
             return {admin:false, 
                     app_id:server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default),
@@ -986,14 +986,14 @@ const commonAppIam = async (host, endpoint=null, security=null) =>{
   *          host:string,
   *          user_agent:string
   *          idToken:string, 
-  *          data:{ iam_user_id:server['ORM']['Object']['IamUser']['Id']} } } parameters
-  * @returns {Promise.<server['server']['response'] & {result?:server['app']['commonAppSwitch']|null}>}
+  *          data:{ iam_user_id:types_server.ORM['Object']['IamUser']['Id']} } } parameters
+  * @returns {Promise.<types_server.server['response'] & {result?:types_server.app['commonAppSwitch']|null}>}
   */
 const commonAppSwitch = async parameters =>{
     if (parameters.resource_id == server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default))
         return server.getError({statusCode:400})
     else{
-        /**@type{server['ORM']['Object']['App']} */
+        /**@type{types_server.ORM['Object']['App']} */
         const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:parameters.resource_id}).result[0];
         if (app){
             const socket = (await server.socket.socketConnectedUpdate(parameters.app_id, 
@@ -1034,9 +1034,9 @@ const commonAppSwitch = async parameters =>{
  *          uuid:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:{ jsCommon:string, 
+ * @returns {Promise.<types_server.server['response'] & {result:{ jsCommon:string, 
  *                                                              commonComponent:string, 
- *                                                              globals:server['app']['commonGlobals']}}>}
+ *                                                              globals:types_server.app['commonGlobals']}}>}
  */
 const getAppStart = async parameters =>{
     const COMMON_APP_ID =           server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default)??1;
@@ -1067,10 +1067,10 @@ const getAppStart = async parameters =>{
             /**@type{string} */
             commonComponent:(await server.app_common.commonResourceFile({ 
                                                             app_id:DATA_APP_ID, 
-                                                            resource_id:server.ORM.db.App.get({app_id:COMMON_APP_ID, resource_id:null}).result.filter((/**@type{server['ORM']['Object']['App']}*/app)=>app.Id == COMMON_APP_ID)[0].Js,
+                                                            resource_id:server.ORM.db.App.get({app_id:COMMON_APP_ID, resource_id:null}).result.filter((/**@type{types_server.ORM['Object']['App']}*/app)=>app.Id == COMMON_APP_ID)[0].Js,
                                                             content_type:'text/javascript', 
                                                             data_app_id:COMMON_APP_ID})).result?.resource??'',
-            /**@type{server['app']['commonGlobals']} */
+            /**@type{types_server.app['commonGlobals']} */
             globals:        {
                                 //update COMMON_GLOBAL keys:
                                 Parameters:     {
@@ -1098,7 +1098,7 @@ const getAppStart = async parameters =>{
                                 Data:           {
                                                 Apps:           server.ORM.db.App.getViewInfo({app_id:COMMON_APP_ID, resource_id:null}).result,
                                                 AppData:        server.ORM.db.AppData.getServer({app_id:DATA_APP_ID, resource_id:null, data:{name:'APP_PARAMETER',data_app_id:COMMON_APP_ID}})
-                                                                .result.map((/**@type{server['ORM']['Object']['AppData']}*/row)=>{return [row.AppId, row.Name, row.Value, row.DisplayData]}),
+                                                                .result.map((/**@type{types_server.ORM['Object']['AppData']}*/row)=>{return [row.AppId, row.Name, row.Value, row.DisplayData]}),
                                                                 /**@type{string} */
                                                 cssCommon:      (await server.app_common.commonResourceFile({ 
                                                                                                 app_id:DATA_APP_ID, 
@@ -1144,7 +1144,7 @@ const getAppStart = async parameters =>{
  *          host:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:string}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:string}>}
  */
 const getAppInit = async parameters =>{
 
@@ -1224,7 +1224,7 @@ const commonAppError = async (message=null) =>serverError({data:{message:message
  *                type: 'INFO'|'RESOURCE',
  *                content_type: string}
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{resource:string}}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:{resource:string}}>}
  */
 const commonAppResource = async parameters =>{
     
@@ -1269,10 +1269,10 @@ const commonAppResource = async parameters =>{
  * @param {{type:string,
  *          name:string,
  *          role:string|null}} parameters
- * @returns {server['ORM']['Object']['AppModule']}
+ * @returns {types_server.ORM['Object']['AppModule']}
  */
 const commonRegistryAppModule = (app_id, parameters) => server.ORM.db.AppModule.get({app_id:app_id, resource_id:null, data:{data_app_id:app_id}}).result
-                                                           .filter((/**@type{server['ORM']['Object']['AppModule']}*/app)=>
+                                                           .filter((/**@type{types_server.ORM['Object']['AppModule']}*/app)=>
                                                                app.ModuleType==parameters.type && 
                                                                app.ModuleName==parameters.name && 
                                                                app.ModuleRole == parameters.role)[0];
@@ -1282,7 +1282,7 @@ const commonRegistryAppModule = (app_id, parameters) => server.ORM.db.AppModule.
  * @description Returns geodata
  * @function
  * @param {{app_id:number,
-*          endpoint:server['bff']['parameters']['endpoint'],
+*          endpoint:types_server.bff['parameters']['endpoint'],
 *          ip:string,
 *          user_agent:string,
 *          accept_language:string}} parameters
@@ -1309,7 +1309,7 @@ const commonGeodata = async parameters =>{
                                                 authorization:'',
                                                 accept_language:parameters.accept_language})
                                     .then(result=>{if (result.http) throw result; else return result.result;})
-                                    .catch((/**@type{server['server']['error']}*/error)=>{throw error;});
+                                    .catch((/**@type{types_server.server['error']}*/error)=>{throw error;});
                                     /**@ts-ignore */
         result_geodata.latitude =   result_city.lat;
                                     /**@ts-ignore */

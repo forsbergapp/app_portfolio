@@ -1,7 +1,7 @@
 /** @module server/iam */
 
 /**
- * @import {server} from './types.d.ts'
+ * @import types_server from './types.d.ts'
  */
 
 const {server} = await import('./server.js');
@@ -40,8 +40,8 @@ const iamUtilTokenAppId = app_id => {
  * @function
  * @param {number} app_id
  * @param {string} token
- * @param {server['ORM']['Type']['TokenType']} token_type 
- * @returns {server['iam']['iam_access_token_claim'] |server['iam']['iam_microservice_token_claim'] & {app_id_token?:number, exp:number, iat:number}}
+ * @param {types_server.ORM['Type']['TokenType']} token_type 
+ * @returns {types_server.iam['iam_access_token_claim'] |types_server.iam['iam_microservice_token_claim'] & {app_id_token?:number, exp:number, iat:number}}
  */
 const iamUtilTokenGet = (app_id, token, token_type) =>{
     /**@type{*} */
@@ -60,7 +60,7 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
                                                     
 
     if (token_type=='MICROSERVICE')
-        /**@type{server['iam']['iam_microservice_token_claim'] & {exp:number, iat:number}} */
+        /**@type{types_server.iam['iam_microservice_token_claim'] & {exp:number, iat:number}} */
         return {
             app_id:                 verify.app_id,
             service_registry_id:    verify.service_registry_id,
@@ -71,7 +71,7 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
             exp:                    verify.exp,
             iat:                    verify.iat};
     else
-        /**@type{server['iam']['iam_access_token_claim'] & {exp:number, iat:number}} */
+        /**@type{types_server.iam['iam_access_token_claim'] & {exp:number, iat:number}} */
         return {
                 app_id:                 verify.app_id,
                 app_id_token:           verify.app_id_token,
@@ -91,7 +91,7 @@ const iamUtilTokenGet = (app_id, token, token_type) =>{
  *              or access tokens APP_ACCESS, APP_ACCESS_VERIFICATION, APP_ACCESS_EXTERNAL or ADMIN in IamAppAccess
  * @function
  * @param {number}  app_id
- * @param {server['ORM']['Type']['TokenType']} token_type 
+ * @param {types_server.ORM['Type']['TokenType']} token_type 
  * @param {string} token 
  * @returns {boolean}
  */
@@ -99,9 +99,9 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
     try {
         return iamUtilTokenGet(app_id, token, token_type) && 
                     (token_type=='APP_ID' && server.ORM.db.IamAppIdToken.get({app_id:app_id, resource_id:null, data:{data_app_id:null}}).result
-                    .filter((/**@type{server['ORM']['Object']['IamAppIdToken']}*/row)=>row.Token==token)[0].Res!=1) ||
+                    .filter((/**@type{types_server.ORM['Object']['IamAppIdToken']}*/row)=>row.Token==token)[0].Res!=1) ||
                     (token_type!='APP_ID' && server.ORM.db.IamAppAccess.get(app_id,null).result
-                    .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>row.Token==token)[0].Res!=1);
+                    .filter((/**@type{types_server.ORM['Object']['IamAppAccess']}*/row)=>row.Token==token)[0].Res!=1);
     } catch (error) {
         return true;   
     }
@@ -114,12 +114,12 @@ const iamUtilTokenExpired = (app_id, token_type, token) =>{
  * @param {number} app_id
  * @param {string} authorization
  * @param {string} ip
- * @returns {Promise.<server['server']['response'] & {result?: server["ORM"]["MetaData"]["common_result_update"]}>}
+ * @returns {Promise.<types_server.server['response'] & {result?: types_server.ORM["MetaData"]["common_result_update"]}>}
  */
 const iamUtilTokenExpiredSet = async (app_id, authorization, ip) =>{
     const token = authorization?.split(' ')[1] ?? '';
-    /**@type{server['ORM']['Object']['IamAppAccess']}*/
-    const iam_app_access_row = server.ORM.db.IamAppAccess.get(app_id,null).result.filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>row.Token==token &&row.Ip == ip)[0];
+    /**@type{types_server.ORM['Object']['IamAppAccess']}*/
+    const iam_app_access_row = server.ORM.db.IamAppAccess.get(app_id,null).result.filter((/**@type{types_server.ORM['Object']['IamAppAccess']}*/row)=>row.Token==token &&row.Ip == ip)[0];
     if (iam_app_access_row){
         //set token expired
         return server.ORM.db.IamAppAccess.update(app_id, iam_app_access_row.Id??null, {res:2});
@@ -138,21 +138,21 @@ const iamUtilTokenExpiredSet = async (app_id, authorization, ip) =>{
  *          authorization:string,
  *          ip:string,
  *          host:string,
- *          method:server['server']['req']['method']
+ *          method:types_server.server['req']['method']
  *          url:string,
  *          user_agent:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{
- *                                              iam_user_id:server['ORM']['Object']['IamUser']['Id'],
- *                                              iam_user_app_id:server['ORM']['Object']['IamUserApp']['AppId'],
- *                                              iam_user_username?:server['ORM']['Object']['IamUser']['Username'],
- *                                              bio?:server['ORM']['Object']['IamUser']['Bio'],
- *                                              avatar?:server['ORM']['Object']['IamUser']['Avatar'],
- *                                              IamUserApp?: server['ORM']['Object']['IamUserApp'],
+ * @returns {Promise.<types_server.server['response'] & {result?:{
+ *                                              iam_user_id:types_server.ORM['Object']['IamUser']['Id'],
+ *                                              iam_user_app_id:types_server.ORM['Object']['IamUserApp']['AppId'],
+ *                                              iam_user_username?:types_server.ORM['Object']['IamUser']['Username'],
+ *                                              bio?:types_server.ORM['Object']['IamUser']['Bio'],
+ *                                              avatar?:types_server.ORM['Object']['IamUser']['Avatar'],
+ *                                              IamUserApp?: types_server.ORM['Object']['IamUserApp'],
  *                                              token_at:string,
  *                                              exp:number,
  *                                              iat:number,
- *                                              active:server['ORM']['Object']['IamUser']['Active']}|null}>}
+ *                                              active:types_server.ORM['Object']['IamUser']['Active']}|null}>}
  */
 const iamAuthenticateUser = async parameters =>{
     const admin_app_id = server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.APP_ADMIN_APP_ID.default);
@@ -162,19 +162,19 @@ const iamAuthenticateUser = async parameters =>{
 
     /**
      * @param {1|0} result
-     * @param {server['ORM']['Object']['IamUser'] & {Type:string}} user
-     * @param {server['ORM']['Object']['IamAppAccess']['Type']} token_type
-     * @returns {Promise.<server['server']['response'] & {result?:{
-     *                                              iam_user_id:server['ORM']['Object']['IamUser']['Id'],
-     *                                              iam_user_app_id:server['ORM']['Object']['IamUserApp']['AppId'],
-     *                                              iam_user_username?:server['ORM']['Object']['IamUser']['Username'],
-     *                                              bio?:server['ORM']['Object']['IamUser']['Bio'],
-     *                                              avatar?:server['ORM']['Object']['IamUser']['Avatar'],
-     *                                              IamUserApp?: server['ORM']['Object']['IamUserApp'],
+     * @param {types_server.ORM['Object']['IamUser'] & {Type:string}} user
+     * @param {types_server.ORM['Object']['IamAppAccess']['Type']} token_type
+     * @returns {Promise.<types_server.server['response'] & {result?:{
+     *                                              iam_user_id:types_server.ORM['Object']['IamUser']['Id'],
+     *                                              iam_user_app_id:types_server.ORM['Object']['IamUserApp']['AppId'],
+     *                                              iam_user_username?:types_server.ORM['Object']['IamUser']['Username'],
+     *                                              bio?:types_server.ORM['Object']['IamUser']['Bio'],
+     *                                              avatar?:types_server.ORM['Object']['IamUser']['Avatar'],
+     *                                              IamUserApp?: types_server.ORM['Object']['IamUserApp'],
      *                                              token_at:string,
      *                                              exp:number,
      *                                              iat:number,
-     *                                              active:server['ORM']['Object']['IamUser']['Active']}|null }>}
+     *                                              active:types_server.ORM['Object']['IamUser']['Active']}|null }>}
      */
     const check_user = async (result, user, token_type) => {     
         if (result == 1){
@@ -199,7 +199,7 @@ const iamAuthenticateUser = async parameters =>{
                                                             ip:                 parameters.ip, 
                                                             scope:              'USER'});
                     //Save access info in IAM_APP_ACCESS table
-                    /**@ts-ignore @type{server['ORM']['Object']['IamAppAccess']} */
+                    /**@ts-ignore @type{types_server.ORM['Object']['IamAppAccess']} */
                     const file_content = {	
                             AppId:                  parameters.app_id,
                             AppIdToken:             iamUtilTokenAppId(parameters.app_id),
@@ -246,7 +246,7 @@ const iamAuthenticateUser = async parameters =>{
         }
         else{
             //save log for all login attempts  
-            /**@ts-ignore @type{server['ORM']['Object']['IamAppAccess']} */
+            /**@ts-ignore @type{types_server.ORM['Object']['IamAppAccess']} */
             const file_content = {	
                         AppId:              parameters.app_id,
                         AppIdToken:         null,
@@ -263,12 +263,12 @@ const iamAuthenticateUser = async parameters =>{
                         Ua:                 parameters.user_agent};
             await server.ORM.db.IamAppAccess.post(parameters.app_id, file_content);
             if (server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
-                .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
+                .filter((/**@type{types_server.ORM['Object']['IamAppAccess']}*/row)=>
                     row.Ip==parameters.ip && row.Res==0
                 ).length > (server.ORM.UtilNumberValue(server.ORM?.OpenApiComponentParameters.config?.IAM_USER_MAX_FAILED_LOGIN_ATTEMPTS?.default)??0)){
                 //Create observe record in IamControlObserve since max failed login attempts reached
                 //and for any user attempted
-                /**@ts-ignore @type{server['ORM']['Object']['IamControlObserve']} */
+                /**@ts-ignore @type{types_server.ORM['Object']['IamControlObserve']} */
                 const record = {    IamUserId:      user?.Id,
                                     AppId:          parameters.app_id,
                                     Ip:             parameters.ip, 
@@ -317,8 +317,8 @@ const iamAuthenticateUser = async parameters =>{
                                                                     Active:     1
                                                                     }, 'ADMIN'));
         else{
-            /**@type{server['ORM']['Object']['IamUser'] & {Type:string}}*/
-            const user =  server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server['ORM']['Object']['IamUser']}*/user)=>user.Username == username)[0];
+            /**@type{types_server.ORM['Object']['IamUser'] & {Type:string}}*/
+            const user =  server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{types_server.ORM['Object']['IamUser']}*/user)=>user.Username == username)[0];
             if (user && await server.security.securityPasswordCompare(parameters.app_id, password, user.Password)){
                 if (parameters.app_id == admin_app_id){
                     //admin allowed to login to admin app only
@@ -351,7 +351,7 @@ const iamAuthenticateUser = async parameters =>{
  *          data:{  username:string,
  *                  password:string,
  *                  password_reminder:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{
+ * @returns {Promise.<types_server.server['response'] & {result?:{
  *                                              otp_key:string,
  *                                              token_at:string|null,
  *                                              exp:number,
@@ -382,7 +382,7 @@ const iamAuthenticateUserSignup = async parameters =>{
                                                 iam_user_username:      parameters.data.username, 
                                                 ip:                     parameters.ip, 
                                                 scope:                  'USER'});
-        /**@ts-ignore @type{server['ORM']['Object']['IamAppAccess']} */
+        /**@ts-ignore @type{types_server.ORM['Object']['IamAppAccess']} */
         const data_body = { 
             AppId:                parameters.app_id,
             AppIdToken:           iamUtilTokenAppId(parameters.app_id),
@@ -440,7 +440,7 @@ const iamAuthenticateUserSignup = async parameters =>{
  *          user_agent:string,
  *          data:{  verification_type:'LOGIN'|'SIGNUP'|'UPDATE',
  *                  verification_code:string}}} parameters
- * @returns {Promise.<server['server']['response'] & { result?:{activated:number} }>}
+ * @returns {Promise.<types_server.server['response'] & { result?:{activated:number} }>}
  */
 const iamAuthenticateUserActivate = async parameters =>{
     if (['LOGIN','SIGNUP'].includes(parameters.data.verification_type)){
@@ -449,7 +449,7 @@ const iamAuthenticateUserActivate = async parameters =>{
             //set user active = 1
             server.ORM.db.IamUser.updateAdmin({app_id:parameters.app_id, resource_id:parameters.resource_id, data:{active:1}});
 
-            /**@ts-ignore @type{server['ORM']['Object']['IamUserEvent']}*/
+            /**@ts-ignore @type{types_server.ORM['Object']['IamUserEvent']}*/
             const eventData = {
                 /**@ts-ignore */
                 IamUserId:      iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_VERIFICATION').iam_user_id,
@@ -459,7 +459,7 @@ const iamAuthenticateUserActivate = async parameters =>{
                 EventStatus:    'SUCCESSFUL'
             };
             return server.ORM.db.IamUserEvent.post(parameters.app_id, eventData)
-                        .then((/**@type{server['server']['response']}*/result)=>result.http?result:
+                        .then((/**@type{types_server.server['response']}*/result)=>result.http?result:
                                 iamUserLogout(  {app_id:parameters.app_id,
                                                 idToken:parameters.idToken,
                                                 ip:parameters.ip,
@@ -497,14 +497,14 @@ const iamAuthenticateUserActivate = async parameters =>{
  *                  private:number,
  *                  avatar:string,
  *                  totp:string}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{updated: number} }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:{updated: number} }>}
  */
 const iamAuthenticateUserUpdate = async parameters => {
     const result_totp =  await server.security.securityTOTPValidate(parameters.data.totp, 
                                                                     server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0]?.OtpKey??'');
     if (result_totp){
 
-        /**@ts-ignore @type{server['ORM']['Object']['IamUser'] & {PasswordNew: string|null}} */
+        /**@ts-ignore @type{types_server.ORM['Object']['IamUser'] & {PasswordNew: string|null}} */
         const data_update = {   Type:               server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result[0].Type,
                                 Bio:                parameters.data.bio,
                                 Private:            parameters.data.private,
@@ -514,7 +514,7 @@ const iamAuthenticateUserUpdate = async parameters => {
                                 PasswordReminder:  (parameters.data.password_reminder && parameters.data.password_reminder!='')==true?parameters.data.password_reminder:null,
                                 Avatar:             parameters.data.avatar
                             };
-        /**@ts-ignore @type{server['ORM']['Object']['IamUserEvent']}*/
+        /**@ts-ignore @type{types_server.ORM['Object']['IamUserEvent']}*/
         const eventData = {
             IamUserId: parameters.resource_id,
             Event: 'USER_UPDATE'
@@ -524,7 +524,7 @@ const iamAuthenticateUserUpdate = async parameters => {
             if (result_update.result){
                 eventData.EventStatus='SUCCESSFUL';
                 return  server.ORM.db.IamUserEvent.post(parameters.app_id, eventData)
-                        .then((/**@type{server['server']['response']}}*/result)=>result.http?
+                        .then((/**@type{types_server.server['response']}}*/result)=>result.http?
                                         result:
                                         iamUserLogout({app_id:parameters.app_id,
                                             idToken:parameters.idToken,
@@ -539,7 +539,7 @@ const iamAuthenticateUserUpdate = async parameters => {
             else{
                 eventData.EventStatus='FAIL';
                 return server.ORM.db.IamUserEvent.post(parameters.app_id, eventData)
-                        .then((/**@type{server['server']['response']}}*/result)=>result.http?
+                        .then((/**@type{types_server.server['response']}}*/result)=>result.http?
                                         result:
                                             result_update.http?
                                                 result_update:
@@ -562,7 +562,7 @@ const iamAuthenticateUserUpdate = async parameters => {
  *          authorization:string,
  *          user_agent:string,
  *          data:{password:string}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const iamAuthenticateUserDelete = async parameters => server.ORM.db.IamUser.deleteRecord(parameters.app_id, parameters.resource_id, {password:parameters.data.password});
 
@@ -578,7 +578,7 @@ const iamAuthenticateUserDelete = async parameters => server.ORM.db.IamUser.dele
  *          data:{   data_app_id:number,
  *                   iam_user_id:number,
  *                   password:string}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const iamAuthenticateUserAppDelete = async parameters => {
     if (parameters.resource_id!=null){
@@ -601,17 +601,17 @@ const iamAuthenticateUserAppDelete = async parameters => {
  * @description IAM Middleware authenticate IAM users
  * @function
  * @param {{idToken: string,
- *          endpoint: server['bff']['parameters']['endpoint'],
+ *          endpoint: types_server.bff['parameters']['endpoint'],
  *          authorization: string,
  *          host: string,
  *          security:{
- *                      IamEncryption:  server['ORM']['Object']['IamEncryption']|null,
+ *                      IamEncryption:  types_server.ORM['Object']['IamEncryption']|null,
  *                      idToken:        string|null,
  *                      AppId:          number, 
  *                      AppSignature:   string|null
  *                  }|null,
  *          ip: string,
- *          res: server['server']['res']}} parameters
+ *          res: types_server.server['res']}} parameters
  * @returns {Promise.<{app_id:number|null}>}
  */
  const iamAuthenticateCommon = async parameters  =>{
@@ -629,11 +629,11 @@ const iamAuthenticateUserAppDelete = async parameters => {
             const microservice_token_decoded = server.security.jwt.verify(
                                                     microservice_token.replace('Bearer ','').replace('Basic ',''),
                                                     server.ORM.OpenApiComponentParameters.config.IAM_MICROSERVICE_TOKEN_SECRET.default);
-            /**@type{server['ORM']['Object']['ServiceRegistry']}*/
+            /**@type{types_server.ORM['Object']['ServiceRegistry']}*/
             const service = (server.ORM.db.ServiceRegistry.get({   app_id:appIam.app_id??0,
                                                     resource_id:null, 
                                                     data:{name:microservice_token_decoded.service_registry_name}}).result??[])[0];
-            /**@type{server['ORM']['Object']['IamMicroserviceToken'][]}*/
+            /**@type{types_server.ORM['Object']['IamMicroserviceToken'][]}*/
             if (microservice_token_decoded.app_id == appIam.app_id && 
                 microservice_token_decoded.service_registry_id == service.Id &&
                 microservice_token_decoded.service_registry_name == service.Name &&
@@ -642,7 +642,7 @@ const iamAuthenticateUserAppDelete = async parameters => {
                 //authenticate host with port, since microservice can use same host and different ports
                 microservice_token_decoded.host == parameters.host){
                 if (server.ORM.db.IamMicroserviceToken.get({app_id:appIam.app_id??0, resource_id:null}).result
-                    .filter((/**@type{server['ORM']['Object']['IamMicroserviceToken']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['IamMicroserviceToken']}*/row)=>
                                                             //Authenticate service registry same id and name as in record
                                                             row.ServiceRegistryId     == service.Id &&
                                                             row.ServiceRegistryName   == service.Name &&
@@ -668,12 +668,12 @@ const iamAuthenticateUserAppDelete = async parameters => {
             if (appIam.app_id !=null && parameters.endpoint && parameters.idToken)
                 try {
                     const id_token_decoded = iamUtilTokenGet(appIam.app_id, parameters.idToken, 'APP_ID');
-                    /**@type{server['ORM']['Object']['IamAppIdToken']}*/
+                    /**@type{types_server.ORM['Object']['IamAppIdToken']}*/
                     const log_id_token = server.ORM.db.IamAppIdToken.get({
                                                             app_id:appIam.app_id, 
                                                             resource_id:null,
                                                             data:{data_app_id:null}})
-                                            .result.filter((/**@type{server['ORM']['Object']['IamAppIdToken']}*/row)=> 
+                                            .result.filter((/**@type{types_server.ORM['Object']['IamAppIdToken']}*/row)=> 
                                                 row.Ip == parameters.ip && row.Token == parameters.idToken)[0];
                     if (((  appIam.app_id_token     == id_token_decoded.app_id_token && 
                             id_token_decoded.scope  == 'APP' ||id_token_decoded.scope == 'REPORT' ||id_token_decoded.scope == 'MAINTENANCE') && 
@@ -706,14 +706,14 @@ const iamAuthenticateUserAppDelete = async parameters => {
                                                                             /**@ts-ignore */
                                                                             data:{  iam_user_id:access_token_decoded.iam_user_id, 
                                                                                     data_app_id:null}})
-                                                                .result??[]).map((/**@type{server['ORM']['Object']['IamUserApp']}*/record)=>record.Id):
+                                                                .result??[]).map((/**@type{types_server.ORM['Object']['IamUserApp']}*/record)=>record.Id):
                                                             [];
                                     
                                     if (access_token_decoded.app_id_token == appIam.app_id_token && 
                                         access_token_decoded.scope == 'USER' && 
                                         access_token_decoded.ip == parameters.ip ){
                                         if (server.ORM.db.IamAppAccess.get(appIam.app_id, null).result
-                                            .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
+                                            .filter((/**@type{types_server.ORM['Object']['IamAppAccess']}*/row)=>
                                                                                     //Authenticate IAM user
                                                                                     //iam_user_app_id is also saved in token but used as info
                                                                                     access_token_decoded.iam_user_app_id !=null && iamuserApp.includes(access_token_decoded.iam_user_app_id) &&
@@ -806,7 +806,7 @@ const iamAuthenticateRequestRateLimiter = parameters =>{
 const iamObserveLimitReached = ip =>{
     return server.ORM.db.IamControlObserve.get(server.ORM.OpenApiComponentParameters.config.APP_COMMON_APP_ID.default, 
                                                 null).result
-                .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
+                .filter((/**@type{types_server.ORM['Object']['IamControlObserve']}*/row)=>
                         row.Ip==ip).length>
                                             (server.ORM.UtilNumberValue(server.ORM.OpenApiComponentParameters.config.IAM_AUTHENTICATE_REQUEST_OBSERVE_LIMIT.default)??0)
 }
@@ -828,8 +828,8 @@ const iamObserveLimitReached = ip =>{
  * @param {{ip:string, 
  *          common_app_id:number,
  *          OpenApiPathsMatchPublic:[string, *],
- *          req:server['server']['req'],
- *          res:server['server']['res']}} parameters
+ *          req:types_server.server['req'],
+ *          res:types_server.server['res']}} parameters
  * @returns {Promise.<boolean>}
  */
  const iamAuthenticateRequest = async parameters => {
@@ -861,7 +861,7 @@ const iamObserveLimitReached = ip =>{
      */
     const block_ip_control = (app_id, ip_v4) => {
         if (server.ORM.OpenApiComponentParameters.config.IAM_AUTHENTICATE_REQUEST_IP.default == '1'){
-            /**@type{server['ORM']['Object']['IamControlIp'][]} */
+            /**@type{types_server.ORM['Object']['IamControlIp'][]} */
             const ranges = server.ORM.db.IamControlIp.get(
                                                     app_id, 
                                                     null, 
@@ -870,7 +870,7 @@ const iamObserveLimitReached = ip =>{
             //check if IP is blocked
             if (server.ORM.db.IamControlObserve.get( app_id, 
                                                 null).result
-                    .filter((/**@type{server['ORM']['Object']['IamControlObserve']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['IamControlObserve']}*/row)=>
                         row.Ip==ip_v4 && row.AppId == app_id && row.Status==1)
                     .length>0)
                 //IP is blocked in IamControlObserve
@@ -912,7 +912,7 @@ const iamObserveLimitReached = ip =>{
             statusMessage= '';
         }
         else{
-            /**@ts-ignore @type{server['ORM']['Object']['IamControlObserve']} */
+            /**@ts-ignore @type{types_server.ORM['Object']['IamControlObserve']} */
             const record = {    IamUserId:null,
                                 AppId:parameters.common_app_id,
                                 Ip:ip_v4, 
@@ -954,7 +954,7 @@ const iamObserveLimitReached = ip =>{
                     fail_block = true;
                 }
                 //check if user-agent is blocked
-                if(server.ORM.db.IamControlUserAgent.get(parameters.common_app_id, null).result.filter((/**@type{server['ORM']['Object']['IamControlUserAgent']}*/row)=>row.UserAgent== parameters.req.headers['user-agent']).length>0){
+                if(server.ORM.db.IamControlUserAgent.get(parameters.common_app_id, null).result.filter((/**@type{types_server.ORM['Object']['IamControlUserAgent']}*/row)=>row.UserAgent== parameters.req.headers['user-agent']).length>0){
                     //stop always
                     fail_block = true;
                     await server.ORM.db.IamControlObserve.post(parameters.common_app_id, 
@@ -1007,7 +1007,7 @@ const iamObserveLimitReached = ip =>{
  * @param { {app_id:number,
  *           ip:string,
  *           idToken:string,
- *           endpoint:server['bff']['parameters']['endpoint'],
+ *           endpoint:types_server.bff['parameters']['endpoint'],
  *           authorization:string|null,
  *           claim_iam_user_app_id:number|null,
  *           claim_iam_user_id:number|null,
@@ -1023,7 +1023,7 @@ const iamAuthenticateResource = parameters =>  {
                             (server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                             resource_id: parameters.claim_iam_user_app_id, 
                                             data:{  iam_user_id:parameters.claim_iam_user_id, 
-                                                    data_app_id:null}}).result??[]).map((/**@type{server['ORM']['Object']['IamUserApp']}*/record)=>record.Id):
+                                                    data_app_id:null}}).result??[]).map((/**@type{types_server.ORM['Object']['IamUserApp']}*/record)=>record.Id):
                                 [];
 
     //authenticate access token
@@ -1111,10 +1111,10 @@ const iamAuthenticateResource = parameters =>  {
  *           ip:string,
  *           host:string,
  *           user_agent:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{token: string,exp: *,iat: *}}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:{token: string,exp: *,iat: *}}>}
  */
 const iamAuthenticateMicroservice = async parameters =>{
-    /**@type{server['ORM']['Object']['ServiceRegistry'][]} */
+    /**@type{types_server.ORM['Object']['ServiceRegistry'][]} */
     const service = server.ORM.db.ServiceRegistry.get({app_id:parameters.app_id, resource_id:null, data:{name:parameters.resource_id}}).result??[];
     
     if (service.length==1 && service[0].ServerHost == parameters.host.split(':')[0]){
@@ -1146,7 +1146,7 @@ const iamAuthenticateMicroservice = async parameters =>{
                     Ip:         parameters.ip ?? '',
                     Ua:         parameters.user_agent,
                     Host:       parameters.host})
-                .then((/**@type{server['server']['response']}}*/result)=>{ 
+                .then((/**@type{types_server.server['response']}}*/result)=>{ 
                     return result.http?result:{result:jwt_data, type:'JSON'};
                 });
     }
@@ -1159,7 +1159,7 @@ const iamAuthenticateMicroservice = async parameters =>{
  * @function
  * @param {number} app_id
  * @param {string|null} ip
- * @param {server['iam']['iam_access_token_claim']['scope']} scope
+ * @param {types_server.iam['iam_access_token_claim']['scope']} scope
  * @returns {Promise.<{id:Number|null, token:string}>}
  */
  const iamAuthorizeIdToken = async (app_id, ip, scope)=>{
@@ -1173,7 +1173,7 @@ const iamAuthenticateMicroservice = async parameters =>{
                                                             ip:ip ?? '', 
                                                             scope:scope});
 
-    /**@ts-ignore @type{server['ORM']['Object']['IamAppIdToken']} */
+    /**@ts-ignore @type{types_server.ORM['Object']['IamAppIdToken']} */
     const file_content = {	AppId:     app_id,
                             AppIdToken: AppIdToken, 
                             Res:		1,
@@ -1192,7 +1192,7 @@ const iamAuthenticateMicroservice = async parameters =>{
  * @function
  * @param {number} app_id
  * @param {'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'ADMIN'|'APP_ACCESS_EXTERNAL'|'MICROSERVICE'} endpoint
- * @param {server['iam']['iam_access_token_claim']} claim
+ * @param {types_server.iam['iam_access_token_claim']} claim
  * @returns {{
  *              token:string, 
  *              exp:number,             //expires at
@@ -1224,7 +1224,7 @@ const iamAuthenticateMicroservice = async parameters =>{
             break;
         }
     }
-    /**@type{server['iam']['iam_access_token_claim']} */
+    /**@type{types_server.iam['iam_access_token_claim']} */
     const access_token_claim = {app_id:                 app_id,
                                 app_id_token:           ['APP_ACCESS_EXTERNAL', 'MICROSERVICE'].includes(endpoint)?
                                                             app_id:
@@ -1251,16 +1251,16 @@ const iamAuthenticateMicroservice = async parameters =>{
  * @param {{app_id:Number,
  *          data:{  iam_user_id?:string|null,
  *                  data_app_id?:string|null}}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamAppAccess'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['IamAppAccess'][] }}
  */
 const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
-                                                                .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
+                                                                .filter((/**@type{types_server.ORM['Object']['IamAppAccess']}*/row)=>
                                                                     row.IamUserId==server.ORM.UtilNumberValue(parameters.data.iam_user_id) &&  
                                                                     row.AppId==(server.ORM.UtilNumberValue(parameters.data.data_app_id) ?? row.AppId));
                                                     
                                                     return {result:rows.length>0?
-                                                                rows.sort(( /**@type{server['ORM']['Object']['IamAppAccess']}*/a,
-                                                                            /**@type{server['ORM']['Object']['IamAppAccess']}*/b)=> 
+                                                                rows.sort(( /**@type{types_server.ORM['Object']['IamAppAccess']}*/a,
+                                                                            /**@type{types_server.ORM['Object']['IamAppAccess']}*/b)=> 
                                                                             //sort descending on created
                                                                             
                                                                             a.Created.localeCompare(b.Created)==1?-1:1):
@@ -1274,10 +1274,10 @@ const iamAppAccessGet = parameters => {const rows = server.ORM.db.IamAppAccess.g
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:'servers'|'config',
- *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default'],
+ *          data:{pathType?:types_server.ORM['Object']['OpenApi']['servers'][0]['x-type']['default'],
  *                parameter?:string}}} parameters
- * @returns {server['server']['response'] & {result?:server["ORM"]["Object"]["OpenApi"]["servers"]|
- *                                                   server['ORM']['Object']['OpenApi']['components']['parameters']['config']|
+ * @returns {types_server.server['response'] & {result?:types_server.ORM["Object"]["OpenApi"]["servers"]|
+ *                                                   types_server.ORM['Object']['OpenApi']['components']['parameters']['config']|
  *                                                   [*]}}
  */
 const iamAdminServerConfigGet = parameters =>{
@@ -1305,13 +1305,13 @@ const iamAdminServerConfigGet = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:'servers'|'config',
- *          data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default'],
+ *          data:{pathType:types_server.ORM['Object']['OpenApi']['servers'][0]['x-type']['default'],
  *                host: string,
  *                port: number,
  *                basePath:string,
- *                config_key:keyof server['ORM']['Object']['OpenApi']['servers'][0]['variables']['config'],
+ *                config_key:keyof types_server.ORM['Object']['OpenApi']['servers'][0]['variables']['config'],
  *                config_value:*}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{updated: number}}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:{updated: number}}>}
  */
 const iamAdminServerConfigUpdate = async parameters =>{
     if (parameters.resource_id == 'servers' && 
@@ -1357,11 +1357,11 @@ const iamAdminServerConfigUpdate = async parameters =>{
  *          data:{  id_view?:number|null,
  *                  data_app_id:number|null,
  *                  iam_user_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPost'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserAppDataPost'][] }}
  */
 const IamUserAppDataPostGet = parameters =>{
     if (parameters.data.id_view!=null){
-        /**@type{server['ORM']['Object']['IamUserAppDataPostView']} */
+        /**@type{types_server.ORM['Object']['IamUserAppDataPostView']} */
         const data_ViewStat = { Document:{	client_ip:          		parameters.ip,
                                             client_user_agent:  		parameters.user_agent},
                                 IamUserAppId:    		server['socket'].socketConnectedGetAppIdTokenRecord(parameters.idToken)[0].IamUserid!=null?
@@ -1389,7 +1389,7 @@ const IamUserAppDataPostGet = parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['iam']['iam_user']}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.iam['iam_user']}>}
  */
 const iamUserGet = async parameters =>{
 
@@ -1397,7 +1397,7 @@ const iamUserGet = async parameters =>{
     return result.http?
                 /**@ts-ignore */
                 result:
-                    {result:result.result.map((/**@type{server['ORM']['Object']['IamUser']} */row)=>{
+                    {result:result.result.map((/**@type{types_server.ORM['Object']['IamUser']} */row)=>{
                         return {Id: row.Id,
                                 Username: row.Username,
                                 Password: row.Password,
@@ -1424,21 +1424,21 @@ const iamUserGet = async parameters =>{
  *                  order_by?:string|null,
  *                  search?:string|null,
  *                  offset?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['Object']['IamUser'][]}>}
+ * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['Object']['IamUser'][]}>}
  */
 const iamUserGetAdmin = async parameters => {
 
     const order_by_num = parameters.data.order_by =='asc'?1:-1;
     return {
             result:server.ORM.db.IamUser.get(parameters.app_id, parameters.resource_id).result
-                    .filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['IamUser']}*/row)=>
                                 parameters.data.search=='*'?row:
                                 (server.ORM.UtilSearchMatch(row.Username??'', parameters.data?.search??'') ||
                                 server.ORM.UtilSearchMatch(row.Bio??'', parameters.data?.search??'') ||
                                 server.ORM.UtilSearchMatch(row.OtpKey??'', parameters.data?.search??'') ||
                                 server.ORM.UtilSearchMatch(row.Id?.toString()??'', parameters.data?.search??''))
                             )
-                    .sort((/**@type{server['ORM']['Object']['IamUser']}*/first, /**@type{server['ORM']['Object']['IamUser']}*/second)=>{
+                    .sort((/**@type{types_server.ORM['Object']['IamUser']}*/first, /**@type{types_server.ORM['Object']['IamUser']}*/second)=>{
                         const default_sort = 'Id';
                         /**@ts-ignore */
                         if (typeof first[parameters.data?.sort==null?'Id':parameters.data?.sort] == 'number'){
@@ -1480,11 +1480,11 @@ const iamUserGetAdmin = async parameters => {
  * @returns {string|null}
  */
 const iamUserGetLastLogin = (app_id, id) =>server.ORM.db.IamAppAccess.get(app_id, null).result
-                                                .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
+                                                .filter((/**@type{types_server.ORM['Object']['IamAppAccess']}*/row)=>
                                                     row.IamUserId==id &&  row.AppId==app_id && row.Res==1)
-                                                .sort((/**@type{server['ORM']['Object']['IamAppAccess']}*/a,
+                                                .sort((/**@type{types_server.ORM['Object']['IamAppAccess']}*/a,
                                                         /**@ts-ignore */
-                                                        /**@type{server['ORM']['IamAppAccess']}*/b)=>a.Created < b.Created?1:-1)[0]?.Created;
+                                                        /**@type{types_server.ORM['IamAppAccess']}*/b)=>a.Created < b.Created?1:-1)[0]?.Created;
 
 /**
  * @name iamUserLogout
@@ -1496,7 +1496,7 @@ const iamUserGetLastLogin = (app_id, id) =>server.ORM.db.IamAppAccess.get(app_id
  *          authorization:string,
  *          ip:string,
  *          user_agent:string}} parameters
- * @returns {Promise.<server['server']['response']>}
+ * @returns {Promise.<types_server.server['response']>}
  */
 
 const iamUserLogout = async parameters =>{
@@ -1524,14 +1524,14 @@ const iamUserLogout = async parameters =>{
  * @description
  * @function
  * @param {{app_id:number,
- *          data:{data_app_id: server['ORM']['Object']['IamUserApp']['AppId'], 
- *                iam_user_id: server['ORM']['Object']['IamUserApp']['IamUserId']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['Object']['IamUserApp'][]}>}
+ *          data:{data_app_id: types_server.ORM['Object']['IamUserApp']['AppId'], 
+ *                iam_user_id: types_server.ORM['Object']['IamUserApp']['IamUserId']}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserApp'][]}>}
  */
 const iamUserLoginApp = async parameters => {
     /**
      * @param{number|null} id 
-     * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserApp'][]}}
+     * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserApp'][]}}
      */
     const iamuserapp = id => server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                 resource_id: id, 

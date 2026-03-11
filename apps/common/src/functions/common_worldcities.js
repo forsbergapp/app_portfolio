@@ -3,7 +3,7 @@
 */
 
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  */
 const {formatLocale} = await import('./common_locale.js');
 const {server} = await import('../../../../server/server.js');
@@ -21,7 +21,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:server['app']['commonWorldCitiesCity']|server['app']['commonWorldCitiesCity'][]|{data?:string}[]}>}
+ * @returns {Promise.<types_server.server['response'] & {result:types_server.app['commonWorldCitiesCity']|types_server.app['commonWorldCitiesCity'][]|{data?:string}[]}>}
  */
 const appFunction = async parameters =>{
     /**@type {[key:string]}*/
@@ -33,7 +33,7 @@ const appFunction = async parameters =>{
      * 
      * @description format result
      * @param {string|null} row
-     * @returns {server['server']['response'] & {result:server['app']['commonWorldCitiesCity']|server['app']['commonWorldCitiesCity'][]|{data?:string}[],type:'JSON'}}
+     * @returns {types_server.server['response'] & {result:types_server.app['commonWorldCitiesCity']|types_server.app['commonWorldCitiesCity'][]|{data?:string}[],type:'JSON'}}
      */
     const formatReturn = row =>{
         return row?

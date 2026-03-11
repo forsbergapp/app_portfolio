@@ -1,7 +1,7 @@
 /** @module server/db/AppModule */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 
 const {server} = await import ('../server.js');
@@ -14,7 +14,7 @@ const {server} = await import ('../server.js');
  * @param {{app_id:Number,
  *          resource_id:number|null,
  *          data:{data_app_id?:string|number|null}}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['AppModule'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['AppModule'][] }}
  */
 const get = parameters => server.ORM.getObject(parameters.app_id, 'AppModule',parameters.resource_id, server.ORM.UtilNumberValue(parameters.data.data_app_id));
 
@@ -24,12 +24,12 @@ const get = parameters => server.ORM.getObject(parameters.app_id, 'AppModule',pa
  * @function
  * @param {number} app_id 
  * @param {*} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.app_id!=null && data.ModuleType!=null && data.ModuleName!=null && data.ModuleRole!=null && data.ModulePath!=null){
-        /**@type{server['ORM']['Object']['AppModule']} */
+        /**@type{types_server.ORM['Object']['AppModule']} */
         const data_new ={
             Id:                 Date.now(),
             AppId:             data.app_id,
@@ -52,15 +52,15 @@ const post = async (app_id, data) => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:{  module_type: server['ORM']['Object']['AppModule']['ModuleType'],
- *                  module_name: server['ORM']['Object']['AppModule']['ModuleName'],
- *                  module_role: server['ORM']['Object']['AppModule']['ModuleRole']
- *                  module_path: server['ORM']['Object']['AppModule']['ModulePath'],
- *                  module_description: server['ORM']['Object']['AppModule']['ModuleDescription']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ *          data:{  module_type: types_server.ORM['Object']['AppModule']['ModuleType'],
+ *                  module_name: types_server.ORM['Object']['AppModule']['ModuleName'],
+ *                  module_role: types_server.ORM['Object']['AppModule']['ModuleRole']
+ *                  module_path: types_server.ORM['Object']['AppModule']['ModulePath'],
+ *                  module_description: types_server.ORM['Object']['AppModule']['ModuleDescription']}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
-    /**@type{server['ORM']['Object']['AppModule']} */
+    /**@type{types_server.ORM['Object']['AppModule']} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.module_type!=null)
@@ -85,7 +85,7 @@ const update = async parameters => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) =>
     server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppModule', delete:{resource_id:resource_id, data_app_id:null}});

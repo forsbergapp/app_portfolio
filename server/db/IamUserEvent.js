@@ -1,7 +1,7 @@
 /** @module server/db/IamUserEvent */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 
 const {server} = await import ('../server.js');
@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamUserEvent'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['IamUserEvent'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUserEvent',resource_id, null);
 
@@ -20,8 +20,8 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUserEvent',
  * @description Create record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamUserEvent']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamUserEvent']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -31,7 +31,7 @@ const post = async (app_id, data) => {
             return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['IamUserEvent']} */
+        /**@type{types_server.ORM['Object']['IamUserEvent']} */
         const data_new =     {
                                 Id:Date.now(),
                                 IamUserId:data.IamUserId, 
@@ -48,7 +48,7 @@ const post = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) =>
     server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUserEvent', delete:{resource_id:resource_id, data_app_id:null}});

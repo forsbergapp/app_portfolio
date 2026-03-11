@@ -314,11 +314,11 @@ type CommonGlobal = {
                 app_div:string
                 },
         Data:{
-            Apps:server['ORM']['View']['AppGetInfo'][],
-            AppData:[   server['ORM']['Object']['AppData']['AppId'], 
-                        server['ORM']['Object']['AppData']['Name'],
-                        server['ORM']['Object']['AppData']['Value'],
-                        server['ORM']['Object']['AppData']['DisplayData']][],
+            Apps:types_server.ORM['View']['AppGetInfo'][],
+            AppData:[   types_server.ORM['Object']['AppData']['AppId'], 
+                        types_server.ORM['Object']['AppData']['Name'],
+                        types_server.ORM['Object']['AppData']['Value'],
+                        types_server.ORM['Object']['AppData']['DisplayData']][],
             User:{
                     iam_user_id:number|null,
                     iam_user_username:string|null,
@@ -632,18 +632,33 @@ type CommonModuleReactDOM = typeof import('./public/modules/react/react-dom.deve
 type CommonModuleVue = typeof import('./public/modules/vue/vue.esm-browser.js')
 
 /**
- * @name server
- * @description Type server
+ * @name types_server
+ * @description Type types_server
  */
-import type {server} from '../../server/types.d.ts'
+import type types_server from '../../server/types.d.ts'
 
 /**
  * @name CommonAppModuleWithMetadata
  * @description Type CommonAppModuleWithMetadata
  */
-type CommonAppModuleWithMetadata = server['ORM']['Object']['AppModule'] & CommonAppModuleMetadata
+type CommonAppModuleWithMetadata = types_server.ORM['Object']['AppModule'] & CommonAppModuleMetadata
 
-
+/**
+ * @name server
+ * @description Type server
+ */
+type server = {
+        app:types_server.app,
+        bff:types_server.bff,
+        iam:types_server.iam,
+        info:types_server.info,
+        server:types_server.server,
+        security:types_server.security,
+        socket:types_server.socket,
+        test:types_server.test,
+        serviceregistry:types_server.serviceregistry,
+        ORM:types_server.ORM
+}
 type common = {
         COMMON_WINDOW:COMMON_WINDOW,            //BOM Browser Object Model (contains what is used)
         COMMON_DOCUMENT:COMMON_DOCUMENT,        //DOM Document Object Model types (contains what is used)
@@ -677,6 +692,6 @@ type common = {
         CommonModuleReact:CommonModuleReact,            //Module file types
         CommonModuleReactDOM:CommonModuleReactDOM,      //Module file types
         CommonModuleVue:CommonModuleVue,                //Module file types
-        server:server
+        server:server 
 }
 export {common};

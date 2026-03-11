@@ -2,7 +2,7 @@
  * @module apps/common/src/functions/common_doc
 */
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  */
 
 const {server} = await import('../../../../server/server.js');
@@ -209,7 +209,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
  *              GUIDE returns saved markdow
  * @function
  * @param {{app_id:number,
- *          type:server['app']['commonDocumentMenu']['type'],
+ *          type:types_server.app['commonDocumentMenu']['type'],
  *          doc:string,
  *          module:string,
  *          locale:string}} parameters
@@ -225,10 +225,10 @@ const markdownRender = async parameters =>{
         }
         case parameters.type.toUpperCase()=='APP':{
             //replace variables for APP template
-            /**@type{server['ORM']['Object']['AppTranslation']} */
+            /**@type{types_server.ORM['Object']['AppTranslation']} */
             const app_translation = (server.ORM.db.AppTranslation.get(parameters.app_id,null, parameters.locale, 
                                                                 server.ORM.UtilNumberValue(parameters.doc)??0).result??[])[0];
-            /**@type{server['ORM']['Object']['App']} */
+            /**@type{types_server.ORM['Object']['App']} */
             const app = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:server.ORM.UtilNumberValue(parameters.doc)}).result[0];
 
             let markdown = await getFile(`${server.info.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_APPS + MD_SUFFIX}`);
@@ -303,7 +303,7 @@ const markdownRender = async parameters =>{
              *                  servers
              *                  paths
              *                  components
-             * @param {{openApi:server['ORM']['Object']['OpenApi']}} parameters
+             * @param {{openApi:types_server.ORM['Object']['OpenApi']}} parameters
              * @returns 
              */
             const openApiMarkdown = parameters =>{
@@ -376,7 +376,7 @@ const markdownRender = async parameters =>{
                         return {summary:'', response:''};
                 };
                         
-                /**@type{server['ORM']['Object']['OpenApi']} */
+                /**@type{types_server.ORM['Object']['OpenApi']} */
                 const openApi = server.ORM.db.OpenApi.getViewWithoutConfig({app_id:parameters.app_id}).result;
                 for (const path of Object.entries(openApi.paths))
                     for (const method of Object.entries(path[1])){
@@ -555,7 +555,7 @@ const markdownRender = async parameters =>{
  */
 const menuRender = async parameters =>{
 
-    /**@type{server['app']['commonDocumentMenu'][]} */
+    /**@type{types_server.app['commonDocumentMenu'][]} */
     const markdown_menu_docs = await getFile(`${server.info.serverProcess.cwd()}${MD_PATH}menu.json`).then((/**@type{string}*/result)=>JSON.parse(result));
     for (const menu of markdown_menu_docs){
         switch (true){
@@ -563,8 +563,8 @@ const menuRender = async parameters =>{
                 //return menu for app with updated id and app name
                 menu.menu_sub = server.ORM.db.App.get({app_id:parameters.app_id, resource_id:null}).result
                                 // sort common last
-                                .sort((/**@type{server['ORM']['Object']['App']}*/a,/**@type{server['ORM']['Object']['App']}*/b)=>(a.Id==0&&b.Id==0)?0:a.Id==0?1:b.Id==0?-1:(a.Id??0)-(b.Id??0))
-                                .map((/**@type{server['ORM']['Object']['App']}*/app)=>{
+                                .sort((/**@type{types_server.ORM['Object']['App']}*/a,/**@type{types_server.ORM['Object']['App']}*/b)=>(a.Id==0&&b.Id==0)?0:a.Id==0?1:b.Id==0?-1:(a.Id??0)-(b.Id??0))
+                                .map((/**@type{types_server.ORM['Object']['App']}*/app)=>{
                     return { 
                             id:app.Id,
                             menu:app.Name,
@@ -616,7 +616,7 @@ const menuRender = async parameters =>{
  *              ROUTE_REST_API      HTML - markdown converted, renders content scanning files
  * @function
  * @param {{app_id:number,
- *          data:{  documentType:server['app']['commonDocumentMenu']['type'],
+ *          data:{  documentType:types_server.app['commonDocumentMenu']['type'],
  *                  data_app_id:number,
  *                  doc:string},
  *          user_agent:string,
@@ -625,7 +625,7 @@ const menuRender = async parameters =>{
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:string}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:string}>}
  */
 const appFunction = async parameters =>{
     //check if valid document request

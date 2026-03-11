@@ -1,7 +1,7 @@
 /** @module server/db/AppDataEntity */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 
@@ -12,7 +12,7 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{data_app_id?:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['AppDataEntity'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['AppDataEntity'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppDataEntity',parameters.resource_id, parameters.data.data_app_id??null);
     
@@ -21,8 +21,8 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppDataEntity'
  * @description Create record
  * @function
  * @param {{app_id:number,
- *          data:server['ORM']['Object']['AppDataEntity']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
+ *          data:types_server.ORM['Object']['AppDataEntity']}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert']}>}
  */
 const post = async parameters => {
     //check required attributes
@@ -30,7 +30,7 @@ const post = async parameters => {
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['AppDataEntity']} */
+        /**@type{types_server.ORM['Object']['AppDataEntity']} */
         const data_new =     {
                                 Id:Date.now(),
                                 AppId:parameters.data.AppId, 
@@ -47,8 +47,8 @@ const post = async parameters => {
  * @function
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:server['ORM']['Object']['AppDataEntity']}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ *          data:types_server.ORM['Object']['AppDataEntity']}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async parameters =>{
     //check required attributes
@@ -56,7 +56,7 @@ const update = async parameters =>{
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['AppDataEntity']} */
+        /**@type{types_server.ORM['Object']['AppDataEntity']} */
         const data_update = {};
         //allowed parameters to update:
         if (parameters.data.Document!=null)
@@ -74,7 +74,7 @@ const update = async parameters =>{
  * @function
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>
     server.ORM.Execute({app_id:parameters.app_id, dml:'DELETE', object:'AppDataEntity', delete:{resource_id:parameters.resource_id, data_app_id:null}});

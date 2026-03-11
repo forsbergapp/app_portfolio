@@ -1,7 +1,7 @@
 /** @module server/db/AppModuleQueue */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 
 const {server} = await import ('../server.js');
@@ -13,7 +13,7 @@ const fs = await import('node:fs');
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['AppModuleQueue'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['AppModuleQueue'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppModuleQueue',parameters.resource_id, parameters.app_id);
 
@@ -25,7 +25,7 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'AppModuleQueue
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<server['server']['response'] & {result:{resource:string}}>}
+ * @returns {Promise.<types_server.server['response'] & {result:{resource:string}}>}
  */
 const getResult = async parameters => {
     return {result:{resource:(await fs.promises.readFile(server.info.serverProcess.cwd() + `/data/${server.ORM.OpenApiComponentParameters.config.SERVER_PATH_JOBS.default}/${parameters.resource_id}.html`)).toString()}, 
@@ -41,14 +41,14 @@ const getResult = async parameters => {
  *          iam_user_id:number,
  *          name:string,
  *          parameters:string,
- *          status:server['ORM']['Object']['AppModuleQueue']['Status']
+ *          status:types_server.ORM['Object']['AppModuleQueue']['Status']
  *          user:string}} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
     if (app_id!=null && data.type!=null && data.name!=null && data.parameters!=null && data.user!=null){
-        /**@type{server['ORM']['Object']['AppModuleQueue']} */
+        /**@type{types_server.ORM['Object']['AppModuleQueue']} */
         const job =     {
                             Id:Date.now(),
                             IamUserId:data.iam_user_id,       //FK iam_user
@@ -76,7 +76,7 @@ const post = async (app_id, data) => {
  * @param {number} app_id
  * @param {number} id
  * @param {string} result
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const postResult = async (app_id, id, result) =>{
     await fs.promises.writeFile(server.info.serverProcess.cwd() + `/data/${server.ORM.OpenApiComponentParameters.config.SERVER_PATH_JOBS.default}/${id}.html`, result,  'utf8');
@@ -91,12 +91,12 @@ const postResult = async (app_id, id, result) =>{
  * @param {{start?:string|null,
  *          end?:string|null,
  *          progress?:number|null,
- *          status?:server['ORM']['Object']['AppModuleQueue']['Status'],
+ *          status?:types_server.ORM['Object']['AppModuleQueue']['Status'],
  *          message?:string|null}} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async (app_id, resource_id, data) => {
-    /**@type{server['ORM']['Object']['AppModuleQueue']} */
+    /**@type{types_server.ORM['Object']['AppModuleQueue']} */
     const data_update = {};
     //allowed parameters to update (not alloewd to update user info or module info):
     if (data.start!=null)
@@ -121,7 +121,7 @@ const update = async (app_id, resource_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) =>
     server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'AppModuleQueue', delete:{resource_id:resource_id, data_app_id:null}});

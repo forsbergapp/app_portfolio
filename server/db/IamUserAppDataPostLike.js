@@ -1,7 +1,7 @@
 /** @module server/db/IamUserAppDataPostLike */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -13,17 +13,17 @@ const {server} = await import ('../server.js');
  *          data:{  iam_user_id:number|null,
  *                  data_app_id:number|null,
  *                  iam_user_app_data_post_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPostLike'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserAppDataPostLike'][] }}
  */
 const get = parameters =>{
     const IamUserApp_records =  server.ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                                 resource_id:null, 
                                                 data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result;
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPostLike',parameters.resource_id, null).result ??[])
-                        .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row)=>
+                        .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPostLike']}*/row)=>
                             row.IamUserAppDataPostId == (parameters.data.iam_user_app_data_post_id ?? row.IamUserAppDataPostId) &&
                             (IamUserApp_records??[])
-                            .filter((/**@type{server['ORM']['Object']['IamUserApp']}*/rowIamUserApp)=>
+                            .filter((/**@type{types_server.ORM['Object']['IamUserApp']}*/rowIamUserApp)=>
                                 row.IamUserAppId == rowIamUserApp.Id
                             )
                             .length>0
@@ -40,10 +40,10 @@ const get = parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data: { iam_user_app_data_post_id:server['ORM']['Object']['IamUserAppDataPostLike']['IamUserAppDataPostId'],
- *                  iam_user_id:server['ORM']['Object']['IamUserApp']['IamUserId'],
- *                  data_app_id:server['ORM']['Object']['IamUserApp']['AppId'],}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ *          data: { iam_user_app_data_post_id:types_server.ORM['Object']['IamUserAppDataPostLike']['IamUserAppDataPostId'],
+ *                  iam_user_id:types_server.ORM['Object']['IamUserApp']['IamUserId'],
+ *                  data_app_id:types_server.ORM['Object']['IamUserApp']['AppId'],}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async parameters =>{
     //check required attributes
@@ -51,10 +51,10 @@ const post = async parameters =>{
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['IamUserApp']} */
+        /**@type{types_server.ORM['Object']['IamUserApp']} */
         const result = (server.ORM.db.IamUserApp.get({app_id:parameters.app_id, resource_id:null, data:{   iam_user_id:parameters.data.iam_user_id, 
                                                                                             data_app_id:parameters.data.data_app_id}}).result??[])[0];
-        /**@type{server['ORM']['Object']['IamUserAppDataPostLike']} */
+        /**@type{types_server.ORM['Object']['IamUserAppDataPostLike']} */
         const data_new =     {
                                 Id:Date.now(),
                                 /**@ts-ignore */
@@ -73,10 +73,10 @@ const post = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data: { iam_user_app_data_post_id:server['ORM']['Object']['IamUserAppDataPostLike']['IamUserAppDataPostId'],
- *                  iam_user_id:server['ORM']['Object']['IamUserApp']['IamUserId'],
- *                  data_app_id:server['ORM']['Object']['IamUserApp']['IamUserId'],}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ *          data: { iam_user_app_data_post_id:types_server.ORM['Object']['IamUserAppDataPostLike']['IamUserAppDataPostId'],
+ *                  iam_user_id:types_server.ORM['Object']['IamUserApp']['IamUserId'],
+ *                  data_app_id:types_server.ORM['Object']['IamUserApp']['IamUserId'],}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>{
     const result = (get({app_id:parameters.app_id, resource_id:null, data:{  iam_user_id:parameters.data.iam_user_id, 

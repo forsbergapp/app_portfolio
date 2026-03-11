@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 
@@ -36,7 +36,7 @@ const {server} = await import('../../../../server/server.js');
  * 			idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:types_app.APP_FUNCTION_cube_solve_return[]}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_app.APP_FUNCTION_cube_solve_return[]}>}
  */
 const cubeSolve = async parameters =>{
 	if ((parameters.data.model ==0 || parameters.data.model ==1) && parameters.data.preamble == 0 && (parameters.data.temperature == 0 || parameters.data.temperature == 1) && 

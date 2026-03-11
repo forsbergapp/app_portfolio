@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 
@@ -24,16 +24,16 @@ const {getToken} = await import('./payment_request_create.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:{status:string}[]}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:{status:string}[]}>}
  */
 const paymentRequestUpdate = async parameters =>{
 
-    /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
+    /**@ts-ignore @type{types_server.ORM['Object']['AppDataEntity']} */
     const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
 
-    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer}} */
+    /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:customer}} */
     const customer = (server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                 resource_id:null, 
                                                 data:{  iam_user_id:parameters.data.iam_user_id,
@@ -45,7 +45,7 @@ const paymentRequestUpdate = async parameters =>{
     const token = await getToken({app_id:parameters.app_id, authorization:parameters.data.token, ip:parameters.ip}).catch(()=>null);
 
     //get payment request using app_custom_id that should be the payment request id
-    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:payment_request}}}*/
+    /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:payment_request}}}*/
     const payment_request = (server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         all_users:true,
                                                         resource_id:null, 
@@ -55,7 +55,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result??[])
                                     /**@ts-ignore */
-                                    .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:payment_request}}*/payment_request)=>
+                                    .filter((/**@type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:payment_request}}*/payment_request)=>
                                         payment_request.Document?.PaymentRequestId==token?.app_custom_id
                                     )[0];
 
@@ -63,7 +63,7 @@ const paymentRequestUpdate = async parameters =>{
         let status ='PENDING';
         if (server.ORM.UtilNumberValue(parameters.data.status)==1)
             try {
-                /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}}}*/
+                /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}}}*/
                 const account_payer         =  (server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                             resource_id:null, 
                                                                             data:{  iam_user_id:parameters.data.iam_user_id,
@@ -83,13 +83,13 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         resource_name_data_master_attribute:null,
                                                                                         app_data_entity_id:Entity.Id
                                                                                 }}).result.reduce(( /**@type{number}*/balance, 
-                                                                                                    /**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}}*/current_row)=>
+                                                                                                    /**@type{types_server.ORM['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}}*/current_row)=>
                                                                                     balance += (current_row.Document.AmountDeposit ?? current_row.Document.AmountWithdrawal) ?? 0,0
                                                                                 );
                 if ((account_payer_saldo - (payment_request.Document.Amount??0)) <0)
                     status='NO FUNDS';
                 else{
-                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}} */
+                    /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}} */
                     const data_debit = {Document                               : {  Timestamp:new Date().toISOString(),
                                                                                     Logo:'',
                                                                                     Origin:payment_request.Document.Reference,
@@ -100,7 +100,7 @@ const paymentRequestUpdate = async parameters =>{
                                         };
                     //create DEBIT transaction PAYERID resource TRANSACTION
                     await server.ORM.db.AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
-                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_account}} */
+                    /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_account}} */
                     const account_payee         =  (server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                                 all_users:true,
                                                                                 resource_id:null, 
@@ -111,11 +111,11 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         app_data_entity_id:Entity.Id
                                                                                 }}).result??[])
                                                             /**@ts-ignore */
-                                                            .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/account)=>
+                                                            .filter((/**@type{types_server.ORM['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/account)=>
                                                                 account.Document?.BankAccountVpa == payment_request.Document.PayeeId
                                                             )[0];
                     if (account_payee && account_payee.Id!=null){
-                        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}} */
+                        /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}} */
                         const data_credit = {   Document                               : { Timestamp:new Date().toISOString(),
                                                                                            Logo:'',
                                                                                            Origin:payment_request.Document.Reference,

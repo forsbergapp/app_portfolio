@@ -19,7 +19,7 @@
  * @module apps/app1/src/report/performance_test
  */
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
@@ -392,7 +392,7 @@ const component = async props => {
                                     }).run();
     return template(report);
 };
-/**@type{server['app']['commonModuleMetadata'][]}*/
+/**@type{types_server.app['commonModuleMetadata'][]}*/
 const metadata = [{param:{name:'concurrency',text:'Concurrency', default:50}},
                     {param:{name:'requests',text:'Requests', default:50}}];
 export {metadata};

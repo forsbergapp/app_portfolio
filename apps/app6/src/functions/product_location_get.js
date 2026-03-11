@@ -2,7 +2,7 @@
  * @module apps/app6/src/functions/product_location_get
  */
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
@@ -19,11 +19,11 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:{Stock:{KeyName:string, KeyValue:string|number, KeyType:string}[][]}[] }>}
+ * @returns {Promise.<types_server.server['response'] & {result:{Stock:{KeyName:string, KeyValue:string|number, KeyType:string}[][]}[] }>}
  */
 const productLocationGet = async parameters =>{
 
-        /**@type{server['ORM']['Object']['AppDataEntity']} */
+        /**@type{types_server.ORM['Object']['AppDataEntity']} */
         const Entity            = (server.ORM.db.AppDataEntity.get({   
                                                         app_id:parameters.app_id, 
                                                         resource_id:null, 
@@ -31,7 +31,7 @@ const productLocationGet = async parameters =>{
 
         /**@type{{KeyName:string, KeyValue:string|number, KeyType:string}[][]} */
         const stock = [];
-        /**@type{(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:product_variant_location,adrm_attribute_master_Document:{Name:string}})[]} */
+        /**@type{(types_server.ORM['Object']['AppDataResourceDetailData'] & {Document:product_variant_location,adrm_attribute_master_Document:{Name:string}})[]} */
         const product_variant_location = (server.ORM.db.AppDataResourceDetailData.get({ 
                                                                                 app_id:parameters.app_id, 
                                                                                 resource_id:null, 
@@ -43,7 +43,7 @@ const productLocationGet = async parameters =>{
                                                                                         resource_name_data_master_attribute:'LOCATION',
                                                                                         app_data_entity_id:Entity.Id
                                                                                 }}).result??[]);
-        /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.metadata_product_variant_location})[]} */
+        /**@ts-ignore @type{(types_server.ORM['Object']['AppDataResourceMaster'] & {Document:types_app.metadata_product_variant_location})[]} */
         const product_variant_location_metadata = (server.ORM.db.AppDataResourceMaster.get({
                                                                                 app_id:parameters.app_id, 
                                                                                 resource_id:null, 

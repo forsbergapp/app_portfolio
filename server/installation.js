@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from './types.d.ts'
+ * @import types_server from './types.d.ts'
  */
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';
@@ -13,7 +13,7 @@ const fs = await import('node:fs');
 
 /**
  * @description Get default file for given object in default directory
- * @param {server['ORM']['MetaData']['AllObjects']} object
+ * @param {types_server.ORM['MetaData']['AllObjects']} object
  */
 const getDefaultObject = async object => 
     await fs.promises.readFile(server.info.serverProcess.cwd() + `/server/install/default/${object}.json`)
@@ -49,7 +49,7 @@ const getDefaultObject = async object =>
  * @param {{app_id:number,
 *          idToken:string,
 *          data:{  demo_password?:string|null}}} parameters
-* @returns {Promise.<server['server']['response'] & {result:{info: {}[]} }>}
+* @returns {Promise.<types_server.server['response'] & {result:{info: {}[]} }>}
 */
 const postDemo = async parameters=> {
 
@@ -57,7 +57,7 @@ const postDemo = async parameters=> {
     const install_result = [];
     install_result.push({'⌚': new Date().toISOString()});
     const fileBuffer = await fs.promises.readFile(`${server.info.serverProcess.cwd()}${DB_DEMO_PATH}${DB_DEMO_FILE}`, 'utf8');
-    /**@type{server['ORM']['Type']['DemoData'][]}*/
+    /**@type{types_server.ORM['Type']['DemoData'][]}*/
     const demo_users = JSON.parse(fileBuffer.toString()).DemoUsers;
     //create social records
     /**@type{('IamUserLike'|'IamUserView'|'IamUserViewX'|'IamUserFollow'|'IamUserAppDataPostLike'|'IamUserAppDataPostView'|'IamUserAppDataPostViewX')[]} */
@@ -77,17 +77,17 @@ const postDemo = async parameters=> {
     try {
         /**
         * Create demo users
-        * @param {server['ORM']['Type']['DemoData'][]} demo_users 
+        * @param {types_server.ORM['Type']['DemoData'][]} demo_users 
         * @returns {Promise.<void>}
         */
         const create_users = async (demo_users) =>{
                 /**
                 * 
-                * @param {server['ORM']['Type']['DemoData']} demo_user
+                * @param {types_server.ORM['Type']['DemoData']} demo_user
                 * @returns 
                 */
                 const create_update_id = async demo_user=>{
-                    /**@ts-ignore @type{server['ORM']['Object']['IamUser']}}*/
+                    /**@ts-ignore @type{types_server.ORM['Object']['IamUser']}}*/
                     const data_create = {   Username:           demo_user.Username,
                                             Bio:                demo_user.Bio,
                                             Avatar:             demo_user.Avatar,
@@ -116,7 +116,7 @@ const postDemo = async parameters=> {
         * Create iam user app
         * @param {number} app_id 
         * @param {number} iam_user_id
-        * @returns {Promise.<server['ORM']['MetaData']['common_result_insert']>}
+        * @returns {Promise.<types_server.ORM['MetaData']['common_result_insert']>}
         */
         const create_iam_user_app = async (app_id, iam_user_id) =>{
             return new Promise((resolve, reject) => {
@@ -143,7 +143,7 @@ const postDemo = async parameters=> {
         };
         /**
         * Create iam user app data post
-        * @param {server['ORM']['Object']['IamUserAppDataPost']} data 
+        * @param {types_server.ORM['Object']['IamUserAppDataPost']} data 
         * @returns {Promise.<null>}
         */
         const create_iam_user_app_data_post = async data => {
@@ -165,7 +165,7 @@ const postDemo = async parameters=> {
 
         /**
          * 
-         * @param {server['ORM']['Object']['AppDataResourceMaster']} data 
+         * @param {types_server.ORM['Object']['AppDataResourceMaster']} data 
          * @returns {Promise.<number>}
          */
         const create_app_data_resource_master = async data => {
@@ -184,7 +184,7 @@ const postDemo = async parameters=> {
         };
         /**
         * 
-        * @param {server['ORM']['Object']['AppDataResourceDetail']} data 
+        * @param {types_server.ORM['Object']['AppDataResourceDetail']} data 
         * @returns {Promise.<number>}
         */
         const create_app_data_resource_detail = async data => {
@@ -204,7 +204,7 @@ const postDemo = async parameters=> {
         /**
         * @description Update app_data entity with additional keys
         * @param {number} user_account_post_app_id 
-        * @param {server['ORM']['Type']['DemoData']['AppDataResourceMaster'][0]['AppDataEntity']} data 
+        * @param {types_server.ORM['Type']['DemoData']['AppDataResourceMaster'][0]['AppDataEntity']} data 
         * @returns {Promise.<number>}
         */
         const update_app_data_entity = async (user_account_post_app_id,data) => {
@@ -237,7 +237,7 @@ const postDemo = async parameters=> {
         /**
         * 
         * @param {number} user_account_post_app_id 
-        * @param {server['ORM']['Object']['AppDataResourceDetailData']} data 
+        * @param {types_server.ORM['Object']['AppDataResourceDetailData']} data 
         * @returns {Promise.<number>}
         */
         const create_app_data_resource_detail_data = async (user_account_post_app_id, data) => {
@@ -297,7 +297,7 @@ const postDemo = async parameters=> {
                                         });
             //create for others apps except common, admin and already created
             for (const app of server.ORM.db.App.get({app_id:parameters.app_id,resource_id:null}).result
-                            .filter((/**@type{server['ORM']['Object']['App']}*/row)=>row.Id!=common_app_id && row.Id!=admin_app_id && row.Id!=demo_user.IamUserApp.AppId)){
+                            .filter((/**@type{types_server.ORM['Object']['App']}*/row)=>row.Id!=common_app_id && row.Id!=admin_app_id && row.Id!=demo_user.IamUserApp.AppId)){
                 await create_iam_user_app(app.Id, 
                                         /**@ts-ignore */
                                         demo_user.Id);
@@ -323,7 +323,7 @@ const postDemo = async parameters=> {
                 //month 20001-20022
                 demo_user_account_app_data_post.Document.DesignThemeMonthId = Math.floor(20001 + Math.random() * 22);
                 demo_user_account_app_data_post.Document.DesignThemeYearId = 30001;
-                /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
+                /**@type{types_server.ORM['Object']['IamUserAppDataPost']} */
                 const Document_user_account_app_data_post = {
                                                 /**@ts-ignore */
                                                 Document: demo_user_account_app_data_post.Document,
@@ -383,7 +383,7 @@ const postDemo = async parameters=> {
             };
             //3D.Create app data master records if any
             for (const resource_master of demo_user.AppDataResourceMaster ?? []){
-                /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster']} */
+                /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster']} */
                 const data = {  
                                 IamUserAppId:               iam_user_app_id ??null,
                                 AppDataEntityResourceId:    resource_master.AppDataEntityResourceId,
@@ -417,7 +417,7 @@ const postDemo = async parameters=> {
                     
                 //3F.Create app data detail records if any
                 for (const resource_detail of resource_master.AppDataResourceDetail ?? []){
-                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail']} */
+                    /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceDetail']} */
                     const data = {  AppDataResourceMasterId                    : master_id,
                                     AppDataEntityResourceId                    : resource_detail.AppDataEntityResourceId,
                                     AppDataResourceMasterAttributeId           : resource_detail.AppDataResourceMasterAttributeId,
@@ -426,7 +426,7 @@ const postDemo = async parameters=> {
                     const detail_id = await create_app_data_resource_detail(data);
                     //3G.Create app data detail data records if any
                     for (const resource_detail_data of resource_detail.AppDataResourceDetailData ?? []){
-                        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData']} */
+                        /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceDetailData']} */
                         const data ={   AppDataResourceDetailId            : detail_id,
                                         AppDataResourceMasterAttributeId   : resource_detail_data.AppDataResourceMasterAttributeId,
                                         Document                           : await demo_data_update(resource_detail_data)
@@ -466,7 +466,7 @@ const postDemo = async parameters=> {
         /**
         * Create user account view
         * @param {number} app_id 
-        * @param {server['ORM']['Object']['IamUserView']} data 
+        * @param {types_server.ORM['Object']['IamUserView']} data 
         * @returns {Promise.<null>}
         */
         const create_iam_user_view = async (app_id, data ) =>{
@@ -546,7 +546,7 @@ const postDemo = async parameters=> {
         */
         const create_iam_user_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
             return new Promise((resolve, reject) => {
-                /**@type{server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPost'][]}} */
+                /**@type{types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserAppDataPost'][]}} */
                 const result_posts = server.ORM.db.IamUserAppDataPost.get({app_id:parameters.app_id, resource_id:null, data:{iam_user_id:user1, data_app_id:app_id}});
                 if (result_posts.result){
                     //choose random post from user
@@ -713,11 +713,11 @@ const postDemo = async parameters=> {
 * @memberof ROUTE_REST_API
 * @param {{app_id:number,
 *          idToken:string}} parameters
-* @returns {Promise.<server['server']['response'] & {result:{info: {}[]} }>}
+* @returns {Promise.<types_server.server['response'] & {result:{info: {}[]} }>}
 */
 const deleteDemo = async parameters => {
-    /**@type{(server['ORM']['Object']['IamUser'])[]} */
-    const result_demo_users = server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>row.UserLevel==2);
+    /**@type{(types_server.ORM['Object']['IamUser'])[]} */
+    const result_demo_users = server.ORM.db.IamUser.get(parameters.app_id, null).result.filter((/**@type{types_server.ORM['Object']['IamUser']}*/row)=>row.UserLevel==2);
     if (result_demo_users){
         let deleted_user = 0;
         if (result_demo_users.length>0){
@@ -803,9 +803,9 @@ const postConfigDefault = async () => {
                                             pathServiceRegistry:'/server/install/default/ServiceRegistry.json'
     });
     /**
-     * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['MetaData']['Object'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['OpenApi']],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['ServiceRegistry'][]]
+     * @type{[  [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['MetaData']['Object'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['OpenApi']],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['ServiceRegistry'][]]
      *       ]}
      */
     const config_obj = [
@@ -820,7 +820,7 @@ const postConfigDefault = async () => {
                             '/data/db/journal',
                             '/data/microservice'
                             ])
-    .catch((/**@type{server['server']['error']}*/err) => {
+    .catch((/**@type{types_server.server['error']}*/err) => {
         throw err;
     }); 
     //update default environment in OpenApi
@@ -877,16 +877,16 @@ const postConfigDefault = async () => {
 const postDataDefault = async () => {
     
     /**
-     * @type{[  [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['IamUser'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['App'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppDataEntityResource'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppDataEntity'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppDataResourceDetailData'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppDataResourceDetail'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppDataResourceMaster'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppModule'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppData'][]],
-     *          [server['ORM']['MetaData']['AllObjects'], server['ORM']['Object']['AppTranslation'][]]
+     * @type{[  [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['IamUser'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['App'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['AppDataEntityResource'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['AppDataEntity'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['AppDataResourceDetailData'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['AppDataResourceDetail'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['AppDataResourceMaster'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['AppModule'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['AppData'][]],
+     *          [types_server.ORM['MetaData']['AllObjects'], types_server.ORM['Object']['AppTranslation'][]]
      *       ]}
      */
     const config_obj = [
@@ -904,7 +904,7 @@ const postDataDefault = async () => {
     
     //write files to ORM
     //read default where type is configured
-    /**@type{server['ORM']['MetaData']['Object'][]}*/
+    /**@type{types_server.ORM['MetaData']['Object'][]}*/
     const ORM = await getDefaultObject('ORM');
     
     for (const config_row of config_obj){
@@ -930,9 +930,9 @@ const updateConfigSecrets = async () =>{
                                             pathServiceRegistry:null
                                         });
     //get users and password
-    /**@type{server['ORM']['Object']['IamUser'][]} */
+    /**@type{types_server.ORM['Object']['IamUser'][]} */
     const users = await new Promise(resolve=>{(async () =>{ 
-        /**@type{server['ORM']['Object']['IamUser'][]} */
+        /**@type{types_server.ORM['Object']['IamUser'][]} */
         const users = server.ORM.db.IamUser.get(0, null).result??[];
         for (const user of users){
             /**@ts-ignore */
@@ -967,7 +967,7 @@ const updateConfigSecrets = async () =>{
  * @name updateMicroserviceSecurity
  * @description Reads key pair in serviceregistry and updates them in microservice config files
  * @function
- * @param {{serveRegistry:server['ORM']['Object']['ServiceRegistry'][],
+ * @param {{serveRegistry:types_server.ORM['Object']['ServiceRegistry'][],
  *          pathMicroserviceSource:      string,
  *          pathMicroserviceDestination:   string,
  *          init?: boolean}} parameters
@@ -985,7 +985,7 @@ const updateMicroserviceSecurity = async parameters =>{
         return url.replace('localhost:3000',app_host + (app_port==80?'':':' + app_port));
     }
     for (const file of ['BATCH']){
-        /**@type{server['serviceregistry']['microservice_local_config']} */
+        /**@type{types_server.serviceregistry['microservice_local_config']} */
         const content = await fs.promises.readFile(server.info.serverProcess.cwd() + `${parameters.pathMicroserviceSource}${file}.json`).then(filebuffer=>JSON.parse(filebuffer.toString()));
         if (parameters.init){
             content.environment                 = server.info.serverProcess.argv[2];
@@ -1005,14 +1005,14 @@ const updateMicroserviceSecurity = async parameters =>{
  * @function
  * @param {{pathOpenApi:            string|null,
  *          pathServiceRegistry:    string|null}} parameters
- * @returns {Promise.<{ OpenApi:    server['ORM']['Object']['OpenApi'],
- *                      ServiceRegistry:server['ORM']['Object']['ServiceRegistry'][]}>}
+ * @returns {Promise.<{ OpenApi:    types_server.ORM['Object']['OpenApi'],
+ *                      ServiceRegistry:types_server.ORM['Object']['ServiceRegistry'][]}>}
  */
 const getConfigSecurityUpdate = async parameters =>{
     
     return {
         OpenApi:await new Promise(resolve=>{(async () =>{ 
-                            /**@type{server['ORM']['Object']['OpenApi']}*/
+                            /**@type{types_server.ORM['Object']['OpenApi']}*/
                             const openApi = parameters.pathOpenApi?await fs.promises.readFile(server.info.serverProcess.cwd() + parameters.pathOpenApi)
                                                 .then(file=>JSON.parse(file.toString())):server.ORM.getObject(0,'OpenApi');
                             //generate secrets
@@ -1029,7 +1029,7 @@ const getConfigSecurityUpdate = async parameters =>{
                             resolve(openApi);
                         })();}),
         ServiceRegistry:parameters.pathServiceRegistry?await new Promise(resolve=>{(async () =>{ 
-                                /**@type{server['ORM']['Object']['ServiceRegistry'][]}*/
+                                /**@type{types_server.ORM['Object']['ServiceRegistry'][]}*/
                                 const content = await fs.promises.readFile(server.info.serverProcess.cwd() + parameters.pathServiceRegistry)
                                                     .then(file=>JSON.parse(file.toString()));
                                 for (const row of content){

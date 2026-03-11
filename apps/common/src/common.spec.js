@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from '../../../server/types.d.ts'
+ * @import types_server from '../../../server/types.d.ts'
  */
 
 let test_running = false;
@@ -16,7 +16,7 @@ const app_common = await import('./common.js');
  *              afterAll:   restores Array.prototype.filter
  * @function
  * @param {import('../../../test/test.js')} t
- * @returns {Promise.<server['test']['spec_result']['detail']>}
+ * @returns {Promise.<types_server.test['spec_result']['detail']>}
  */
 const test = async t =>
 [await t.describe('Spy test, commonApp as called from bff', async ()=> {

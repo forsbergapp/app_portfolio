@@ -2,7 +2,7 @@
  * @module apps/common/src/component/common_report
  */
 /**
- * @import {server} from '../../../../server/types.d.ts';
+ * @import types_server from '../../../../server/types.d.ts';
  */
 /**
  * @name template
@@ -22,7 +22,7 @@ const template = async props =>`  <div id='paper' class='${props.papersize}'>
  * @description Component
  * @function
  * @param {{data:       {
- *                      data:server['app']['commonReportCreateParameters'],
+ *                      data:types_server.app['commonReportCreateParameters'],
  *                      papersize:'A4'|'Letter'
  *                      },
  *          methods:    {function_report:function}}} props 

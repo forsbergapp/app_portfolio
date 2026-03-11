@@ -1,7 +1,7 @@
 /** @module server/db/IamUser */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamUser'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['IamUser'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUser',resource_id, null);
 
@@ -27,17 +27,17 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUser',resou
  *                  id?:string|null,
  *                  search?:string|null,
  *                  POST_ID?:string |null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserGetProfile'][]}>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['View']['IamUserGetProfile'][]}>}
  */
 const getViewProfile = async parameters =>{
-  /**@type{server['ORM']['View']['IamUserGetProfile'][]} */
+  /**@type{types_server.ORM['View']['IamUserGetProfile'][]} */
   const result_getProfileUser = get(parameters.app_id, parameters.resource_id).result
-                                .filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>   
+                                .filter((/**@type{types_server.ORM['Object']['IamUser']}*/row)=>   
                                     row.Active==1 && 
                                     row.Private !=1 &&
                                     server.ORM.UtilSearchMatch(row.Username, parameters.data.search??'') &&
                                     server.ORM.UtilSearchMatch(row.Username, parameters.data.name??''))
-                                .map((/**@type{server['ORM']['Object']['IamUser']}*/row)=>{
+                                .map((/**@type{types_server.ORM['Object']['IamUser']}*/row)=>{
                                     // check if friends
                                     const friends =  (server.ORM.db.IamUserFollow.get({app_id:parameters.app_id, 
                                                                     resource_id:null, 
@@ -99,7 +99,7 @@ const getViewProfile = async parameters =>{
   else
       if (result_getProfileUser[0]){
           //always save stat who is viewing, same user, none or someone else
-          /**@ts-ignore @type{server['ORM']['Object']['IamUserView']} */
+          /**@ts-ignore @type{types_server.ORM['Object']['IamUserView']} */
           const data_body = { IamUserId:       server.ORM.UtilNumberValue(parameters.data.id),    //who views
                               IamUserIdView:   server.ORM.UtilNumberValue(parameters.data.POST_ID) ?? result_getProfileUser[0].Id, //viewed account
                               ClientIp:        parameters.ip,
@@ -118,12 +118,12 @@ const getViewProfile = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          data:{statchoice?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['IamUserGetProfileStat'][] }>}
+ * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['View']['IamUserGetProfileStat'][] }>}
  */
 const getViewProfileStat = async parameters =>{
     /**@ts-ignore */
     return {result: get(parameters.app_id, null).result
-                            .filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>
+                            .filter((/**@type{types_server.ORM['Object']['IamUser']}*/row)=>
                                     row.Active==1 && row.Private !=1 &&
                                     //user should have a record in current app
                                     (server.ORM.db.IamUserApp.get({  app_id:parameters.app_id, 
@@ -133,7 +133,7 @@ const getViewProfileStat = async parameters =>{
                                                                     data_app_id: parameters.app_id}
                                                                 }).result??[])[0]
                             )              
-                            .map((/**@type{server['ORM']['Object']['IamUser']}*/row)=>{
+                            .map((/**@type{types_server.ORM['Object']['IamUser']}*/row)=>{
                                 return {
                                     Top:    server.ORM.UtilNumberValue(parameters.data?.statchoice)==1?'VISITED':
                                             server.ORM.UtilNumberValue(parameters.data?.statchoice)==2?'FOLLOWING':
@@ -160,8 +160,8 @@ const getViewProfileStat = async parameters =>{
                                 };
                             })
                             /**@ts-ignore */
-                            .sort(( /**@type{server['ORM']['View']['IamUserGetProfileStat']}*/a,
-                                    /**@type{server['ORM']['View']['IamUserGetProfileStat']}*/b)=>a.Count>b.Count?-1:1),
+                            .sort(( /**@type{types_server.ORM['View']['IamUserGetProfileStat']}*/a,
+                                    /**@type{types_server.ORM['View']['IamUserGetProfileStat']}*/b)=>a.Count>b.Count?-1:1),
             type:'JSON'};
 };
     
@@ -173,7 +173,7 @@ const getViewProfileStat = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{detailchoice?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserGetProfileDetail'][] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['View']['IamUserGetProfileDetail'][] }>}
  */
 const getViewProfileDetail = async parameters =>{
     /**@ts-ignore */
@@ -183,7 +183,7 @@ const getViewProfileDetail = async parameters =>{
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
                                                     iam_user_id_follow:null}}).result??[])
-                            .map((/**@type{server['ORM']['Object']['IamUserFollow']}*/row)=>{return {iam_user_id:row.IamUserIdFollow};}):
+                            .map((/**@type{types_server.ORM['Object']['IamUserFollow']}*/row)=>{return {iam_user_id:row.IamUserIdFollow};}):
                     //followed
                     server.ORM.UtilNumberValue(parameters.data?.detailchoice)==2?
                         server.ORM.db.IamUserFollow.get({ app_id:parameters.app_id, 
@@ -196,7 +196,7 @@ const getViewProfileDetail = async parameters =>{
                                             resource_id:null, 
                                             data:{  iam_user_id:parameters.resource_id,
                                                     iam_user_id_like:null}}).result??[])
-                            .map((/**@type{server['ORM']['Object']['IamUserLike']}*/row)=>{return {iam_user_id:row.IamUserIdLike};}):
+                            .map((/**@type{types_server.ORM['Object']['IamUserLike']}*/row)=>{return {iam_user_id:row.IamUserIdLike};}):
                     //liked user
                     server.ORM.UtilNumberValue(parameters.data?.detailchoice)==4?
                         server.ORM.db.IamUserLike.get({   app_id:parameters.app_id, 
@@ -205,13 +205,13 @@ const getViewProfileDetail = async parameters =>{
                                                     iam_user_id_like:parameters.resource_id}}).result:
                     [])
                     /**@ts-ignore */
-                    .filter((/**@type{server['ORM']['View']['IamUserGetProfileDetail']}*/row)=>{
-                        /**@type{server['ORM']['Object']['IamUser']}*/
+                    .filter((/**@type{types_server.ORM['View']['IamUserGetProfileDetail']}*/row)=>{
+                        /**@type{types_server.ORM['Object']['IamUser']}*/
                         const user = get(parameters.app_id,row.IamUserId).result[0];
                         return user?.Active == 1 && user?.Private != 1;
                     })              
                     /**@ts-ignore */
-                    .map((/**@type{server['ORM']['View']['IamUserGetProfileDetail']}*/row)=>{
+                    .map((/**@type{types_server.ORM['View']['IamUserGetProfileDetail']}*/row)=>{
                         return {
                             Detail: server.ORM.UtilNumberValue(parameters.data?.detailchoice)==1?'FOLLOWING':
                                     server.ORM.UtilNumberValue(parameters.data?.detailchoice)==2?'FOLLOWED':
@@ -223,8 +223,8 @@ const getViewProfileDetail = async parameters =>{
                         };
                     })
                     /**@ts-ignore */
-                    .sort(( /**@type{server['ORM']['View']['IamUserGetProfileDetail']}*/a,
-                            /**@type{server['ORM']['View']['IamUserGetProfileDetail']}*/b)=>a.Username<b.Username?-1:1),
+                    .sort(( /**@type{types_server.ORM['View']['IamUserGetProfileDetail']}*/a,
+                            /**@type{types_server.ORM['View']['IamUserGetProfileDetail']}*/b)=>a.Username<b.Username?-1:1),
            type:'JSON'};
 };
 
@@ -234,7 +234,7 @@ const getViewProfileDetail = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number}}parameters
- * @returns {server['server']['response'] & {result:server['ORM']['View']['IamUserGetStatCountAdmin'][]}}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['View']['IamUserGetStatCountAdmin'][]}}
  */
 const getViewStatCountAdmin = parameters => {return {result: [{CountUsers:get(parameters.app_id,null).result?.length}],
                                                     type:'JSON'};};
@@ -243,7 +243,7 @@ const getViewStatCountAdmin = parameters => {return {result: [{CountUsers:get(pa
  * @name validationData
  * @description Validates user data
  * @function
- * @param {server['ORM']['Object']['IamUser'] & {PasswordNew:string|null}} data
+ * @param {types_server.ORM['Object']['IamUser'] & {PasswordNew:string|null}} data
  * @returns {Promise.<boolean>}
  */
 const validationData = async data =>{
@@ -277,12 +277,12 @@ const validationData = async data =>{
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamUser'] & {PasswordNew:string|null}} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamUser'] & {PasswordNew:string|null}} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     if (await validationData(data)){
-        /**@type{server['ORM']['Object']['IamUser']} */
+        /**@type{types_server.ORM['Object']['IamUser']} */
         const data_new =     {
                                 Id:                 Date.now(),
                                 Username:           data.Username, 
@@ -310,11 +310,11 @@ const post = async (app_id, data) => {
  * @description Add record admin
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamUser']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamUser']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const postAdmin = async (app_id, data) => {
-    /**@type{server['ORM']['Object']['IamUser']} */
+    /**@type{types_server.ORM['Object']['IamUser']} */
     const data_new =     {
                             Id:Date.now(),
                             Username:data.Username, 
@@ -341,15 +341,15 @@ const postAdmin = async (app_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @param {server['ORM']['Object']['IamUser'] & {PasswordNew:string|null}} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @param {types_server.ORM['Object']['IamUser'] & {PasswordNew:string|null}} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async (app_id, resource_id, data) => {
-    /**@type{server['ORM']['Object']['IamUser']}*/
+    /**@type{types_server.ORM['Object']['IamUser']}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (await validationData(data) && user.Username == data.Username && data.Password && await server.security.securityPasswordCompare(app_id, data.Password, user.Password)){
-            /**@type{server['ORM']['Object']['IamUser']} */
+            /**@type{types_server.ORM['Object']['IamUser']} */
             const data_update = {};
             //allowed parameters to update:
             if (data.Username!=null && data.Username != ''){
@@ -392,25 +392,25 @@ const update = async (app_id, resource_id, data) => {
  * @param {{app_id:number,
  *          resource_id:number,
  *          data :{
- *              username?: server['ORM']['Object']['IamUser']['Username'],
- *              password?: server['ORM']['Object']['IamUser']['Password'],
+ *              username?: types_server.ORM['Object']['IamUser']['Username'],
+ *              password?: types_server.ORM['Object']['IamUser']['Password'],
  *              password_new?: string|null,
- *              password_reminder?: server['ORM']['Object']['IamUser']['PasswordReminder'],
- *              bio?: server['ORM']['Object']['IamUser']['Bio'],
- *              private?: server['ORM']['Object']['IamUser']['Private'],
- *              avatar?: server['ORM']['Object']['IamUser']['Avatar'],
- *              otp_key?: server['ORM']['Object']['IamUser']['OtpKey'],
- *              type?: server['ORM']['Object']['IamUser']['Type'],
- *              user_level?: server['ORM']['Object']['IamUser']['UserLevel'],
- *              status?: server['ORM']['Object']['IamUser']['Status'],
- *              active?: server['ORM']['Object']['IamUser']['Active']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ *              password_reminder?: types_server.ORM['Object']['IamUser']['PasswordReminder'],
+ *              bio?: types_server.ORM['Object']['IamUser']['Bio'],
+ *              private?: types_server.ORM['Object']['IamUser']['Private'],
+ *              avatar?: types_server.ORM['Object']['IamUser']['Avatar'],
+ *              otp_key?: types_server.ORM['Object']['IamUser']['OtpKey'],
+ *              type?: types_server.ORM['Object']['IamUser']['Type'],
+ *              user_level?: types_server.ORM['Object']['IamUser']['UserLevel'],
+ *              status?: types_server.ORM['Object']['IamUser']['Status'],
+ *              active?: types_server.ORM['Object']['IamUser']['Active']}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const updateAdmin = async parameters => {
-    /**@type{server['ORM']['Object']['IamUser']}*/
+    /**@type{types_server.ORM['Object']['IamUser']}*/
     const user = get(parameters.app_id, parameters.resource_id).result[0];
     if (user){
-            /**@type{server['ORM']['Object']['IamUser']} */
+            /**@type{types_server.ORM['Object']['IamUser']} */
             const data_update = {};
             //allowed parameters to update:
             if (parameters.data?.active!=null)
@@ -486,10 +486,10 @@ const updateAdmin = async parameters => {
  * @param {number} app_id
  * @param {number} resource_id
  * @param {{password:string}} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id, data) => {
-    /**@type{server['ORM']['Object']['IamUser']}*/
+    /**@type{types_server.ORM['Object']['IamUser']}*/
     const user = get(app_id, resource_id).result[0];
     if (user){
         if (data.password && await server.security.securityPasswordCompare(app_id, data.password, user.Password))
@@ -509,10 +509,10 @@ const deleteRecord = async (app_id, resource_id, data) => {
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecordAdmin = async (app_id, resource_id) => {
-    /**@type{server['ORM']['Object']['IamUser']}*/
+    /**@type{types_server.ORM['Object']['IamUser']}*/
     const user = get(app_id, resource_id).result[0];
     if (user)
         return server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamUser', delete:{resource_id:resource_id, data_app_id:null}});

@@ -1,7 +1,7 @@
 /** @module server/db/IamAppAccess */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -10,7 +10,7 @@ const {server} = await import ('../server.js');
  * @function
  * @param {number} app_id
  * @param {number|null} resource_id
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamAppAccess'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['IamAppAccess'][] }}
  */
 const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamAppAccess',resource_id, null);
     
@@ -19,8 +19,8 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamAppAccess',
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamAppAccess']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamAppAccess']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) =>{
     //check required attributes
@@ -29,8 +29,8 @@ const post = async (app_id, data) =>{
         data.Res != null &&
         data.Ip != null){
         //security check that token is not used already
-        if (server.ORM.getObject(app_id, 'IamAppAccess', null, null).result.filter((/**@type{server['ORM']['Object']['IamAppAccess']} */row)=>row.Token==data.Token && data.Token !=null).length==0){
-            /**@type{server['ORM']['Object']['IamAppAccess']} */
+        if (server.ORM.getObject(app_id, 'IamAppAccess', null, null).result.filter((/**@type{types_server.ORM['Object']['IamAppAccess']} */row)=>row.Token==data.Token && data.Token !=null).length==0){
+            /**@type{types_server.ORM['Object']['IamAppAccess']} */
             const data_new = {};
             data_new.Id =  Date.now();
             //required
@@ -66,12 +66,12 @@ const post = async (app_id, data) =>{
  * @param {number} app_id 
  * @param {number|null} resource_id
  * @param {*} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async (app_id, resource_id, data) =>{
     //check required attributes
     if (app_id!=null && resource_id != null){
-        /**@type{server['ORM']['Object']['IamAppAccess']} */
+        /**@type{types_server.ORM['Object']['IamAppAccess']} */
         const data_update = {};
         //check allowed attributes to update
         if (data.res!=null)
@@ -92,7 +92,7 @@ const update = async (app_id, resource_id, data) =>{
  * @function
  * @param {number} app_id
  * @param {number} resource_id
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async (app_id, resource_id) =>
     server.ORM.Execute({app_id:app_id, dml:'DELETE', object:'IamAppAccess', delete:{resource_id:resource_id, data_app_id:null}});

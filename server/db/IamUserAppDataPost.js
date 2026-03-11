@@ -1,7 +1,7 @@
 /** @module server/db/IamUserAppDataPost */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -13,16 +13,16 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  data_app_id:number|null,
  *                  iam_user_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserAppDataPost'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserAppDataPost'][] }}
  */
 const get = parameters =>{
     const IamUserApp = server.ORM.db.IamUserApp.get({ app_id:parameters.app_id,
                                         resource_id:null, 
                                         data:{iam_user_id:parameters.data.iam_user_id, data_app_id:parameters.data.data_app_id}}).result;
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserAppDataPost',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPost']}*/row)=>
                         (IamUserApp??[])
-                        .filter((/**@type{server['ORM']['Object']['IamUserApp']}*/rowIamUserApp)=>
+                        .filter((/**@type{types_server.ORM['Object']['IamUserApp']}*/rowIamUserApp)=>
                             row.IamUserAppId == rowIamUserApp.Id
                         )
                         .length>0
@@ -41,15 +41,15 @@ const get = parameters =>{
  * @param {{app_id:number,
  *          resource_id:number,
  *          data:{id_current_user?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppDataPostgetProfileUserPosts'][] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['View']['IamUserAppDataPostgetProfileUserPosts'][] }>}
  */
 const getViewProfileUserPosts = async parameters =>{
-    /**@type{server['server']['response'] & {result?:(server['ORM']['Object']['IamUserAppDataPost'])[]}} */
+    /**@type{types_server.server['response'] & {result?:(types_server.ORM['Object']['IamUserAppDataPost'])[]}} */
     const result = get({app_id:parameters.app_id, resource_id:null, data:{data_app_id:parameters.app_id, iam_user_id:parameters.resource_id}});
     if (result.result)
         if (result.result.length>0)
             return {result:result.result
-                    .map((/**@type{(server['ORM']['Object']['IamUserAppDataPost'])}*/row)=>{
+                    .map((/**@type{(types_server.ORM['Object']['IamUserAppDataPost'])}*/row)=>{
                         return {
                             Id: row.Id,
                             Description:row.Document?.Description??'', 
@@ -91,7 +91,7 @@ const getViewProfileUserPosts = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result:server['ORM']['View']['IamUserAppDataPostgetProfileStatLike']}>}
+ * @returns {Promise.<types_server.server['response'] & {result:types_server.ORM['View']['IamUserAppDataPostgetProfileStatLike']}>}
  */
  const getViewProfileStatLike = async parameters =>{
 
@@ -106,7 +106,7 @@ const getViewProfileUserPosts = async parameters =>{
                                                                         data:{  iam_user_id:parameters.resource_id, 
                                                                                 data_app_id:parameters.app_id,
                                                                                 iam_user_app_data_post_id:null}}).result??[])
-                                            .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row_like)=>
+                                            .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPostLike']}*/row_like)=>
                                                 row_like.IamUserAppId == (get({app_id:parameters.app_id, 
                                                     resource_id:row_like.IamUserAppDataPostId,
                                                     data:{  iam_user_id:null, 
@@ -118,9 +118,9 @@ const getViewProfileUserPosts = async parameters =>{
                                                                         data:{  iam_user_id:null, 
                                                                                 data_app_id:parameters.app_id,
                                                                                 iam_user_app_data_post_id:null}}).result??[])
-                                            .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row_like)=>
+                                            .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPostLike']}*/row_like)=>
                                                 (result_liked??[])
-                                                .filter((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/data_post)=>
+                                                .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPost']}*/data_post)=>
                                                     row_like.IamUserAppDataPostId==data_post.Id
                                                 ).length>0
                                             ).length
@@ -137,7 +137,7 @@ const getViewProfileUserPosts = async parameters =>{
  * @param {{app_id:number,
  *         data:{statchoice?:string|null}
  *       }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['View']['IamUserAppDataPostGetProfileStatPost'][] }>}
  */
 const getViewProfileStatPost = async parameters =>{
     if (parameters.data.statchoice==null)
@@ -150,14 +150,14 @@ const getViewProfileStatPost = async parameters =>{
                                                                         data:{  iam_user_id:null, 
                                                                                 data_app_id:parameters.app_id,
                                                                                 iam_user_app_data_post_id:null}})
-                                        .result??[]).map((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row)=>{return {IamUserAppDataPostId:row.IamUserAppDataPostId}}):
+                                        .result??[]).map((/**@type{types_server.ORM['Object']['IamUserAppDataPostLike']}*/row)=>{return {IamUserAppDataPostId:row.IamUserAppDataPostId}}):
                                     (server.ORM.db.IamUserAppDataPostView.get({
                                                                 app_id:parameters.app_id, 
                                                                 resource_id:null})
-                                            .result??[]).map((/**@type{server['ORM']['Object']['IamUserAppDataPostView']}*/row)=>{return {IamUserAppDataPostId:row.IamUserAppDataPostId}});
+                                            .result??[]).map((/**@type{types_server.ORM['Object']['IamUserAppDataPostView']}*/row)=>{return {IamUserAppDataPostId:row.IamUserAppDataPostId}});
         /**@ts-ignore */
         return {result:server.ORM.db.IamUser.get(parameters.app_id, null).result
-                        .filter((/**@type{server['ORM']['Object']['IamUser']}*/row_user)=>
+                        .filter((/**@type{types_server.ORM['Object']['IamUser']}*/row_user)=>
                             row_user.Type=='USER' &&
                             //count users with posts
                             (get({  app_id:parameters.app_id, 
@@ -166,13 +166,13 @@ const getViewProfileStatPost = async parameters =>{
                                                                 iam_user_id:row_user.Id??0}})
                                                     .result??[]).length>0
                         )
-                        .map((/**@type{server['ORM']['Object']['IamUser']}*/row_user)=>{
+                        .map((/**@type{types_server.ORM['Object']['IamUser']}*/row_user)=>{
                             //get all user posts
                             const UserPost = (get({  app_id:parameters.app_id, 
                                                     resource_id:null,
                                                     data:{  data_app_id:parameters.app_id,
                                                             iam_user_id:row_user.Id??0}})
-                                                .result??[]).map((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/rowUserPost) =>{return {Id:rowUserPost.Id}})
+                                                .result??[]).map((/**@type{types_server.ORM['Object']['IamUserAppDataPost']}*/rowUserPost) =>{return {Id:rowUserPost.Id}})
                             return {
                                 Top:server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
                                         'LIKED_POST':
@@ -183,27 +183,27 @@ const getViewProfileStatPost = async parameters =>{
                                 Count:server.ORM.UtilNumberValue(parameters.data.statchoice)==4?
                                                 (postRecords??[])
                                                 /**@ts-ignore */
-                                                .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/rowIamUserAppDataPostLike)=>
+                                                .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPostLike']}*/rowIamUserAppDataPostLike)=>
                                                         (UserPost??[])
                                                         /**@ts-ignore */
-                                                        .filter((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/rowUserPost)=> 
+                                                        .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPost']}*/rowUserPost)=> 
                                                             rowUserPost.Id == rowIamUserAppDataPostLike.IamUserAppDataPostId
                                                         ).length>0
                                                 ).length:
                                                     (postRecords??[])
                                                     /**@ts-ignore */
-                                                    .filter((/**@type{server['ORM']['Object']['IamUserAppDataPostView']}*/rowIamUserAppDataPostView)=>
+                                                    .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPostView']}*/rowIamUserAppDataPostView)=>
                                                         (UserPost??[])
                                                         /**@ts-ignore */
-                                                        .filter((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/rowUserPost)=> 
+                                                        .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPost']}*/rowUserPost)=> 
                                                             rowUserPost.Id == rowIamUserAppDataPostView.IamUserAppDataPostId
                                                         ).length>0
                                                     ).length
                             };
                         })
                         /**@ts-ignore */
-                        .sort(( /**@type{server['ORM']['View']['IamUserAppDataPostGetProfileStatPost']}*/a,
-                                /**@type{server['ORM']['View']['IamUserAppDataPostGetProfileStatPost']}*/b)=>a.Count>b.Count?-1:1),
+                        .sort(( /**@type{types_server.ORM['View']['IamUserAppDataPostGetProfileStatPost']}*/a,
+                                /**@type{types_server.ORM['View']['IamUserAppDataPostGetProfileStatPost']}*/b)=>a.Count>b.Count?-1:1),
                 type:'JSON'};
     }
 };
@@ -218,7 +218,7 @@ const getViewProfileStatPost = async parameters =>{
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{detailchoice?:string|null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail'][] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['View']['IamUserAppdataPostGetProfileUserPostDetail'][] }>}
  */
 const getViewProfileUserPostDetail = async parameters =>{
     if (parameters.data.detailchoice==null)
@@ -244,15 +244,15 @@ const getViewProfileUserPostDetail = async parameters =>{
                                                             data:{  iam_user_id:null, 
                                                                     data_app_id:parameters.app_id,
                                                                     iam_user_app_data_post_id:null}}).result??[])
-                                .filter ((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row)=>
+                                .filter ((/**@type{types_server.ORM['Object']['IamUserAppDataPostLike']}*/row)=>
                                     (result_IamUserAppDataPost??[])
-                                    .filter((/**@type{server['ORM']['Object']['IamUserAppDataPost']}*/data_post)=>
+                                    .filter((/**@type{types_server.ORM['Object']['IamUserAppDataPost']}*/data_post)=>
                                         data_post.Id == row.IamUserAppDataPostId
                                     ).length>0
                                 );
         /**@ts-ignore */
         return { result: result
-                        .map((/**@type{server['ORM']['Object']['IamUserAppDataPostLike']}*/row)=>{
+                        .map((/**@type{types_server.ORM['Object']['IamUserAppDataPostLike']}*/row)=>{
                             const result_IamUserApp_id =    (server.ORM.db.IamUserApp.get({app_id:parameters.app_id, 
                                                                             resource_id:server.ORM.UtilNumberValue(parameters.data.detailchoice)==6?
                                                                                             (get({   app_id:parameters.app_id, 
@@ -261,7 +261,7 @@ const getViewProfileUserPostDetail = async parameters =>{
                                                                                                             data_app_id:null}}).result??[])[0].IamUserAppId:
                                                                                                 row.IamUserAppId,
                                                                             data:{iam_user_id:null, data_app_id:null}}).result??[])[0]?.IamUserId;
-                            /**@type{server['ORM']['Object']['IamUser']} */
+                            /**@type{types_server.ORM['Object']['IamUser']} */
                             const result_IamUser = server.ORM.db.IamUser.get(parameters.app_id, 
                                                                 result_IamUserApp_id).result[0];
                             return {
@@ -274,8 +274,8 @@ const getViewProfileUserPostDetail = async parameters =>{
                             };
                         })
                         /**@ts-ignore */
-                        .sort(( /**@type{server['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail']}*/a,
-                                /**@type{server['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail']}*/b)=>a.Username<b.Username?-1:1),
+                        .sort(( /**@type{types_server.ORM['View']['IamUserAppdataPostGetProfileUserPostDetail']}*/a,
+                                /**@type{types_server.ORM['View']['IamUserAppdataPostGetProfileUserPostDetail']}*/b)=>a.Username<b.Username?-1:1),
                 type:'JSON'};
    }
 };
@@ -285,9 +285,9 @@ const getViewProfileUserPostDetail = async parameters =>{
  * @function
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
- *          data:{  iam_user_app_id:server['ORM']['Object']['IamUserAppDataPost']['IamUserAppId'],
- *                  document:server['ORM']['Object']['IamUserAppDataPost']['Document']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert']}>}
+ *          data:{  iam_user_app_id:types_server.ORM['Object']['IamUserAppDataPost']['IamUserAppId'],
+ *                  document:types_server.ORM['Object']['IamUserAppDataPost']['Document']}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert']}>}
  */
 const post = async parameters => {
     //check required attributes
@@ -295,7 +295,7 @@ const post = async parameters => {
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
+        /**@type{types_server.ORM['Object']['IamUserAppDataPost']} */
         const data_new =     {
                                 Id:Date.now(),
                                 IamUserAppId:parameters.data.iam_user_app_id, 
@@ -313,11 +313,11 @@ const post = async parameters => {
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number,
- *          data:{document:server['ORM']['Object']['IamUserAppDataPost']['Document']}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ *          data:{document:types_server.ORM['Object']['IamUserAppDataPost']['Document']}}} parameters
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async parameters =>{
-    /**@type{server['ORM']['Object']['IamUserAppDataPost']} */
+    /**@type{types_server.ORM['Object']['IamUserAppDataPost']} */
     const data_update = {};
     //allowed parameters to update:
     if (parameters.data.document!=null)
@@ -338,7 +338,7 @@ const update = async parameters =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>
     server.ORM.Execute({  app_id:parameters.app_id, 

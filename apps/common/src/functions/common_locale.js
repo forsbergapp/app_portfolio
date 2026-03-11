@@ -2,7 +2,7 @@
  * @module apps/common/src/functions/common_locale
 */
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -72,7 +72,7 @@ const formatLocale = locale =>{
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:{data: string}[]}>}
+ * @returns {Promise.<types_server.server['response'] & {result:{data: string}[]}>}
  */
 const appFunction = async parameters =>{
     

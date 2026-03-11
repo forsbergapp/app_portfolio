@@ -2,8 +2,6 @@
  * @module apps/common/src/component/common_server_error
  */
 
-const {server} = await import('../../../../server/server.js');
-
 /**
  * @name template
  * @description Server error

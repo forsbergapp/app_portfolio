@@ -2,10 +2,6 @@
  * @module apps/common/src/component/common_app
  */  
 
-/**
- * @import {server} from '../../../../server/types.d.ts';
- */
-
 const {server} = await import('../../../../server/server.js');
 
 /**

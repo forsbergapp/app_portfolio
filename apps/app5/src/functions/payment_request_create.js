@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
@@ -11,7 +11,7 @@ const {server} = await import('../../../../server/server.js');
  * @param {{app_id:number,
  *          authorization:string,
  *          ip:string}} parameters
- * @returns {Promise.<server['iam']['iam_access_token_claim'] & {exp?:number, iat?:number}|null>}
+ * @returns {Promise.<types_server.iam['iam_access_token_claim'] & {exp?:number, iat?:number}|null>}
  */
 const getToken = async parameters => {
    const token_verify = server.iam.iamUtilTokenGet(parameters.app_id, parameters.authorization, 'APP_ACCESS_EXTERNAL');
@@ -20,7 +20,7 @@ const getToken = async parameters => {
        token_verify.scope          == 'APP_EXTERNAL' &&
        //authenticated saved values in iam_app_access
        server.ORM.db.IamAppAccess.get(parameters.app_id, null).result
-                       .filter((/**@type{server['ORM']['Object']['IamAppAccess']}*/row)=>
+                       .filter((/**@type{types_server.ORM['Object']['IamAppAccess']}*/row)=>
                                                                //Authenticate the token type
                                                                row.Type                    == 'APP_ACCESS_EXTERNAL' &&
                                                                //Authenticate app id
@@ -49,15 +49,15 @@ const getToken = async parameters => {
 *          idToken:string,
 *          authorization:string,
 *          accept_language:string}} parameters
-* @returns {Promise.<server['server']['response'] & {result?:{message:string}}>}
+* @returns {Promise.<types_server.server['response'] & {result?:{message:string}}>}
 */
 const paymentRequestCreate = async parameters =>{
    
-   /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */
+   /**@ts-ignore @type{types_server.ORM['Object']['AppDataEntity']} */
    const Entity    = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                            resource_id:null, 
                                            data:{data_app_id:parameters.app_id}}).result[0];
-    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:currency}} */
+    /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:currency}} */
    const currency = server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                resource_id:null, 
                                                data:{  iam_user_id:null,
@@ -65,7 +65,7 @@ const paymentRequestCreate = async parameters =>{
                                                        resource_name:'CURRENCY',
                                                        app_data_entity_id:Entity.Id
                                                }}).result[0];
-   /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:merchant}} */
+   /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:merchant}} */
    const merchant = (server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                all_users:true,
                                                resource_id:null, 
@@ -75,7 +75,7 @@ const paymentRequestCreate = async parameters =>{
                                                        app_data_entity_id:Entity.Id
                                                }}).result??[])
                         /**@ts-ignore */
-                       .filter((/**@type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:merchant}}*/merchant)=>
+                       .filter((/**@type{types_server.ORM['Object']['AppDataResourceMaster'] & {Document:merchant}}*/merchant)=>
                            server.ORM.UtilNumberValue(merchant.Document?.MerchantId)==parameters.data.id
                        )[0];
                        
@@ -104,10 +104,10 @@ const paymentRequestCreate = async parameters =>{
                                                                    }
                                                                }).result??[])
                                         /**@ts-ignore */
-                                       .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/account)=>
+                                       .filter((/**@type{types_server.ORM['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/account)=>
                                             account.Document?.BankAccountVpa==merchant.Document.MerchantVpa
                                        )[0].Document;
-       /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}} */
+       /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}} */
        const bankaccount_payer = (server.ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                                all_users:true,
                                                                resource_id:null, 
@@ -119,7 +119,7 @@ const paymentRequestCreate = async parameters =>{
                                                                    }
                                                                }).result??[])
                                     /**@ts-ignore */
-                                   .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/account)=>
+                                   .filter((/**@type{types_server.ORM['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/account)=>
                                        account.Document?.BankAccountVpa==body_decrypted.payerid
                                    )[0];
        if (merchant.Document.MerchantApiSecret==body_decrypted.api_secret && 
@@ -143,7 +143,7 @@ const paymentRequestCreate = async parameters =>{
                                                Message:         body_decrypted.message,
                                                Status:          'PENDING'
                                            };
-               /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster']} */
+               /**@ts-ignore @type{types_server.ORM['Object']['AppDataResourceMaster']} */
                const data_new_payment_request = {
                                                Document                                : data_payment_request,
                                                IamUserAppId                            : merchant.IamUserAppId,
@@ -167,7 +167,7 @@ const paymentRequestCreate = async parameters =>{
                                                                                                ip:                 parameters.ip,
                                                                                                scope:              'APP_EXTERNAL'});
                //Save access info in IAM_APP_ACCESS table
-               /**@ts-ignore @type{server['ORM']['Object']['IamAppAccess']} */
+               /**@ts-ignore @type{types_server.ORM['Object']['IamAppAccess']} */
                const file_content = {	
                                        Type:                'APP_ACCESS_EXTERNAL',
                                        IamUserAppId:        null,

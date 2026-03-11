@@ -1,7 +1,7 @@
 /** @module server/db/IamUserView */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -12,11 +12,11 @@ const {server} = await import ('../server.js');
  *          resource_id:number|null,
  *          data:{  iam_user_id:number|null,
  *                  iam_user_id_view:number|null}}} parameters
- * @returns {server['server']['response'] & {result?:server['ORM']['Object']['IamUserView'][] }}
+ * @returns {types_server.server['response'] & {result?:types_server.ORM['Object']['IamUserView'][] }}
  */
 const get = parameters =>{
     const result = (server.ORM.getObject(parameters.app_id, 'IamUserView',parameters.resource_id, null).result??[])
-                    .filter((/**@type{server['ORM']['Object']['IamUserView']}*/row)=>
+                    .filter((/**@type{types_server.ORM['Object']['IamUserView']}*/row)=>
                         row.IamUserId == (parameters.data.iam_user_id ?? row.IamUserId) &&
                         row.IamUserIdView == (parameters.data.iam_user_id_view ?? row.IamUserIdView) );
     if (result.length>0 || parameters.resource_id==null)
@@ -31,8 +31,8 @@ const get = parameters =>{
  * @function
  * @function
  * @param {number} app_id,
- * @param {server['ORM']['Object']['IamUserView']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamUserView']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) =>{
     //check required attributes
@@ -40,7 +40,7 @@ const post = async (app_id, data) =>{
         return server.getError({statusCode: 400});
     }
     else{
-        /**@type{server['ORM']['Object']['IamUserView']} */
+        /**@type{types_server.ORM['Object']['IamUserView']} */
         const data_new =     {
                                 Id:Date.now(),
                                 IamUserId:data.IamUserId, 
@@ -60,7 +60,7 @@ const post = async (app_id, data) =>{
  * @memberof ROUTE_REST_API
  * @param {{app_id:number,
  *          resource_id:number|null}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_delete'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_delete'] }>}
  */
 const deleteRecord = async parameters =>
     server.ORM.Execute({app_id:parameters.app_id, 

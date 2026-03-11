@@ -1,7 +1,7 @@
 /** @module server/db/IamAppIdToken */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @param {{app_id:number,
  *          resource_id:number|null,
  *          data:{data_app_id:number|null}}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['IamAppIdToken'][] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['IamAppIdToken'][] }}
  */
 const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamAppIdToken',parameters.resource_id, parameters.data.data_app_id);
     
@@ -20,8 +20,8 @@ const get = parameters =>server.ORM.getObject(parameters.app_id, 'IamAppIdToken'
  * @description Add record
  * @function
  * @param {number} app_id 
- * @param {server['ORM']['Object']['IamAppIdToken']} data
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_insert'] }>}
+ * @param {types_server.ORM['Object']['IamAppIdToken']} data
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_insert'] }>}
  */
 const post = async (app_id, data) => {
     //check required attributes
@@ -31,8 +31,8 @@ const post = async (app_id, data) => {
         data.Token != null &&
         data.Ip != null){
         //security check that token is not used already
-        if (server.ORM.getObject(app_id, 'IamAppIdToken', null, null).result.filter((/**@type{server['ORM']['Object']['IamAppIdToken']} */row)=>row.Token==data.Token).length==0){
-            /**@type{server['ORM']['Object']['IamAppIdToken']} */
+        if (server.ORM.getObject(app_id, 'IamAppIdToken', null, null).result.filter((/**@type{types_server.ORM['Object']['IamAppIdToken']} */row)=>row.Token==data.Token).length==0){
+            /**@type{types_server.ORM['Object']['IamAppIdToken']} */
             const data_new = {};
             data_new.Id = Date.now();
             //required

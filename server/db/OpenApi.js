@@ -1,7 +1,7 @@
 /** @module server/db/OpenApi */
 
 /**
- * @import {server} from '../types.d.ts'
+ * @import types_server from '../types.d.ts'
  */
 
 const {server} = await import ('../server.js');
@@ -11,7 +11,7 @@ const {server} = await import ('../server.js');
  * @description Get
  * @function
  * @param {{app_id:number}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['OpenApi'] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['OpenApi'] }}
  */
 const get = parameters => {
     return {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null), 
@@ -23,14 +23,14 @@ const get = parameters => {
  * @description Returns #/servers for given pathType or all servers without variables.config for each server
  * @function
  * @param {{app_id:number,
- *          data:{pathType?:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default']|null}}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['OpenApi']['servers'] }}
+ *          data:{pathType?:types_server.ORM['Object']['OpenApi']['servers'][0]['x-type']['default']|null}}} parameters
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['OpenApi']['servers'] }}
  */
 const getViewServers = parameters =>{
     return {result:server.ORM.getObject(parameters.app_id, 'OpenApi',null, null).servers
-                    .filter((/**@type{server['ORM']['Object']['OpenApi']['servers'][0] }*/server)=>server['x-type'].default==(parameters.data.pathType??server['x-type'].default))
-                    .map((/**@type{server['ORM']['Object']['OpenApi']['servers'][0]}*/server)=>{
-                        /**@type{server['ORM']['Object']['OpenApi']['servers'][0]} */
+                    .filter((/**@type{types_server.ORM['Object']['OpenApi']['servers'][0] }*/server)=>server['x-type'].default==(parameters.data.pathType??server['x-type'].default))
+                    .map((/**@type{types_server.ORM['Object']['OpenApi']['servers'][0]}*/server)=>{
+                        /**@type{types_server.ORM['Object']['OpenApi']['servers'][0]} */
                         const serverReturn = {
                             "url":          server.url,
                             "description":  server.description,
@@ -52,7 +52,7 @@ const getViewServers = parameters =>{
  * @description OpenApi get without #/components/parameters/config
  * @function
  * @param {{app_id:number}} parameters
- * @returns {server['server']['response'] & {result:server['ORM']['Object']['OpenApi'] }}
+ * @returns {types_server.server['response'] & {result:types_server.ORM['Object']['OpenApi'] }}
  */
 const getViewWithoutConfig = parameters => {
     const openApi = server.ORM.getObject(parameters.app_id, 'OpenApi',null, null);
@@ -66,12 +66,12 @@ const getViewWithoutConfig = parameters => {
  * @description Update a key in openApi
  * @function
  * @param {{app_id:number,
- *          data:{  openApiKey: keyof server['ORM']['Object']['OpenApi'],
+ *          data:{  openApiKey: keyof types_server.ORM['Object']['OpenApi'],
  *                  openApiValue: *}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const update = async parameters => {
-    /**@type{server['ORM']['Object']['OpenApi']} */
+    /**@type{types_server.ORM['Object']['OpenApi']} */
     const OpenApi = get({app_id:parameters.app_id}).result;
     const created = OpenApi.info['x-created'];
     OpenApi[parameters.data.openApiKey] = parameters.data.openApiValue
@@ -84,7 +84,7 @@ const update = async parameters => {
                                 update:{resource_id:null, 
                                         data_app_id:null, 
                                         data:OpenApi}})
-            .then((/**@type{server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update']}}*/result)=>{
+            .then((/**@type{types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update']}}*/result)=>{
                     if('result' in result)
                         if (result.result?.AffectedRows??0>0){
                             //Update OpenApi cache
@@ -104,10 +104,10 @@ const update = async parameters => {
  *              Only one key allowed to be updated for each request.
  * @function
  * @param {{app_id:number,
- *         data:{config_key:keyof server['ORM']['Object']['OpenApi']['servers'][0]['variables']['config'],
+ *         data:{config_key:keyof types_server.ORM['Object']['OpenApi']['servers'][0]['variables']['config'],
  *               config_value:*}
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const updateConfig = async parameters =>{
     const old = server.ORM.getObject(parameters.app_id, 'OpenApi',null, null);
@@ -134,12 +134,12 @@ const updateConfig = async parameters =>{
  *                  return 400
  * @function
  * @param {{app_id:number,
- *         data:{pathType:server['ORM']['Object']['OpenApi']['servers'][0]['x-type']['default'],
+ *         data:{pathType:types_server.ORM['Object']['OpenApi']['servers'][0]['x-type']['default'],
  *               host: string,
  *               port: number,
  *               basePath: string}
  *          }} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['MetaData']['common_result_update'] }>}
+ * @returns {Promise.<types_server.server['response'] & {result?:types_server.ORM['MetaData']['common_result_update'] }>}
  */
 const updateServersVariables = async parameters =>{
     const old = server.ORM.getObject(parameters.app_id, 'OpenApi',null, null);

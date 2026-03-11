@@ -2,7 +2,7 @@
  * @module test/test.js
  */
 /**
- * @import {server} from '../server/types.d.ts'
+ * @import types_server from '../server/types.d.ts'
  */
 const {server} = await import('../server/server.js');
 /**
@@ -13,7 +13,7 @@ const {server} = await import('../server/server.js');
  * @param {function} fn
  * @returns {Promise.<{ describe:string,
  *                      it:{should:string,
- *                          expect:server['test']['expect_result'][]}}>}
+ *                          expect:types_server.test['expect_result'][]}}>}
  */
 const describe = async (description, fn) =>{
     return {
@@ -30,7 +30,7 @@ const describe = async (description, fn) =>{
  * @param {function} fn
  * @param {number|null} timeout
  * @returns {Promise.<{ should:string,
-*                       expect:Promise.<server['test']['expect_result'][]>}>}
+*                       expect:Promise.<types_server.test['expect_result'][]>}>}
 */
 const it = async (itDescription, fn, timeout=null) =>{
    return {
@@ -67,7 +67,7 @@ class Expect {
      * @param {*} actual
      * @param {*} expect
      * @param {*} expect_result
-     * @returns {server['test']['expect_result']}
+     * @returns {types_server.test['expect_result']}
      */
     static result = (desc, actual, expect, expect_result) => {
         return {
@@ -86,7 +86,7 @@ class Expect {
      *              or other complex data structure support
 	 * @method
      * @param {*} expected
-     * @returns {server['test']['expect_result']}
+     * @returns {types_server.test['expect_result']}
      */
     toBe = expected => Expect.result(this.desc, this.actual, expected, this.actual == expected);
 
@@ -95,7 +95,7 @@ class Expect {
      * @description not.toBe method 
 	 * @method
      * @param {*} expected
-     * @returns {server['test']['expect_result']}
+     * @returns {types_server.test['expect_result']}
      */
     'not.toBe' = expected => Expect.result(this.desc, this.actual, expected, this.actual != expected);
     
@@ -103,7 +103,7 @@ class Expect {
      * @name toBeUndefined
      * @description toBeUndefined method
 	 * @method
-     * @returns {server['test']['expect_result']}
+     * @returns {types_server.test['expect_result']}
      */
     toBeUndefined = () => Expect.result(this.desc, this.actual, undefined, this.actual == undefined);
 
@@ -111,7 +111,7 @@ class Expect {
      * @name not.toBeUndefined
      * @description not.toBeUndefined method 
 	 * @method
-     * @returns {server['test']['expect_result']}
+     * @returns {types_server.test['expect_result']}
      */
     'not.toBeUndefined' = () => Expect.result(this.desc, this.actual, '!=undefined', this.actual != undefined);
 
@@ -120,7 +120,7 @@ class Expect {
      * @description toBeLessThan method
      * @param {number} expected
 	 * @method
-     * @returns {server['test']['expect_result']}
+     * @returns {types_server.test['expect_result']}
      */
     toBeLessThan = expected => Expect.result(this.desc, this.actual, expected, this.actual < expected);
 
@@ -129,7 +129,7 @@ class Expect {
      * @description toBeGreaterThan method
      * @param {number} expected
 	 * @method
-     * @returns {server['test']['expect_result']}
+     * @returns {types_server.test['expect_result']}
      */
     toBeGreaterThan = expected => Expect.result(this.desc, this.actual, expected, this.actual > expected);
     
@@ -157,7 +157,7 @@ const expect = (desc,actual) => new Expect(desc, actual);
  * @returns {Promise <{ result:*, 
  *                      reqSize:number, 
  *                      resSize:number, 
- *                      status:server['server']['res']['statusCode']|undefined}>}
+ *                      status:types_server.server['res']['statusCode']|undefined}>}
  */
 const serverRequest = async parameters =>{
     const protocol = await import('node:http')
