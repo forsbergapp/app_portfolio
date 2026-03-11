@@ -1,7 +1,7 @@
 /** @module apps/common/src/common */
 
 /**
- * @import {server} from '../../../server/types.js'
+ * @import {server} from '../../../server/types.d.ts'
  * 
  */
 

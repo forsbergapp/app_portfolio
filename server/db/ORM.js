@@ -32,7 +32,7 @@
  */
 
 /**
- * @import {server} from '../types.js'
+ * @import {server} from '../types.d.ts'
  * @import {Dirent} from 'node:fs'
  */
 
@@ -199,37 +199,108 @@ class ORM_class {
             }
             //cache frequent used OpenConfig 
             this.setOpenApiCache();
-            //load types.js
-            const file = await fs.promises.readFile(`${server.info.serverProcess.cwd()}/server/types.js`, 'utf8').then(file=>file.toString().replaceAll('\r\n','\n'));
-            //get all types for ORM objects
-            const regexp_comments = /\/\*\*([\s\S]*?)\*\//g;
+            //load types
+            const file = await fs.promises.readFile(`${server.info.serverProcess.cwd()}/server/types.d.ts`, 'utf8').then(file=>file.toString().replaceAll('\r\n','\n'));
+            
             /**@type {[string,string][][]} */
-            const types = [...file.matchAll(regexp_comments)]
-                            .map(row=>row[1].substring(row.indexOf('*')+1))
-                            .filter(row=>
-                                row.indexOf('memberof ORM')>-1
+            const types = 
+                            //split types to records with name and types
+                            file
+                            .split('type server_db_object_')
+                            //remove first
+                            .filter((row,index)=>index!=0)
+                            //split row into an array with [object, properties]
+                            .map(row=>
+                                [row
+                                    .substring(0,row.indexOf('='))
+                                    .trimStart().trimEnd(),
+                                row
+                                    .substring(row.indexOf('=')+1)
+                                    //each property must have tag before to identify properties
+                                    //to simplify how to read typescript types
+                                    .split('/**@property*/')]
                             )
-                            .map(row=>row.split('@'))
-                            .map(row=>row.filter(rowsub=>
-                                    !rowsub.toLowerCase().startsWith('\n') &&
-                                    rowsub.toLowerCase().indexOf('description db')==-1 &&
-                                    rowsub.toLowerCase().indexOf('memberof')==-1
-                                    )
+                            //remove comment
+                            .map(row=>
+                                [row[0],
+                                    row[1]
+                                    /**@ts-ignore */
                                     .map(row=>
                                         row
-                                            .replace('typedef','')
-                                            .replace('property','')
-                                            .replace('server_db_table_','Table ')
-                                            .replace('server_db_document_','Document ')
-                                            .replace(row.substring(row.indexOf('\n')),'')
-                                            .trimStart()
-                                            .trimEnd()
-                                            .split(' ').reverse()
+                                        //remove post comment
+                                        .substring(0,row.indexOf('/**')>-1?
+                                                            row.indexOf('/**'):
+                                                                row.length).trim()
                                     )
-                                    .map(row=>[row[0],row.slice(1).reverse().join('').substring(1,row.slice(1).reverse().join('').length-1)])
+                                ]
                             )
-            //convert types array to OpenApi structure
-            /**@type{{ ORM:{[key in server['ORM']['MetaData']['Object']['Name']]:{
+                             //Remove wrapping { and }
+                            .map(row=>
+                                [
+                                    row[0],
+                                    row[1]
+                                    /**@ts-ignore */
+                                    .map(row=>
+                                        row
+                                        .substring(row[0]=='{'?
+                                                        1:
+                                                            0,
+                                                   row[row.length-1]=='}'?
+                                                        row.length-1:
+                                                                row.length)
+                                    )
+                                ]
+                            )
+                            //Split property and type
+                            .map(row=>
+                                [row[0],
+                                    row[1]
+                                    /**@ts-ignore */
+                                    .map(row=>
+                                        row
+                                        .split(':')
+                                    )
+                                ]
+                            )
+                            //cleanup properties
+                            .map(row=>
+                                 [
+                                    //object
+                                    row[0].trim(),
+                                    //properties
+                                    row[1]
+                                    /**@ts-ignore */
+                                    .filter(row=>
+                                        row[0].trim()!=''
+                                    )
+                                    //trim properties
+                                    /**@ts-ignore */
+                                    .map(row=>
+                                        //property    
+                                        //join ':' inside property
+                                        [row[0].trim(),
+                                        //type    
+                                        row.length>2?
+                                                    row.slice(1).join(':').trim():
+                                                        row[1].trim()]
+                                    )
+                                    
+                                ]
+                            )
+                            //remove last comma in types
+                            .map(row=>[row[0],
+                                        /**@ts-ignore */
+                                        row[1].map(row=>[
+                                                                row[0],
+                                                                row[1]
+                                                                .substring(0,row[1]
+                                                                                .substring(row[1].length-1)==','?
+                                                                                    row[1].lastIndexOf(','):
+                                                                                        row[1].length)])])
+                            
+            /**
+             * @description convert types array to OpenApi structure
+             * @type{{ ORM:{[key in server['ORM']['MetaData']['Object']['Name']]:{
              *                  constraints:{Pk:server['ORM']['MetaData']['Object']['Pk'],
              *                               Fk:server['ORM']['MetaData']['Object']['Fk'],
              *                               Uk: server['ORM']['MetaData']['Object']['Uk']}, 
@@ -242,12 +313,12 @@ class ORM_class {
              *          } }}} */
             this.JSONSchema = {
                                 ORM: {
-                                        ...types.reduce((orm,row)=>{
+                                        ...types.reduce((orm,row_object)=>{
                                                 /**@ts-ignore */
-                                                orm[row[0][0]] = {
+                                                orm[row_object[0]] = {
                                                     properties: {
                                                         ...{
-                                                            ...row.splice(1).reduce((row,column)=>{
+                                                            ...row_object[1].reduce((row,column)=>{
                                                                 /**@ts-ignore */
                                                                 row[column[0]]={
                                                                     type: column[1],
@@ -259,7 +330,10 @@ class ORM_class {
                                                         }
                                                     },
                                                     ...DB.data
-                                                        .filter(object=>object.Name==row[0][0])
+                                                        .filter(object=>
+                                                            /**@ts-ignore */
+                                                            object.Name==row_object[0]
+                                                        )
                                                         .map(row=>{
                                                             return {
                                                                 description:row.Description,

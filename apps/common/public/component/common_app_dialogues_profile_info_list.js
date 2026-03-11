@@ -2,7 +2,7 @@
  * @module apps/common/component/common_app_dialogues_profile_info_list
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
 /**

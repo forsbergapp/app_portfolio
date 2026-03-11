@@ -5,7 +5,7 @@
 
 
 /**
- * @import {config} from './types.js'
+ * @import types from './types.d.ts'
  */
 
 /**
@@ -35,7 +35,7 @@ const serverStart = async () =>{
     const serviceregistry = await import(`${serverProcess.cwd()}/sdk/server/serviceregistry.js`);
     /**
      * @description Get config
-     * @type{config} 
+     * @type{types.config} 
      */
     const Config = await serviceregistry.commonConfig({service:'BATCH', path:serverProcess.cwd()});
 

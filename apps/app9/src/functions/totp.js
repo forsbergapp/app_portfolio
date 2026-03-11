@@ -2,7 +2,7 @@
  * @module apps/app9/src/functions/totp
  */
 /**
- * @import {server} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -17,7 +17,7 @@ const {server} = await import('../../../../server/server.js');
 *          idToken:string,
 *          authorization:string,
 *          accept_language:string}} parameters
-* @returns {Promise.<server['server']['response'] & {result:{totp_value?:string, expire?:number}|null[]}>}
+* @returns {Promise.<server['server']['response'] & {result:{totp_value?:string, expire?:number}[]}>}
 */
 const getTOTP = async parameters =>{
 

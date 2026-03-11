@@ -2,8 +2,8 @@
  * @module apps/app5/src/functions/customer_get
  */
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {customer} from './types.js' 
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts' 
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -20,7 +20,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer})[]}>}
+ * @returns {Promise.<server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.customer})[]}>}
  */
 const customerGet = async parameters =>{
     /**@ts-ignore @type{server['ORM']['Object']['AppDataEntity']} */

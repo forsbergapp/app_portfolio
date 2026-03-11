@@ -52,7 +52,7 @@
  * @module apps/common/component/common_app_data_display
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
 /**

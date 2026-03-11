@@ -3,8 +3,8 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {currency, payment_request, bank_account, merchant} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 const {getToken} = await import('./payment_request_create.js');
@@ -58,7 +58,7 @@ const paymentRequestGet = async parameters =>{
                                         payment_request.Document?.PaymentRequestId==token?.app_custom_id
                                     )[0];
     if (payment_request){
-        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}} */
+        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}} */
         const account_payer = (server.ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                             all_users:true,
                                                             resource_id:null, 

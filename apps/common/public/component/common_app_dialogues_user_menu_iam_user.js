@@ -3,7 +3,7 @@
  * @module apps/common/component/common_app_dialogues_user_menu_iam_user
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
 /**

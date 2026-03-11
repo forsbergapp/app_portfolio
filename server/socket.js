@@ -1,7 +1,7 @@
 /** @module server/socket */
 
 /**
- * @import {server} from './types.js'
+ * @import {server} from './types.d.ts'
  */
 
 const {server} = await import('./server.js');
@@ -214,9 +214,12 @@ const socketClientAdd = (newClient) => {
                     //sort result
                     .sort((first, second)=>{
                         //sort default is connection_date if sort missing as argument
+                        /**@ts-ignore */
                         if (typeof first[sort==null?'Created':sort] == 'number'){
                             //number sort
+                            /**@ts-ignore */
                             const first_sort_num = first[sort==null?'Created':sort];
+                            /**@ts-ignore */
                             const second_sort_num = second[sort==null?'Created':sort];
                             if ((first_sort_num??0) < (second_sort_num??0) )
                                 return -1 * order_by_num;
@@ -227,7 +230,9 @@ const socketClientAdd = (newClient) => {
                         }
                         else{
                             //string sort with lowercase and localcompare
+                            /**@ts-ignore */
                             const first_sort = (first[sort==null?'Created':sort] ?? '').toString().toLowerCase();
+                            /**@ts-ignore */
                             const second_sort = (second[sort==null?'Created':sort] ?? '').toString().toLowerCase();
                             //using localeCompare as collation method
                             if (first_sort.localeCompare(second_sort)<0 )

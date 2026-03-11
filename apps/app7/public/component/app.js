@@ -3,7 +3,7 @@
  * @module apps/app7/component/app
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 /**
  * @name temaplte

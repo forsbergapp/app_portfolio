@@ -1,7 +1,7 @@
 /** @module server-info */
 
 /**
- * @import {server} from './types.js'
+ * @import {server} from './types.d.ts'
  */
 const os = await import('node:os');
 

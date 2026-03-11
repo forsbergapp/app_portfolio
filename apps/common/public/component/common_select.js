@@ -3,7 +3,7 @@
  * @module apps/common/component/common_select
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
 /**

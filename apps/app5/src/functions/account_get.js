@@ -2,8 +2,8 @@
  * @module apps/app5/src/functions/account_get
  */
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {bank_account} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -20,7 +20,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account})[]}>}
+ * @returns {Promise.<server['server']['response'] & {result:(server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account})[]}>}
  */
 const accountGet = async parameters =>{
 
@@ -28,7 +28,7 @@ const accountGet = async parameters =>{
     const Entity            = server.ORM.db.AppDataEntity.get({  app_id:parameters.app_id, 
                                             resource_id:null, 
                                             data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    /**@ts-ignore */7
+    /**@ts-ignore */
     return server.ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                             resource_id:parameters.data.resource_id, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,

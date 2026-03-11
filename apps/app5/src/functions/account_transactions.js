@@ -2,8 +2,8 @@
  * @module apps/app5/src/functions/account_transactions
  */
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {bank_transaction} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -19,7 +19,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:bank_transaction[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:types_app.bank_transaction[]}>}
  */
 const getTransacions = async parameters =>{
     

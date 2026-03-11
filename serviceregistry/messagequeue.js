@@ -1,7 +1,7 @@
 /** @module serviceregistry/microservice/messagequeue */
 
 /**
- * @import {server} from '../server/types.js'
+ * @import {server} from '../server/types.d.ts'
  */
 const {server} = await import('../server/server.js');
 /**
@@ -22,7 +22,7 @@ const {server} = await import('../server/server.js');
 const messageQueue = async parameters => {
     switch (parameters.message_queue_type) {
         case 'PUBLISH': {
-            /**@type{server['ORM']['Object']['MessageQueuePublish']} */
+            /**@ts-ignore @type{server['ORM']['Object']['MessageQueuePublish']} */
             const message_queue = { Service: parameters.data.service, 
                                     Message:   {Type:parameters.data.type,
                                                 Message:parameters.data.message??''}

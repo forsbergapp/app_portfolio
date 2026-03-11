@@ -3,8 +3,8 @@
  * @module apps/app4/component/settings_tab6
  */
 /**
- * @import {common}  from '../../../common_types.js'
- * @import {APP_user_setting}  from '../js/types.js'
+ * @import {common}  from '../../../common/types.d.ts'
+ * @import types_app  from '../../types.d.ts'
  */
 
 /**
@@ -49,7 +49,7 @@ const template = props =>`  <div id='user_settings'>
  * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_settings:APP_user_setting,
+ *                      user_settings:types_app.APP_user_setting,
  *                      },
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon']

@@ -4,8 +4,8 @@
 
 /**
  * 
- * @import {server} from '../../../../server/types.js'
- * @import {customer, merchant, payment_request, bank_account} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 
 const {server} = await import('../../../../server/server.js');
@@ -76,7 +76,7 @@ const paymentRequestGetStatus = async parameters =>{
                     const data_return = {   status:                 payment_request.Document.Status};
                     const data_encrypted = server.security.securityPublicEncrypt(merchant.Document.MerchantPublicKey, JSON.stringify(data_return));
 
-                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/
+                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}}*/
                     const account_payer =  (server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                         all_users:true,
                                                                         resource_id:null, 

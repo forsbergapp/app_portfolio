@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from '../../../server/types.js'
+ * @import {server} from '../../../server/types.d.ts'
  */
 
 let test_running = false;

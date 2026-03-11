@@ -3,8 +3,8 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {customer, payment_request, bank_account, bank_transaction} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 
 const {server} = await import('../../../../server/server.js');
@@ -63,7 +63,7 @@ const paymentRequestUpdate = async parameters =>{
         let status ='PENDING';
         if (server.ORM.UtilNumberValue(parameters.data.status)==1)
             try {
-                /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}}*/
+                /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}}}*/
                 const account_payer         =  (server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                             resource_id:null, 
                                                                             data:{  iam_user_id:parameters.data.iam_user_id,
@@ -83,13 +83,13 @@ const paymentRequestUpdate = async parameters =>{
                                                                                         resource_name_data_master_attribute:null,
                                                                                         app_data_entity_id:Entity.Id
                                                                                 }}).result.reduce(( /**@type{number}*/balance, 
-                                                                                                    /**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction}}*/current_row)=>
+                                                                                                    /**@type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}}*/current_row)=>
                                                                                     balance += (current_row.Document.AmountDeposit ?? current_row.Document.AmountWithdrawal) ?? 0,0
                                                                                 );
                 if ((account_payer_saldo - (payment_request.Document.Amount??0)) <0)
                     status='NO FUNDS';
                 else{
-                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction}} */
+                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}} */
                     const data_debit = {Document                               : {  Timestamp:new Date().toISOString(),
                                                                                     Logo:'',
                                                                                     Origin:payment_request.Document.Reference,
@@ -100,7 +100,7 @@ const paymentRequestUpdate = async parameters =>{
                                         };
                     //create DEBIT transaction PAYERID resource TRANSACTION
                     await server.ORM.db.AppDataResourceDetailData.post({app_id:parameters.app_id, data:data_debit});
-                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_account}} */
+                    /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_account}} */
                     const account_payee         =  (server.ORM.db.AppDataResourceDetail.get({  app_id:parameters.app_id, 
                                                                                 all_users:true,
                                                                                 resource_id:null, 
@@ -115,7 +115,7 @@ const paymentRequestUpdate = async parameters =>{
                                                                 account.Document?.BankAccountVpa == payment_request.Document.PayeeId
                                                             )[0];
                     if (account_payee && account_payee.Id!=null){
-                        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction}} */
+                        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction}} */
                         const data_credit = {   Document                               : { Timestamp:new Date().toISOString(),
                                                                                            Logo:'',
                                                                                            Origin:payment_request.Document.Reference,

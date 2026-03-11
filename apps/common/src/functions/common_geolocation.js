@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.d.ts'
  */
 const {formatLocale} = await import('./common_locale.js');
 const {server} = await import('../../../../server/server.js');

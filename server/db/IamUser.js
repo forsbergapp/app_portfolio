@@ -1,7 +1,7 @@
 /** @module server/db/IamUser */
 
 /**
- * @import {server} from '../types.js'
+ * @import {server} from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 /**
@@ -27,10 +27,10 @@ const get = (app_id, resource_id) =>server.ORM.getObject(app_id, 'IamUser',resou
  *                  id?:string|null,
  *                  search?:string|null,
  *                  POST_ID?:string |null}}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUsetGetProfile'][]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:server['ORM']['View']['IamUserGetProfile'][]}>}
  */
 const getViewProfile = async parameters =>{
-  /**@type{server['ORM']['View']['IamUsetGetProfile'][]} */
+  /**@type{server['ORM']['View']['IamUserGetProfile'][]} */
   const result_getProfileUser = get(parameters.app_id, parameters.resource_id).result
                                 .filter((/**@type{server['ORM']['Object']['IamUser']}*/row)=>   
                                     row.Active==1 && 

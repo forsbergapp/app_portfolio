@@ -3,8 +3,8 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {APP_FUNCTION_cube_solution_model,APP_FUNCTION_cube_solve_data, APP_FUNCTION_cube_solve_return} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 
 const GOAL_SOLVE = ['UF', 'UR', 'UB', 'UL', 'DF', 'DR', 'DB', 'DL', 'FR', 'FL', 'BR', 'BL', 'UFR', 'URB', 'UBL', 'ULF', 'DRF', 'DFL', 'DLB', 'DBR'];
@@ -29,14 +29,14 @@ const {server} = await import('../../../../server/server.js');
  * 				Returns Singmaster notation with moves, time, length and model for each solution
  * @function
  * @param {{app_id:number,
- *          data:APP_FUNCTION_cube_solve_data,
+ *          data:types_app.APP_FUNCTION_cube_solve_data,
  *          user_agent:string,
  *          ip:string,
  *          host:string,
  * 			idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:APP_FUNCTION_cube_solve_return[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:types_app.APP_FUNCTION_cube_solve_return[]}>}
  */
 const cubeSolve = async parameters =>{
 	if ((parameters.data.model ==0 || parameters.data.model ==1) && parameters.data.preamble == 0 && (parameters.data.temperature == 0 || parameters.data.temperature == 1) && 
@@ -61,7 +61,7 @@ const cubeSolve = async parameters =>{
 		//Only robot can solve to given goal state at the moment
 		if (parameters.data.cube_goalstate)
 			parameters.data.model = 0;
-		/**@type{APP_FUNCTION_cube_solution_model} */
+		/**@type{types_app.APP_FUNCTION_cube_solution_model} */
 		const model = parameters.data.model;
 		switch (parameters.data.model){
 			case 0:{

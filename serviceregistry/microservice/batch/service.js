@@ -4,13 +4,13 @@
  */
 
 /**
- * @import {config, jobs} from './types.js'
+ * @import types from './types.d.ts'
  */
 
 const {exec} = await import('node:child_process');
 const os = await import('node:os');
 
-/**@type{jobs} */
+/**@type{types.jobs} */
 const JOBS = [];
 
 /**
@@ -242,7 +242,7 @@ const scheduleMilliseconds = (cron_expression) =>{
  * @description Schedule job
  * @function
  * @param {import('../../../sdk/server/serviceregistry.js')['commonLog']} commonLog
- * @param {config}      config
+ * @param {types.config}config
  * @param {string}      token
  * @param {number}      jobid 
  * @param {'OS'}        command_type 
@@ -347,7 +347,7 @@ const scheduleJob = async (commonLog, config, token, jobid, command_type, comman
  * @description Start jobs
  * @function
  * @param {import('../../../sdk/server/serviceregistry.js')} sdk
- * @param {config} config
+ * @param {types.config} config
  * @param {string} token
  * @returns {Promise.<void>}
  */

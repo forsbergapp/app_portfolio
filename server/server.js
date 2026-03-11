@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from './types.js'
+ * @import {server} from './types.d.ts'
  */
 
 const http = await import('node:http');

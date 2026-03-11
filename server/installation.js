@@ -3,7 +3,7 @@
  */
 
 /**
- * @import {server} from './types.js'
+ * @import {server} from './types.d.ts'
  */
 
 const DB_DEMO_PATH              = '/server/install/db/demo/';

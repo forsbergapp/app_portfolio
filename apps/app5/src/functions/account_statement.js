@@ -3,8 +3,8 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {currency, metadata_account, bank_account, bank_transaction} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -101,7 +101,7 @@ const getStatement = async parameters =>{
     const Entity            = server.ORM.db.AppDataEntity.get({   app_id:parameters.app_id, 
                                                     resource_id:null, 
                                                     data:{data_app_id:parameters.data.data_app_id}}).result[0];
-    /**@type{(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:bank_transaction})[]} */
+    /**@type{(server['ORM']['Object']['AppDataResourceDetailData'] & {Document:types_app.bank_transaction})[]} */
     const transactions = (server.ORM.db.AppDataResourceDetailData.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{  iam_user_id:parameters.data.iam_user_id,
@@ -112,7 +112,7 @@ const getStatement = async parameters =>{
                                                                 app_data_resource_detail_id:null,
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result??[]);
-    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_account})[]}} */
+    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.metadata_account})[]}} */
     const AccountMetaData   = (server.ORM.db.AppDataResourceMaster.get({   app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:null,
@@ -120,7 +120,7 @@ const getStatement = async parameters =>{
                                                                     resource_name:'ACCOUNT',
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result??[]);
-    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account})}} */
+    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account})}} */
     const CustomerAccount   = server.ORM.db.AppDataResourceDetail.get(   {app_id:parameters.app_id, 
                                                             resource_id:null, 
                                                             data:{  iam_user_id:parameters.data.iam_user_id,
@@ -138,7 +138,7 @@ const getStatement = async parameters =>{
                                                                     app_data_entity_id:Entity.Id
                                                             }}).result[0];
     /**@type{number} */
-    const balance = transactions.reduce((/**@type{number}*/balance, /**@type{{Document:bank_transaction}}*/current_row)=>balance += 
+    const balance = transactions.reduce((/**@type{number}*/balance, /**@type{{Document:types_app.bank_transaction}}*/current_row)=>balance += 
                                                                     (current_row.Document.AmountDeposit ?? current_row.Document.AmountWithdrawal) ?? 0,0) ?? 0;
     return {result:[{
                     //ENTITY ACCOUNT resource

@@ -4,9 +4,9 @@
  */
 
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
- * @import {APP_user_setting_record}  from '../js/types.js'
+ * @import types_app  from '../../types.d.ts'
  */
 /**
  * @name template
@@ -22,7 +22,7 @@ const template = () => `<div id='mapid'>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_settings:APP_user_setting_record
+ *                      user_settings:types_app.APP_user_setting_record
  *                      },
  *          methods:    {COMMON:common['CommonModuleCommon'],
  *                      appComponentSettingUpdate:appComponentSettingUpdate}}} props

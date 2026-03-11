@@ -3,9 +3,9 @@
  * @module apps/app4/component/settings_tab5
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
- * @import {APP_user_setting_record, APP_REPORT_GLOBAL}  from '../js/types.js'
+ * @import types_app  from '../../types.d.ts'
  */
 
 /**
@@ -97,8 +97,8 @@ const template = props =>`   <div class='settings_row'>
  * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_settings:APP_user_setting_record,
- *                      methods:APP_REPORT_GLOBAL['CommonModulePrayTimes_methods']
+ *                      user_settings:types_app.APP_user_setting_record,
+ *                      methods:types_app.APP_REPORT_GLOBAL['CommonModulePrayTimes_methods']
  *                      },
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon'],

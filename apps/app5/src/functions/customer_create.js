@@ -3,8 +3,8 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {customer} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 const {default:createBankAccount} = await import('./account_create.js');
@@ -41,7 +41,7 @@ const customerCreate = async parameters =>{
                                                                     resource_name:'CUSTOMER'
                                                             }}).result??[])[0];
     if (resource_customer){
-        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:customer}} */
+        /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.customer}} */
         const post_data = {
             Document                    :{
                                             CustomerType   :parameters.data.customer_type,

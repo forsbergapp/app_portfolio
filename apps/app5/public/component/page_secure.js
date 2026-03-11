@@ -3,7 +3,7 @@
  * @module apps/app5/component/page_secure
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 /**
  * @name template

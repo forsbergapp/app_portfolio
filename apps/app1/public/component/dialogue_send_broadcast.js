@@ -3,7 +3,7 @@
  * @module apps/app1/component/dialogue_send_broadcast
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
 /**

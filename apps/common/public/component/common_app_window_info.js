@@ -7,7 +7,7 @@
  * @module apps/common/component/common_app_window_info
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
 /**

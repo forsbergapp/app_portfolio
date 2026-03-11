@@ -3,10 +3,8 @@
  * @module apps/app4/app
  */
 /**
- * @import {common} from '../../../common_types.js'
- * @import {APP_PARAMETERS, APP_user_setting_data, APP_user_setting_record, APP_REPORT_day_user_account_app_data_posts, 
- *          APP_REPORT_settings, APP_GLOBAL, 
- *          APP_user_setting} from './types.js'
+ * @import {common} from '../../../common/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 
 /**@type{common['COMMON_DOCUMENT']} */
@@ -15,8 +13,7 @@ const COMMON_DOCUMENT = document;
 /**@type {common['CommonModuleCommon']} */
 let common;
 
-
-/**@type{APP_user_setting} */
+/**@type{types_app.APP_user_setting} */
 const APP_USER_SETTINGS_EMPTY = {current_id:0,
                              data:[{Id:0,
                                     Document: { Description: '',
@@ -71,7 +68,7 @@ const APP_USER_SETTINGS_EMPTY = {current_id:0,
                                 ]
                             };
 
-/**@type{APP_GLOBAL} */
+/**@type{types_app.APP_GLOBAL} */
 const APP_GLOBAL = {
     description:null,
     app_default_startup_page:0,
@@ -148,9 +145,9 @@ Object.seal(APP_GLOBAL);
 /**
  * @name appReportTimetableSettings
  * @description Get report settings
- * @param {APP_user_setting_record|null} other_settings
+ * @param {types_app.APP_user_setting_record|null} other_settings
  * @function
- * @returns {APP_REPORT_settings}
+ * @returns {types_app.APP_REPORT_settings}
  */
 const appReportTimetableSettings = (other_settings=null) => {
     const setting_global = (other_settings ?? APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document);
@@ -220,7 +217,7 @@ const appReportTimetableSettings = (other_settings=null) => {
  * @function
  * @param {number} timetable_type 
  * @param {'toolbar_btn_left' | 'toolbar_btn_right' | null} item_id 
- * @param {APP_REPORT_settings} settings 
+ * @param {types_app.APP_REPORT_settings} settings 
  * @returns {Promise.<void>}
  */
 const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, settings) => {
@@ -239,8 +236,8 @@ const appReportTimetableUpdate = async (timetable_type = 0, item_id = null, sett
  * @function
  * @param {'DAY'|'MONTH'|'YEAR'} timetable_type 
  * @param {'toolbar_btn_left' | 'toolbar_btn_right' | null} item_id 
- * @param {APP_REPORT_settings} settings?
- * @param {APP_user_setting_data[]|null}all_user_settings
+ * @param {types_app.APP_REPORT_settings} settings?
+ * @param {types_app.APP_user_setting_data[]|null}all_user_settings
  * @returns {string}
  */
 const appReportTimetable = (timetable_type = 'DAY', item_id = null, settings, all_user_settings=null) =>
@@ -829,9 +826,9 @@ const appUserProfileDetail = (detailchoice) => {
  * @name appUserSettingsGet
  * @description User settings get, formats saved data
  * @function
- * @param {{iam_user_id:number, settings_fetched?:APP_user_setting_record[], sid?:number}} parameters
+ * @param {{iam_user_id:number, settings_fetched?:types_app.APP_user_setting_record[], sid?:number}} parameters
  * 
- * @returns {Promise.<[APP_user_setting_data]>}
+ * @returns {Promise.<[types_app.APP_user_setting_data]>}
  */
 const appUserSettingsGet = async parameters => {
     const result = parameters.settings_fetched?
@@ -840,7 +837,7 @@ const appUserSettingsGet = async parameters => {
                                                     query:`IAM_data_app_id=${common.commonGlobalGet('Data').UserApp.app_id}&iam_user_id=${parameters.iam_user_id ??''}${parameters.sid==null?'':'&id_view=' + parameters.sid}`, 
                                                     method:'GET', 
                                                     authorization_type:'APP_ID'});
-    const settings = JSON.parse(result).rows.map((/** @type{APP_user_setting_record}*/setting)=>{
+    const settings = JSON.parse(result).rows.map((/** @type{types_app.APP_user_setting_record}*/setting)=>{
         const json = {Description:setting.Description,
             RegionalLanguageLocale:setting.RegionalLanguageLocale,
             RegionalTimezone:setting.RegionalTimezone,
@@ -974,7 +971,7 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
                 case 'ADD':{
                     if (add_settings==true){
                         //update user settings
-                        /** @type{APP_user_setting_data}*/
+                        /** @type{types_app.APP_user_setting_data}*/
                         const data = {  Id:         JSON.parse(result).id, 
                                         Document:  JSON.parse(JSON.stringify(APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document))};
                         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.data.length+0] = data;
@@ -1238,7 +1235,7 @@ const appTimetablePreview = async parameters => {
                         APP_GLOBAL.user_settings.data:
                             await appUserSettingsGet({iam_user_id:parameters.iam_user_id, sid:parameters.sid});
     const curren_setting = settings
-                                    .filter((/**@type{APP_user_setting_data}*/row)=>row.Id== parameters.sid)[0].Document;
+                                    .filter((/**@type{types_app.APP_user_setting_data}*/row)=>row.Id== parameters.sid)[0].Document;
     common.commonComponentRender({   mountDiv:   null,
             data:  {   
                     commonMountdiv:null, 
@@ -1760,7 +1757,7 @@ const appMapQibblaShow = () => {
  * @returns {Promise.<void>}
  */
 const appInit = async () => {
-    /**@ts-ignore @type{APP_PARAMETERS} */
+    /**@ts-ignore @type{types_app.APP_PARAMETERS} */
     const parameters = (await common.commonGetAppData(common.commonGlobalGet('Data').UserApp.app_id,'APP_PARAMETER'))
                         .reduce((key, row)=>{
                             /**@ts-ignore */

@@ -4,14 +4,14 @@
  */
 
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{profile:common['server']['ORM']['View']['IamUsetGetProfile'],
+ * @param {{profile:common['server']['ORM']['View']['IamUserGetProfile'],
  *          function_commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate'],
  *          icons:{ like:string,
  *                  unlike:string, 
@@ -120,7 +120,7 @@ const component = async props => {
             else
                 return `/server-db/iamuser-profile/${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id ?? ''}`;
     };
-    /**@type{common['server']['ORM']['View']['IamUsetGetProfile']}*/
+    /**@type{common['server']['ORM']['View']['IamUserGetProfile']}*/
     const profile = await props.methods.COMMON.commonFFB(
                             {
                                 path:pathInfoGet(), 
@@ -208,7 +208,7 @@ const component = async props => {
                 method:'GET', 
                 authorization_type:'APP_ID'})
             .then(result=>{
-                /**@type{common['server']['ORM']['View']['IamUsetGetProfile']}*/
+                /**@type{common['server']['ORM']['View']['IamUserGetProfile']}*/
                 const user_stat = JSON.parse(result)[0];
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_view_count').textContent = user_stat.CountViews;
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_following_count').textContent = user_stat.CountFollowing;

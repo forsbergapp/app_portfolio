@@ -3,15 +3,15 @@
  * @module apps/app4/component/settings_tab3
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  * @import {appSettingThemeThumbnailsUpdate}  from '../js/app.js'
- * @import {APP_GLOBAL, APP_user_setting_record}  from '../js/types.js'
+ * @import types_app  from '../../types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
- * @param {{user_settings:APP_user_setting_record,
+ * @param {{user_settings:types_app.APP_user_setting_record,
  *          icons:{ theme_day:string,
  *                  theme_month:string,
  *                  theme_year:string,
@@ -82,8 +82,8 @@ const template = props =>`  <div class='settings_row3'>
  * @description Component
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_settings:APP_user_setting_record,
- *                      themes:APP_GLOBAL['themes']
+ *                      user_settings:types_app.APP_user_setting_record,
+ *                      themes:types_app.APP_GLOBAL['themes']
  *                      },
  *          methods:    {
  *                      COMMON:common['CommonModuleCommon'],
@@ -96,7 +96,7 @@ const template = props =>`  <div class='settings_row3'>
 const component = async props => {
     
     //update APP_GLOBAL with themes
-    /**@type{import('../js/types.js').APP_GLOBAL['themes']} */
+    /**@type{types_app.APP_GLOBAL['themes']} */
     props.data.themes.data = (await props.methods.COMMON.commonGetAppData(props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id))
                             .filter(setting=>
                                     setting.Name.startsWith('REPORT_THEME')

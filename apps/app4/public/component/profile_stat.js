@@ -3,7 +3,7 @@
  * @module apps/app4/component/profile_stat
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 /**
  * @name template

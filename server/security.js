@@ -1,7 +1,7 @@
 /** @module server/security */
 
 /**
- * @import {server} from './types.js'}
+ * @import {server} from './types.d.ts'}
  */
 const Crypto = await import('node:crypto');
 const {server} = await import('./server.js');

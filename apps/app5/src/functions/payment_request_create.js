@@ -3,8 +3,8 @@
  */
 
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {payment_request, bank_account, merchant} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -92,7 +92,7 @@ const paymentRequestCreate = async parameters =>{
        */
        const  body_decrypted = JSON.parse(server.security.securityPrivateDecrypt(merchant.Document.MerchantPrivateKey, parameters.data.message));
 
-       /**@ts-ignore @type{bank_account} */
+       /**@ts-ignore @type{types_app.bank_account} */
        const merchant_bankaccount = (server.ORM.db.AppDataResourceDetail.get({app_id:parameters.app_id, 
                                                                all_users:true,
                                                                resource_id:null, 
@@ -107,7 +107,7 @@ const paymentRequestCreate = async parameters =>{
                                        .filter((/**@type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}}*/account)=>
                                             account.Document?.BankAccountVpa==merchant.Document.MerchantVpa
                                        )[0].Document;
-       /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:bank_account}} */
+       /**@ts-ignore @type{server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.bank_account}} */
        const bankaccount_payer = (server.ORM.db.AppDataResourceDetail.get({   app_id:parameters.app_id, 
                                                                all_users:true,
                                                                resource_id:null, 
@@ -131,7 +131,7 @@ const paymentRequestCreate = async parameters =>{
            //validate data
            if (body_decrypted.currency_code==currency.Document.CurrencyCode){
                const payment_request_id = server.security.securityUUIDCreate();
-               /**@type{payment_request} */
+               /**@type{types_app.payment_request} */
                const data_payment_request = {
                                                MerchantId:      parameters.data.id,
                                                PaymentRequestId:payment_request_id,

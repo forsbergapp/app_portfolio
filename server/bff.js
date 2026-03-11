@@ -1,7 +1,7 @@
 /** @module server/bff */
 
 /**
- * @import {server} from './types.js'
+ * @import {server} from './types.d.ts'
  */
 const {server} = await import('./server.js');
 const {registryConfigServices} = await import('../serviceregistry/registry.js')

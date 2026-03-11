@@ -3,7 +3,7 @@
  * @module apps/app4/component/settings_tab_nav_7
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
 /**

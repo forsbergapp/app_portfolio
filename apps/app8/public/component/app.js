@@ -3,7 +3,7 @@
  * @module apps/app8/component/app
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 /**
  * @name template

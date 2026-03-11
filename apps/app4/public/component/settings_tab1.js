@@ -4,8 +4,9 @@
  */
 
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
+ * @import types_app from '../../types.d.ts'
  * 
  */
 
@@ -76,7 +77,7 @@ const template = props => ` <div class='settings_row'>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string,
- *                      user_settings:import('../js//types.js').APP_user_setting_record
+ *                      user_settings:types_app.APP_user_setting_record
  *                      },
  *          methods:    {COMMON:common['CommonModuleCommon'],
  *                      appComponentSettingUpdate:appComponentSettingUpdate}}} props

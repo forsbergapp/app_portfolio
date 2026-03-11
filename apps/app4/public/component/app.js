@@ -4,8 +4,8 @@
  */
 
 /**
- * @import {common}  from '../../../common_types.js'
- * @import {CommonModuleLibTimetable} from '../js/types.js'
+ * @import {common}  from '../../../common/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 /**
  * @name template
@@ -48,7 +48,7 @@ const template = props=>`  <div id='toolbar_top'>
  *                      }}} props 
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:null, 
- *                      methods:{appLibTimetable:CommonModuleLibTimetable},
+ *                      methods:{appLibTimetable:types_app.CommonModuleLibTimetable},
  *                      template:string}>}
  */
 const component = async props => {

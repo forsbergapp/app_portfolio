@@ -2,8 +2,8 @@
  * @module apps/app6/src/functions/product_location_get
  */
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {product_variant_location, metadata_product_variant_location} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -43,7 +43,7 @@ const productLocationGet = async parameters =>{
                                                                                         resource_name_data_master_attribute:'LOCATION',
                                                                                         app_data_entity_id:Entity.Id
                                                                                 }}).result??[]);
-        /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_product_variant_location})[]} */
+        /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.metadata_product_variant_location})[]} */
         const product_variant_location_metadata = (server.ORM.db.AppDataResourceMaster.get({
                                                                                 app_id:parameters.app_id, 
                                                                                 resource_id:null, 

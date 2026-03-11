@@ -2,8 +2,9 @@
  * @module apps/common/src/functions/common_doc
 */
 /**
- * @import {server} from '../../../../server/types.js'
+ * @import {server} from '../../../../server/types.d.ts'
  */
+
 const {server} = await import('../../../../server/server.js');
 const fs = await import('node:fs');
 const {exec} = await import('node:child_process');
@@ -494,6 +495,7 @@ const markdownRender = async parameters =>{
             const ROW_HEADER_CONSTRAINT = '|- **Constraints**   |                                       |';
             const ROW_CONSTRAINT        = '|- @{NAME}           |@{CONSTRAINT}                          |';
             const template = await getFile(`${server.info.serverProcess.cwd()}${MD_PATH + MD_TEMPLATE_ORM + MD_SUFFIX}`, true)
+        
             const content = Object.entries(server.ORM.JSONSchema.ORM).map(object=>{   
                                                 return ROW_HEADER
                                                         .replace('@{OBJECT}',object[0])
@@ -515,7 +517,7 @@ const markdownRender = async parameters =>{
                                                                                                                                                 constraints[1]==property[0]:
                                                                                                                                                     constraints[1].filter((/**@type{string}*/col)=>col[0]==property[0]).length>0).length>0?'**':'') 
                                                                         )
-                                                            .replace('@{DATATYPE}',HTMLEntities(property[1].type))
+                                                            .replace('@{DATATYPE}',HTMLEntities(property[1].type, true))
                                                             +
                                                             '\n'
                                                         ).join('') +

@@ -3,7 +3,7 @@
  * @module apps/app3/component/app
  */
 /**
- * @import {common}  from '../../../common_types.js'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 /**@type{common['server']['app']['commonDocumentMenu'][]} */
 const MENU = [];

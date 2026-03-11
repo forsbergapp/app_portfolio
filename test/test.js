@@ -2,7 +2,7 @@
  * @module test/test.js
  */
 /**
- * @import {server} from '../server/types.js'
+ * @import {server} from '../server/types.d.ts'
  */
 const {server} = await import('../server/server.js');
 /**

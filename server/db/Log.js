@@ -1,7 +1,7 @@
 /** @module server/db/Log */
 
 /**
- * @import {server} from '../types.js'
+ * @import {server} from '../types.d.ts'
  */
 const {server} = await import ('../server.js');
 const {STATUS_CODES} = await import('node:http');

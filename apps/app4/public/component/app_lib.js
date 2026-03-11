@@ -3,11 +3,11 @@
  */
 
 /**
- * @import {APP_REPORT_column_titles, APP_REPORT_times, APP_REPORT_settings, APP_REPORT_GLOBAL, APP_REPORT_day_user_account_app_data_posts, timesType}  from '../js/types.js'
- * @import {common}  from '../../../common_types.js'
+ * @import types_app  from '../../types.d.ts'
+ * @import {common}  from '../../../common/types.d.ts'
  */
 
-/**@type{APP_REPORT_GLOBAL} */
+/**@type{types_app.APP_REPORT_GLOBAL} */
 const APP_REPORT_GLOBAL = {
 	app_copyright:'',
 	session_currentDate:new Date(),
@@ -107,7 +107,7 @@ Object.seal(APP_REPORT_GLOBAL);
  * 			TIMETABLE_MONTH_DATA:{class:string, columns:{class:string, attribute?:string, value:string}[]}[],
  * 			TIMETABLE_YEAR_MONTH_DATA: string[]|[],
  * 			TIMETABLE_COPYRIGHT:string,
- * 			settings:APP_REPORT_settings, 
+ * 			settings:types_app.APP_REPORT_settings, 
  * 			function_StyleGet:function,
  *          icons:{ timezone:string,
  *                   gps_position_lat:string,
@@ -298,9 +298,9 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
  * @param {{data:       {
  * 						commonMountdiv:null,
  * 						timetable:'DAY'|'MONTH'|'YEAR',
- * 						user_account_app_data_post:APP_REPORT_settings, 
+ * 						user_account_app_data_post:types_app.APP_REPORT_settings, 
  * 						button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
- * 						user_account_app_data_posts_parameters:APP_REPORT_day_user_account_app_data_posts[]|null
+ * 						user_account_app_data_posts_parameters:types_app.APP_REPORT_day_user_account_app_data_posts[]|null
  * 						},
  *          methods:    {COMMON:common['CommonModuleCommon']}}} props
  * @returns {{ lifecycle:common['CommonComponentLifecycle'], 
@@ -673,7 +673,7 @@ const component = props => {
 		 * @param {string|number} timezone
 		 * @param {string|number} dst
 		 * @param {string} format
-		 * @returns {timesType}
+		 * @returns {types_app.timesType}
 		 */
 		getTimes (date, coords, timezone, dst, format) {
 			this.lat = 1* coords[0];
@@ -818,8 +818,8 @@ const component = props => {
 		 * @name computePrayerTimes
 		 * @description compute prayer times at given julian date
 		 * @method
-		 * @param {timesType} times
-		 * @returns {timesType}
+		 * @param {types_app.timesType} times
+		 * @returns {types_app.timesType}
 		 */
 		computePrayerTimes (times) {
 			/**@ts-ignore */
@@ -852,12 +852,12 @@ const component = props => {
 		 * @name computeTimes
 		 * @description compute prayer times 
 		 * @method
-		 * @returns {timesType}
+		 * @returns {types_app.timesType}
 		 */
 		computeTimes() {
 			// default times
 			/**
-			 * @type{timesType}
+			 * @type{types_app.timesType}
 			 */
 			let times = { 
 				imsak: 5, fajr: 5, sunrise: 6, dhuhr: 12, 
@@ -884,8 +884,8 @@ const component = props => {
 		/**
 		 * @name adjustTimes
 		 * @description adjust times 
-		 * @param {timesType} times
-		 * @returns {timesType}
+		 * @param {types_app.timesType} times
+		 * @returns {types_app.timesType}
 		 */
 		adjustTimes(times) {
 			const params = this.setting;
@@ -944,8 +944,8 @@ const component = props => {
 		 * @name tuneTimes
 		 * @description apply offsets to the times
 		 * @method
-		 * @param {timesType} times
-		 * @returns {timesType}
+		 * @param {types_app.timesType} times
+		 * @returns {types_app.timesType}
 		 */
 		tuneTimes (times) {
 			for (const i in times){
@@ -959,8 +959,8 @@ const component = props => {
 		 * @name modifyFormats
 		 * @description convert times to given time format
 		 * @method
-		 * @param {timesType} times
-		 * @returns {timesType}
+		 * @param {types_app.timesType} times
+		 * @returns {types_app.timesType}
 		 */
 		modifyFormats (times) {
 			for (const i in times){
@@ -974,8 +974,8 @@ const component = props => {
 		 * @name adjustHighLats
 		 * @description adjust times for locations in higher latitudes
 		 * @method
-		 * @param{timesType} times
-		 * @returns {timesType}
+		 * @param{types_app.timesType} times
+		 * @returns {types_app.timesType}
 		 */
 		adjustHighLats (times) {
 			const params = this.setting;
@@ -1039,8 +1039,8 @@ const component = props => {
 		 * @name dayPortion
 		 * @description convert hours to day portions 
 		 * @method
-		 * @param {timesType} times
-		 * @returns {timesType}
+		 * @param {types_app.timesType} times
+		 * @returns {types_app.timesType}
 		 */
 		dayPortion (times) {
 			for (const i in times){
@@ -1695,10 +1695,10 @@ const component = props => {
 	/**
 	 * Set current date and current Hijri Date after navigating in app
 	 * @param {'DAY'|'MONTH'|'YEAR'} timetable
-	 * @param {APP_REPORT_settings['ui_navigation_left']} ui_navigation_left
-	 * @param {APP_REPORT_settings['ui_navigation_right']} ui_navigation_right
+	 * @param {types_app.APP_REPORT_settings['ui_navigation_left']} ui_navigation_left
+	 * @param {types_app.APP_REPORT_settings['ui_navigation_right']} ui_navigation_right
 	 * @param {'GREGORIAN'|'HIJRI'} calendartype
-	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
+	 * @param {types_app.APP_REPORT_settings['ui_navigation_left']|types_app.APP_REPORT_settings['ui_navigation_right']} button_id
 	 * @returns {void}
 	 */
 	const setCurrent = (timetable, ui_navigation_left, ui_navigation_right, calendartype, button_id) =>{
@@ -1765,13 +1765,12 @@ const component = props => {
 
 	/**
 	 * Timetable day
-	 * @param {APP_REPORT_settings} settings 
-	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
-	 * @param {APP_REPORT_day_user_account_app_data_posts[]} user_settings 
+	 * @param {types_app.APP_REPORT_settings} settings 
+	 * @param {types_app.APP_REPORT_settings['ui_navigation_left']|types_app.APP_REPORT_settings['ui_navigation_right']} button_id
+	 * @param {types_app.APP_REPORT_day_user_account_app_data_posts[]} user_settings 
 	 * @returns {string}
 	 */
 	const displayDay = (settings, button_id, user_settings) => {
-		let times; 
 		/**@type{Intl.DateTimeFormatOptions} */
 		const options = { timeZone: settings.timezone, 
 						weekday: 'long', 
@@ -1836,7 +1835,7 @@ const component = props => {
 			const day_timetable = (	user_locale, user_timezone, user_number_system, user_calendar_hijri_type,
 									user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) =>{
 				const timezone_offset = getTimezoneOffset(user_timezone);
-				times = PRAYTIMES.getTimes(APP_REPORT_GLOBAL.session_currentDate, [user_gps_latitude ?? 0, user_gps_longitude ?? 0], 
+				const times = PRAYTIMES.getTimes(APP_REPORT_GLOBAL.session_currentDate, [user_gps_latitude ?? 0, user_gps_longitude ?? 0], 
 											/**@ts-ignore */
 											parseInt(timezone_offset), 
 											0, 'Float');
@@ -1924,16 +1923,16 @@ const component = props => {
 	};
 /**
 	 * Make a timetable month row
-	 * @param {APP_REPORT_times} data 
+	 * @param {types_app.timesType & {day:number|string}} data 
 	 * @param {number} year 
 	 * @param {number} month 
-	 * @param {APP_REPORT_settings} settings 
+	 * @param {types_app.APP_REPORT_settings} settings 
 	 * @param {[number, number, number]|null} date 
 	 * @returns {{class:string, attribute?:string, value:string}[]}
 	 */
 	const makeTableRow = (data, year, month, settings, date = null) => {
 
-		/**@type{APP_REPORT_column_titles} */
+		/**@type{types_app.APP_REPORT_column_titles} */
 		const columns = {
 							day: '',
 							weekday: '',
@@ -1982,7 +1981,7 @@ const component = props => {
 			}
 		};
 		/**
-		 * @param {string} column
+		 * @param {keyof types_app.APP_REPORT_column_titles} column
 		 * @param {string} calendartype
 		 * @param {string} number_system
 		 */
@@ -1990,16 +1989,18 @@ const component = props => {
 			switch (column){
 				case 'day':{
 					return number_system=='hanidec'?
-						/**@ts-ignore */
+                        /**@ts-ignore */
 						getNumberString(settings.number_system, data[column]).toString():
+                            /**@ts-ignore */
 							data[column].toLocaleString(settings.locale + 
 														APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 														APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 														settings.number_system);
 				}
 				case 'caltype':{
-					/**@ts-ignore */
-					const date_temp = new Date(year,month,data.day);
+					const date_temp = new Date(year,month,
+                                                /**@ts-ignore */
+                                                data.day);
 					date_temp.setDate(date_temp.getDate() + settings.hijri_adj);
 					return calendartype=='GREGORIAN'?
 						date_temp.toLocaleDateString(settings.locale + 
@@ -2017,8 +2018,9 @@ const component = props => {
 				}
 				case 'weekday':
 				case 'weekday_tr':{
-					/**@ts-ignore */
-					const date_temp = new Date(year,month,data.day);
+					const date_temp = new Date(year,month,
+                                                /**@ts-ignore */
+                                                data.day);
 					date_temp.setDate(date_temp.getDate() + settings.hijri_adj);
 					return calendartype=='GREGORIAN'?
 						date_temp.toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
@@ -2036,8 +2038,9 @@ const component = props => {
 				case 'iqamat_asr':
 				case 'iqamat_maghrib':
 				case 'iqamat_isha':{
-					/**@ts-ignore */
-					const iqamat = calculateIqamat(settings[column], data[column.split('_')[1]]);
+					const iqamat = calculateIqamat(settings[column], 
+                                                    /**@ts-ignore */
+                                                    data[column.split('_')[1]]);
 					return localTime(null, settings.locale + 		APP_REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 									APP_REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 									settings.number_system, 
@@ -2110,8 +2113,9 @@ const component = props => {
 												format:					settings.format};
 						return show_col('MONTH', 
 										column, 
+                                        /**@ts-ignore */
 										data[column], 
-										/**@ts-ignore */
+                                        /**@ts-ignore */
 										show_col_data);
 					}
 				}
@@ -2120,8 +2124,8 @@ const component = props => {
 	};
 	/**
 	 * Timetable month
-	 * @param {APP_REPORT_settings} settings 
-	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
+	 * @param {types_app.APP_REPORT_settings} settings 
+	 * @param {types_app.APP_REPORT_settings['ui_navigation_left']|types_app.APP_REPORT_settings['ui_navigation_right']} button_id
 	 * @param {string|null} year_class 
 	 * @returns {string}
 	 */
@@ -2266,14 +2270,22 @@ const component = props => {
 							.map((day,index)=>{
 								data.date.setDate(data.date.getDate()+ (index==0?0:1));
 								const times = PRAYTIMES.getTimes(data.date, [settings.gps_lat, settings.gps_long], timezone_offset, 0, 'Float');
-								if (settings.calendartype=='GREGORIAN')
-									times.day = data.date.getDate();
-								else
-									times.day = ++data.date_hijri[2] - 1;
+								const dayTimes  = settings.calendartype=='GREGORIAN'?
+                                                                        data.date.getDate():
+                                                                            (++data.date_hijri[2] - 1);
 								return {
-										class:	`${'timetable_month_data_row'} ${isToday(data.date, timezone_offset)?'timetable_month_data_today_row':''} ${highlight_row(settings.highlight, data.date.getDay(), times.day)}`,
-                                        /**@ts-ignore */
-										columns: makeTableRow(times, data.year, data.month, settings, settings.calendartype=='HIJRI'?getGregorian([data.year,data.month,times.day], settings.hijri_adj):null)
+										class:	`${'timetable_month_data_row'} ${isToday(data.date, timezone_offset)?'timetable_month_data_today_row':''} ${highlight_row(settings.highlight, data.date.getDay(), dayTimes)}`,
+                                        
+										columns: makeTableRow({
+                                                                ...times,
+                                                                //add day to time calculations
+                                                                ...{day:dayTimes}}, 
+                                                                data.year, 
+                                                                data.month, 
+                                                                settings, 
+                                                                settings.calendartype=='HIJRI'?
+                                                                    getGregorian([data.year,data.month,dayTimes], settings.hijri_adj):
+                                                                        null)
 										};
 
 							});
@@ -2302,8 +2314,8 @@ const component = props => {
 
 	/**
 	 * Timetable year
-	 * @param {APP_REPORT_settings} settings 
-	 * @param {APP_REPORT_settings['ui_navigation_left']|APP_REPORT_settings['ui_navigation_right']} button_id
+	 * @param {types_app.APP_REPORT_settings} settings 
+	 * @param {types_app.APP_REPORT_settings['ui_navigation_left']|types_app.APP_REPORT_settings['ui_navigation_right']} button_id
 	 * @returns {string}
 	 */
 	const displayYear = (settings, button_id) => {

@@ -2,8 +2,8 @@
  * @module apps/app6/src/functions/product_get
  */
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {currency, product, product_return, product_variant, metadata_product_variant} from './types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
@@ -19,7 +19,7 @@ const {server} = await import('../../../../server/server.js');
  *          idToken:string,
  *          authorization:string,
  *          accept_language:string}} parameters
- * @returns {Promise.<server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:product_return})[]}>}
+ * @returns {Promise.<server['server']['response'] & {result?:(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.product_return})[]}>}
  */
 const productGet = async parameters =>{
         
@@ -27,7 +27,7 @@ const productGet = async parameters =>{
     const Entity            = (server.ORM.db.AppDataEntity.get({app_id:parameters.app_id, 
                                                         resource_id:null, 
                                                         data:{data_app_id:parameters.data.data_app_id}}).result??[])[0];
-    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:product_return})[]} */
+    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.product_return})[]} */
     const products = (server.ORM.db.AppDataResourceMaster.get({ app_id:parameters.app_id, 
                                                         resource_id:parameters.data.resource_id, 
                                                         data:{  iam_user_id:null,
@@ -45,7 +45,7 @@ const productGet = async parameters =>{
                                                                 app_data_entity_id:Entity.Id
                                                         }}).result??[])[0];
     
-    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:metadata_product_variant})[]} */
+    /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceMaster'] & {Document:types_app.metadata_product_variant})[]} */
     const product_variant_metadatas = (server.ORM.db.AppDataResourceMaster.get({app_id:parameters.app_id, 
                                                                         resource_id:null, 
                                                                         data:{  iam_user_id:null,
@@ -54,9 +54,9 @@ const productGet = async parameters =>{
                                                                                 app_data_entity_id:Entity.Id,
                                                                         }}).result??[]);
     for (const product of products){
-        /**@type{product_return['Sku'][]} */
+        /**@type{types_app.product_return['Sku'][]} */
         product.Document.Sku = [];
-        /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:product_variant})[]}} */
+        /**@ts-ignore @type{(server['ORM']['Object']['AppDataResourceDetail'] & {Document:types_app.product_variant})[]}} */
         const product_variants = (server.ORM.db.AppDataResourceDetail.get({ app_id:parameters.app_id, 
                                                                 resource_id:null, 
                                                                 data:{  iam_user_id:null,
@@ -69,7 +69,7 @@ const productGet = async parameters =>{
                                                                 .filter(row=>
                                                                     row.AppDataResourceMasterId == product.Id);
         for (const product_variant of product_variants){
-            /**@type{product_return['Sku'][0]} */
+            /**@type{types_app.product_return['Sku'][0]} */
             const sku_keys = [];
             for (const product_variant_metadata of product_variant_metadatas){
                 const key_name = Object.keys(product_variant_metadata.Document)[0];

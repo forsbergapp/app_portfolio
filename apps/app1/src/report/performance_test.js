@@ -19,15 +19,15 @@
  * @module apps/app1/src/report/performance_test
  */
 /**
- * @import {server} from '../../../../server/types.js'
- * @import {report_data,test_function_result} from '../types.js'
+ * @import {server} from '../../../../server/types.d.ts'
+ * @import types_app from '../../types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
  * @name template
  * @description Template
  * @function
- * @param {report_data} props
+ * @param {types_app.report_data} props
  */
 const template = props => ` <div id='report'>
                                 <div id='report_title'>${props.title}</div>
@@ -141,7 +141,7 @@ const component = async props => {
         }
         /**
          * @param {number} startTime
-         * @returns {report_data}
+         * @returns {types_app.report_data}
          */
         done = (startTime) =>{
             const totalUse = Date.now() - startTime;
@@ -335,7 +335,7 @@ const component = async props => {
                 const next = async () => {
                     const start = performance.now();
                     test_function()
-                    .then((/**@type{test_function_result}*/result)=>{
+                    .then((/**@type{types_app.test_function_result}*/result)=>{
                         if (result.status!=200) {
                             this._fail++;
                         }
@@ -374,7 +374,7 @@ const component = async props => {
     /**
      * Fetches servers main host using configured protocol and port
      * and returns result and metadata
-    * @returns {Promise.<test_function_result>}
+    * @returns {Promise.<types_app.test_function_result>}
     */
     const test_function = async () => {
         return await test.serverRequest({url:PROTOCOL + HOST + ':' + PORT})
