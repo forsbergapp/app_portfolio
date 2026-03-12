@@ -1,9 +1,9 @@
 /**
- * Displays user menu message
+ * @description Displays user menu message
  * @module apps/common/component/common_app_dialogues_user_menu_message
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -11,8 +11,8 @@
  * @description TemplateFV
  * 
  * @function
- * @param {{message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']},
- *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate'],
+ * @param {{message:types_common.server['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:types_common.server['ORM']['Object']['IamUser']['Username']},
+ *          commonMiscFormatJsonDate:types_common.CommonModuleCommon['commonMiscFormatJsonDate'],
  *          icons:{
  *                   date:string,
  *                   sender:string,
@@ -58,12 +58,12 @@ const template = props => `
 * @function
 * @param {{data:       {
 *                      commonMountdiv:string,
-*                      message:common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']},
+*                      message:types_common.server['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:types_common.server['ORM']['Object']['IamUser']['Username']},
 *                      },
 *          methods:    {
-*                      COMMON:common['CommonModuleCommon']
+*                      COMMON:types_common.CommonModuleCommon
 *                      }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}

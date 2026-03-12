@@ -1,9 +1,9 @@
 /**
- * Displays app
+ * @description Displays app
  * @module apps/app6/component/app
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 /**
  * @name template
@@ -32,9 +32,9 @@ const template = () =>` <div id='app_top'>
  *                      },
  *          methods:    {
  *                      pay:()=>void,
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -43,7 +43,7 @@ const component = async props => {
 
     const onMounted = async () =>{
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#app_top_logo').innerHTML = 
-            props.methods.COMMON.commonGlobalGet('Data').Apps.filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id)[0].Logo;
+            props.methods.COMMON.commonGlobalGet('Data').Apps.filter((/**@type{types_common.server['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id)[0].Logo;
         await props.methods.COMMON.commonComponentRender({
                 mountDiv:   'app_page_start_shop', 
                 data:       {

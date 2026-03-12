@@ -1,10 +1,10 @@
 /**
- * Displays server logs
+ * @description Displays server logs
  * @module apps/app1/component/menu_monitor_detail_server_log
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -14,7 +14,7 @@
  *              [log columns][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
  * @function
  * @param {{function_get_order_by:function,
- *          function_roundOff:common['CommonModuleCommon']['commonMiscRoundOff'],
+ *          function_roundOff:types_common.CommonModuleCommon['commonMiscRoundOff'],
  *          logs:[],
  *          logscope:'LogRequest'|'LogServer'|'LogApp'|'LogBff'|'LogDb'|''}} props
  * @returns {string}
@@ -89,7 +89,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['server']['ORM']['Object']['LogRequestInfo']}*/
+                                                    /**@type{types_common.server['ORM']['Object']['LogRequestInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_request_row'>
                                         <div>
@@ -173,7 +173,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['server']['ORM']['Object']['LogServerInfo']}*/
+                                                    /**@type{types_common.server['ORM']['Object']['LogServerInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_server_row'>
                                         <div >
@@ -214,7 +214,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['server']['ORM']['Object']['LogAppInfo']}*/
+                                                    /**@type{types_common.server['ORM']['Object']['LogAppInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_app_row'>
                                         <div>
@@ -273,7 +273,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                     </div>
                                 </div>
                                 ${props.logs.map((
-                                                    /**@type{common['server']['ORM']['Object']['LogBffInfo']}*/
+                                                    /**@type{types_common.server['ORM']['Object']['LogBffInfo']}*/
                                                     log)=>
                                     `<div class='menu_monitor_detail_server_log_bff_row'>
                                         <div>
@@ -331,7 +331,7 @@ const template = props => ` ${  props.logscope=='LogRequest'?
                                         LOG TEXT
                                     </div>
                                 </div>
-                                ${props.logs.map((/**@type{common['server']['ORM']['Object']['LogDbInfo']}*/log)=>
+                                ${props.logs.map((/**@type{types_common.server['ORM']['Object']['LogDbInfo']}*/log)=>
                                     `<div class='menu_monitor_detail_server_log_db_row'>
                                         <div>
                                             ${log.Id}
@@ -366,12 +366,12 @@ const template = props => ` ${  props.logscope=='LogRequest'?
  * @param {{ data:{      commonMountdiv:string,
  *                       path:string,
  *                       query:string,
- *                       token_type:common['CommonRESTAPIAuthorizationType'],
+ *                       token_type:types_common.CommonRESTAPIAuthorizationType,
  *                       sort:string,
  *                       order_by:string},
- *           methods:{   COMMON:common['CommonModuleCommon']},
+ *           methods:{   COMMON:types_common.CommonModuleCommon},
  *           lifeycle:   null}} props 
- * @returns {Promise.<{ lifecycle:   common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:   types_common.CommonComponentLifecycle, 
  *                      data:        {page_last:number, count:Number, total_count:number},
  *                      methods:     null,
  *                      template:    string}>}

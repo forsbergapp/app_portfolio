@@ -1,9 +1,10 @@
 /**
+ * @description map control expand
  * @module apps/common/component/common_map_control_expand
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -37,15 +38,15 @@ const template = props => props.expand_type=='search'?
 *                       expand_type:'search'|'layer',
 *                       },
 *          methods:     {
-*                       COMMON:common['CommonModuleCommon'],
+*                       COMMON:types_common.CommonModuleCommon,
 *                       goTo:(arg0:{ip:string|null,
 *                                   longitude:string|number|null,
 *                                   latitude:string|number|null})=>void,
 *                       dataGet:(arg0?:string)=>*,
-*                       getLayer:(arg0?:string)=>common['commonMapLayers'][],
+*                       getLayer:(arg0?:string)=>types_common.commonMapLayers[],
 *                       setLayer:(arg0:string)=>void
 *                       }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:null,
 *                      events:function,
@@ -134,7 +135,7 @@ const component = async props => {
     /**
      * @description delay search result using delay type watch pattern
      * @function
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.CommonAppEvent} event
      * @param {string} search
      */
     const eventKeyUpDispatch = (event,search)=>{
@@ -166,8 +167,8 @@ const component = async props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      */
     const events = async (event_type, event) =>{
         const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);

@@ -1,9 +1,10 @@
 /**
+ * @description open ai
  * @module apps/app1/component/open_api
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -31,12 +32,12 @@ const template = props => ` <div id='menu_openapi_content_widget1' class='widget
  * @function
  * @param {{ data:{      commonMountdiv:string},
  *           methods:{   appSecureCommonButtonSave:(arg0:string)=>void,
- *                       COMMON:common['CommonModuleCommon']},
+ *                       COMMON:types_common.CommonModuleCommon},
  *           lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
- *                      events:common['commonComponentEvents'],
+ *                      events:types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -45,8 +46,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

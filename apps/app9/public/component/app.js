@@ -1,10 +1,10 @@
 /**
- * App
+ * @description App
  * @module apps/app9/component/app
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -24,8 +24,8 @@ const template = props =>  `<div id='otp_row'>
 /**
  * 
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON:common['CommonModuleCommon']}}} props 
- * @returns {Promise.<{ lifecycle:  common['CommonComponentLifecycle'], 
+ *          methods:    {COMMON:types_common.CommonModuleCommon}}} props 
+ * @returns {Promise.<{ lifecycle:  types_common.CommonComponentLifecycle, 
  *                      data:       null, 
  *                      methods:    null,
  *                      template:   string}>}

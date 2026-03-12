@@ -1,15 +1,16 @@
 /**
+ * @description common
  * @module apps/common/common
  */
 
 /** 
- * @import { common} from '../../../common/types.d.ts' 
+ * @import types_common from '../../../common/types.d.ts' 
  */
 
-/**@type{common['COMMON_WINDOW']} */
+/**@type{types_common.COMMON_WINDOW} */
 const COMMON_WINDOW = window;
 
-/**@type{common['COMMON_DOCUMENT']} */
+/**@type{types_common.COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 /**
@@ -41,7 +42,7 @@ const ICON_DUPLICATE = {
  * @name COMMON_GLOBAL
  * @description Globals, svg contains template
  * @constant
- * @type{common['CommonGlobal']} 
+ * @type{types_common.CommonGlobal} 
  */
 const COMMON_GLOBAL = {
     ICONS : {
@@ -292,7 +293,7 @@ Object.seal(COMMON_GLOBAL);
                     
 /**
  * @description Get value for given global key
- * @param {keyof common['CommonGlobal']} key
+ * @param {keyof types_common.CommonGlobal} key
  * @returns {*}
  */
 const commonGlobalGet = key =>key=='ICONS'?
@@ -305,7 +306,7 @@ const commonGlobalGet = key =>key=='ICONS'?
                                 COMMON_GLOBAL[key];
 /**
  * @description Set value for given global key Parameters, Data and Functions (ICONS should not be updated)
- * @param {{key:keyof common['CommonGlobal'],
+ * @param {{key:keyof types_common.CommonGlobal,
  *          subkey?: string|null, 
  *          name: string, 
  *          value: *}} parameters
@@ -323,9 +324,9 @@ const commonGlobalSet = parameters =>((parameters.key in COMMON_GLOBAL) && ['Par
 
 /**
  * @description Get current App record
- * @returns {common['server']['ORM']['Object']['App']}
+ * @returns {types_common.server['ORM']['Object']['App']}
  */
-const commonGetApp = () =>commonGlobalGet('Data').Apps.filter((/**@type{common['server']['ORM']['Object']['App']}*/app)=>app.Id == COMMON_GLOBAL.Data.UserApp.app_id)[0]
+const commonGetApp = () =>commonGlobalGet('Data').Apps.filter((/**@type{types_common.server['ORM']['Object']['App']}*/app)=>app.Id == COMMON_GLOBAL.Data.UserApp.app_id)[0]
 
 /**
  * @description Get AppData parameter records for given app id and optional name and value
@@ -334,20 +335,20 @@ const commonGetApp = () =>commonGlobalGet('Data').Apps.filter((/**@type{common['
  * @param  {number} app_id
  * @param  {string|null} name
  * @param  {string|null} value
- * @returns {Promise<{  AppId:      common['CommonGlobal']['Data']['AppData'][0][0],
- *              Name:       common['CommonGlobal']['Data']['AppData'][0][1],
- *              Value:      common['CommonGlobal']['Data']['AppData'][0][2],
- *              DisplayData:common['CommonGlobal']['Data']['AppData'][0][3]}[]>}
+ * @returns {Promise<{  AppId:      types_common.CommonGlobal['Data']['AppData'][0][0],
+ *              Name:       types_common.CommonGlobal['Data']['AppData'][0][1],
+ *              Value:      types_common.CommonGlobal['Data']['AppData'][0][2],
+ *              DisplayData:types_common.CommonGlobal['Data']['AppData'][0][3]}[]>}
  */
 const commonGetAppData = async (app_id, name=null, value=null) =>{
     const records = commonGlobalGet('Data').AppData
-        .filter((/**@type{common['CommonGlobal']['Data']['AppData'][0]}*/row)=>row[0]==app_id && row[1]==(name??row[1]) && row[2]==(value??row[2]));
+        .filter((/**@type{types_common.CommonGlobal['Data']['AppData'][0]}*/row)=>row[0]==app_id && row[1]==(name??row[1]) && row[2]==(value??row[2]));
     if (records.length>0)
         return records
-        .map((/**@type{common['CommonGlobal']['Data']['AppData'][0]}*/row)=>{return {AppId:row[0], Name:row[1], Value:row[2], DisplayData:row[3]}});
+        .map((/**@type{types_common.CommonGlobal['Data']['AppData'][0]}*/row)=>{return {AppId:row[0], Name:row[1], Value:row[2], DisplayData:row[3]}});
     else{
         if (commonGlobalGet('Data').AppData
-            .filter((/**@type{common['CommonGlobal']['Data']['AppData'][0]}*/row)=>row[0]==app_id && row[1]==name).length==0){
+            .filter((/**@type{types_common.CommonGlobal['Data']['AppData'][0]}*/row)=>row[0]==app_id && row[1]==name).length==0){
             //Name not found, fetch records
             //return new records for new AppData name not cached
             const new_records = await commonFFB({path:'/server-db/appdata/',
@@ -356,12 +357,12 @@ const commonGetAppData = async (app_id, name=null, value=null) =>{
                                             authorization_type:'APP_ID'}).then((/**@type{string}*/result)=>
                                                 JSON.parse(commonWindowBase64From(JSON.parse(result).rows[0].data)));
             if (new_records.length>0){
-                COMMON_GLOBAL.Data.AppData.push(...(new_records.map((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>
+                COMMON_GLOBAL.Data.AppData.push(...(new_records.map((/**@type{types_common.server['ORM']['Object']['AppData']}*/row)=>
                     [row.AppId, row.Name, row.Value, row.DisplayData]
                 )))
                 return new_records
-                .filter((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>row.AppId==app_id && row.Name==(name??row.Name) && row.Value==(value??row.Value))
-                .map((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>{return {AppId:row.AppId, Name:row.Name, Value:row.Value, DisplayData:row.DisplayData}});
+                .filter((/**@type{types_common.server['ORM']['Object']['AppData']}*/row)=>row.AppId==app_id && row.Name==(name??row.Name) && row.Value==(value??row.Value))
+                .map((/**@type{types_common.server['ORM']['Object']['AppData']}*/row)=>{return {AppId:row.AppId, Name:row.Name, Value:row.Value, DisplayData:row.DisplayData}});
             }
             else
                 return [];
@@ -375,7 +376,7 @@ const commonGetAppData = async (app_id, name=null, value=null) =>{
  * @name commonGlobals
  * @description Sets start globals
  * @function
- * @param {common['server']['app']['commonGlobals']} globals
+ * @param {types_common.server['app']['commonGlobals']} globals
  * @returns {void}
  */
 const commonGlobals = globals => {  
@@ -693,7 +694,7 @@ const commonMiscInputControl = (dialogue, validate_items) =>{
  * @name commonMiscListKeyEvent
  * @description List key event
  * @function
- * @param {{event:common['CommonAppEvent'],
+ * @param {{event:types_common.CommonAppEvent,
  *          event_function:function,
  *          event_parameters:*,
  *          rows_element:string,
@@ -811,7 +812,7 @@ const commonMiscPreferencesUpdateBodyClassFromPreferences = () => {
  * @returns {Promise.<void>}
  */
 const commonMiscPrint = async (element_id, inner=true) => {
-    /**@type{common['CommonComponentResult']}*/
+    /**@type{types_common.CommonComponentResult}*/
         const {template} = await commonComponentRender({ mountDiv:   null,
                                                                 data:  {   
                                                                         commonMountdiv:null, 
@@ -1207,7 +1208,7 @@ const commonWindowBase64To = str =>
  * @name commonWindoGet
  * @description get window object
  * @function
- * @returns {common['COMMON_WINDOW']}
+ * @returns {types_common.COMMON_WINDOW}
  */
 const commonWindowGet = () =>COMMON_WINDOW;
 
@@ -1455,7 +1456,7 @@ const commonComponentName =  path => {
  *          data:{}|null,
  *          methods:{}|null,
  *          path:string}} parameters
- * @returns {Promise.<{data:*, methods:*, events?:common['commonComponentEvents']|null, template:string|null}>}
+ * @returns {Promise.<{data:*, methods:*, events?:types_common.commonComponentEvents|null, template:string|null}>}
  */
 const commonComponentRender = async parameters => {
     const {default:ComponentCreate} = await commonMiscImport(parameters.path);
@@ -1463,7 +1464,7 @@ const commonComponentRender = async parameters => {
         COMMON_DOCUMENT.querySelector(`#${parameters.mountDiv}`).innerHTML = 
             commonGlobalGet('Functions').component[commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_app']?.methods?.getTemplateLoading()
     //manage async and synchronous function with corresponding syntax        
-    /**@type{common['CommonComponentResult']}*/
+    /**@type{types_common.CommonComponentResult}*/
     const component = Object.prototype.toString.call(ComponentCreate).toLowerCase().indexOf('async')>-1?
                         await ComponentCreate({ data:       {...parameters.data,       ...{commonMountdiv:parameters.mountDiv}},
                                                 methods:    {...parameters.methods,    ...{ COMMON:commonGet()}}})
@@ -1661,7 +1662,7 @@ const commonMessageShow = async (message_type, function_event, text_class=null, 
     switch (message_type){
         case 'ERROR_BFF':{
             try {
-                /**@type{common['CommonErrorMessageISO20022']} */
+                /**@type{types_common.CommonErrorMessageISO20022} */
                 const message_iso = JSON.parse(message);
                 display_message = message_iso.error?.text ?? message_iso;
             } catch (error) {
@@ -1888,7 +1889,7 @@ const commonUserLogin = async () => {
  * @name commonUserLoginApp
  * @description
  * @function
- * @param {common['server']['ORM']['Object']['IamUserApp']|null} IamUserApp
+ * @param {types_common.server['ORM']['Object']['IamUserApp']|null} IamUserApp
  * @returns {void}
  */
 const commonUserLoginApp = (IamUserApp=null) =>{
@@ -2059,7 +2060,7 @@ const commonUserLocale =() =>COMMON_GLOBAL.Data.UserApp.user_locale;
  * @name commonUserPreferencesGlobalSetDefault
  * @description User prefernce set 
  * @function
- * @param {common['server']['ORM']['Object']['IamUserApp']['Document']|null} preferences 
+ * @param {types_common.server['ORM']['Object']['IamUserApp']['Document']|null} preferences 
  * @returns {void}
  */
 const commonUserPreferencesGlobalSetDefault = (preferences=null) => {
@@ -2089,8 +2090,8 @@ const commonUserPreferencesGlobalSetDefault = (preferences=null) => {
  * @function
  * @param {{path:string,
  *          query?:string|null,
- *          method:common['CommonRESTAPIMethod'],
- *          authorization_type:common['CommonRESTAPIAuthorizationType'],
+ *          method:types_common.CommonRESTAPIMethod,
+ *          authorization_type:types_common.CommonRESTAPIAuthorizationType,
  *          username?:string,
  *          password?:string,
  *          body?:*,
@@ -2246,7 +2247,7 @@ const commonFFB = async parameter =>{
                                             if (parameters.response_type=='SSE'){
                                                 /**
                                                  * @param {string} BFFmessage
-                                                 * @returns {{sse_type:common['server']['socket']['broadcast_type'],
+                                                 * @returns {{sse_type:types_common.server['socket']['broadcast_type'],
                                                  *           sse_message:string}}
                                                  */
                                                 const getSSEMessage = BFFmessage =>{
@@ -2371,7 +2372,7 @@ const commonFFB = async parameter =>{
  * @name commonSocketSSEShow
  * @description Show sse message
  * @function
- * @param {{sse_type:common['server']['socket']['broadcast_type'],
+ * @param {{sse_type:types_common.server['socket']['broadcast_type'],
  *           sse_message:string}} sse_message 
  * @returns {Promise.<void>}
  */
@@ -2467,7 +2468,7 @@ const commonFrameworkMount = async (framework, template, methods,mount_div) =>{
     switch (framework){
         case 2:{
             //Vue
-            /**@type {common['CommonModuleVue']} */
+            /**@type {types_common.CommonModuleVue} */
             const Vue = await commonMiscImport(commonMiscImportmap('Vue'));
 
             //Use tempmount div to be able to return pure HTML without extra events
@@ -2495,9 +2496,9 @@ const commonFrameworkMount = async (framework, template, methods,mount_div) =>{
         }
         case 3:{
             //React
-            /**@type {common['CommonModuleReact']} */
+            /**@type {types_common.CommonModuleReact} */
             const React = await commonMiscImport(commonMiscImportmap('React')).then(module=>module.React);
-            /**@type {common['CommonModuleReactDOM']} */
+            /**@type {types_common.CommonModuleReactDOM} */
             const ReactDOM = await commonMiscImport(commonMiscImportmap('ReactDOM')).then(module=>module.ReactDOM);
 
             try {
@@ -2692,7 +2693,7 @@ const commonCustomFramework = () => {
 const commonAppSwitch = async (app_id, spinner_id=null) =>{   
     
     COMMON_GLOBAL.Data.UserApp.app_id =          app_id;
-    /**@type{common['server']['app']['commonAppSwitch']} */
+    /**@type{types_common.server['app']['commonAppSwitch']} */
     const CommonAppInit = await commonFFB({ path:`/app-switch/${app_id}`, 
                                             method:'GET', 
                                             query:COMMON_GLOBAL.Data.User.iam_user_id!=null?`IAM_iam_user_id=${COMMON_GLOBAL.Data.User.iam_user_id}`:'',
@@ -2726,7 +2727,7 @@ const commonAppSwitch = async (app_id, spinner_id=null) =>{
         commonMiscCssApply({cssApp:css, cssFont:false});
     const {appMetadata, default:AppInit} = await commonMiscImport(COMMON_GLOBAL.Data.Apps.filter(row=>row.Id == app_id)[0].Js);
     
-    /**@type{common['commonMetadata']} */
+    /**@type{types_common.commonMetadata} */
     const appdata = appMetadata();
     //add metadata using tree shaking pattern
     COMMON_GLOBAL.Functions.app_metadata.events.change = appdata.events.change;
@@ -2764,7 +2765,7 @@ const commonAppSwitch = async (app_id, spinner_id=null) =>{
  * @name commonGet
  * @description Returns all functions and globals
  * @function
- * @returns {common['CommonModuleCommon']}
+ * @returns {types_common.CommonModuleCommon}
  */
 const commonGet = () =>{
     return {

@@ -1,4 +1,5 @@
 /**
+ * @description product get
  * @module apps/app6/src/functions/product_get
  */
 /**

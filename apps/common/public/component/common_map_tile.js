@@ -1,9 +1,10 @@
 /**
+ * @description map tile
  * @module apps/common/component/common_map_tile
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -27,13 +28,13 @@ const template = props => ` <div id='${props.id}'
 * @function
 * @param {{data:        {
 *                       commonMountdiv:string,
-*                       geoJSON:common['commonGeoJSONTile']
+*                       geoJSON:types_common.commonGeoJSONTile
 *                       },
 *          methods:     {
-*                       COMMON:common['CommonModuleCommon'],
+*                       COMMON:types_common.CommonModuleCommon,
 *                       project:function,
 *                       }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}

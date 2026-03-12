@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 module combiner
  * @module apps/app8/src/functions/solver3/module/combiner
  */
 

@@ -1,21 +1,20 @@
 /**
- * Displays Javascript code with code line or parsed Markdown document in document container
- *         
+ * @description Displays Javascript code with code line or parsed Markdown document in document container      
  * @module apps/common/component/common_document
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{app_logo:common['server']['ORM']['Object']['App']['Logo'],
- *          app_copyright:common['server']['ORM']['Object']['App']['Copyright'],
- *          app_name:common['server']['ORM']['Object']['App']['Name'],
+ * @param {{app_logo:types_common.server['ORM']['Object']['App']['Logo'],
+ *          app_copyright:types_common.server['ORM']['Object']['App']['Copyright'],
+ *          app_name:types_common.server['ORM']['Object']['App']['Name'],
  *          document :string,
- *          documentType:common['commonDocumentType'],
+ *          documentType:types_common.commonDocumentType,
  *          document_href:string,
  *          functionMarkdownParse:(arg0:string)=>string
  *          }} props
@@ -51,15 +50,15 @@ const template = props =>`  <div id='${'common_document_' + Date.now()}' class='
  *                      app_name:string,
  *                      href:string,
  *                      title:string,
- *                      documentType:common['commonDocumentType']
+ *                      documentType:types_common.commonDocumentType
  *                      },
  *          methods:    {
- *                       COMMON:common['CommonModuleCommon']
+ *                       COMMON:types_common.CommonModuleCommon
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
- *                      events:  common['commonComponentEvents'],
+ *                      events:  types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -246,8 +245,8 @@ const component = async props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

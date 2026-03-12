@@ -1,4 +1,5 @@
 /**
+ * @description  customer create
  * @module apps/app5/src/functions/customer_create
  */
 

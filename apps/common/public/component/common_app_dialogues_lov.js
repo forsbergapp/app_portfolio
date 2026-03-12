@@ -1,9 +1,9 @@
 /**
- * Displays list of values
+ * @description Displays list of values
  * @module apps/common/component/common_app_dialogues_lov
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -46,12 +46,12 @@ const template = props =>`  <div id='common_app_dialogues_lov_form'>
  *                      commonMountdiv:string
  *                      },
  *          methods:    {
- *                      functionData:   ((arg0:common['CommonAppEvent']['target'])=>Promise.<Object.<string,*>[]>)|null,
+ *                      functionData:   ((arg0:types_common.CommonAppEvent['target'])=>Promise.<Object.<string,*>[]>)|null,
  *                      functionRow:    ((arg0:{id:*,value:*}|null)=> Promise.<void>)|null,
- *                      event_target:common['CommonAppEvent']['target']
- *                      COMMON:common['CommonModuleCommon'],
+ *                      event_target:types_common.CommonAppEvent['target']
+ *                      COMMON:types_common.CommonModuleCommon,
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      events:events,
@@ -63,9 +63,9 @@ const component = async props => {
 
     let path = '';
     let query = null;
-    /**@type{common['CommonRESTAPIAuthorizationType']}*/
+    /**@type{types_common.CommonRESTAPIAuthorizationType}*/
     let token_type;
-    /**@type{common['CommonRESTAPIMethod']}*/
+    /**@type{types_common.CommonRESTAPIMethod}*/
     let method;
     let body = null;
     let lov_column_value = '';
@@ -152,8 +152,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

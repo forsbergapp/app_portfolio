@@ -1,17 +1,17 @@
 /**
- * Display apps
+ * @description Display apps
  * @module apps/app1/component/menu_apps
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{apps:common['server']['ORM']['Object']['App'][],
+ * @param {{apps:types_common.server['ORM']['Object']['App'][],
  *          icons:{ title:string,
  *                  data:string,
  *                  module:string,
@@ -70,16 +70,16 @@ const template = props => ` <div id='menu_apps_content_widget1' class='widget'>
  * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      },
  *          lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
  */
 const component = async props => {
-    /**@type{common['server']['ORM']['Object']['App'][]} */
+    /**@type{types_common.server['ORM']['Object']['App'][]} */
     const apps = await props.methods.COMMON.commonFFB({path:'/server-db/app', method:'GET', authorization_type:'ADMIN'})
                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 

@@ -1,17 +1,17 @@
 /**
- * Displays user menu iam user
+ * @description Displays user menu iam user
  * @module apps/common/component/common_app_dialogues_user_menu_iam_user
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{user:common['server']['iam']['iam_user'],
- *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate'],
+ * @param {{user:types_common.server['iam']['iam_user'],
+ *          commonMiscFormatJsonDate:types_common.CommonModuleCommon['commonMiscFormatJsonDate'],
  *          icons:{ private:string,
  *                  username:string,
  *                  bio:string,
@@ -103,16 +103,16 @@ const template = props => ` <div id='common_app_dialogues_user_menu_iam_user'>
 *                      commonMountdiv:string
 *                      },
 *          methods:    {
-*                      COMMON:common['CommonModuleCommon']
+*                      COMMON:types_common.CommonModuleCommon
 *                      }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:{commonUserUpdate:function},
 *                      events: events,
 *                      template:string}>}
 */
 const component = async props => {
-    /**@type{common['server']['iam']['iam_user']} */    
+    /**@type{types_common.server['iam']['iam_user']} */    
     const user = await props.methods.COMMON.commonFFB({path:`/server-iam/iamuser/${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id}`, 
                                                 method:'GET', authorization_type:props.methods.COMMON.commonGlobalGet('Data').UserApp.app_id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id?'ADMIN':'APP_ACCESS'})
                         .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
@@ -228,8 +228,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

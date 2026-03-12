@@ -1,4 +1,5 @@
 /**
+ * @description account transactions
  * @module apps/app5/src/functions/account_transactions
  */
 /**

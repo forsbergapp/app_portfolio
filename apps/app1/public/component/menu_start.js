@@ -1,9 +1,9 @@
 /**
- * Displays start
+ * @description Displays start
  * @module apps/app1/component/menu_start
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -11,7 +11,7 @@
  * @description Template
  * @function
  * @param {{maintenance:0|1|null,
- *          user_stat:(common['server']['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[],
+ *          user_stat:(types_common.server['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[],
  *          count_not_connected:number,
  *          icons:{
  *                   maintenance:string,
@@ -58,10 +58,10 @@ const template = props => ` <div id='menu_start_content_widget1' class='widget'>
  * @function 
  * @param {{ data:       {commonMountdiv:string},
  *           methods:    {
- *                       COMMON:common['CommonModuleCommon']
+ *                       COMMON:types_common.CommonModuleCommon
  *                       },
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null,
  *                      template:string}>}
@@ -76,7 +76,7 @@ const component = async props => {
         return props.methods.COMMON.commonFFB({path:'/server-socket/socket-stat', query:`logged_in=${logged_in}`, method:'GET', authorization_type:'ADMIN'})
                 .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     };
-    /**@type{(common['server']['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[]} */
+    /**@type{(types_common.server['ORM']['View']['IamUserGetStatCountAdmin'] & {count_connected:number})[]} */
     const user_stat = await props.methods.COMMON.commonFFB({path:'/server-db/iamuser-stat', method:'GET', authorization_type:'ADMIN'})
                             .then((/**@type{string}*/result)=>JSON.parse(result).rows);
     //add count stat
@@ -158,7 +158,7 @@ const component = async props => {
                 data:   {
                         default_value:props.methods.COMMON.commonGlobalGet('ICONS').infinite,
                         default_data_value:'',
-                        options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}).concat({Id:'',Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}),
+                        options:apps.map((/**@type{types_common.server['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}).concat({Id:'',Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}),
                         column_value:'Id',
                         column_text:'Name'
                         },

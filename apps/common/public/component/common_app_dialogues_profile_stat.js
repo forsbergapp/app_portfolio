@@ -1,10 +1,10 @@
 /**
- * Displays profile stat
+ * @description Displays profile stat
  * @module apps/common/component/common_app_dialogues_profile_stat
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  * 
  */
 /**
@@ -33,12 +33,12 @@ const template = props =>  `   <div id='common_app_dialogues_profile_stat_row1'>
  *                      statchoice:number
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
- *                      events:common['commonComponentEvents'],
+ *                      events:types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -57,8 +57,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

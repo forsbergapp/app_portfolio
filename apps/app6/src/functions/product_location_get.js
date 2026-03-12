@@ -1,4 +1,5 @@
 /**
+ * @description product location get
  * @module apps/app6/src/functions/product_location_get
  */
 /**

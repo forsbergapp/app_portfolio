@@ -1,9 +1,9 @@
 /**
- * Setings tab 3
+ * @description Setings tab 3
  * @module apps/app4/component/settings_tab3
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  * @import {appSettingThemeThumbnailsUpdate}  from '../js/app.js'
  * @import types_app  from '../../types.d.ts'
  */
@@ -86,9 +86,9 @@ const template = props =>`  <div class='settings_row3'>
  *                      themes:types_app.APP_GLOBAL['themes']
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon'],
+ *                      COMMON:types_common.CommonModuleCommon,
  *                      appSettingThemeThumbnailsUpdate:appSettingThemeThumbnailsUpdate}}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

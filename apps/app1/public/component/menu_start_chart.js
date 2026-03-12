@@ -1,10 +1,10 @@
 /**
- * Displays pie chart and bar chart
+ * @description Displays pie chart and bar chart
  * @module apps/app1/component/menu_start_chart
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -12,12 +12,12 @@
  * @description Template
  * @function
  * @param {{app_id:number|null,
- *          chart1_stat:common['server']['ORM']['View']['LogGetStat'][],
+ *          chart1_stat:types_common.server['ORM']['View']['LogGetStat'][],
  *          function_chart1_pie_colors:function,
  *          function_chart1_legend:function,
  *          chart2_color_app_all:string,
  *          chart2_color_app:string,
- *          chart2_stat:common['server']['ORM']['View']['LogGetStat'][],
+ *          chart2_stat:types_common.server['ORM']['View']['LogGetStat'][],
  *          chart2_legend_text:string,
  *          chart2_legend_text_apps:string,
  *          icons:{
@@ -78,10 +78,10 @@ const template = props => ` <div id='menu_start_chart_box1'>
  * @function
  * @param {{ data:       {commonMountdiv:string},
  *           methods:    {
- *                       COMMON:common['CommonModuleCommon']
+ *                       COMMON:types_common.CommonModuleCommon
  *                       },
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null,
  *                      methods:null,
  *                      template:string}>}
@@ -101,7 +101,7 @@ const component = async props => {
         };
     /**
      * Chart 2 pie colors
-     * @param {common['server']['ORM']['View']['LogGetStat'][]} chart1
+     * @param {types_common.server['ORM']['View']['LogGetStat'][]} chart1
      * @returns {string}
      */
     const chart1_pie_colors = chart1 =>{
@@ -146,7 +146,7 @@ const component = async props => {
         query = `data_app_id=${app_id}&statGroup=&statValue=${admin_statValues.value}&unique=&year=${year}&month=${month}`;
     
     //return result for both charts
-    /**@type{common['server']['ORM']['View']['LogGetStat'][]} */
+    /**@type{types_common.server['ORM']['View']['LogGetStat'][]} */
     const charts = await props.methods.COMMON.commonFFB({path:'/server-db/log-stat', query:query, method:'GET', authorization_type:'ADMIN'})
                         .then((/**@type{string}*/result)=>JSON.parse(props.methods.COMMON.commonWindowBase64From(JSON.parse(result).rows)));
       

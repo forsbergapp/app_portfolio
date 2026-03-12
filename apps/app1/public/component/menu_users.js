@@ -1,10 +1,10 @@
 /**
- * Displays stat of users
+ * @description Displays stat of users
  * @module apps/app1/component/menu_users
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 /**
  * @name template
@@ -37,9 +37,9 @@ const template = props => `<div id='menu_users_content_widget1' class='widget'>
  * @description Component
  * @function 
  * @param {{ data:{      commonMountdiv:string},
- *           methods:{   COMMON:common['CommonModuleCommon']},
+ *           methods:{   COMMON:types_common.CommonModuleCommon},
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

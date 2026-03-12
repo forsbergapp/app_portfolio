@@ -52,7 +52,7 @@
  * @module apps/common/component/common_app_data_display
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -63,7 +63,7 @@
 
 /**
  * @param {{    display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL',
- *              master_object:common['CommonMasterObjectType'],
+ *              master_object:types_common.CommonMasterObjectType,
  *              rows:[],
  *              detail_class:string,
  *              new_resource:boolean,
@@ -221,20 +221,20 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      display_type:'VERTICAL_KEY_VALUE'|'MASTER_DETAIL_HORIZONTAL'|'MASTER_DETAIL_VERTICAL'
  *                      dialogue:boolean,
  *                      lov: {  lov:string, 
- *                              lov_functionData: ((arg0:common['CommonAppEvent']['target'])=>Promise.<Object.<string,*>[]>)|null,
+ *                              lov_functionData: ((arg0:types_common.CommonAppEvent['target'])=>Promise.<Object.<string,*>[]>)|null,
  *                              lov_functionRow :((arg0:{id:*,value:*}|null)=> Promise.<void>)|null
  *                          }[],
  *                      master_path:string,
  *                      master_query:string,
  *                      master_body:string,
- *                      master_method:common['CommonRESTAPIMethod'],
- *                      master_token_type:common['CommonRESTAPIAuthorizationType'],
+ *                      master_method:types_common.CommonRESTAPIMethod,
+ *                      master_token_type:types_common.CommonRESTAPIAuthorizationType,
  *                      master_resource:string,
  *                      detail_path:string,
  *                      detail_query:string,
  *                      detail_body:string,
- *                      detail_method:common['CommonRESTAPIMethod'],
- *                      detail_token_type:common['CommonRESTAPIAuthorizationType'],
+ *                      detail_method:types_common.CommonRESTAPIMethod,
+ *                      detail_token_type:types_common.CommonRESTAPIAuthorizationType,
  *                      detail_resource:string,
  *                      detail_class:string,
  *                      new_resource:boolean,
@@ -248,15 +248,15 @@ const template = props =>`  ${(props.master_object && props.new_resource)?
  *                      button_delete: boolean,
  *                      button_delete_icon:string},
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon'],
+ *                      COMMON:types_common.CommonModuleCommon,
  *                      button_print:function,
  *                      button_update:function,
  *                      button_post:function,
  *                      button_delete:function}}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:{master_object:*},
  *                      methods:null,
- *                      events:common['commonComponentEvents'],
+ *                      events:types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -331,8 +331,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

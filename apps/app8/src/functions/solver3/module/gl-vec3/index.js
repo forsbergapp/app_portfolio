@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 module gl-vec3
  * Changed from original https://github.com/stackgl/gl-vec3:
  * Merged all files into one
  * Replaced function declarations with function expression syntax

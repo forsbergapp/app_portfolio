@@ -1,16 +1,17 @@
 /**
+ * @description map control expand search city
  * @module apps/common/component/common_map_control_expand_search_city
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{records:common['CommonWorldcitiesRecordType'][]}
+ * @param {{records:types_common.CommonWorldcitiesRecordType[]}
 *          } props 
 * @returns {string}
 */
@@ -43,10 +44,10 @@ const template = props =>`  <div id='common_map_control_expand_search_list'>
  *                      commonMountdiv:string,
  *                      search:string},
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon'],
+ *                      COMMON:types_common.CommonModuleCommon,
  *                      goTo:function
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      events:function,
@@ -67,7 +68,7 @@ const component = async props => {
                            .then(result=>JSON.parse(result).rows);
 
     /**
-     * @param {common['CommonAppEvent']['target']} target
+     * @param {types_common.CommonAppEvent['target']} target
      */
     const eventClickSearchList = async target =>{
         const row = props.methods.COMMON.commonMiscElementRow(target);
@@ -84,8 +85,8 @@ const component = async props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      */
     const events = async (event_type, event) =>{
         const event_target_id = props.methods.COMMON.commonMiscElementId(event.target);

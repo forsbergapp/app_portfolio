@@ -1,10 +1,11 @@
 /**
+ * @description app lib
  * @module apps/app4/report/lib_timetable
  */
 
 /**
  * @import types_app  from '../../types.d.ts'
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**@type{types_app.APP_REPORT_GLOBAL} */
@@ -302,8 +303,8 @@ const template = props => `<div id='${props.TIMETABLE_ID}'
  * 						button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
  * 						user_account_app_data_posts_parameters:types_app.APP_REPORT_day_user_account_app_data_posts[]|null
  * 						},
- *          methods:    {COMMON:common['CommonModuleCommon']}}} props
- * @returns {{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:    {COMMON:types_common.CommonModuleCommon}}} props
+ * @returns {{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   	null,
  *                      methods:	null,
  *                      template:string}}

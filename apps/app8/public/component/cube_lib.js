@@ -1,5 +1,5 @@
 /**
- * Cube component library
+ * @description Cube component library
  * 
  * Original code https://github.com/stringham/rubiks-solver
  * Changes
@@ -19,10 +19,10 @@
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
-/**@type{common['COMMON_DOCUMENT']} */
+/**@type{types_common.COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
 const WHITE='#ffffff', YELLOW='#ffff00' , GREEN='#009900' , BLUE='#006dbf', RED='#cc0000', ORANGE='#ff8000', CLEAR = '#000000';

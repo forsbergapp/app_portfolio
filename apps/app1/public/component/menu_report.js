@@ -1,10 +1,10 @@
 /**
- * Displays reports and report queue
+ * @description Displays reports and report queue
  * @module apps/app1/component/menu_report
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -32,10 +32,10 @@ const template = props => ` <div id='menu_report_content_widget1' class='widget'
  * @function 
  * @param {{data:        {commonMountdiv:string},
  *          methods:     {
- *                       COMMON:common['CommonModuleCommon']
+ *                       COMMON:types_common.CommonModuleCommon
  *                       },
  *          lifecycle:   null}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:{    updateMetadata:function, 
  *                                   reportRun:function,
@@ -45,7 +45,7 @@ const template = props => ` <div id='menu_report_content_widget1' class='widget'
  */
 const component = async props => {
     
-    /**@type{common['server']['ORM']['Object']['AppModule'][]} */
+    /**@type{types_common.server['ORM']['Object']['AppModule'][]} */
     const reports = await props.methods.COMMON.commonFFB({path:'/app-common-module-metadata/', query:'type=REPORT',method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     /**

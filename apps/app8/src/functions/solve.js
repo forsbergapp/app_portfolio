@@ -1,4 +1,5 @@
 /**
+ * @description cube solve
  * @module apps/app8/src/functions/solve
  */
 

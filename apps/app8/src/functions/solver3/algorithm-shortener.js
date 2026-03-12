@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 algorithm shortener
  * @module apps/app8/src/functions/solver3/algorithm-shortener
  */
 

@@ -1,10 +1,10 @@
 /**
- * Displays stat of users
+ * @description Displays stat of users
  * @module apps/app1/component/menu_users_list
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -12,7 +12,7 @@
  * @description Template
  * @function
  * @param {{iam_user_id:number,
- *          users:common['server']['ORM']['Object']['IamUser'][],
+ *          users:types_common.server['ORM']['Object']['IamUser'][],
  *          function_get_order_by:function,
  *          icons:{ avatar:string,
  *                  id:string,
@@ -73,9 +73,9 @@ const template = props => ` <div class='menu_users_list_row row_title'>
  * @param {{ data:{      commonMountdiv:string,
  *                       sort:string,
  *                       order_by:string},
- *           methods:{   COMMON:common['CommonModuleCommon']},
+ *           methods:{   COMMON:types_common.CommonModuleCommon},
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

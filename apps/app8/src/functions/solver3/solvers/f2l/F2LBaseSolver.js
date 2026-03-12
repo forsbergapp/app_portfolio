@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 solvers f2l F2L base solver
  * @module apps/app8/src/functions/solver3/solvers/f2l
  */
 

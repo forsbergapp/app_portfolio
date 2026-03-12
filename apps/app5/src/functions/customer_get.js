@@ -1,4 +1,5 @@
 /**
+ * @description customer get
  * @module apps/app5/src/functions/customer_get
  */
 /**

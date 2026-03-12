@@ -1,16 +1,16 @@
 /**
- * Displays app
+ * @description Displays app
  * @module apps/app2/component/app
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 /**
  * @name template
  * @description Template
  * @function
- * @param {{apps:(common['server']['ORM']['View']['AppGetInfo'])[],
+ * @param {{apps:(types_common.server['ORM']['View']['AppGetInfo'])[],
  *          icons:{info:string}}} props 
  * @returns {string}
  */
@@ -35,11 +35,11 @@ const template = props =>`
  * @description Component
  * @function
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON:common['CommonModuleCommon']}}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:    {COMMON:types_common.CommonModuleCommon}}} props 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
- *                      events:common['commonComponentEvents'],
+ *                      events:types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -47,8 +47,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{
@@ -84,7 +84,7 @@ const component = async props => {
         methods:    null,
         events:     events,
         template:   template({apps:props.methods.COMMON.commonGlobalGet('Data').Apps
-                                    .filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>
+                                    .filter((/**@type{types_common.server['ORM']['View']['AppGetInfo']}*/app)=>
                                             [props.methods.COMMON.commonGlobalGet('Parameters').app_common_app_id,
                                             props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id,
                                             props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id

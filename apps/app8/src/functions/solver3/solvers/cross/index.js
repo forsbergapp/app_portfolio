@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 solvers cross
  * @module apps/app8/src/functions/solver3/solvers/cross
  */
 

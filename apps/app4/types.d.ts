@@ -16,7 +16,7 @@ type CommonModuleLibTimetableParam = {
   						    button_id:'toolbar_btn_left'|'toolbar_btn_right'|null,
   						    user_account_app_data_posts_parameters:APP_REPORT_day_user_account_app_data_posts[]|null
   						    },
-               methods:    {COMMON:common['CommonModuleCommon']}
+               methods:    {COMMON:types_common.CommonModuleCommon}
 }
 /**
  * @name CommonModuleLibTimetable
@@ -26,7 +26,7 @@ type CommonModuleLibTimetableParam = {
 type CommonModuleLibTimetable = {  APP_REPORT_GLOBAL:APP_REPORT_GLOBAL,
         component:{(arg0:CommonModuleLibTimetableParam) : 
                             {   
-                                lifecycle:common['CommonComponentLifecycle'], 
+                                lifecycle:types_common.CommonComponentLifecycle, 
                                 data:   	null,
                                 methods:	null,
                                 template:   string

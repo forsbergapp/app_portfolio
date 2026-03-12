@@ -1,9 +1,10 @@
 /**
+ * @description map measure
  * @module apps/common/component/common_map_measure
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -24,9 +25,9 @@ const template = props => `<div>${props.km} km / ${props.miles} mi</div>`;
 *                       miles:number,
 *                       },
 *          methods:     {
-*                       COMMON:common['CommonModuleCommon']
+*                       COMMON:types_common.CommonModuleCommon
 *                       }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}

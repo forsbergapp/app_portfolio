@@ -1,10 +1,10 @@
 /**
- * Displays user menu
+ * @description Displays user menu
  * @module apps/common/component/common_app_dialogues_user_menu
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -74,12 +74,12 @@ const template = props =>`  <div id='common_app_dialogues_user_menu_content' ${p
 *                      commonMountdiv:string
 *                      },
 *          methods:    {
-*                      COMMON:common['CommonModuleCommon']
+*                      COMMON:types_common.CommonModuleCommon
 *                      }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:null,
-*                      events:  common['commonComponentEvents'],
+*                      events:  types_common.commonComponentEvents,
 *                      template:string}>}
 */
 const component = async props => {
@@ -95,7 +95,7 @@ const component = async props => {
         element.classList.remove('common_app_dialogues_user_menu_messages_list_row_unread');
         element.classList.add('common_app_dialogues_user_menu_messages_list_row_read');
 
-        /**@type{common['server']['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:common['server']['ORM']['Object']['IamUser']['Username']}}} */
+        /**@type{types_common.server['ORM']['Object']['MessageQueuePublish']['Message'] & {Username:types_common.server['ORM']['Object']['IamUser']['Username']}}} */
         const message = {Sender:element.getAttribute('data-sender')==''?null:element.getAttribute('data-sender'),
                          ReceiverId:Number(element.getAttribute('data-receiver_id')),
                          Username:props.methods.COMMON.commonGlobalGet('Data').User.iam_user_username ??'',
@@ -178,8 +178,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

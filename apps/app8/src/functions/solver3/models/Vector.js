@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 models vector
  * @module apps/app8/src/functions/solver3/models/vector
  */
 

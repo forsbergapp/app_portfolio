@@ -1,9 +1,9 @@
 /**
- * Displays menu and logged in user
+ * @description Displays menu and logged in user
  * @module apps/app1/component/secure
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 /**
  * @name template
@@ -51,8 +51,8 @@ const template = props =>` <div id='secure'>
  * @description Component
  * @function
  * @param {{data:{      commonMountdiv:string},
- *          methods:{   COMMON:common['CommonModuleCommon']}}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:{   COMMON:types_common.CommonModuleCommon}}} props 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

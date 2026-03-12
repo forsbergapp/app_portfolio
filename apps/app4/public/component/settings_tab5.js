@@ -1,9 +1,9 @@
 /**
- * Settings tab 5
+ * @description Settings tab 5
  * @module apps/app4/component/settings_tab5
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * @import types_app  from '../../types.d.ts'
  */
@@ -101,10 +101,10 @@ const template = props =>`   <div class='settings_row'>
  *                      methods:types_app.APP_REPORT_GLOBAL['CommonModulePrayTimes_methods']
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon'],
+ *                      COMMON:types_common.CommonModuleCommon,
  *                      appComponentSettingUpdate:appComponentSettingUpdate
  *                       }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

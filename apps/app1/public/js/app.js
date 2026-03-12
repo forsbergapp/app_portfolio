@@ -1,15 +1,15 @@
 /**
- * Admin app
+ * @description Admin app
  * @module apps/app1/app
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
-/**@type{common['COMMON_DOCUMENT']} */
+/**@type{types_common.COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-/**@type{common['CommonModuleCommon']}*/
+/**@type{types_common.CommonModuleCommon}*/
 let common;
 /**
  * App globals
@@ -491,7 +491,7 @@ const appSecureCommonRecordUpdate = async ( table,
                                             resource_id,
                                             data) => {
     let path = '';
-    /**@type{common['CommonRESTAPIMethod']} */
+    /**@type{types_common.CommonRESTAPIMethod} */
     let method;
     switch (table){
         case 'user_account':{
@@ -533,7 +533,7 @@ const appSecureCommonRecordUpdate = async ( table,
  * @param {string} id 
  * @param {boolean|null} db_icon 
  * @param {string} path 
- * @param {common['CommonRESTAPIMethod']} method 
+ * @param {types_common.CommonRESTAPIMethod} method 
  * @param {{demo_password?:string}|null} data 
  * @returns {void}
  */
@@ -589,7 +589,7 @@ const appSecureMenuInstallationDemoUninstall = () =>{
  * @description App events
  * @function
  * @param {string} event_type 
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @param {string} event_target_id 
  * @returns {void}
  */
@@ -887,7 +887,7 @@ const appLogin = async () => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -933,7 +933,7 @@ const appEventClick = event => {
  * @name appEventChange
  * @description App event change
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventChange = event => {
@@ -944,7 +944,7 @@ const appEventChange = event => {
  * @name appEventKeyUp
  * @description App event keyup
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
@@ -968,7 +968,7 @@ const appEventKeyUp = event => {
  * @name appEventKeyDown
  * @description App event keydown
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyDown = event => {
@@ -979,7 +979,7 @@ const appEventKeyDown = event => {
  * @name appEventInput
  * @description App event input
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventInput = event => {
@@ -990,7 +990,7 @@ const appEventInput = event => {
  * @name appEventFocusIn
  * @description App event focusin
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventFocusIn = event => {
@@ -1012,7 +1012,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {common['CommonModuleCommon']} commonLib
+ * @param {types_common.CommonModuleCommon} commonLib
  * @returns {Promise.<void>}
  */
 const appCommonInit = async (commonLib) => {
@@ -1025,7 +1025,7 @@ const appCommonInit = async (commonLib) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {common['commonMetadata']}
+ * @returns {types_common.commonMetadata}
  */
 const appMetadata = () =>{
     return { 

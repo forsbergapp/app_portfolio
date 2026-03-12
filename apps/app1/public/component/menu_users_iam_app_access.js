@@ -1,17 +1,17 @@
 /**
- * Displays stat of users
+ * @description Displays stat of users
  * @module apps/app1/component/menu_users_logon
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{user_logons:common['server']['ORM']['Object']['IamAppAccess'][]}} props
+ * @param {{user_logons:types_common.server['ORM']['Object']['IamAppAccess'][]}} props
  * @returns {string}
  */
 const template = props => ` <div id='menu_users_iam_app_access_row_title' class='menu_users_iam_app_access_row row_title'>
@@ -55,9 +55,9 @@ const template = props => ` <div id='menu_users_iam_app_access_row_title' class=
  * @function 
  * @param {{ data:{      commonMountdiv:string,
  *                       iam_user_id:number},
- *           methods:{   COMMON:common['CommonModuleCommon']},
+ *           methods:{   COMMON:types_common.CommonModuleCommon},
  *           lifecycle:  null}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

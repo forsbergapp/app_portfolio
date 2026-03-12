@@ -1,10 +1,10 @@
 /**
- * Displays stat of users
+ * @description Displays stat of users
  * @module apps/app1/component/menu_db_info
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 
@@ -13,10 +13,10 @@
  * @description Template
  * @function
  * @param {{size:string,
- *          db:common['server']['ORM']['View']['ORMGetInfo'],
- *          db_detail:common['server']['ORM']['View']['ORMGetObjects'][],
- *          function_seconds_to_time:common['CommonModuleCommon']['commonMiscSecondsToTime'],
- *          function_roundOff:common['CommonModuleCommon']['commonMiscRoundOff'],
+ *          db:types_common.server['ORM']['View']['ORMGetInfo'],
+ *          db_detail:types_common.server['ORM']['View']['ORMGetObjects'][],
+ *          function_seconds_to_time:types_common.CommonModuleCommon['commonMiscSecondsToTime'],
+ *          function_roundOff:types_common.CommonModuleCommon['commonMiscRoundOff'],
  *          icons:{
  *                  database_title:string,
  *                  name_title:string,
@@ -89,9 +89,9 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
  * @description Component
  * @function 
  * @param {{ data:{      commonMountdiv:string},
- *           methods:{   COMMON:common['CommonModuleCommon']},
+ *           methods:{   COMMON:types_common.CommonModuleCommon},
  *           lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -99,11 +99,11 @@ const template = props => ` <div id='menu_db_info_content_widget1' class='widget
 const component = async props => {
     const size = '(Mb)';
     /**
-     * @type {common['server']['ORM']['View']['ORMGetInfo']}
+     * @type {types_common.server['ORM']['View']['ORMGetInfo']}
      */
     const db = await props.methods.COMMON.commonFFB({path:'/server-db/ORM', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows[0]);
     /**
-     * @type {common['server']['ORM']['View']['ORMGetObjects'][]}
+     * @type {types_common.server['ORM']['View']['ORMGetObjects'][]}
      */
     const db_detail = await props.methods.COMMON.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'}).then((/**@type{string}*/result)=>JSON.parse(result).rows);
 

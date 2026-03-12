@@ -1,19 +1,19 @@
 /**
- * Displays report queue
+ * @description Displays report queue
  * @module apps/app1/component/menu_report
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{report_queue:common['server']['ORM']['Object']['AppModuleQueue'][],
+ * @param {{report_queue:types_common.server['ORM']['Object']['AppModuleQueue'][],
  *          function_get_order_by:function,
- *          function_commonMiscRoundOff:common['CommonModuleCommon']['commonMiscRoundOff'],
+ *          function_commonMiscRoundOff:types_common.CommonModuleCommon['commonMiscRoundOff'],
  *          icons:{
  *                 preview:string
  *          }}} props
@@ -58,10 +58,10 @@ const template = props => ` <div class='menu_report_queue_row row_title'>
  *                       order_by:string
  *                       },
  *          methods:     {
- *                       COMMON:common['CommonModuleCommon']
+ *                       COMMON:types_common.CommonModuleCommon
  *                       },
  *          lifecycle:   null}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -72,7 +72,7 @@ const component = async props => {
      * @param {string} column
      */
     const get_order_by = column =>column==props.data.sort?props.data.order_by:'';
-    /**@type{common['server']['ORM']['Object']['AppModuleQueue'][]} */
+    /**@type{types_common.server['ORM']['Object']['AppModuleQueue'][]} */
     const report_queue = await props.methods.COMMON.commonFFB({path:'/app-common-module-report-queue/', method:'GET', authorization_type:'ADMIN'})
                                 .then((/**@type{*}*/result)=>JSON.parse(result).rows ?? JSON.parse(result));
     

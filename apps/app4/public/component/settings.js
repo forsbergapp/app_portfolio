@@ -1,10 +1,10 @@
 /**
- * Displays settings
+ * @description Displays settings
  * @module apps/app4/component/settings
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 /**
  * @name template
@@ -49,9 +49,9 @@ const template = props =>`
  *                          avatar:string|null
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon'],
+ *                      COMMON:types_common.CommonModuleCommon,
  *                      SettingShow:function}}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

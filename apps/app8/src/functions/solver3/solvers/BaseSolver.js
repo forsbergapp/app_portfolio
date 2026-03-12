@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 solvers base solver
  * @module apps/app8/src/functions/solver3/solvers/basesolver
  */
 

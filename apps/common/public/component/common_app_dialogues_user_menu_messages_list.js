@@ -1,17 +1,17 @@
 /**
- * Displays user menu message list
+ * @description Displays user menu message list
  * @module apps/common/component/common_app_dialogues_user_menu_messages_list_list
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{messages:common['CommonResponsePagination'] & {rows: common['server']['ORM']['Object']['MessageQueuePublish']['Message'][]},
- *          commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate'],
+ * @param {{messages:types_common.CommonResponsePagination & {rows: types_common.server['ORM']['Object']['MessageQueuePublish']['Message'][]},
+ *          commonMiscFormatJsonDate:types_common.CommonModuleCommon['commonMiscFormatJsonDate'],
  *          icons:{ delete:string,
  *                  date:string,
  *                  sender:string,
@@ -47,12 +47,12 @@ const template = props => `
 * @function
 * @param {{data:       {
 *                      commonMountdiv:string,
-*                      messages:common['CommonResponsePagination'] & {rows: common['server']['ORM']['Object']['MessageQueuePublish']['Message'][]},
+*                      messages:types_common.CommonResponsePagination & {rows: types_common.server['ORM']['Object']['MessageQueuePublish']['Message'][]},
 *                      },
 *          methods:    {
-*                      COMMON:common['CommonModuleCommon']
+*                      COMMON:types_common.CommonModuleCommon
 *                      }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:null,
 *                      template:string}>}

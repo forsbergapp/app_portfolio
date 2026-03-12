@@ -1,9 +1,10 @@
 /**
+ * @description print
  * @module apps/common/component/common_print
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -36,10 +37,10 @@ const template = props =>`  <!DOCTYPE html>
  *                      appHtml:string
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      }}} props
  * 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}
@@ -47,7 +48,7 @@ const template = props =>`  <!DOCTYPE html>
 const component = async props => {
     /**
      * 
-     * @param {common['COMMON_DOCUMENT']|ShadowRoot} element 
+     * @param {types_common.COMMON_DOCUMENT|ShadowRoot} element 
      * @returns {string}
      */
     const getCss = element =>{

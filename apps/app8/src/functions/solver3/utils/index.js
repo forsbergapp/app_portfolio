@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 utils
  * @module apps/app8/src/functions/solver3/utils
  */
 
@@ -469,7 +470,7 @@ function _reverseNotations(notations) {
 		notation = isPrime ? notation[0] : notation[0] + 'prime';
 		reversed.push(notation);
 	}
-
+    /**@ts-ignore */
 	return typeof moves === 'string' ? reversed.join(' ') : reversed;
 }
 

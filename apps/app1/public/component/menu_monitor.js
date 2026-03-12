@@ -1,10 +1,10 @@
 /**
- * Displays config
+ * @description Displays config
  * @module apps/app1/component/menu_monitor
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -53,8 +53,8 @@ const template = props => `<div id='menu_monitor_content_widget1' class='widget'
  * @description Component
  * @function
  * @param {{data:{      commonMountdiv:string},
- *          methods:{   COMMON:common['CommonModuleCommon']}}} props 
- * @returns {Promise.<{ lifecycle:  common['CommonComponentLifecycle'], 
+ *          methods:{   COMMON:types_common.CommonModuleCommon}}} props 
+ * @returns {Promise.<{ lifecycle:  types_common.CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {monitorShow:                monitorShow,
  *                                   monitorDetailShowServerLog: monitorDetailShowServerLog,
@@ -105,7 +105,7 @@ const component = async props => {
         //service_log parameters
         const result_parameters = await props.methods.COMMON.commonFFB({path:'/server-db/openapi/config', method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result));
-        /**@type{common['server']['ORM']['View']['ORMGetObjects'][]}*/
+        /**@type{types_common.server['ORM']['View']['ORMGetObjects'][]}*/
         const result_log_objects = await props.methods.COMMON.commonFFB({path:'/server-db/ORM-objects', method:'GET', authorization_type:'ADMIN'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
         
@@ -230,7 +230,7 @@ const component = async props => {
                 data:   {
                         default_value:props.methods.COMMON.commonGlobalGet('ICONS').infinite,
                         default_data_value:'',
-                        options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}).concat({Id:'',Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}),
+                        options:apps.map((/**@type{types_common.server['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}).concat({Id:'',Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}),
                         column_value:'Id',
                         column_text:'Name'
                         },

@@ -1,4 +1,5 @@
 /**
+ * @description solver 3 models cubie
  * @module apps/app8/src/functions/solver3/models/cube
  */
 

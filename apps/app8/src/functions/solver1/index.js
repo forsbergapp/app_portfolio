@@ -1,4 +1,5 @@
 /**
+ * @description solver 1
  * @module apps/app8/src/functions/solver1/solve
  */
 class AlgorithmsClass {

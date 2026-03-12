@@ -1,10 +1,10 @@
 /**
- * Displays app details modules, parameters and secrets 
+ * @description Displays app details modules, parameters and secrets 
  * @module apps/app1/component/menu_apps_detail
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -39,7 +39,7 @@ const template = props => ` <div class='menu_apps_detail_row row_title'>
                                     }
                             </div>
                             ${props.detail=='menu_apps_detail_module'?
-                                `${props.app_detail.map((/**@type{common['server']['ORM']['Object']['AppModule']}*/row)=>
+                                `${props.app_detail.map((/**@type{types_common.server['ORM']['Object']['AppModule']}*/row)=>
                                         `<div data-changed-record='0' class='menu_apps_detail_row common_row'>
                                             <div class='menu_apps_detail_col list_readonly' data-column='Id'>${row.Id}</div>
                                             <div class='menu_apps_detail_col list_readonly' data-column='AppId'>${row.AppId}</div>
@@ -50,7 +50,7 @@ const template = props => ` <div class='menu_apps_detail_row row_title'>
                                             <div class='menu_apps_detail_col common_input list_edit' contentEditable='true' data-column='ModuleDescription'>${row.ModuleDescription??''}</div>
                                         </div>`).join('')
                                 }`:
-                                    `${props.app_detail.map((/**@type{common['server']['ORM']['Object']['AppData']}*/row)=>
+                                    `${props.app_detail.map((/**@type{types_common.server['ORM']['Object']['AppData']}*/row)=>
                                             `<div data-changed-record='0' class='menu_apps_detail_row common_row'>
                                                 <div class='menu_apps_detail_col list_readonly' data-column='Id'>${row.Id}</div>
                                                 <div class='menu_apps_detail_col list_readonly' data-column='AppId'>${row.AppId}</div>
@@ -71,8 +71,8 @@ const template = props => ` <div class='menu_apps_detail_row row_title'>
  * @param {{data:{      commonMountdiv:string,
  *                      app_id_data:number,
  *                      detail:'menu_apps_detail_data'|'menu_apps_detail_module'},
- *          methods:{   COMMON:common['CommonModuleCommon']}}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:{   COMMON:types_common.CommonModuleCommon}}} props 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

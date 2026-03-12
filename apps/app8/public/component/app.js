@@ -1,9 +1,9 @@
 /**
- * Displays app
+ * @description Displays app
  * @module apps/app8/component/app
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 /**
  * @name template
@@ -97,11 +97,11 @@ const template = props =>`  <div id='app_main'>
  * @function
  * @param {{data:       {
  *                      commonMountdiv:string},
- *          methods:    {COMMON:common['CommonModuleCommon']}}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:    {COMMON:types_common.CommonModuleCommon}}} props 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null, 
  *                      methods:null,
- *                      events:common['commonComponentEvents'],
+ *                      events:types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -119,8 +119,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{
@@ -236,7 +236,7 @@ const component = async props => {
     };
     /**
      * @description Get cube solutions
-     * @param {common['CommonAppEvent']['target']} event_target
+     * @param {types_common.CommonAppEvent['target']} event_target
      * @returns {Promise.<{
      *                      Id: string,
      *                      cube_solution: string

@@ -1,9 +1,9 @@
 /**
- * Displays page secure
+ * @description Displays page secure
  * @module apps/app5/component/page_secure
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 /**
  * @name template
@@ -42,10 +42,10 @@ const template = props => ` <div id='app_page_secure'>
  * @param {{data:       {
  *                      commonMountdiv:string},
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon'],
+ *                      COMMON:types_common.CommonModuleCommon,
  *                      button_post:function
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

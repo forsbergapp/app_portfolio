@@ -1,10 +1,10 @@
 /**
- * Settings tab 2
+ * @description Settings tab 2
  * @module apps/app4/component/settings_tab2
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  * @import {appComponentSettingUpdate}  from '../js/app.js'
  * @import types_app  from '../../types.d.ts'
  */
@@ -24,9 +24,9 @@ const template = () => `<div id='mapid'>
  *                      commonMountdiv:string,
  *                      user_settings:types_app.APP_user_setting_record
  *                      },
- *          methods:    {COMMON:common['CommonModuleCommon'],
+ *          methods:    {COMMON:types_common.CommonModuleCommon,
  *                      appComponentSettingUpdate:appComponentSettingUpdate}}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

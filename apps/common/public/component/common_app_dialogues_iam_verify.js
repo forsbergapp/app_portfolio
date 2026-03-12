@@ -1,10 +1,10 @@
 /**
- * Displays IAM verify
+ * @description Displays IAM verify
  * @module apps/common/component/common_app_dialogues_iam_verify
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -38,9 +38,9 @@ const template = props => `
  *                      commonMountdiv:string,
  *                      user_verification_type:'LOGIN'|'SIGNUP'|'UPDATE'|null},
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon'],
+ *                      COMMON:types_common.CommonModuleCommon,
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:{commonUserVerifyCheckInput:function},
  *                      events:events,
@@ -144,8 +144,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

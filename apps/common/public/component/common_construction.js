@@ -1,10 +1,10 @@
 /**
- * Displays construction
+ * @description Displays construction
  * @module apps/common/component/common_construction
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -19,8 +19,8 @@ const template = () => ' <div class=\'common_construction common_icon\'></div>';
  * @description Component
  * @function
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON:common['CommonModuleCommon']}}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:    {COMMON:types_common.CommonModuleCommon}}} props
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      template:string}>}

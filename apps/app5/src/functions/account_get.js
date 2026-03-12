@@ -1,4 +1,5 @@
 /**
+ * @description account get
  * @module apps/app5/src/functions/account_get
  */
 /**

@@ -1,9 +1,9 @@
 /**
- * Profile info
+ * @description Profile info
  * @module apps/app4/component/profile_info
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -59,8 +59,8 @@ const template = props => ` ${props.setting?
  *                      profile_id:number
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']}}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *                      COMMON:types_common.CommonModuleCommon}}} props
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:       null,
  *                      methods:    {
  *                                  profile_user_setting_update:       function,
@@ -79,7 +79,7 @@ const component = async props => {
         return props.methods.COMMON.commonFFB({path:`/server-db/iamuserappdatapost-profile/${profile_id}`, query:`id_current_user=${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id??''}`, method:'GET', authorization_type:'APP_ID'})
                     .then((/**@type{string}*/result)=>
                             JSON.parse(result)
-                            .map((/**@type{common['server']['ORM']['View']['IamUserAppDataPostgetProfileUserPosts']}*/setting)=>{return {  value:JSON.stringify({   
+                            .map((/**@type{types_common.server['ORM']['View']['IamUserAppDataPostgetProfileUserPosts']}*/setting)=>{return {  value:JSON.stringify({   
                                                                                                 sid:setting.Id, 
                                                                                                 iam_user_id:setting.IamUserId, 
                                                                                                 liked:setting.Liked,

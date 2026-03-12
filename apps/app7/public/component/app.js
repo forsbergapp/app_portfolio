@@ -1,9 +1,9 @@
 /**
- * Displays app
+ * @description Displays app
  * @module apps/app7/component/app
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 /**
  * @name temaplte
@@ -15,8 +15,8 @@ const template = () =>' <div id=\'mapid\'></div>';
  * @name component
  * @description Component
  * @param {{data:       {commonMountdiv:string},
- *          methods:    {COMMON:common['CommonModuleCommon']}}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:    {COMMON:types_common.CommonModuleCommon}}} props 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

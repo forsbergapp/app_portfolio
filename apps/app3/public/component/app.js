@@ -1,18 +1,18 @@
 /**
- * Displays app
+ * @description Displays app
  * @module apps/app3/component/app
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
-/**@type{common['server']['app']['commonDocumentMenu'][]} */
+/**@type{types_common.server['app']['commonDocumentMenu'][]} */
 const MENU = [];
 /**
  * @name template
  * @description Template
  * @function
  * @param {{title:string,
- *          app_menu:common['server']['app']['commonDocumentMenu'][]}} props
+ *          app_menu:types_common.server['app']['commonDocumentMenu'][]}} props
  * @returns {string}
  */
 const template = props =>`  <div id='app_menu'>
@@ -42,9 +42,9 @@ const template = props =>`  <div id='app_menu'>
  *                      app_id:number
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      }}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

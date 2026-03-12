@@ -1,4 +1,5 @@
 /**
+ * @description account statement
  * @module apps/app5/src/functions/account_statement
  */
 

@@ -1,9 +1,9 @@
 /**
- * Settings tab 3 thumbnail
+ * @description Settings tab 3 thumbnail
  * @module apps/app4/component/settings_tab_nav_7
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -28,8 +28,8 @@ const template = props => ` <div class='paper ${props.class}'>
  *                      type:'day'|'month'|'year',
  *                      html:string
  *                      },
- *          methods:    {COMMON:common['CommonModuleCommon']}}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:    {COMMON:types_common.CommonModuleCommon}}} props
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

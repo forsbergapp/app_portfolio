@@ -1,18 +1,18 @@
 /**
- * Displays profile info
+ * @description Displays profile info
  * @module apps/common/component/common_app_dialogues_profile_info
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{profile:common['server']['ORM']['View']['IamUserGetProfile'],
- *          function_commonMiscFormatJsonDate:common['CommonModuleCommon']['commonMiscFormatJsonDate'],
+ * @param {{profile:types_common.server['ORM']['View']['IamUserGetProfile'],
+ *          function_commonMiscFormatJsonDate:types_common.CommonModuleCommon['commonMiscFormatJsonDate'],
  *          icons:{ like:string,
  *                  unlike:string, 
  *                  user_account_created:string,
@@ -102,12 +102,12 @@ const template = props =>`  <div id='common_app_dialogues_profile_info'>
  *                      username:string
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
- *                      events: common['commonComponentEvents'],
+ *                      events: types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -120,7 +120,7 @@ const component = async props => {
             else
                 return `/server-db/iamuser-profile/${props.methods.COMMON.commonGlobalGet('Data').User.iam_user_id ?? ''}`;
     };
-    /**@type{common['server']['ORM']['View']['IamUserGetProfile']}*/
+    /**@type{types_common.server['ORM']['View']['IamUserGetProfile']}*/
     const profile = await props.methods.COMMON.commonFFB(
                             {
                                 path:pathInfoGet(), 
@@ -161,7 +161,7 @@ const component = async props => {
     const commonUserFunction = function_name => {
         return new Promise((resolve, reject)=>{
             const user_id_profile = Number(props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_id').textContent);
-            /**@type{common['CommonRESTAPIMethod']} */
+            /**@type{types_common.CommonRESTAPIMethod} */
             let method;
             let path;
             let json;
@@ -208,7 +208,7 @@ const component = async props => {
                 method:'GET', 
                 authorization_type:'APP_ID'})
             .then(result=>{
-                /**@type{common['server']['ORM']['View']['IamUserGetProfile']}*/
+                /**@type{types_common.server['ORM']['View']['IamUserGetProfile']}*/
                 const user_stat = JSON.parse(result)[0];
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_view_count').textContent = user_stat.CountViews;
                 props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_dialogues_profile_info_following_count').textContent = user_stat.CountFollowing;
@@ -225,8 +225,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

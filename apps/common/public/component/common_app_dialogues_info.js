@@ -1,19 +1,19 @@
 /**
- * Displays info
+ * @description Displays info
  * @module apps/common/component/common_app_dialogues_info
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{app_copyright:common['server']['ORM']['Object']['App']['Copyright'],
-*          app_link_url:common['server']['ORM']['Object']['App']['LinkUrl'],
-*          app_link_title:common['server']['ORM']['Object']['App']['LinkTitle'],
+ * @param {{app_copyright:types_common.server['ORM']['Object']['App']['Copyright'],
+*          app_link_url:types_common.server['ORM']['Object']['App']['LinkUrl'],
+*          app_link_title:types_common.server['ORM']['Object']['App']['LinkTitle'],
 *          info_link_policy_name:string,
 *          info_link_disclaimer_name:string,
 *          info_link_terms_name:string,
@@ -48,12 +48,12 @@ const template = props => `
 *                      commonMountdiv:string
 *                      },
 *          methods:    {
-*                      COMMON:common['CommonModuleCommon']
+*                      COMMON:types_common.CommonModuleCommon
 *                      }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:null, 
 *                      methods:null,
-*                      events:common['commonComponentEvents'],
+*                      events:types_common.commonComponentEvents,
 *                      template:string}>}
 */
 const component = async props => {
@@ -64,8 +64,8 @@ const component = async props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

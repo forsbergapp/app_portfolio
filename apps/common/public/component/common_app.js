@@ -1,9 +1,10 @@
 /**
+ * @description common app
  * @module apps/common/component/common_app
  */  
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -138,13 +139,13 @@ const template = props => props.current=='START'?
 * @description Component
 * @function
 * @param {{data:       {
-*                      globals:common['server']['app']['commonGlobals']
+*                      globals:types_common.server['app']['commonGlobals']
 *                      },
 *          methods:    {
-*                      COMMON:common['CommonModuleCommon']
+*                      COMMON:types_common.CommonModuleCommon
 *                      }}} props
 *      }} props 
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:{
 *                               getTemplateMessage:getTemplateMessage,
@@ -187,7 +188,7 @@ const component = async props =>{
      * @name commonEventCopyPasteCutDisable
      * @description Disable copy cut paste
      * @function
-     * @param {common['CommonAppEvent']} event 
+     * @param {types_common.CommonAppEvent} event 
      * @returns {void}
      */
     const commonEventCopyPasteCutDisable = event => {
@@ -208,7 +209,7 @@ const component = async props =>{
      * @name commonEventInputDisable
      * @description Disable common input textediting
      * @function
-     * @param {common['CommonAppEvent']} event 
+     * @param {types_common.CommonAppEvent} event 
      * @returns {void}
      */
     const commonEventInputDisable = event => {
@@ -253,13 +254,13 @@ const component = async props =>{
      * @descption Central event delegation on app root
      *            order of events: 1 common, 2 module, 3 app 
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']|null} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent|null} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{
         if (event==null){
-            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.methods.COMMON.commonGlobalGet('Parameters').app_root}`).addEventListener(event_type, (/**@type{common['CommonAppEvent']}*/event) => {
+            props.methods.COMMON.COMMON_DOCUMENT.querySelector(`#${props.methods.COMMON.commonGlobalGet('Parameters').app_root}`).addEventListener(event_type, (/**@type{types_common.CommonAppEvent}*/event) => {
                 events(event_type, event);
             });
         }

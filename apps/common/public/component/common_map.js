@@ -1,9 +1,10 @@
 /**
+ * @description map
  * @module apps/common/component/common_map
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -58,20 +59,20 @@ const template = props =>`
 *                      longitude:number|null,
 *                      latitude:number|null},
 *          methods:    {
-*                      COMMON:common['CommonModuleCommon']
+*                      COMMON:types_common.CommonModuleCommon
 *                      }}} props
-* @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+* @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
 *                      data:   null,
 *                      methods:{
 *                               goTo:function,
 *                               drawVectors:function
 *                              },
-*                      events:  common['commonComponentEvents'],
+*                      events:  types_common.commonComponentEvents,
 *                      template:string}>}
 */
 const component = async props => {
 
-    /**@type{common['commonMapLayers'][]} */
+    /**@type{types_common.commonMapLayers[]} */
     const  MAP_LAYERS = [{
         title: 'OpenStreetMap_Mapnik',
         value: 'OpenStreetMap_Mapnik',
@@ -212,7 +213,7 @@ const component = async props => {
      * @name drawVectors
      * @description Adds array of geoJSON type Linestring, RFC 7946 Linestring
      * @function
-     * @param {common['commonGeoJSONPolyline'][]}vectorLinesgeoJSON
+     * @param {types_common.commonGeoJSONPolyline[]}vectorLinesgeoJSON
      * @returns {Promise.<void>}
      */
     const drawVectors = async vectorLinesgeoJSON => {
@@ -311,13 +312,13 @@ const component = async props => {
      * @name addPopup
      * @description Add geoJSON type Point with a popup and geolocation data for given lat, long,x and y
      * @function
-     * @param {{place:common['commonMapPlace'], x:number, y:number}} parameters
+     * @param {{place:types_common.commonMapPlace, x:number, y:number}} parameters
      * @returns {Promise.<void>}
      */
     const addPopup = async parameters =>{
         if (getPopup(+parameters.place.longitude, +parameters.place.latitude).length==0){
             const id = 'common_map_popups_point_' + Date.now();
-            /**@type{common['commonGeoJSONPopup']} */
+            /**@type{types_common.commonGeoJSONPopup} */
             const geoJSON = {   id:  id,
                 type:'Feature',
                 properties:{x:parameters.x, 
@@ -351,7 +352,7 @@ const component = async props => {
      * @description get place for gps
      * @param {{longitude:number,
      *          latitude:number}} parameters
-     * @returns {Promise.<common['commonMapPlace']>}
+     * @returns {Promise.<types_common.commonMapPlace>}
      */
     const getPlace = async parameters =>
         await props.methods.COMMON.commonFFB({
@@ -541,7 +542,7 @@ const component = async props => {
      * @descripton Get map layer
      * @function
      * @param {string|null} value?
-     * @returns {common['commonMapLayers'][]}
+     * @returns {types_common.commonMapLayers[]}
      */
     const getLayer = (value=null) => MAP_LAYERS.filter(layer=>layer.value==(value??layer.value))
     
@@ -555,7 +556,7 @@ const component = async props => {
      * @returns {Promise.<void>}
      */
     const goTo = async parameters =>{
-        /** @type{common['commonMapPlace']}*/
+        /** @type{types_common.commonMapPlace}*/
         const place =  parameters.ip?
                             await props.methods.COMMON.commonFFB({ 
                                                             path:'/geolocation/ip', 
@@ -585,8 +586,8 @@ const component = async props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

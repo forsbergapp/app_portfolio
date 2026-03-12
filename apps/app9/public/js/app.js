@@ -1,15 +1,16 @@
 /**
+ * @description OTP app
  * @module apps/app9/app
  */
 
 /**
- * @import {common} from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
-/**@type{common['COMMON_DOCUMENT']} */
+/**@type{types_common.COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-/**@type {common['CommonModuleCommon']} */
+/**@type {types_common.CommonModuleCommon} */
 let common;
 
 /**
@@ -60,7 +61,7 @@ const appTotpGet = otp_key =>{
  * @name appEventClick
  * @description App event click
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -83,7 +84,7 @@ const appEventClick = event => {
  * @name appEventKeyUp
  * @description App event keyup
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
@@ -115,7 +116,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {common['CommonModuleCommon']} commonLib
+ * @param {types_common.CommonModuleCommon} commonLib
 
  * @returns {Promise.<void>}
  */
@@ -128,7 +129,7 @@ const appCommonInit = async (commonLib) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {common['commonMetadata']}
+ * @returns {types_common.commonMetadata}
  */
 const appMetadata = () =>{
     return { 

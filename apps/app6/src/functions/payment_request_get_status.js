@@ -1,4 +1,5 @@
 /**
+ * @description payment request get status
  * @module apps/app6/src/functions/payment_request_get_status
  */
 

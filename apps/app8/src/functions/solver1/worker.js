@@ -1,5 +1,5 @@
 /**
- * Use worker_threads for solver1 using kociemba algorithm
+ * @description Use worker_threads for solver1 using kociemba algorithm
  * that can take seconds or sometimes minutes to return result
  * so main NodeJs process will not be blocked.
  * Sends message using parentPort.postmessage in worker_threads

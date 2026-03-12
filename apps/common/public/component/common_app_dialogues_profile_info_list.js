@@ -1,8 +1,9 @@
 /**
+ * @description Displays profile info list
  * @module apps/common/component/common_app_dialogues_profile_info_list
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -12,8 +13,8 @@
  * @param {{iam_user_id:number,
  *          iam_user_id_profile:number,
  *          detailchoice:number,
- *          list:   common['server']['ORM']['View']['IamUserGetProfileDetail'][]|
- *                  common['server']['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail'][]}} props
+ *          list:   types_common.server['ORM']['View']['IamUserGetProfileDetail'][]|
+ *                  types_common.server['ORM']['View']['IamUserAppdataPostGetProfileUserPostDetail'][]}} props
  * @returns {string}
  */
 const template = props => `     ${props.list.map(row=>
@@ -42,12 +43,12 @@ const template = props => `     ${props.list.map(row=>
  *                      detailchoice:number
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'],
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle,
  *                      data:null, 
  *                      methods:null,
- *                      events:common['commonComponentEvents'],
+ *                      events:types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -75,8 +76,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

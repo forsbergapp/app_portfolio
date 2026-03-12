@@ -1,9 +1,10 @@
 /**
+ * @description openapi details
  * @module apps/app1/component/menu_openapi_detail
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -11,8 +12,8 @@
  * @description Template
  * @function
  * @param {{detail:'menu_openapi_detail_config'|'menu_openapi_detail_servers',
- *          openapi_config:common['server']['ORM']['Object']['OpenApi']['components']['parameters']['config'],
- *          openapi_servers:common['server']['ORM']['Object']['OpenApi']['servers']}} props
+ *          openapi_config:types_common.server['ORM']['Object']['OpenApi']['components']['parameters']['config'],
+ *          openapi_servers:types_common.server['ORM']['Object']['OpenApi']['servers']}} props
  *
  * @returns {string}
  */
@@ -68,8 +69,8 @@ const template = props => `
  * @function
  * @param {{data:{      commonMountdiv:string,
  *                      detail:'menu_openapi_detail_config'|'menu_openapi_detail_servers'},
- *          methods:{   COMMON:common['CommonModuleCommon']}}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *          methods:{   COMMON:types_common.CommonModuleCommon}}} props 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
  *                      template:string}>}

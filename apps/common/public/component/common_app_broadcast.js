@@ -1,10 +1,10 @@
 /**
- * Displays broadcast
+ * @description Displays broadcast
  * @module apps/common/component/common_app_broadcast
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -37,11 +37,11 @@ const template = props =>` <div id='common_app_broadcast_info'>
  *                      message:string
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']}}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ *                      COMMON:types_common.CommonModuleCommon}}} props
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
- *                      events:common['commonComponentEvents']
+ *                      events:types_common.commonComponentEvents
  *                      template:string}>}
  */
 const component = async props => {
@@ -49,8 +49,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{
@@ -68,7 +68,7 @@ const component = async props => {
     };
     const onMounted =()=>{
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_broadcast_info_logo').innerHTML = 
-            props.methods.COMMON.commonGlobalGet('Data').Apps.filter((/**@type{common['server']['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id)[0].Logo;
+            props.methods.COMMON.commonGlobalGet('Data').Apps.filter((/**@type{types_common.server['ORM']['View']['AppGetInfo']}*/app)=>app.Id == props.methods.COMMON.commonGlobalGet('Parameters').app_admin_app_id)[0].Logo;
 
     };
     return {

@@ -659,39 +659,38 @@ type server = {
         serviceregistry:types_server.serviceregistry,
         ORM:types_server.ORM
 }
-type common = {
-        COMMON_WINDOW:COMMON_WINDOW,            //BOM Browser Object Model (contains what is used)
-        COMMON_DOCUMENT:COMMON_DOCUMENT,        //DOM Document Object Model types (contains what is used)
-        commonTarget:commonTarget,              //DOM Document Object Model types (contains what is used)
-        CommonAppEvent:CommonAppEvent,          //DOM Document Object Model types (contains what is used)
-        CommonFFB_parameters:CommonFFB_parameters
-        CommonGlobal:CommonGlobal,
-        commonComponentEvents:commonComponentEvents,
-        CommonComponentLifecycle:CommonComponentLifecycle,
-        CommonComponentResult:CommonComponentResult,
-        CommonErrorMessageISO20022:CommonErrorMessageISO20022,
-        commonDocumentType:commonDocumentType,
-        commonMetadata:commonMetadata,
-        commonEventType:commonEventType,
-        commonGeoJSONPopup:commonGeoJSONPopup,
-        commonGeoJSONTile:commonGeoJSONTile,
-        commonGeoJSONPolyline:commonGeoJSONPolyline,
-        commonMapPlace:commonMapPlace,
-        commonMapLayers:commonMapLayers,
-        CommonRESTAPIMethod:CommonRESTAPIMethod,
-        CommonRESTAPIAuthorizationType:CommonRESTAPIAuthorizationType,
-        CommonAppModuleMetadata:CommonAppModuleMetadata,
-        CommonAppModuleWithMetadata:CommonAppModuleWithMetadata,
-        CommonCountryType:CommonCountryType,
-        CommonMasterObjectType:CommonMasterObjectType,
-        CommonResponsePagination:CommonResponsePagination,
-        MessageQueuePublishMicroserviceLog:MessageQueuePublishMicroserviceLog,
-        CommonWorldcitiesRecordType:CommonWorldcitiesRecordType,
-        CommonModuleCommon:CommonModuleCommon,          //Module file types
-        CommonModuleRegional:CommonModuleRegional,      //Module file types
-        CommonModuleReact:CommonModuleReact,            //Module file types
-        CommonModuleReactDOM:CommonModuleReactDOM,      //Module file types
-        CommonModuleVue:CommonModuleVue,                //Module file types
-        server:server 
-}
-export {common};
+export {
+        COMMON_WINDOW,              //BOM Browser Object Model (contains what is used)
+        COMMON_DOCUMENT,            //DOM Document Object Model types (contains what is used)
+        commonTarget,               //DOM Document Object Model types (contains what is used)
+        CommonAppEvent,             //DOM Document Object Model types (contains what is used)
+        CommonFFB_parameters,
+        CommonGlobal,
+        commonComponentEvents,
+        CommonComponentLifecycle,
+        CommonComponentResult,
+        CommonErrorMessageISO20022,
+        commonDocumentType,
+        commonMetadata,
+        commonEventType,
+        commonGeoJSONPopup,
+        commonGeoJSONTile,
+        commonGeoJSONPolyline,
+        commonMapPlace,
+        commonMapLayers,
+        CommonRESTAPIMethod,
+        CommonRESTAPIAuthorizationType,
+        CommonAppModuleMetadata,
+        CommonAppModuleWithMetadata,
+        CommonCountryType,
+        CommonMasterObjectType,
+        CommonResponsePagination,
+        MessageQueuePublishMicroserviceLog,
+        CommonWorldcitiesRecordType,
+        CommonModuleCommon,         //Module file types
+        CommonModuleRegional,       //Module file types
+        CommonModuleReact,          //Module file types
+        CommonModuleReactDOM,       //Module file types
+        CommonModuleVue,            //Module file types
+        server 
+};

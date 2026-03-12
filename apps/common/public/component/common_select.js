@@ -1,9 +1,9 @@
 /**
- * Common select
+ * @description Common select
  * @module apps/common/component/common_select
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -45,12 +45,12 @@ const template = props => ` <div class='common_select_dropdown'>
  *                      class_option?: string|null
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      }}} props
- * @returns {{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:null, 
  *                      methods:null,
- *                      events:  common['commonComponentEvents'],
+ *                      events:  types_common.commonComponentEvents,
  *                      template:string}}
  */
 const component = props => {
@@ -59,8 +59,8 @@ const component = props => {
      * @name events
      * @descption Events for map
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

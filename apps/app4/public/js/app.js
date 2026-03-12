@@ -1,16 +1,16 @@
 /**
- * Timetable app
+ * @description Timetable app
  * @module apps/app4/app
  */
 /**
- * @import {common} from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  * @import types_app from '../../types.d.ts'
  */
 
-/**@type{common['COMMON_DOCUMENT']} */
+/**@type{types_common.COMMON_DOCUMENT} */
 const COMMON_DOCUMENT = document;
 
-/**@type {common['CommonModuleCommon']} */
+/**@type {types_common.CommonModuleCommon} */
 let common;
 
 /**@type{types_app.APP_user_setting} */
@@ -944,7 +944,7 @@ const appUserSettingFunction = async (function_name, add_settings=true) => {
         const body = {  document:              APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document,
                         IAM_iam_user_app_id:    common.commonGlobalGet('Data').UserApp.iam_user_app_id
                     };
-        /**@type {common['CommonRESTAPIMethod']}*/
+        /**@type {types_common.CommonRESTAPIMethod}*/
         let method;
         let path = '';
         let spinner_id;
@@ -1282,7 +1282,7 @@ const appUserSettingProfileLink = item => {
         }
         case 'profile_user_settings_like_unlike':
         case 'profile_user_settings_like_like':{
-            /**@type{common['CommonRESTAPIMethod']} */
+            /**@type{types_common.CommonRESTAPIMethod} */
             let method;
             const json = {  iam_user_app_data_post_id: sid, 
                             IAM_iam_user_id: common.commonGlobalGet('Data').User.iam_user_id,
@@ -1317,7 +1317,7 @@ const appUserSettingProfileLink = item => {
  * @name appEventClick
  * @description App event click
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventClick = event => {
@@ -1656,7 +1656,7 @@ const appEventClick = event => {
  * @name appEventKeyUp
  * @description App event keyup
  * @function
- * @param {common['CommonAppEvent']} event 
+ * @param {types_common.CommonAppEvent} event 
  * @returns {void}
  */
 const appEventKeyUp = event => {
@@ -1693,7 +1693,7 @@ const appEventKeyUp = event => {
 const appMapQibblaShow = () => {
     if (APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLongText  &&
         APP_GLOBAL.user_settings.data[APP_GLOBAL.user_settings.current_id].Document.GpsLatText ){
-        /**@type{common['commonGeoJSONPolyline']}*/
+        /**@type{types_common.commonGeoJSONPolyline}*/
         const geoJSONQibbla = 
         {
             type: 'Feature',
@@ -1720,7 +1720,7 @@ const appMapQibblaShow = () => {
             }
         };
         common.commonGlobalGet('Functions').component[common.commonGlobalGet('Parameters').app_common_app_id + '_' + 'common_map']?.methods?.drawVectors([geoJSONQibbla]);
-        /**@type{common['commonGeoJSONPolyline']}*/
+        /**@type{types_common.commonGeoJSONPolyline}*/
         const geoJSONQibblaOld = 
         {
             type: 'Feature',
@@ -1863,7 +1863,7 @@ const appInit = async () => {
  * @name appCommonInit
  * @description Init common
  * @function
- * @param {common['CommonModuleCommon']} commonLib
+ * @param {types_common.CommonModuleCommon} commonLib
  * @returns {Promise.<void>}
  */
 const appCommonInit = async (commonLib) => {
@@ -1875,7 +1875,7 @@ const appCommonInit = async (commonLib) => {
  * @name appMetadata
  * @description App metadata for event delegataion and lifecycle events
  * @function
- * @returns {common['commonMetadata']}
+ * @returns {types_common.commonMetadata}
  */
 const appMetadata = () =>{
     return { 

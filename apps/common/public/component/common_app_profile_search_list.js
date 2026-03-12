@@ -1,17 +1,17 @@
 /**
- * Displays profile search list
+ * @description Displays profile search list
  * @module apps/common/component/common_app_profile_search_list
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{records:common['server']['ORM']['View']['IamUserGetProfile'][]}} props 
+ * @param {{records:types_common.server['ORM']['View']['IamUserGetProfile'][]}} props 
  * @returns {string}
  */
 const template = props =>`  ${props.records.length>0?
@@ -40,11 +40,11 @@ const template = props =>`  ${props.records.length>0?
  * @param {{data:       {
  *                      commonMountdiv:string},
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']}}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'],
+ *                      COMMON:types_common.CommonModuleCommon}}} props
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle,
  *                      data:   null,
  *                      methods:null,
- *                      events:common['commonComponentEvents'],
+ *                      events:types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -59,7 +59,7 @@ const component = async props => {
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_list_wrap').style.display = 'none';
         props.methods.COMMON.COMMON_DOCUMENT.querySelector('#common_app_profile_search_input').classList.add('common_input_error');
     }
-    /**@type{common['server']['ORM']['View']['IamUserGetProfile'][]} */
+    /**@type{types_common.server['ORM']['View']['IamUserGetProfile'][]} */
     const records = commonMiscInputControl?await props.methods.COMMON.commonFFB(
                                                 {
                                                     path:   '/server-db/iamuser-profile/', 
@@ -73,8 +73,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

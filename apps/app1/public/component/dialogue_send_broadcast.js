@@ -1,9 +1,9 @@
 /**
- * Displays dialogue to send broadcast messages
+ * @description Displays dialogue to send broadcast messages
  * @module apps/app1/component/dialogue_send_broadcast
  */
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -31,10 +31,10 @@ const template = props => `<div id='dialogue_send_broadcast_form'>
  * @function
  * @param {{data:       {commonMountdiv:string},
  *          methods:    {
- *                      COMMON:                 common['CommonModuleCommon']
+ *                      COMMON:                 types_common.CommonModuleCommon
  *                      }
  *          }} props 
- * @returns {Promise.<{ lifecycle:              common['CommonComponentLifecycle'],
+ * @returns {Promise.<{ lifecycle:              types_common.CommonComponentLifecycle,
  *                      data:                   null, 
  *                      methods:                null,
  *                      template:               string}>}
@@ -64,7 +64,7 @@ const component = async props => {
                 data:{
                     default_value:props.methods.COMMON.commonGlobalGet('ICONS').infinite,
                     default_data_value:'',
-                    options:apps.map((/**@type{common['server']['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}).concat({Id:'',Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}),
+                    options:apps.map((/**@type{types_common.server['ORM']['Object']['App']}*/row)=>{return {Id:row.Id, Name:row.Name}}).concat({Id:'',Name:props.methods.COMMON.commonGlobalGet('ICONS').infinite}),
                     column_value:'Id',
                     column_text:'Name'
                   },

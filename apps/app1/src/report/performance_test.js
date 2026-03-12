@@ -1,5 +1,5 @@
 /**
- * Report performance test
+ * @description Report performance test
  * Tests performance of requests to servers main host using configured protocol and port
  * Runs in report queue where progress is updated
  * 

@@ -1,17 +1,17 @@
 /**
- * Displays profile stat list
+ * @description Displays profile stat list
  * @module apps/common/component/common_app_dialogues_profile_stat_list
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
  * @name template
  * @description Template
  * @function
- * @param {{stat_list:common['server']['ORM']['View']['IamUserGetProfileStat'][]|common['server']['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] }} props 
+ * @param {{stat_list:types_common.server['ORM']['View']['IamUserGetProfileStat'][]|types_common.server['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] }} props 
  * @returns {string}
  */
 const template = props =>`   
@@ -45,9 +45,9 @@ const template = props =>`
  *                      stat_list_app_rest_url:string,
  *                      },
  *          methods:    {
- *                      COMMON:common['CommonModuleCommon']
+ *                      COMMON:types_common.CommonModuleCommon
  *                      }}} props
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:   null,
  *                      methods:null,
  *                      events:events,
@@ -63,7 +63,7 @@ const component = async props => {
         /*other statschoice, apps can use >3 and return same columns*/
         path = props.data.stat_list_app_rest_url ?? '';
     }
-    /**@type{common['server']['ORM']['View']['IamUserGetProfileStat'][]|common['server']['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] } */
+    /**@type{types_common.server['ORM']['View']['IamUserGetProfileStat'][]|types_common.server['ORM']['View']['IamUserAppDataPostGetProfileStatPost'][] } */
     const stat_list = await props.methods.COMMON.commonFFB({path:path, query:`statchoice=${props.data.stat_choice}`, method:'GET', authorization_type:'APP_ID'})
                                     .then((/**@type{string}*/result)=>JSON.parse(result).rows);
 
@@ -71,8 +71,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{

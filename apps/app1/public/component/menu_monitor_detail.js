@@ -1,11 +1,10 @@
 /**
- * Displays monitor of connected clients and server logs
- * 
+ * @description Displays monitor of connected clients and server logs
  * @module apps/app1/component/menu_monitor_detail
  */
 
 /**
- * @import {common}  from '../../../common/types.d.ts'
+ * @import types_common from '../../../common/types.d.ts'
  */
 
 /**
@@ -15,9 +14,9 @@
  * @param {{
  *          iam_user_id:number,
  *          monitor_detail:'CONNECTED'|'SERVER_LOG',
- *          function_commonWindowUserAgentPlatform:common['CommonModuleCommon']['commonWindowUserAgentPlatform'],
+ *          function_commonWindowUserAgentPlatform:types_common.CommonModuleCommon['commonWindowUserAgentPlatform'],
  *          function_get_order_by:function,
- *          function_roundOff:common['CommonModuleCommon']['commonMiscRoundOff'],
+ *          function_roundOff:types_common.CommonModuleCommon['commonMiscRoundOff'],
  *          logs:[],
  *          SERVICE_LOG_DATA_PARAMETERS:{
  *                                      REQUEST_LEVEL:number,
@@ -80,7 +79,7 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
                                                 BROADCAST
                                             </div>
                                         </div>
-                                        ${props.logs.map((/**@type{common['server']['socket']['SocketConnectedClient']}*/log)=>
+                                        ${props.logs.map((/**@type{types_common.server['socket']['SocketConnectedClient']}*/log)=>
                                             `<div class='menu_monitor_detail_connected_row ${log.IamUserid==props.iam_user_id?'list_current_user_row':''}'>
                                                 <div class='menu_monitor_detail_connected_col'>
                                                     ${log.Id}
@@ -189,18 +188,18 @@ const template = props => ` ${props.monitor_detail=='CONNECTED'?
  *                                       logObjects:{VALUE:string, TEXT:string}[]}
  *                       },
  *           methods:    {
- *                       COMMON:common['CommonModuleCommon'],
+ *                       COMMON:types_common.CommonModuleCommon,
  *                       monitorShow:function
  *                       },
  *           lifecycle:  null}} props 
- * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
+ * @returns {Promise.<{ lifecycle:types_common.CommonComponentLifecycle, 
  *                      data:    null,
  *                      methods: {
  *                               monitorDetailPage:function,
  *                               monitorDetailShowServerLog:function,
  *                               monitorDetailClickSort:function
  *                               },
- *                      events:common['commonComponentEvents'],
+ *                      events:types_common.commonComponentEvents,
  *                      template:string}>}
  */
 const component = async props => {
@@ -431,8 +430,8 @@ const component = async props => {
      * @name events
      * @descption Events
      * @function
-     * @param {common['commonEventType']} event_type
-     * @param {common['CommonAppEvent']} event
+     * @param {types_common.commonEventType} event_type
+     * @param {types_common.CommonAppEvent} event
      * @returns {Promise.<void>}
      */
     const events = async (event_type, event) =>{
