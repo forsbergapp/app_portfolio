@@ -1986,9 +1986,7 @@ const commonUserLogout = async () => {
  */
 const commonLogout = async () => {
     commonComponentRemove('common_app_dialogues_user_menu');
-    COMMON_GLOBAL.Functions.component[COMMON_GLOBAL.Parameters.app_common_app_id + '_' + 'common_app_window_info']?.methods?.commonWindoInfoClose?
-        COMMON_GLOBAL.Functions.component[COMMON_GLOBAL.Parameters.app_common_app_id + '_' + 'common_app_window_info']?.methods?.commonWindoInfoClose():
-            null;
+    commonComponentRemove('common_app_window_info');
     commonComponentRemove('common_app_dialogues_iam_verify');
     if (COMMON_GLOBAL.Data.UserApp.app_id != COMMON_GLOBAL.Parameters.app_admin_app_id){
         commonUserUpdateAvatar(false,null );

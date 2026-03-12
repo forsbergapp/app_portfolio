@@ -70,7 +70,7 @@ const template = props => `
  *                      }}} props
  * @returns {Promise.<{ lifecycle:common['CommonComponentLifecycle'], 
  *                      data:   null,
- *                      methods:{WindoInfoClose:function},
+ *                      methods:null,
  *                      events:common['commonComponentEvents'],
  *                      template:string}
  * >}
@@ -220,7 +220,7 @@ const component = async props => {
     return {
         lifecycle:  {onUnmounted:onUnmounted},
         data:       null,
-        methods:    {WindoInfoClose:WindoInfoClose},
+        methods:    null,
         events:     events,
         template:   template({  info:   props.data.info,
                                 url:    props.data.url,
