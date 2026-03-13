@@ -5,6 +5,7 @@
 /**
  * @name config
  * @description config
+ * @typescript
  */
 type config = {
         name:                              string,
@@ -33,6 +34,7 @@ type config = {
 /**
  * @name jobs
  * @description jobs
+ * @typescript
  */
 type jobs = {
             jobid:number,

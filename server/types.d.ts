@@ -17,6 +17,7 @@
 /**
  * @name server_apps_app_info
  * @description APP server_apps_app_info
+ * @typescript
  */
 type server_apps_app_info = {
         app_id:number,
@@ -33,6 +34,7 @@ type server_apps_app_info = {
 /**
  * @name server_apps_globals
  * @description APP server_apps_globals
+ * @typescript
  */
 type server_apps_globals = {
         Parameters:{
@@ -71,6 +73,7 @@ type server_apps_globals = {
 /**
  * @name server_apps_report_query_parameters
  * @description APP server_apps_report_query_parameters
+ * @typescript
  */
 type server_apps_report_query_parameters = {
         module:string,
@@ -83,6 +86,7 @@ type server_apps_report_query_parameters = {
 /**
  * @name server_apps_report_create_parameters
  * @description APP server_apps_report_create_parameters
+ * @typescript
  */
 type server_apps_report_create_parameters = {
         app_id: number,
@@ -94,6 +98,7 @@ type server_apps_report_create_parameters = {
 /**
  * @name server_apps_module_metadata
  * @description APP server_apps_module_metadata
+ * @typescript
  */
 type server_apps_module_metadata = {
         param:{ 
@@ -105,11 +110,13 @@ type server_apps_module_metadata = {
 /**
  * @name server_config_apps_status
  * @description APP server_config_apps_status
+ * @typescript
  */
 type server_config_apps_status = 'ONLINE'|'OFFLINE'
 /**
  * @name serverComponentLifecycle
  * @description APP serverComponentLifecycle
+ * @typescript
  */
 type serverComponentLifecycle = {
         onBeforeMounted?:Function|null,
@@ -119,6 +126,7 @@ type serverComponentLifecycle = {
 /**
  * @name serverDocumentMenu
  * @description APP serverDocumentMenu
+ * @typescript
  */
 type serverDocumentMenu = {
         id:number,
@@ -142,7 +150,8 @@ type serverDocumentMenu = {
  *              "capital":      [admin, minor, primary, ''],
  *              "population":   [count],
  *              "id":           [id]
- *		        } 
+ *		        }
+ * @typescript
  */
 type commonWorldCitiesCity = {
         city:       string,
@@ -155,6 +164,7 @@ type commonWorldCitiesCity = {
 /**
  * @name commonAppSwitch
  * @description APP commonAppSwitch
+ * @typescript
  */
 type commonAppSwitch = {
         IamUserApp:ORM['Object']['IamUserApp']|null
@@ -162,6 +172,7 @@ type commonAppSwitch = {
 /**
  * @name server_bff_parameters
  * @description BFF server_bff_parameters
+ * @typescript
  */
 type server_bff_parameters = {
         app_id:number,
@@ -193,6 +204,7 @@ type server_bff_parameters = {
 /**
  * @name server_bff_RestApi_parameters
  * @description BFF server_bff_RestApi_parameters
+ * @typescript
  */
 type server_bff_RestApi_parameters = {
         app_id:number,
@@ -214,6 +226,7 @@ type server_bff_RestApi_parameters = {
 /**
  * @name server_db_object_App
  * @description DB TABLE App
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_App = {
@@ -245,6 +258,7 @@ type server_db_object_App = {
 /**
  * @name server_db_object_AppDataEntity
  * @description DB TABLE AppDataEntity
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppDataEntity = {
@@ -263,6 +277,7 @@ type server_db_object_AppDataEntity = {
 /**
  * @name server_db_object_AppDataEntityResource
  * @description DB TABLE AppDataEntityResource
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppDataEntityResource = {
@@ -282,6 +297,7 @@ type server_db_object_AppDataEntityResource = {
 /**
  * @name server_db_object_AppDataResourceMaster
  * @description DB TABLE AppDataResourceMaster
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppDataResourceMaster = {
@@ -301,6 +317,7 @@ type server_db_object_AppDataResourceMaster = {
 /**
  * @name server_db_object_AppDataResourceDetail
  * @description DB TABLE AppDataResourceDetail
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppDataResourceDetail = {
@@ -322,6 +339,7 @@ type server_db_object_AppDataResourceDetail = {
 /**
  * @name server_db_object_AppDataResourceDetailData
  * @description DB TABLE AppDataResourceDetailData
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppDataResourceDetailData = {
@@ -341,6 +359,7 @@ type server_db_object_AppDataResourceDetailData = {
 /**
  * @name server_db_object_AppModule
  * @description DB TABLE AppModule
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppModule = {
@@ -362,6 +381,7 @@ type server_db_object_AppModule = {
 /**
  * @name server_db_object_AppModuleQueue
  * @description DB TABLE AppModuleQueue
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppModuleQueue = {
@@ -395,6 +415,7 @@ type server_db_object_AppModuleQueue = {
 /**
  * @name server_db_object_AppTranslation
  * @description DB TABLE AppTranslation
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppTranslation = {
@@ -413,6 +434,7 @@ type server_db_object_AppTranslation = {
 /**
  * @name server_db_object_AppData
  * @description DB TABLE AppData
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_AppData = {
@@ -439,6 +461,7 @@ type server_db_object_AppData = {
 /**
  * @name server_db_object_IamControlIp
  * @description DB TABLE IamControlIp
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamControlIp = {
@@ -464,6 +487,7 @@ type server_db_object_IamControlIp = {
 /**
  * @name server_db_object_IamControlObserve
  * @description DB TABLE IamControlObserve
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamControlObserve = {
@@ -497,6 +521,7 @@ type server_db_object_IamControlObserve = {
 /**
  * @name server_db_object_IamControlUserAgent
  * @description DB TABLE IamControlUserAgent
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamControlUserAgent = {
@@ -510,6 +535,7 @@ type server_db_object_IamControlUserAgent = {
 /**
  * @name server_db_object_IamEncryption
  * @description DB TABLE IamEncryption
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamEncryption = {
@@ -533,6 +559,7 @@ type server_db_object_IamEncryption = {
 /**
  * @name server_db_object_IamMicroserviceToken
  * @description DB TABLE IamMicroserviceToken
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamMicroserviceToken = {
@@ -560,6 +587,7 @@ type server_db_object_IamMicroserviceToken = {
 /**
  * @name server_db_object_IamUser
  * @description DB TABLE IamUser
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUser = {
@@ -595,6 +623,7 @@ type server_db_object_IamUser = {
 /**
  * @name server_db_object_IamUserFollow
  * @description DB TABLE IamUserFollow
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUserFollow = {
@@ -610,6 +639,7 @@ type server_db_object_IamUserFollow = {
 /**
  * @name server_db_object_IamUserLike
  * @description DB TABLE IamUserLike
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUserLike = {
@@ -625,6 +655,7 @@ type server_db_object_IamUserLike = {
 /**
  * @name server_db_object_IamUserView
  * @description DB TABLE IamUserView
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUserView = {
@@ -644,6 +675,7 @@ type server_db_object_IamUserView = {
 /**
  * @name server_db_object_IamUserApp
  * @description DB TABLE IamUserApp
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUserApp = {
@@ -670,6 +702,7 @@ type server_db_object_IamUserApp = {
 /**
  * @name server_db_object_IamUserAppDataPost
  * @description DB TABLE IamUserAppDataPost
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUserAppDataPost = {
@@ -688,6 +721,7 @@ type server_db_object_IamUserAppDataPost = {
 /**
  * @name server_db_object_IamUserAppDataPostLike
  * @description DB TABLE IamUserAppDataPostLike
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUserAppDataPostLike = {
@@ -703,6 +737,7 @@ type server_db_object_IamUserAppDataPostLike = {
 /**
  * @name server_db_object_IamUserAppDataPostView
  * @description DB TABLE IamUserAppDataPostView
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUserAppDataPostView = {
@@ -724,6 +759,7 @@ type server_db_object_IamUserAppDataPostView = {
 /**
  * @name server_db_object_IamUserEvent
  * @description DB TABLE IamUserEvent
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamUserEvent = {
@@ -742,6 +778,7 @@ type server_db_object_IamUserEvent = {
 /**
  * @name server_db_object_IamAppIdToken
  * @description DB TABLE IamAppIdToken
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamAppIdToken = {
@@ -766,6 +803,7 @@ type server_db_object_IamAppIdToken = {
  * @name server_db_object_IamAppAccess
  * @description DB TABLE IamAppAccess
  *              Res:0=fail, 1=success, 2=invalidated
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_IamAppAccess = {
@@ -801,6 +839,7 @@ type server_db_object_IamAppAccess = {
 /**
  * @name server_db_object_LogAppInfo
  * @description DB TABLE_LOG LogAppInfo
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_LogAppInfo = {
@@ -822,6 +861,7 @@ type server_db_object_LogAppInfo = {
 /**
  * @name server_db_object_LogDbInfo
  * @description DB TABLE_LOG LogDbInfo
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_LogDbInfo = {
@@ -843,6 +883,7 @@ type server_db_object_LogDbInfo = {
 /**
  * @name server_db_object_LogBffInfo
  * @description DB TABLE_LOG LogBffInfo
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_LogBffInfo = {
@@ -868,6 +909,7 @@ type server_db_object_LogBffInfo = {
 /**
  * @name server_db_object_LogRequestInfo
  * @description DB TABLE_LOG LogRequestInfo
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_LogRequestInfo = {
@@ -919,6 +961,7 @@ type server_db_object_LogRequestInfo = {
 /**
  * @name server_db_object_LogServerInfo
  * @description DB TABLE_LOG LogServerInfo
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_LogServerInfo = {
@@ -932,6 +975,7 @@ type server_db_object_LogServerInfo = {
 /**
  * @name server_db_object_ServiceRegistry
  * @description DB DOCUMENT ServiceRegistry
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ServiceRegistry = {
@@ -966,6 +1010,7 @@ type server_db_object_ServiceRegistry = {
  * @name server_db_object_OpenApi
  * @description DB DOCUMENT OpenApi
  *              Follows Open API syntax
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_OpenApi = {
@@ -988,6 +1033,7 @@ type server_db_object_OpenApi = {
 /**
  * @name server_db_object_MessageQueuePublish
  * @description DB TABLE MessageQueuePublish
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_MessageQueuePublish = {
@@ -1013,6 +1059,7 @@ type server_db_object_MessageQueuePublish = {
 /**
  * @name server_db_object_MessageQueueConsume
  * @description DB TABLE MessageQueueConsume
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_MessageQueueConsume = {
@@ -1036,6 +1083,7 @@ type server_db_object_MessageQueueConsume = {
 /**
  * @name server_db_object_MessageQueueError
  * @description DB TABLE MessageQueueError
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_MessageQueueError = {
@@ -1053,6 +1101,7 @@ type server_db_object_MessageQueueError = {
 /**
  * @name server_db_object_ViewLogGetStat
  * @description DB VIEW server_db_object_ViewLogGetStat
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewLogGetStat = {
@@ -1072,6 +1121,7 @@ type server_db_object_ViewLogGetStat = {
 /**
  * @name server_db_object_ViewAppGetInfo
  * @description DB VIEW server_db_object_ViewAppGetInfo
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewAppGetInfo = {
@@ -1099,6 +1149,7 @@ type server_db_object_ViewAppGetInfo = {
 /**
  * @name server_db_object_ViewIamUserGetProfile
  * @description DB VIEW server_db_object_ViewIamUserGetProfile
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewIamUserGetProfile = {
@@ -1138,6 +1189,7 @@ type server_db_object_ViewIamUserGetProfile = {
 /**
  * @name server_db_object_ViewIamUserGetProfileDetail
  * @description DB VIEW server_db_object_ViewIamUserGetProfileDetail
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewIamUserGetProfileDetail = {
@@ -1153,6 +1205,7 @@ type server_db_object_ViewIamUserGetProfileDetail = {
 /**
  * @name server_db_object_ViewIamUserGetProfileStat
  * @description DB VIEW server_db_object_ViewIamUserGetProfileStat
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewIamUserGetProfileStat = {
@@ -1170,6 +1223,7 @@ type server_db_object_ViewIamUserGetProfileStat = {
 /**
  * @name server_db_object_ViewIamUserGetStatCountAdmin
  * @description DB VIEW server_db_object_ViewIamUserGetStatCountAdmin
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewIamUserGetStatCountAdmin = {
@@ -1179,6 +1233,7 @@ type server_db_object_ViewIamUserGetStatCountAdmin = {
 /**
  * @name server_db_object_ViewIamUserAppDataPostgetProfileUserPosts
  * @description DB VIEW server_db_object_ViewIamUserAppDataPostgetProfileUserPosts
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewIamUserAppDataPostgetProfileUserPosts = {
@@ -1198,6 +1253,7 @@ type server_db_object_ViewIamUserAppDataPostgetProfileUserPosts = {
 /**
  * @name server_db_object_ViewIamUserAppDataPostGetProfileStatLike
  * @description DB VIEW server_db_object_ViewIamUserAppDataPostGetProfileStatLike
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewIamUserAppDataPostGetProfileStatLike = {
@@ -1209,6 +1265,7 @@ type server_db_object_ViewIamUserAppDataPostGetProfileStatLike = {
 /**
  * @name server_db_object_ViewIamUserAppDataPostGetProfileStatPost
  * @description DB VIEW server_db_object_ViewIamUserAppDataPostGetProfileStatPost
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewIamUserAppDataPostGetProfileStatPost = {
@@ -1226,6 +1283,7 @@ type server_db_object_ViewIamUserAppDataPostGetProfileStatPost = {
 /**
  * @name server_db_object_ViewIamUserAppdataPostGetProfileUserPostDetail
  * @description DB VIEW server_db_object_ViewIamUserAppdataPostGetProfileUserPostDetail
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewIamUserAppdataPostGetProfileUserPostDetail = {
@@ -1241,6 +1299,7 @@ type server_db_object_ViewIamUserAppdataPostGetProfileUserPostDetail = {
 /**
  * @name server_db_object_ViewORMGetInfo
  * @description DB VIEW server_db_object_ViewORMGetInfo
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewORMGetInfo = {
@@ -1258,6 +1317,7 @@ type server_db_object_ViewORMGetInfo = {
 /**
  * @name server_db_object_ViewORMGetObjects
  * @description DB VIEW server_db_object_ViewORMGetObjects
+ * @typescript
  * @memberof ORM
  */
 type server_db_object_ViewORMGetObjects = {
@@ -1287,6 +1347,7 @@ type server_db_object_ViewORMGetObjects = {
 /** 
  * @name server_db_ORM
  * @description DB object record
+ * @typescript
  * @namespace ORM
  */
 type server_db_ORM = {
@@ -1306,6 +1367,7 @@ type server_db_ORM = {
 /** 
  * @name server_db_result_fileFsRead
  * @description DB server_db_result_fileFsRead
+ * @typescript
  */
 type server_db_result_fileFsRead = {
         FileContent:   any, 
@@ -1315,12 +1377,14 @@ type server_db_result_fileFsRead = {
 /**
  * @name server_db_common_result
  * @description DB common result
+ * @typescript
  */
 type server_db_common_result = server_db_common_result_select|server_db_common_result_insert|server_db_common_result_delete|server_db_common_result_update
 
 /**
  * @name server_db_common_result_select
  * @description DB common result SELECT
+ * @typescript
  */
 type server_db_common_result_select = {
         Rows:any[]
@@ -1334,6 +1398,7 @@ type server_db_common_result_select = {
  *              PostgreSQL:     rows[0].id              rowCount
  *              Oracle:         outBinds.insertId[0]    rowsAffected
  *              sqLite:         lastID                  changes
+ * @typescript
  */
 type server_db_common_result_insert = {
         InsertId?:number, 
@@ -1349,6 +1414,7 @@ type server_db_common_result_insert = {
  *              PostgreSQL:     rowCount
  *              Oracle:         rowsAffected
  *              sqLite:         changes
+ * @typescript
  */
 type server_db_common_result_delete = {
         AffectedRows:number, 
@@ -1363,6 +1429,7 @@ type server_db_common_result_delete = {
  *              PostgreSQL:     rowCount
  *              Oracle:         rowsAffected
  *              sqLite:         changes
+ * @typescript
  */
 type server_db_common_result_update = {
         AffectedRows:number, 
@@ -1371,6 +1438,7 @@ type server_db_common_result_update = {
 /** 
  * @name server_db_database_demo_data
  * @description DB server_db_database_demo_data
+ * @typescript
  */
 type server_db_database_demo_data = {
         Id?:number,
@@ -1457,6 +1525,7 @@ type server_db_database_demo_data = {
 /**
  * @name server_iam_access_token_claim
  * @description IAM server_iam_access_token_claim
+ * @typescript
  */
 type server_iam_access_token_claim = {
         app_id:                 number,
@@ -1471,6 +1540,7 @@ type server_iam_access_token_claim = {
 /**
  * @name server_iam_microservice_token_claim
  * @description IAM server_iam_microservice_token_claim
+ * @typescript
  */
 type server_iam_microservice_token_claim = {
         app_id:                 number,
@@ -1483,6 +1553,7 @@ type server_iam_microservice_token_claim = {
 /**
  * @name server_iam_user
  * @description IAM server_iam_user
+ * @typescript
  */
 type server_iam_user = {
         Id: ORM['Object']['IamUser']['Id'],
@@ -1502,6 +1573,7 @@ type server_iam_user = {
 /**
  * @name server_info_result_Info
  * @description INFO server_info_result_Info
+ * @typescript
  */
 type server_info_result_Info = {
         os:{
@@ -1552,13 +1624,14 @@ type server_info_result_Info = {
 /**
  * @name server_info_process
  * @description INFO process
+ * @typescript
  */
 type server_info_process = any
 
 /**
  * @name server_server_req
  * @description SERVER server_server_req
- *
+ * @typescript
  */
 type server_server_req = {
         path:string,
@@ -1608,6 +1681,7 @@ type server_server_req = {
 /** 
  * @name server_server_res
  * @description SERVER server_server_res
+ * @typescript
  */
 type server_server_res = {
         status:Function,
@@ -1628,6 +1702,7 @@ type server_server_res = {
 /**
  * @name server_server_response
  * @description SERVER server_server_response
+ * @typescript
  */
 type server_server_response = {
         http?:number|null,
@@ -1641,18 +1716,21 @@ type server_server_response = {
 /**
  * @name server_server_req_id_number
  * @description SERVER server_server_req_id_number
+ * @typescript
  */
 type server_server_req_id_number = string|number|null|undefined
 
 /**
  * @name server_server_error
  * @description SERVER server_server_error
+ * @typescript
  */
 type server_server_error = any
 
 /**
  * @name server_geolocation_place
  * @description geolocation place
+ * @typescript
  */
 type server_geolocation_place = {
         place:string, 
@@ -1667,6 +1745,7 @@ type server_geolocation_place = {
 /**
  * @name server_security_jwt_payload
  * @description SECURITY server_security_jwt_payload
+ * @typescript
  */
 type server_security_jwt_payload = {  
         iss:string, 
@@ -1681,6 +1760,7 @@ type server_security_jwt_payload = {
 /**
  * @name server_security_jwt_complete
  * @description SECURITY server_security_jwt_complete
+ * @typescript
  */
 type server_security_jwt_complete = {
         header:   {algo:string, typ:string}, 
@@ -1690,6 +1770,7 @@ type server_security_jwt_complete = {
 /**
  * @name ViewSocketConnectedServer
  * @description SOCKET ViewSocketConnectedServer
+ * @typescript
  */
 type ViewSocketConnectedServer = {
         Id:number,
@@ -1713,6 +1794,7 @@ type ViewSocketConnectedServer = {
 /**
  * @name ViewSocketConnectedClient
  * @description SOCKET ViewSocketConnectedClient
+ * @typescript
  */
 type ViewSocketConnectedClient = {
         Id:ViewSocketConnectedServer['Id'],
@@ -1731,12 +1813,14 @@ type ViewSocketConnectedClient = {
 /** 
  * @name server_socket_broadcast_type
  * @description SOCKET server_socket_broadcast_type
+ * @typescript
  */
 type server_socket_broadcast_type = 'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'|'PROGRESS_LOADING'|'EXPIRED_ACCESS'|'EXPIRED_SESSION'|'CONNECTINFO'|'APP_FUNCTION'|'MESSAGE'|'FONT_URL'
 
 /**
  * @name test_spec_result
  * @description TEST test_spec_result
+ * @typescript
  */
 type test_spec_result = {
         type:'SPY'|'UNIT'|'INTEGRATION'|'PERFORMANCE', 
@@ -1749,6 +1833,7 @@ type test_spec_result = {
 /**
  * @name test_expect_result
  * @description TEST test_expect_result
+ * @typescript
  */
 type test_expect_result = {
         method:string|undefined,
@@ -1760,6 +1845,7 @@ type test_expect_result = {
 /**
  * @name test_specrunner
  * @description TEST test_specrunner
+ * @typescript
  */
 type test_specrunner = {
         description:string,
@@ -1769,6 +1855,7 @@ type test_specrunner = {
 /**
  * @name microservice_local_config
  * @description SERVICE_REGISTRY microservice_local_config
+ * @typescript
  */
 type microservice_local_config = {
         name:                          'BATCH' & string,
@@ -1789,6 +1876,7 @@ type microservice_local_config = {
 /**
  * @name ORM
  * @description ORM
+ * @typescript
  */
 type ORM = {
         Object:{
@@ -1869,6 +1957,7 @@ type ORM = {
 /**
  * @name app
  * @description app
+ * @typescript
  */
 type app = {
                 commonInfo:server_apps_app_info,
@@ -1886,6 +1975,7 @@ type app = {
 /**
  * @name bff
  * @description bff
+ * @typescript
  */
 type bff = {
                 parameters:server_bff_parameters,
@@ -1894,6 +1984,7 @@ type bff = {
 /**
  * @name iam
  * @description iam
+ * @typescript
  */
 type iam = {
                 iam_access_token_claim:server_iam_access_token_claim,
@@ -1903,6 +1994,7 @@ type iam = {
 /**
  * @name info
  * @description info
+ * @typescript
  */
 type info = {
                 result_Info:server_info_result_Info,
@@ -1911,6 +2003,7 @@ type info = {
 /**
  * @name server
  * @description server
+ * @typescript
  */
 type server = {
                 req:server_server_req,
@@ -1923,6 +2016,7 @@ type server = {
 /**
  * @name security
  * @description security
+ * @typescript
  */
 type security = {
                 jwt_payload:server_security_jwt_payload,
@@ -1931,6 +2025,7 @@ type security = {
 /**
  * @name socket
  * @description socket
+ * @typescript
  */
 type socket = {
                 SocketConnectedClient:ViewSocketConnectedClient,
@@ -1940,6 +2035,7 @@ type socket = {
 /**
  * @name test
  * @description test
+ * @typescript
  */
 type test = {
                 spec_result:test_spec_result,
@@ -1949,6 +2045,7 @@ type test = {
 /**
  * @name serviceregistry
  * @description serviceregistry
+ * @typescript
  */
 type serviceregistry = {
                 microservice_local_config:microservice_local_config

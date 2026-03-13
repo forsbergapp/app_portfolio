@@ -3,10 +3,11 @@
  * @module apps/app4/types
  */
 
-import type {common} from '../common/types.d.ts'
+import type types_common from '../common/types.d.ts'
 /**
  * @name CommonModuleLibTimetableParam
  * @description Type CommonModuleLibTimetableParam
+ * @typescript
  */
 type CommonModuleLibTimetableParam = {
                data:       {
@@ -20,8 +21,8 @@ type CommonModuleLibTimetableParam = {
 }
 /**
  * @name CommonModuleLibTimetable
- * @type
  * @description Type CommonModuleLibTimetable
+ * @typescript
  */
 type CommonModuleLibTimetable = {  APP_REPORT_GLOBAL:APP_REPORT_GLOBAL,
         component:{(arg0:CommonModuleLibTimetableParam) : 
@@ -34,15 +35,9 @@ type CommonModuleLibTimetable = {  APP_REPORT_GLOBAL:APP_REPORT_GLOBAL,
                 }
 }
 /**
- * @description Type CommonModuleLibTimetable
- *
- */
-type test = {  
-    () : number
-}
-/**
  * @name APP_user_setting_record
  * @description Type APP_user_setting_record
+ * @typescript
  */
 type APP_user_setting_record = {  
         Id?:number,
@@ -95,6 +90,7 @@ type APP_user_setting_record = {
 /**
  * @name APP_user_setting_data
  * @description Type report APP_user_setting_data
+ * @typescript
  */
 type APP_user_setting_data = {
         Id:number|null, 
@@ -103,6 +99,7 @@ type APP_user_setting_data = {
 /** 
  * @name APP_user_setting
  * @description Type report APP_user_setting
+ * @typescript
  */
 type APP_user_setting = {
     current_id:number,
@@ -111,6 +108,7 @@ type APP_user_setting = {
 /** 
  * @name APP_GLOBAL
  * @description Type APP_GLOBAL
+ * @typescript
  */
 type APP_GLOBAL = {
         description:string|null,
@@ -178,6 +176,7 @@ type APP_GLOBAL = {
 /** 
  * @name APP_PARAMETERS
  * @description Type APP_PARAMETERS
+ * @typescript
  */
 type APP_PARAMETERS = {
         app_default_startup_page:                         string,
@@ -245,6 +244,7 @@ type APP_PARAMETERS = {
 /** 
  * @name APP_REPORT_settings
  * @description Type APP_REPORT_settings
+ * @typescript
  */
  type APP_REPORT_settings ={
         locale:string,
@@ -304,6 +304,7 @@ type APP_PARAMETERS = {
 /** 
  * @name APP_REPORT_column_titles
  * @description Type APP_REPORT_column_titles
+ * @typescript
  */
 type APP_REPORT_column_titles = {
         day: string, // string to support toLocaleString()
@@ -329,6 +330,7 @@ type APP_REPORT_column_titles = {
 /**
  * @name APP_REPORT_day_user_account_app_data_posts
  * @description Type APP_REPORT_day_user_account_app_data_posts
+ * @typescript
  */
 type APP_REPORT_day_user_account_app_data_posts = {
         Description:string,
@@ -347,6 +349,7 @@ type APP_REPORT_day_user_account_app_data_posts = {
 /**
  * @nme APP_REPORT_GLOBAL
  * @description Type APP_REPORT_GLOBAL
+ * @typescript
  */
 type APP_REPORT_GLOBAL = {	
         app_copyright:string,
@@ -371,6 +374,7 @@ type APP_REPORT_GLOBAL = {
  * @name timesType
  * @description Type timesType
  *              added day key for timetables
+ * @typescript
  */
 type timesType = {  
         imsak:number|string, 
@@ -386,7 +390,6 @@ type timesType = {
 
 export{ CommonModuleLibTimetableParam,
         CommonModuleLibTimetable,
-        test,
         APP_user_setting_record,
         APP_user_setting_data,
         APP_user_setting,

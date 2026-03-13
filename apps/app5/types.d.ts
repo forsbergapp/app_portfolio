@@ -4,6 +4,7 @@
 /**
  * @name resource_metadata
  * @description AppData Resource metadata
+ * @typescript
  */
 type resource_metadata = {
         DefaultText: string, 
@@ -14,6 +15,7 @@ type resource_metadata = {
 /**
  * @name metadata_account
  * @description Account metadata
+ * @typescript
  */
 type metadata_account = {
         Title:resource_metadata,
@@ -26,6 +28,7 @@ type metadata_account = {
 /**
  * @name customer
  * @description customer
+ * @typescript
  */
 type customer = {
         CustomerType: string,
@@ -37,6 +40,7 @@ type customer = {
 /**
  * @name currency
  * @description  currency
+ * @typescript
  */
 type currency = {
         ConversionRate: number,
@@ -49,6 +53,7 @@ type currency = {
 /** 
  * @name merchant
  * @description merchant
+ * @typescript
  */
 type merchant = {
         Title:                 string,
@@ -69,6 +74,7 @@ type merchant = {
 /**
  * @name payment_request
  * @description payment_request
+ * @typescript
  */
 type payment_request = {
         MerchantId:         number,
@@ -84,6 +90,7 @@ type payment_request = {
 /** 
  * @name bank_account
  * @description bank_account
+ * @typescript
  */
 type bank_account = {
         BankAccountNumber:string,
@@ -93,6 +100,7 @@ type bank_account = {
 /**
  * @name bank_transaction
  * @description bank_transaction
+ * @typescript
  */
 type bank_transaction = {
         Timestamp:string, 

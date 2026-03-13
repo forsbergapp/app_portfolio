@@ -4,6 +4,7 @@
 /**
  * @name resource_metadata
  * @description AppData Resource metadata
+ * @typescript
  */
 type resource_metadata = {
     DefaultText: string, 
@@ -14,6 +15,7 @@ type resource_metadata = {
 /**
  * @name metadata_product_variant
  * @description product variant metadata
+ * @typescript
  */
 type metadata_product_variant = {
         Sku:resource_metadata,
@@ -25,6 +27,7 @@ type metadata_product_variant = {
 /**
  * @name product
  * @description product
+ * @typescript
  */
 type product = {
         Name:string, 
@@ -37,6 +40,7 @@ type product = {
 /**
  * @name product_return
  * @description product_return
+ * @typescript
  */
 type product_return = 
         product &   { 
@@ -53,6 +57,7 @@ type product_return =
 /**
  * @name product_variant
  * @description product_variant
+ * @typescript
  */
 type product_variant = {
         Sku:string, 
@@ -64,6 +69,7 @@ type product_variant = {
 /**
  * @name product_variant_location
  * @description product_variant_location
+ * @typescript
  */
 type product_variant_location = {
         Stock:number
@@ -71,6 +77,7 @@ type product_variant_location = {
 /**
  * @name metadata_product_variant_location
  * @description product variant location_metadata
+ * @typescript
  */
 type metadata_product_variant_location = {
         Stock:resource_metadata
@@ -78,6 +85,7 @@ type metadata_product_variant_location = {
 /**
  * @name currency
  * @description  currency
+ * @typescript
  */
 type currency = {
         ConversionRate: number,
@@ -90,6 +98,7 @@ type currency = {
 /** 
  * @name AppDataEntityDocument
  * @description AppDataEntityDocument
+ * @typescript
  */
 type AppDataEntityDocument = {
         Description:string, 

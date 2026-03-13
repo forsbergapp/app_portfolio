@@ -4,6 +4,7 @@
 /**
  * @name report_data
  * @description report_data
+ * @typescript
  */
 type report_data = {
         title:string,
@@ -15,6 +16,7 @@ type report_data = {
 /**
  * @name test_function_result
  * @description test_function_result
+ * @typescript
  */
 type test_function_result = {
         result:string,

@@ -6,6 +6,7 @@
 /**
  * @name COMMON_WINDOW
  * @description Type COMMON_WINDOW
+ * @typescript
  */
 type COMMON_WINDOW = {
         console:{ warn:Function,
@@ -36,6 +37,7 @@ type COMMON_WINDOW = {
 /**
  * @name COMMON_DOCUMENT
  * @description Type COMMON_DOCUMENT
+ * @typescript
  */
 type COMMON_DOCUMENT = {
         head:{innerHTML:string},
@@ -54,6 +56,7 @@ type COMMON_DOCUMENT = {
 /**
  * @name commonTarget
  * @description Type target
+ * @typescript
  */
 type commonTarget = {
         id:                 string,
@@ -90,6 +93,7 @@ type commonTarget = {
  * @name CommonAppEvent
  * @description Type CommonAppEvent
  *              events only used on DOM, third party libraries might use events on window in BOM
+ * @typescript
  */
 type CommonAppEvent = {
         clipboardData: {getData:Function},
@@ -112,6 +116,7 @@ type CommonAppEvent = {
 /**
  * @name CommonFFB_parameters
  * @description  Type CommonFFB_parameters
+ * @typescript
  */
 type CommonFFB_parameters = {
         app_id:number,
@@ -138,6 +143,7 @@ type CommonFFB_parameters = {
 /**
  * @name CommonGlobal
  * @description Type CommonGlobal
+ * @typescript
  */
 type CommonGlobal = {
         ICONS: {
@@ -378,11 +384,13 @@ type CommonGlobal = {
 /**
  * @name commonComponentEvents
  * @description Type commonComponentEvents
+ * @typescript
  */
 type commonComponentEvents = (arg0:commonEventType, arg1:CommonAppEvent)=>Promise<void>
 /**
  * @name CommonComponentLifecycle
  * @description Type CommonComponentLifecycle
+ * @typescript
 */
 type CommonComponentLifecycle = {
         onBeforeMounted?:Function|null,
@@ -392,6 +400,7 @@ type CommonComponentLifecycle = {
 /**
  * @name CommonComponentResult
  * @description Type CommonComponentResult
+ * @typescript
  */
 type CommonComponentResult = {
         lifecycle?:CommonComponentLifecycle,
@@ -403,6 +412,7 @@ type CommonComponentResult = {
 /**
  * @name CommonErrorMessageISO20022
  * @description Type CommonErrorMessageISO20022
+ * @typescript
  */
 type CommonErrorMessageISO20022 = {
         error:{
@@ -416,11 +426,13 @@ type CommonErrorMessageISO20022 = {
 /**
  * @name commonDocumentType
  * @description Type commonDocumentType
+ * @typescript
  */
 type commonDocumentType = 'APP'|'GUIDE'|'JSDOC'|'MODULE_CODE'|'MODULE_APPS'|'MODULE_SERVICEREGISTRY'|'MODULE_SERVER'
 /**
  * @name commonMetadata
  * @description commonMetadata
+ * @typescript
  */
 type commonMetadata = {
     events:{
@@ -431,6 +443,7 @@ type commonMetadata = {
 /**
  * @name commonEventType
  * @description commonEventType
+ * @typescript
  */
 type commonEventType = 
         'click'|
@@ -454,6 +467,7 @@ type commonEventType =
 /**
  * @name commonGeoJSONPopup
  * @description geoJSON Popup
+ * @typescript
  */
 type commonGeoJSONPopup = {
         id?: string,
@@ -473,6 +487,7 @@ type commonGeoJSONPopup = {
 /**
  * @name commonGeoJSONTile
  * @description geoJSON tile
+ * @typescript
  */
 type commonGeoJSONTile = {
         id?: string,
@@ -489,6 +504,7 @@ type commonGeoJSONTile = {
 /**
  * @name commonGeoJSONPolyline
  * @description geoJSON Polyline
+ * @typescript
  */
 type commonGeoJSONPolyline = {
         id?: string,
@@ -508,6 +524,7 @@ type commonGeoJSONPolyline = {
 /**
  * @name commonMapPlace
  * @description commonMapPlace
+ * @typescript
  */
 type commonMapPlace = {
         place:       string,
@@ -521,6 +538,7 @@ type commonMapPlace = {
 /**
  * @name commonMapLayers
  * @description commonMapLayers
+ * @typescript
  */
 type commonMapLayers = {
         title:string,
@@ -533,18 +551,21 @@ type commonMapLayers = {
 /**
  * @name CommonRESTAPIMethod
  * @description Type CommonRESTAPIMethod
+ * @typescript
  */
 type CommonRESTAPIMethod = 'GET'|'POST'|'PUT'|'PATCH'|'DELETE'
 
 /**
  * @name CommonRESTAPIAuthorizationType
  * @description Type CommonRESTAPIMethod
+ * @typescript
  */
 type CommonRESTAPIAuthorizationType = 'APP_ID'|'APP_ACCESS'|'APP_ACCESS_VERIFICATION'|'APP_ACCESS_EXTERNAL'|'ADMIN'|'IAM'|'IAM_SIGNUP'
 
 /**
  * @name CommonAppModuleMetadata
  * @description Type CommonAppModuleMetadata
+ * @typescript
  */
 type CommonAppModuleMetadata = {
     param:{name:string, text:string, default:string|number}
@@ -553,6 +574,7 @@ type CommonAppModuleMetadata = {
 /**
  * @name CommonCountryType
  * @description Type CommonCountryType
+ * @typescript
  */
 type CommonCountryType = {
     Id:number, 
@@ -563,12 +585,14 @@ type CommonCountryType = {
 /** 
  * @name CommonMasterObjectType
  * @description Type 
+ * @typescript
  */
 type CommonMasterObjectType = any
 
 /**
  * @name CommonResponsePagination
  * @description Type
+ * @typescript
  */    
 type CommonResponsePagination = {
         page_header:{	total_count:number,
@@ -579,6 +603,7 @@ type CommonResponsePagination = {
 /**
  * @name MessageQueuePublishMicroserviceLog
  * @description Type
+ * @typescript
  */
 type MessageQueuePublishMicroserviceLog = {
         id?:number,
@@ -592,6 +617,7 @@ type MessageQueuePublishMicroserviceLog = {
 /**
  * @name CommonWorldcitiesRecordType
  * @description Type CommonWorldcitiesRecordType
+ * @typescript
  */
 type CommonWorldcitiesRecordType = {
     id:number, 
@@ -605,47 +631,55 @@ type CommonWorldcitiesRecordType = {
 /**
  * @name CommonModuleCommon
  * @description Type CommonModuleCommon
+ * @typescript
  */
 type CommonModuleCommon = typeof import('./public/js/common.js')
 /**
  * @name CommonModuleRegional
  * @description Type CommonModuleRegional
+ * @typescript
  */
 type CommonModuleRegional = typeof import('./public/modules/regional/regional.js')
 
 /**
  * @name CommonModuleReact
  * @description Type CommonModuleReact
+ * @typescript
  */
 type CommonModuleReact = typeof import('./public/modules/react/react.development.js')
 
 /**
  * @name CommonModuleReactDOM
  * @description Type CommonModuleReactDOM
+ * @typescript
  */
 type CommonModuleReactDOM = typeof import('./public/modules/react/react-dom.development.js')
 
 /**
  * @name CommonModuleVue
  * @description Type CommonModuleVue
+ * @typescript
  */
 type CommonModuleVue = typeof import('./public/modules/vue/vue.esm-browser.js')
 
 /**
  * @name types_server
  * @description Type types_server
+ * @typescript
  */
 import type types_server from '../../server/types.d.ts'
 
 /**
  * @name CommonAppModuleWithMetadata
  * @description Type CommonAppModuleWithMetadata
+ * @typescript
  */
 type CommonAppModuleWithMetadata = types_server.ORM['Object']['AppModule'] & CommonAppModuleMetadata
 
 /**
  * @name server
  * @description Type server
+ * @typescript
  */
 type server = {
         app:types_server.app,

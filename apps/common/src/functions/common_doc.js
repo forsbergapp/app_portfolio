@@ -46,7 +46,7 @@ const getFile = async (path, fileRequest=false) =>{
 };
 /**
  * @name getFiles
- * @description Find all *.js files in given directory and its subdirectories
+ * @description Find all files in given directory and its subdirectories
  * @function
  * @param {string} directory
  * @param {RegExp} filePattern
@@ -71,11 +71,10 @@ const getFiles = async (directory, filePattern) =>{
                 await findFiles(fullPath, pattern);
             else 
                 if (file.isFile() && file.name.match(pattern)){
-                    //remove OS path info, .js suffix and replace \\ with /                
+                    //remove OS path info and replace \\ with /                
                     fileList.push({   id: ++index,
                                         file:fullPath
                                             .replace(server.info.serverProcess.cwd(),'')
-                                            .replace('.js','')
                                             .replaceAll('\\','/')});
                 }
         }
@@ -139,6 +138,7 @@ const renderTablesFunctions = async parameters =>{
                                 .filter(row=>row.indexOf('@function')<0)
                                 .filter(row=>row.indexOf('@constant')<0)
                                 .filter(row=>row.indexOf('@class')<0)
+                                .filter(row=>row.indexOf('@typescript')<0)
                                 .join('\n');
             //calculate source line: row match found + match row length
             const source_line = (parameters.file?parameters.file.substring(0,parameters.file.indexOf(match_module_function[1])).split('\n').length:0)  + 
@@ -196,6 +196,7 @@ const commentType = comment =>  comment.indexOf('@module')>-1?'Module':
                                 comment.indexOf('@function')>-1?'Function':
                                 comment.indexOf('@constant')>-1?'Constant':
                                 comment.indexOf('@class')>-1?'Class':
+                                comment.indexOf('@typescript')>-1?'Type':
                                 comment.indexOf('@method')>-1?'Method':null;
 
 /**
@@ -282,7 +283,7 @@ const markdownRender = async parameters =>{
             //replace all found JSDoc comments with markdown formatted module functions
             return markdown.replace('@{MODULE_FUNCTION}', 
                                     await renderTablesFunctions({app_id:         parameters.app_id,                                                 
-                                                            file:           await getFile(`${server.info.serverProcess.cwd()}${parameters.doc}.js`, true),
+                                                            file:           await getFile(`${server.info.serverProcess.cwd()}${parameters.doc}`, true),
                                                             module:         parameters.module,
                                                             comment_with_filter:null
                                                         }));
@@ -447,7 +448,7 @@ const markdownRender = async parameters =>{
                 const membersof = [];
                 //Get REST API function with @namespace tag
                 membersof.push(await renderTablesFunctions({ app_id:             parameters.app_id, 
-                                                        file:               await getFile(`${server.info.serverProcess.cwd()}${routePath}.js`),
+                                                        file:               await getFile(`${server.info.serverProcess.cwd()}${routePath}`),
                                                         module:             routePath,
                                                         comment_with_filter:`@namespace ${tag}`
                                                     }));
@@ -455,7 +456,7 @@ const markdownRender = async parameters =>{
                 for (const directory of routeDirectories)
                     for (const file of (await getFiles(`${server.info.serverProcess.cwd()}/${directory}`, filePattern)).map(row=>row.file)){
                         const file_functions = await renderTablesFunctions({ app_id:             parameters.app_id, 
-                                                                        file:               await getFile(`${server.info.serverProcess.cwd()}${file}.js`),
+                                                                        file:               await getFile(`${server.info.serverProcess.cwd()}${file}`),
                                                                         module:             file,
                                                                         comment_with_filter:`@memberof ${tag}`
                                                                     });
@@ -471,9 +472,9 @@ const markdownRender = async parameters =>{
                         );
             };
             if (parameters.doc==MD_TEMPLATE_OPENAPI_APP_FUNCTIONS)
-                return await renderRouteFuntions('ROUTE_APP', '/server/bff', ['apps'], parameters.doc);
+                return await renderRouteFuntions('ROUTE_APP', '/server/bff.js', ['apps'], parameters.doc);
             else
-                return await renderRouteFuntions('ROUTE_REST_API', '/server/server', ['apps', 'serviceregistry','server'], parameters.doc);
+                return await renderRouteFuntions('ROUTE_REST_API', '/server/server.js', ['apps', 'serviceregistry','server'], parameters.doc);
         }
         case parameters.doc==MD_TEMPLATE_RELEASE_INFO:{
             const command = `git for-each-ref --sort=-creatordate --format '## [%(refname:short)] - %(creatordate:short) %(contents)' refs/tags`;
@@ -590,8 +591,8 @@ const menuRender = async parameters =>{
                 break;
             }
             case menu.type.startsWith('MODULE'):{
-                //return all *.js files in /apps, /serviceregistry and /server directories
-                const filePattern = /\.js$/;
+                //return all *.js  sn .ts files in /apps, /serviceregistry and /server directories
+                const filePattern = /\.(js|ts)$/;
                 menu.menu_sub = (await getFiles(`${server.info.serverProcess.cwd()}/${menu.type.substring('MODULE'.length+1).toLowerCase()}`, filePattern))
                                 .map(row=>{return {id:row.id, menu:row.file, doc:row.file};});
             }
@@ -641,7 +642,7 @@ const appFunction = async parameters =>{
             }
             case parameters.data.documentType=='MODULE_CODE' && 
                 ['apps', 'sdk','server','serviceregistry','test'].includes(parameters.data.doc.split('/')[1]):{
-                return {result:await getFile(`${server.info.serverProcess.cwd()}${parameters.data.doc}.js`, true), type:'HTML'};
+                return {result:await getFile(`${server.info.serverProcess.cwd()}${parameters.data.doc}`, true), type:'HTML'};
             }
             case parameters.data.documentType=='GUIDE':
             case parameters.data.documentType=='APP' && server.ORM.db.App.get({app_id:parameters.app_id, resource_id:server.ORM.UtilNumberValue(parameters.data.doc)}).result?.length==1:
