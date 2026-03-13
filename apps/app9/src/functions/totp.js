@@ -2,7 +2,7 @@
  * @module apps/app9/src/functions/totp
  */
 /**
- * @import {server} from '../../../../server/types.d.ts'
+ * @import types_server from '../../../../server/types.d.ts'
  */
 const {server} = await import('../../../../server/server.js');
 /**
