@@ -28,6 +28,7 @@ const template = props =>`  <!DOCTYPE html>
                             <head>
                                 <style>
                                     body {   
+                                        --common_app_css_border_radius: 4px;
                                         --common_app_color_black: #404040;
                                         --common_app_color_blue1: rgb(81, 171, 255); 
                                         display:flex;
@@ -40,11 +41,27 @@ const template = props =>`  <!DOCTYPE html>
                                     body *{
                                         display:none
                                     }
-                                    @keyframes start_spin{
+                                    @keyframes spin{
                                         from {transform:rotate(0deg);}
                                         to {transform:rotate(360deg);}
                                     }
-                                    body::before{
+                                    #common_loading_wrap{
+                                        display:grid;
+                                        justify-items: center;
+                                        background: var(--common_app_color_blue1);
+                                        align-content: center;
+                                        width: 100px;
+                                        height: 100px;
+                                        grid-row-gap: 1em;
+                                    }
+                                    #common_loading_spinner{
+                                        display:flex !important;
+                                        justify-content:center;
+                                        align-items:center;
+                                        min-height:1.5em;
+                                        width:100%;
+                                    }
+                                    #common_loading_spinner::before{
                                         content:'' !important;
                                         width:25px;
                                         height:25px;
@@ -52,10 +69,26 @@ const template = props =>`  <!DOCTYPE html>
                                         border:4px solid var(--common_app_color_black);
                                         border-top-color: transparent;
                                         border-radius:50%;
-                                        animation:start_spin 1s linear infinite;
+                                        animation:spin 1s linear infinite;
                                     }
+                                    #common_loading_progressbar_wrap{
+                                        display:block;
+                                        border: 0.5px solid var(--common_app_color_black);
+                                        border-radius: var(--common_app_css_border_radius);
+                                        width:100%;
+                                    }
+                                    #common_loading_progressbar{
+                                        display:block;
+                                        background: var(--common_app_color_black);
+                                        width: 0%;
+                                        height: 10px;
+                                        border-radius: var(--common_app_css_border_radius);
+                                        justify-self: start;
+                                    }
+                                    
                                 </style>
                                 <script type=module>
+                                    const progress = value => document.querySelector('#common_loading_progressbar').style.width  = (value*100).toString() + '%';
                                     const commonWindowBase64From = str => {
                                         const binary_string = atob(str);
                                         const len = binary_string.length;
@@ -65,11 +98,13 @@ const template = props =>`  <!DOCTYPE html>
                                         }
                                         return new TextDecoder('utf-8').decode(bytes);
                                     };
+                                    progress(2/10);
                                     Promise.all([
                                         import(URL.createObjectURL(  new Blob ([commonWindowBase64From('${props.crypto}')],{type: 'text/javascript'}))),
                                         fetch('${props.url}', (()=>{const temp = JSON.parse(commonWindowBase64From('${props.options}'));temp.body = JSON.stringify(temp.body);return temp;})()).then(response=>response.text())
                                     ])
                                     .then(promise=>{
+                                        progress(4/10);
                                         return {Crypto: {encrypt:promise[0].subtle.encrypt, 
                                                         decrypt:promise[0].subtle.decrypt},
                                                 commonStart:JSON.parse(promise[0].subtle.decrypt({
@@ -77,12 +112,14 @@ const template = props =>`  <!DOCTYPE html>
                                                                 key:        JSON.parse(commonWindowBase64From('${props.secret}')).jwk.k,
                                                                 ciphertext: promise[1]}))};
                                     })
-                                    .then(result=>
+                                    .then(result=>{
+                                        progress(6/10);
                                         Promise.all([
                                             import(URL.createObjectURL(  new Blob ([result.commonStart.commonComponent],{type: 'text/javascript'}))),
                                             import(URL.createObjectURL(  new Blob ([result.commonStart.jsCommon],{type: 'text/javascript'})))
                                         ])
-                                        .then(promise2=>
+                                        .then(promise2=>{
+                                            progress(8/10);
                                             promise2[0].default({
                                                                     data:   {
                                                                             globals:    {
@@ -99,6 +136,7 @@ const template = props =>`  <!DOCTYPE html>
                                                                             }
                                                                 })
                                             .then(component=>{
+                                                progress(9/10);
                                                 if (component.methods){
                                                     promise2[1].commonGlobalSet({key:'Functions',  
                                                                             name:'component', 
@@ -106,12 +144,19 @@ const template = props =>`  <!DOCTYPE html>
                                                 }
                                                 document.body.innerHTML = component.template;component.lifecycle.onMounted();
                                             })
-                                        )
-                                    )
+                                        })
+                                    })
                                 </script>
                             </head>
                             <html>
-                                <body></body>
+                                <body>
+                                    <div id='common_loading_wrap'>
+                                        <div id='common_loading_spinner'></div>
+                                        <div id='common_loading_progressbar_wrap'>
+                                            <div id='common_loading_progressbar'></div>
+                                        </div>
+                                    </div>
+                                </body>
                             </html>  `;
 /**
 * @name component
