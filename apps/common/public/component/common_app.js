@@ -11,7 +11,7 @@
  * @name template
  * @description Template
  * @function
- * @param {{current: 'START'|'MESSAGE'|'LOADING',
+ * @param {{current: 'START'|'MESSAGE'|'LOADING'|'HEAD',
  *          app_toolbar_button_start:number,
  *          app_toolbar_button_framework:number,
  *          app_framework:number,
@@ -87,53 +87,57 @@ const template = props => props.current=='START'?
                                     </div>
                                 </div>
                             </div>`:
-                                props.current=='LOADING'?
-                                `
-                                <div class='common_loading_spinner'></div>
-                                <div id='common_loading_progressbar_wrap'>
-                                    <div id='common_loading_progressbar_info'></div>
-                                    <div id='common_loading_progressbar'></div>
-                                </div>`:
-                                    props.current=='MESSAGE'?
-                                        `  
-                                        ${props.message_type=='CONFIRM'?
-                                            `<div id='common_app_dialogues_message_confirm_question' class='common_icon_title'>${props.icons.message_confirm}</div>`:''
-                                        }
-                                        ${props.message_type!='CONFIRM'?
-                                        `<div id='common_app_dialogues_message_title_container'>
-                                            <div id='common_app_dialogues_message_title_icon' class='common_icon_title'>${props.message_title_icon_class?props.icons[props.message_title_icon_class]:''}</div>
-                                            <div id='common_app_dialogues_message_title' class='${props.message_title_font_class}'>
-                                                ${props.message !=null && props.message !='' && typeof props.message == 'object'?Object.entries(props.message).map((/**@type{*}*/list_row)=>
-                                                    //loop manages both object and array
-                                                    `<div id='common_app_dialogues_message_info_list'>
-                                                        <div class='common_app_dialogues_message_info_list_row'>
-                                                            <div class='common_app_dialogues_message_info_list_col'>
-                                                                <div>${props.message.constructor===Array?Object.keys(list_row[1])[0]:list_row[0]}</div>
-                                                            </div>
-                                                            <div class='common_app_dialogues_message_info_list_col'>
-                                                                <div>${props.message.constructor===Array?Object.values(list_row[1])[0]:list_row[1]}</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>`).join(''):
-                                                    (props.message?props.message:'')
-                                                }
-                                            </div>
-                                        </div>`:''
-                                        }
-                                        ${props.message_type=='PROGRESS'?
-                                            `<div id='common_app_dialogues_message_progressbar_wrap'>
-                                                <div id='common_app_dialogues_message_progressbar'></div>
-                                            </div>`:''
-                                        }
-                                        <div id='common_app_dialogues_message_buttons'>
-                                            ${props.message_type=='CONFIRM'?
-                                                `<div id='common_app_dialogues_message_cancel' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.cancel}</div>`:''
-                                            }
-                                            ${props.message_type!='PROGRESS'?
-                                                `<div id='common_app_dialogues_message_close' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.close}</div>`:''
-                                            }
+                                props.current=='HEAD'?
+                                    `   <meta charset='UTF-8'>
+                                        <title></title>
+                                        <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>`:
+                                    props.current=='LOADING'?
+                                        `
+                                        <div class='common_loading_spinner'></div>
+                                        <div id='common_loading_progressbar_wrap'>
+                                            <div id='common_loading_progressbar_info'></div>
+                                            <div id='common_loading_progressbar'></div>
                                         </div>`:
-                                        '';
+                                        props.current=='MESSAGE'?
+                                            `  
+                                            ${props.message_type=='CONFIRM'?
+                                                `<div id='common_app_dialogues_message_confirm_question' class='common_icon_title'>${props.icons.message_confirm}</div>`:''
+                                            }
+                                            ${props.message_type!='CONFIRM'?
+                                            `<div id='common_app_dialogues_message_title_container'>
+                                                <div id='common_app_dialogues_message_title_icon' class='common_icon_title'>${props.message_title_icon_class?props.icons[props.message_title_icon_class]:''}</div>
+                                                <div id='common_app_dialogues_message_title' class='${props.message_title_font_class}'>
+                                                    ${props.message !=null && props.message !='' && typeof props.message == 'object'?Object.entries(props.message).map((/**@type{*}*/list_row)=>
+                                                        //loop manages both object and array
+                                                        `<div id='common_app_dialogues_message_info_list'>
+                                                            <div class='common_app_dialogues_message_info_list_row'>
+                                                                <div class='common_app_dialogues_message_info_list_col'>
+                                                                    <div>${props.message.constructor===Array?Object.keys(list_row[1])[0]:list_row[0]}</div>
+                                                                </div>
+                                                                <div class='common_app_dialogues_message_info_list_col'>
+                                                                    <div>${props.message.constructor===Array?Object.values(list_row[1])[0]:list_row[1]}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>`).join(''):
+                                                        (props.message?props.message:'')
+                                                    }
+                                                </div>
+                                            </div>`:''
+                                            }
+                                            ${props.message_type=='PROGRESS'?
+                                                `<div id='common_app_dialogues_message_progressbar_wrap'>
+                                                    <div id='common_app_dialogues_message_progressbar'></div>
+                                                </div>`:''
+                                            }
+                                            <div id='common_app_dialogues_message_buttons'>
+                                                ${props.message_type=='CONFIRM'?
+                                                    `<div id='common_app_dialogues_message_cancel' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.cancel}</div>`:''
+                                                }
+                                                ${props.message_type!='PROGRESS'?
+                                                    `<div id='common_app_dialogues_message_close' class='common_app_dialogues_button common_link common_icon_button' >${props.icons.close}</div>`:''
+                                                }
+                                            </div>`:
+                                            '';
 /**
 * @name component
 * @description Component
@@ -252,7 +256,7 @@ const component = async props =>{
     /**
      * @name events
      * @descption Central event delegation on app root
-     *            order of events: 1 common, 2 module, 3 app 
+     *            order of events: 1 common, 2 component, 3 app 
      * @function
      * @param {types_common.commonEventType} event_type
      * @param {types_common.CommonAppEvent|null} event
@@ -341,14 +345,7 @@ const component = async props =>{
                         if (commonTextEditingDisabled() &&
                             event.target.classList.contains('common_input') && 
                                 (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
-                                (event.shiftKey ==true && (event.code=='ArrowLeft' || 
-                                                            event.code=='ArrowRight' || 
-                                                            event.code=='ArrowUp' || 
-                                                            event.code=='ArrowDown'|| 
-                                                            event.code=='Home'|| 
-                                                            event.code=='End'|| 
-                                                            event.code=='PageUp'|| 
-                                                            event.code=='PageDown') ) )
+                                (event.shiftKey ==true && ['ArrowLeft', 'ArrowRight','ArrowUp','ArrowDown','Home', 'End', 'PageUp', 'PageDown'].includes(event.code)) )
                             ){
                                 event.preventDefault();
                         }
@@ -372,6 +369,9 @@ const component = async props =>{
                             }
                         break;
                     }
+                    case 'copy':
+                    case 'paste':
+                    case 'cut':
                     case 'mousedown':{
                         //common event only
                         commonEventCopyPasteCutDisable(event);
@@ -380,21 +380,6 @@ const component = async props =>{
                     case 'touchstart':{
                         //common event only
                         commonEventInputDisable(event);
-                        break;
-                    }
-                    case 'copy':{
-                        //common event only
-                        commonEventCopyPasteCutDisable(event);
-                        break;
-                    }
-                    case 'paste':{
-                        //common event only
-                        commonEventCopyPasteCutDisable(event);
-                        break;
-                    }
-                    case 'cut':{
-                        //common event only
-                        commonEventCopyPasteCutDisable(event);
                         break;
                     }
                     default:{
@@ -456,9 +441,8 @@ const component = async props =>{
         //mount start app
         await props.methods.COMMON.commonAppSwitch(props.methods.COMMON.commonGlobalGet('Parameters').app_start_app_id);
         //replace old head wtith start styles and start script with new content
-        props.methods.COMMON.COMMON_DOCUMENT.head.innerHTML = ` <meta charset='UTF-8'>
-                                        <title></title>
-                                        <meta name='viewport' content='width=device-width, minimum-scale=1.0, maximum-scale = 1'>`;
+        props.methods.COMMON.COMMON_DOCUMENT.head.innerHTML = template({    current:'HEAD',
+                                                                            ...COMMON_TEMPLATE_PARAMETERS });
         
     }
     return {
